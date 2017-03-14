@@ -1,0 +1,6 @@
+CORE
+NondetDirectFromMethod.class
+--function NondetDirectFromMethod.foo
+^VERIFICATION SUCCESSFUL$
+--
+^warning: ignoring

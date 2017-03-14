@@ -1,0 +1,6 @@
+CORE
+NondetArray.class
+--function NondetArray.foo
+^VERIFICATION SUCCESSFUL$
+--
+^warning: ignoring
