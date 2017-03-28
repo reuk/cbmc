@@ -2435,7 +2435,8 @@ codet java_bytecode_convert_methodt::convert_instructions(
     if(!start_new_block && previous_address!=-1)
     {
       for(const auto &exception_row : method.exception_table)
-        if(exception_row.start_pc==previous_address)
+        if(static_cast<decltype(previous_address)>(exception_row.start_pc)==
+             previous_address)
         {
           start_new_block=true;
           break;
