@@ -6,8 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <cassert>
+#include "util/make_unique.h"
 
+#include <cassert>
 
 #include "satcheck_zchaff.h"
 
@@ -25,7 +26,8 @@ Function: satcheck_zchaff_baset::satcheck_zchaff_baset
 
 \*******************************************************************/
 
-satcheck_zchaff_baset::satcheck_zchaff_baset(CSolver *_solver):solver(_solver)
+satcheck_zchaff_baset::satcheck_zchaff_baset(std::unique_ptr<CSolver> _solver):
+  solver(std::move(_solver))
 {
   status=INIT;
   solver->set_randomness(0);
@@ -44,9 +46,7 @@ Function: satcheck_zchaff_baset::~satcheck_zchaff_baset
 
 \*******************************************************************/
 
-satcheck_zchaff_baset::~satcheck_zchaff_baset()
-{
-}
+satcheck_zchaff_baset::~satcheck_zchaff_baset()=default;
 
 /*******************************************************************\
 
@@ -260,7 +260,7 @@ Function: satcheck_zchafft::satcheck_zchafft
 \*******************************************************************/
 
 satcheck_zchafft::satcheck_zchafft():
-  satcheck_zchaff_baset(new CSolver)
+  satcheck_zchaff_baset(util_make_unique<CSolver>())
 {
 }
 
@@ -276,7 +276,4 @@ Function: satcheck_zchafft::~satcheck_zchafft
 
 \*******************************************************************/
 
-satcheck_zchafft::~satcheck_zchafft()
-{
-  delete solver;
-}
+satcheck_zchafft::~satcheck_zchafft()=default;

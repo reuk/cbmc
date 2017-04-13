@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "util/make_unique.h"
+
 #ifndef _MSC_VER
 #include <inttypes.h>
 #endif
@@ -313,8 +315,8 @@ Function: satcheck_minisat2_baset::satcheck_minisat2_baset
 \*******************************************************************/
 
 template<typename T>
-satcheck_minisat2_baset<T>::satcheck_minisat2_baset(T *_solver):
-  solver(_solver)
+satcheck_minisat2_baset<T>::satcheck_minisat2_baset(std::unique_ptr<T> _solver):
+  solver(std::move(_solver))
 {
 }
 
@@ -330,17 +332,8 @@ Function: satcheck_minisat2_baset::~satcheck_minisat2_baset
 
 \*******************************************************************/
 
-template<>
-satcheck_minisat2_baset<Minisat::Solver>::~satcheck_minisat2_baset()
-{
-  delete solver;
-}
-
-template<>
-satcheck_minisat2_baset<Minisat::SimpSolver>::~satcheck_minisat2_baset()
-{
-  delete solver;
-}
+template<typename T>
+satcheck_minisat2_baset<T>::~satcheck_minisat2_baset()=default;
 
 /*******************************************************************\
 
@@ -404,7 +397,7 @@ Function: satcheck_minisat_no_simplifiert::satcheck_minisat_no_simplifiert
 \*******************************************************************/
 
 satcheck_minisat_no_simplifiert::satcheck_minisat_no_simplifiert():
-  satcheck_minisat2_baset<Minisat::Solver>(new Minisat::Solver)
+  satcheck_minisat2_baset<Minisat::Solver>(util_make_unique<Minisat::Solver>())
 {
 }
 
@@ -421,7 +414,8 @@ Function: satcheck_minisat_simplifiert::satcheck_minisat_simplifiert
 \*******************************************************************/
 
 satcheck_minisat_simplifiert::satcheck_minisat_simplifiert():
-  satcheck_minisat2_baset<Minisat::SimpSolver>(new Minisat::SimpSolver)
+  satcheck_minisat2_baset<Minisat::SimpSolver>(
+    util_make_unique<Minisat::SimpSolver>())
 {
 }
 

@@ -11,6 +11,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "cnf_clause_list.h"
 
+#include <memory>
+
 // use this only if you want to have something
 // derived from CSolver
 // otherwise, use satcheck_zchafft
@@ -20,7 +22,7 @@ class CSolver;
 class satcheck_zchaff_baset:public cnf_clause_listt
 {
 public:
-  explicit satcheck_zchaff_baset(CSolver *_solver);
+  explicit satcheck_zchaff_baset(std::unique_ptr<CSolver> _solver);
   virtual ~satcheck_zchaff_baset();
 
   virtual const std::string solver_text();
@@ -31,11 +33,11 @@ public:
 
   CSolver *zchaff_solver()
   {
-    return solver;
+    return solver.get();
   }
 
 protected:
-  CSolver *solver;
+  std::unique_ptr<CSolver> solver;
 
   typedef enum { INIT, SAT, UNSAT, ERROR } statust;
   statust status;

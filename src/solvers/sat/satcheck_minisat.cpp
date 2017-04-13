@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "util/make_unique.h"
+
 #include <cassert>
 #include <stack>
 
@@ -360,10 +362,10 @@ Function: satcheck_minisat1t::satcheck_minisat1t
 
 \*******************************************************************/
 
-satcheck_minisat1t::satcheck_minisat1t()
+satcheck_minisat1t::satcheck_minisat1t():
+  solver(util_make_unique<Solver>())
 {
   empty_clause_added=false;
-  solver=new Solver;
 }
 
 /*******************************************************************\
@@ -378,10 +380,11 @@ Function: satcheck_minisat1_prooft::satcheck_minisat1_prooft
 
 \*******************************************************************/
 
-satcheck_minisat1_prooft::satcheck_minisat1_prooft():satcheck_minisat1t()
+satcheck_minisat1_prooft::satcheck_minisat1_prooft():
+  satcheck_minisat1t(),
+  minisat_proof(util_make_unique<minisat_prooft>()),
+  proof(util_make_unique<Proof>(*minisat_proof))
 {
-  minisat_proof=new minisat_prooft;
-  proof=new Proof(*minisat_proof);
   //  solver=new Solver;
   solver->proof=proof;
 }
@@ -398,11 +401,7 @@ Function: satcheck_minisat1_prooft::~satcheck_minisat1_prooft
 
 \*******************************************************************/
 
-satcheck_minisat1_prooft::~satcheck_minisat1_prooft()
-{
-  delete proof;
-  delete minisat_proof;
-}
+satcheck_minisat1_prooft::~satcheck_minisat1_prooft()=default;
 
 /*******************************************************************\
 
@@ -448,10 +447,7 @@ Function: satcheck_minisat1_baset::~satcheck_minisat1_baset
 
 \*******************************************************************/
 
-satcheck_minisat1_baset::~satcheck_minisat1_baset()
-{
-  delete solver;
-}
+satcheck_minisat1_baset::~satcheck_minisat1_baset()=default;
 
 /*******************************************************************\
 

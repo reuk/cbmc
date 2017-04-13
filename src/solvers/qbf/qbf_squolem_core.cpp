@@ -6,6 +6,8 @@ Author: CM Wintersteiger
 
 \*******************************************************************/
 
+#include "util/make_unique.h"
+
 #include <algorithm>
 
 #include <util/std_expr.h>
@@ -27,7 +29,7 @@ Function: qbf_squolem_coret::qbf_squolem_coret
 
 \*******************************************************************/
 
-qbf_squolem_coret::qbf_squolem_coret() : squolem(NULL)
+qbf_squolem_coret::qbf_squolem_coret()
 {
   setup();
 }
@@ -50,7 +52,7 @@ void qbf_squolem_coret::setup(void)
   clauses.clear();
   early_decision=false;
   variable_map.clear();
-  squolem=new Squolem2();
+  squolem=util_make_unique<Squolem2>();
 
 //  squolem->options.set_extractCoreVariables(true);
 //  squolem->options.set_saveCertificate(true);
@@ -80,8 +82,7 @@ Function: qbf_squolem_coret::reset
 void qbf_squolem_coret::reset(void)
 {
   squolem->reset();
-  delete(squolem);
-  squolem=NULL;
+  squolem=nullptr;
   setup();
 }
 
@@ -100,8 +101,7 @@ Function: qbf_squolem_coret::~qbf_squolem_coret
 qbf_squolem_coret::~qbf_squolem_coret()
 {
   squolem->reset();
-  delete(squolem);
-  squolem=NULL;
+  squolem=nullptr;
 }
 
 /*******************************************************************\

@@ -10,6 +10,7 @@ Author: Daniel Kroening, kroening@kroening.com
 #define CPROVER_SOLVERS_SAT_SATCHECK_MINISAT_H
 
 #include <vector>
+#include <memory>
 
 #include "cnf.h"
 #include "resolution_proof.h"
@@ -42,7 +43,8 @@ public:
 
 protected:
   // NOLINTNEXTLINE(readability/identifiers)
-  class Solver *solver;
+  class Solver;
+  std::unique_ptr<Solver> solver;
   void add_variables();
   bvt assumptions;
   bool empty_clause_added;
@@ -65,9 +67,11 @@ public:
   // void set_partition_id(unsigned p_id);
 
 protected:
+  class minisat_prooft;
+  std::unique_ptr<minisat_prooft> minisat_proof;
   // NOLINTNEXTLINE(readability/identifiers)
-  class Proof *proof;
-  class minisat_prooft *minisat_proof;
+  class Proof;
+  std::unique_ptr<Proof> proof;
 };
 
 class satcheck_minisat1_coret:public satcheck_minisat1_prooft

@@ -141,7 +141,7 @@ void satcheck_smvsatt::lcnf(const bvt &bv)
   if(process_clause(bv, tmp))
     return;
 
-  int *lits=new int[tmp.size()+1];
+  std::vector<int> lits(tmp.size()+1);
 
   for(unsigned i=0; i<tmp.size(); i++)
     lits[i]=tmp[i].dimacs();
@@ -152,8 +152,6 @@ void satcheck_smvsatt::lcnf(const bvt &bv)
   sat_instance_add_clause(satsolver, lits);
 
   clause_counter++;
-
-  delete[] lits;
 }
 
 /*******************************************************************\
@@ -253,7 +251,7 @@ void satcheck_smvsat_interpolatort::lcnf(const bvt &bv)
   if(process_clause(bv, tmp))
     return;
 
-  int *lits=new int[tmp.size()+1];
+  std::vector<int> lits(tmp.size()+1);
 
   for(unsigned i=0; i<tmp.size(); i++)
     lits[i]=tmp[i].dimacs();
@@ -267,8 +265,6 @@ void satcheck_smvsat_interpolatort::lcnf(const bvt &bv)
     partition_numbers.resize(clause_id+1, -1);
 
   partition_numbers[clause_id]=partition_no;
-
-  delete[] lits;
 }
 
 /*******************************************************************\
@@ -288,8 +284,8 @@ void satcheck_smvsat_interpolatort::interpolate(exprt &dest)
   // crate instance
 
   // NOLINTNEXTLINE(readability/identifiers)
-  struct interpolator *interpolator_satsolver=
-    new_interpolator(satsolver);
+  auto interpolator_satsolver=
+    std::unique_ptr<struct interpolator>(new_interpolator(satsolver));
 
   // set partition numbers
 
@@ -303,8 +299,6 @@ void satcheck_smvsat_interpolatort::interpolate(exprt &dest)
   int output=interpolator_satsolver->interpolate(0, 0);
 
   build_aig(*interpolator_satsolver, output, dest);
-
-  delete interpolator_satsolver;
 }
 
 /*******************************************************************\

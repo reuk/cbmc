@@ -10,6 +10,7 @@ Author: Daniel Kroening, kroening@kroening.com
 #define CPROVER_SOLVERS_SAT_SATCHECK_LIMMAT_H
 
 #include <vector>
+#include <functional>
 #include "dimacs_cnf.h"
 
 class satcheck_limmatt:public dimacs_cnft
@@ -25,7 +26,12 @@ class satcheck_limmatt:public dimacs_cnft
   void copy_cnf();
 
  protected:
-  struct Limmat *solver;
+  struct Limmat;
+  struct limmat_deletert final
+  {
+    void operator()(Limmat*) const;
+  };
+  std::unique_ptr<Limmat, limmat_deletert> solver;
   std::vector<unsigned char> assignment;
 };
 

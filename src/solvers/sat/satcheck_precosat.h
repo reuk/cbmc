@@ -11,6 +11,8 @@ Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
 
 #include "cnf.h"
 
+#include <memory>
+
 namespace PrecoSat // NOLINT(readability/namespace)
 {
 class Solver; // NOLINT(readability/identifiers)
@@ -36,7 +38,7 @@ public:
   virtual bool has_is_in_conflict() const { return false; }
 
 protected:
-  PrecoSat::Solver *solver;
+  std::unique_ptr<PrecoSat::Solver> solver;
   // bvt assumptions;
 };
 

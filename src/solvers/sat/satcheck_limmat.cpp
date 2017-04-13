@@ -16,6 +16,11 @@ extern "C"
 #include "limmat.h"
 }
 
+void satcheck_limmatt::limmat_deletert::operator()(Limmat *l) const 
+{
+  delete_Limmat(l);
+}
+
 /*******************************************************************\
 
 Function: satcheck_limmatt::satcheck_limmatt
@@ -28,9 +33,9 @@ Function: satcheck_limmatt::satcheck_limmatt
 
 \*******************************************************************/
 
-satcheck_limmatt::satcheck_limmatt()
+satcheck_limmatt::satcheck_limmatt():
+  solver(new_Limmat(NULL), limmat_deleter())
 {
-  solver=new_Limmat(NULL);
 }
 
 /*******************************************************************\
@@ -45,11 +50,7 @@ Function: satcheck_limmatt::~satcheck_limmatt
 
 \*******************************************************************/
 
-satcheck_limmatt::~satcheck_limmatt()
-{
-  if(solver!=NULL)
-    delete_Limmat(solver);
-}
+satcheck_limmatt::~satcheck_limmatt()=default;
 
 /*******************************************************************\
 
@@ -124,7 +125,7 @@ void satcheck_limmatt::copy_cnf()
       it++)
       // it=clauses.erase(it))
   {
-    int *clause=new int[it->size()+1];
+    std::vector<int> clause(it->size()+1);
 
     for(unsigned j=0; j<it->size(); j++)
       clause[j]=(*it)[j].dimacs();
@@ -132,9 +133,7 @@ void satcheck_limmatt::copy_cnf()
     // zero-terminated
     clause[it->size()]=0;
 
-    add_Limmat(solver, clause);
-
-    delete clause;
+    add_Limmat(solver, clause.data());
   }
 }
 

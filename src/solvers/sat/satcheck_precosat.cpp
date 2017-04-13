@@ -172,7 +172,7 @@ Function: satcheck_precosatt::satcheck_precosatt
 \*******************************************************************/
 
 satcheck_precosatt::satcheck_precosatt() :
-  solver(new PrecoSat::Solver())
+  solver(util_make_unique<PrecoSat::Solver>())
 {
   solver->init();
 }
@@ -189,10 +189,7 @@ Function: satcheck_precosatt::~satcheck_precosatt
 
 \*******************************************************************/
 
-satcheck_precosatt::~satcheck_precosatt()
-{
-  delete solver;
-}
+satcheck_precosatt::~satcheck_precosatt()=default;
 
 /*******************************************************************\
 

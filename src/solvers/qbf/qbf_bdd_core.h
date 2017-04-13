@@ -10,7 +10,7 @@ Author: CM Wintersteiger
 #define CPROVER_SOLVERS_QBF_QBF_BDD_CORE_H
 
 #include <vector>
-
+#include <memory>
 
 #include "qdimacs_core.h"
 
@@ -20,9 +20,9 @@ class BDD; // NOLINT(*)
 class qbf_bdd_certificatet:public qdimacs_coret
 {
 protected:
-  Cudd *bdd_manager;
+  std::unique_ptr<Cudd> bdd_manager;
 
-  typedef std::vector<BDD*> model_bddst;
+  typedef std::vector<std::unique_ptr<BDD>> model_bddst;
   model_bddst model_bdds;
 
   typedef std::unordered_map<unsigned, exprt> function_cachet;
@@ -45,7 +45,7 @@ private:
   typedef std::vector<BDD*> bdd_variable_mapt;
   bdd_variable_mapt bdd_variable_map;
 
-  BDD *matrix;
+  std::unique_ptr<BDD> matrix;
 
 public:
   qbf_bdd_coret();

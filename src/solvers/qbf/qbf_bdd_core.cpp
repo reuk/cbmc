@@ -6,6 +6,8 @@ Author: CM Wintersteiger
 
 \*******************************************************************/
 
+#include "util/make_unique.h"
+
 #include <cassert>
 #include <fstream>
 
@@ -54,9 +56,10 @@ Function: qbf_bdd_certificatet::qbf_bdd_certificatet
 
 \*******************************************************************/
 
-qbf_bdd_certificatet::qbf_bdd_certificatet(void) : qdimacs_coret()
+qbf_bdd_certificatet::qbf_bdd_certificatet(void):
+  qdimacs_coret(),
+  bdd_manager(util_make_unique<Cudd>(0, 0))
 {
-  bdd_manager=new Cudd(0, 0);
 }
 
 /*******************************************************************\
@@ -71,18 +74,7 @@ Function: qbf_bdd_certificatet::~qbf_bdd_certificatet
 
 \*******************************************************************/
 
-qbf_bdd_certificatet::~qbf_bdd_certificatet(void)
-{
-  for(const BDD* model : model_bdds)
-  {
-    if(model)
-      delete model;
-  }
-  model_bdds.clear();
-
-  delete(bdd_manager);
-  bdd_manager=NULL;
-}
+qbf_bdd_certificatet::~qbf_bdd_certificatet()=default;
 
 /*******************************************************************\
 
@@ -118,9 +110,10 @@ Function: qbf_bdd_coret::qbf_bdd_coret
 
 \*******************************************************************/
 
-qbf_bdd_coret::qbf_bdd_coret() : qbf_bdd_certificatet()
+qbf_bdd_coret::qbf_bdd_coret():
+  qbf_bdd_certificatet(),
+  matrix(util_make_unique<BDD>())
 {
-  matrix=new BDD();
   *matrix=bdd_manager->bddOne();
 }
 
@@ -136,21 +129,7 @@ Function: qbf_bdd_coret::~qbf_bdd_coret
 
 \*******************************************************************/
 
-qbf_bdd_coret::~qbf_bdd_coret()
-{
-  for(const BDD* variable : bdd_variable_map)
-  {
-    if(variable)
-      delete variable;
-  }
-  bdd_variable_map.clear();
-
-  if(matrix)
-  {
-    delete(matrix);
-    matrix=NULL;
-  }
-}
+qbf_bdd_coret::~qbf_bdd_coret()=default;
 
 /*******************************************************************\
 
@@ -223,7 +202,7 @@ propt::resultt qbf_bdd_coret::prop_solve()
         matrix->nodeCount() << " nodes" << std::endl;
       #endif
 
-      BDD *model=new BDD();
+      auto model=util_make_unique<BDD>();
       const BDD &varbdd=*bdd_variable_map[var];
       *model=matrix->AndAbstract(
         varbdd.Xnor(bdd_manager->bddOne()),
@@ -310,10 +289,7 @@ literalt qbf_bdd_coret::new_variable()
   literalt res=qbf_bdd_certificatet::new_variable();
 
   bdd_variable_map.resize(res.var_no()+1, NULL);
-  BDD &var=*(new BDD());
-  var=bdd_manager->bddVar();
-  bdd_variable_map[res.var_no()]=&var;
-
+  bdd_variable_map[res.var_no()]=util_make_unique<BDD>(bdd_manager->bddVar());
   return res;
 }
 

@@ -11,6 +11,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "cnf.h"
 
+#include <memory>
+
 // Select one: basic solver or with simplification.
 // Note that the solver with simplifier isn't really robust
 // when used incrementally, as variables may disappear
@@ -26,7 +28,7 @@ template<typename T>
 class satcheck_minisat2_baset:public cnf_solvert
 {
 public:
-  explicit satcheck_minisat2_baset(T *);
+  explicit satcheck_minisat2_baset(std::unique_ptr<T>);
   virtual ~satcheck_minisat2_baset();
 
   virtual resultt prop_solve() override;
@@ -46,7 +48,7 @@ public:
   virtual bool has_is_in_conflict() const final { return true; }
 
 protected:
-  T *solver;
+  std::unique_ptr<T> solver;
 
   void add_variables();
   bvt assumptions;

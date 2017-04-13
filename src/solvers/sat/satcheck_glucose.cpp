@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "util/make_unique.h"
+
 #ifndef _MSC_VER
 #include <inttypes.h>
 #endif
@@ -304,8 +306,8 @@ Function: satcheck_glucose_baset::satcheck_glucose_baset
 \*******************************************************************/
 
 template<typename T>
-satcheck_glucose_baset<T>::satcheck_glucose_baset(T *_solver):
-  solver(_solver)
+satcheck_glucose_baset<T>::satcheck_glucose_baset(std::unique_ptr<T> _solver):
+  solver(std::move(_solver))
 {
 }
 
@@ -321,17 +323,8 @@ Function: satcheck_glucose_baset::~satcheck_glucose_baset
 
 \*******************************************************************/
 
-template<>
-satcheck_glucose_baset<Glucose::Solver>::~satcheck_glucose_baset()
-{
-  delete solver;
-}
-
-template<>
-satcheck_glucose_baset<Glucose::SimpSolver>::~satcheck_glucose_baset()
-{
-  delete solver;
-}
+template<typename T>
+satcheck_glucose_baset<T>::~satcheck_glucose_baset()=default;
 
 /*******************************************************************\
 
@@ -391,7 +384,7 @@ Function: satcheck_glucose_no_simplifiert::satcheck_glucose_no_simplifiert
 \*******************************************************************/
 
 satcheck_glucose_no_simplifiert::satcheck_glucose_no_simplifiert():
-  satcheck_glucose_baset<Glucose::Solver>(new Glucose::Solver)
+  satcheck_glucose_baset<Glucose::Solver>(util_make_unique<Glucose::Solver>())
 {
 }
 
@@ -408,7 +401,8 @@ Function: satcheck_glucose_simplifiert::satcheck_glucose_simplifiert
 \*******************************************************************/
 
 satcheck_glucose_simplifiert::satcheck_glucose_simplifiert():
-  satcheck_glucose_baset<Glucose::SimpSolver>(new Glucose::SimpSolver)
+  satcheck_glucose_baset<Glucose::SimpSolver>(
+    util_make_unique<Glucose::SimpSolver>())
 {
 }
 
