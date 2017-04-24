@@ -1,4 +1,5 @@
 import re, collections
+import clang.cindex
 
 
 Field = collections.namedtuple('Field', ['name', 'contents'])
@@ -17,41 +18,73 @@ def parse_fields(block_contents):
 Block = collections.namedtuple('Block', ['fields'])
 
 
-def match_blocks(contents):
-    start = r'^/\*+\\$'
-    middle = r'.*?'
-    end = r'^\\\*+/$'
-    block = start + middle + end
-    block_re = re.compile(block, re.MULTILINE | re.DOTALL)
-
-    for m in block_re.finditer(contents):
-        yield Block(list(parse_fields(m.group()))), m.start(), m.end()
-
-
 def has_field(block, field_name):
-    return any(map(lambda x: re.match(field_name, x.name, re.IGNORECASE),
-        block.fields))
+    return field_name in block.fields
 
 
 def is_file_header(block):
-    return has_field(block, 'module') and has_field(block, 'author')
+    return has_field(block, 'Module') and has_field(block, 'Author')
 
 
 def convert_file_header(block):
     return ''
 
 
-def convert_block(block):
+def is_function_doc(block):
+    return (has_field(block, 'Function') and has_field(block, 'Inputs') and
+            has_field(block, 'Outputs') and has_field(block, 'Purpose'))
+
+
+def method_definitions(cursor):
+    """
+    http://stackoverflow.com/questions/37336867/how-to-get-class-method-definitions-using-clang-python-bindings
+    """
+    for i in cursor.walk_preorder():
+        if i.kind != clang.cindex.CursorKind.CXX_METHOD:
+            continue
+        if not i.is_definition():
+            continue
+        yield i
+
+
+def convert_function_doc(block, definitions):
+    function_name = block.fields['Function']
+    print('converting %s' % function_name)
+
+    # TODO search definitions for matching name
+
+    # TODO if no match, just use the immediately following function def
+
+    return ''
+
+
+def replace_block(match, definitions):
+    block = Block({f.name: f.contents for f in (parse_fields(match.group()))})
+
     if is_file_header(block):
         return convert_file_header(block)
-    return str(block)
+
+    if is_function_doc(block):
+        return convert_function_doc(block, definitions)
+
+    return ''
 
 
 def convert_file(file):
+    # TODO set from cmdline
+    if not clang.cindex.Config.loaded:
+        clang.cindex.Config.set_library_path(
+                '/usr/local/Cellar/llvm/4.0.0/lib')
+
+    index = clang.cindex.Index.create()
+    translation_unit = index.parse(file, ['-x', 'c++'])
+    definitions = list(method_definitions(translation_unit.cursor))
+
     with open(file) as f:
         contents = f.read()
 
-    for block, start, end in match_blocks(contents):
-        contents = contents[:start] + convert_block(block) + contents[end:]
+    block_re = re.compile(r'^/\*+\\$.*?^\\\*+/$', re.MULTILINE | re.DOTALL)
+    contents, _ = block_re.subn(
+            lambda match: replace_block(match, definitions), contents)
 
     print(contents)
