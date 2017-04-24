@@ -2,14 +2,17 @@
 
 -[ ] Set up doxygen config
 
--[ ] If any word in any field matches the name of a function parameter, prepend
-     it with `\p`
+-[ ] Fix function parameter formatting
 
--[ ] add filename to 'no function with name' message
+-[ ] multithread conversion script
 
--[ ] stop adding blank lines to the ends of files
+-[x] keep module in file header
 
--[ ] comments look weird if the comment block has just a returns statement
+-[x] add filename to 'no function with name' message
+
+-[x] stop adding blank lines to the ends of files
+
+-[x] comments look weird if the comment block has just a returns statement
 
 -[x] Handle multi-paragraph fields properly
 
