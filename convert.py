@@ -1,4 +1,4 @@
-import re, collections, textwrap, sys, argparse
+import re, collections, textwrap, sys, argparse, platform
 import clang.cindex
 
 
@@ -29,6 +29,8 @@ def function_from_block(block):
 
 def parse_fields(block_contents):
     """ Extract the named fields of an old-style comment block.  """
+    text_wrapper = textwrap.TextWrapper(width=75)
+
     field_re = re.compile(
             r'(?:\n *(Purpose):(.*))|(?:\n *([a-zA-Z0-9]+?):\s*?(\S.*?)?^$)',
             re.MULTILINE | re.DOTALL)
@@ -36,13 +38,17 @@ def parse_fields(block_contents):
     for m in field_re.finditer(block_contents):
         # If the field is a Purpose field
         if m.lastindex == 2:
+            field_name = m.group(1)
+            field_contents = m.group(2)
             # Remove spacing from first paragraph
             paragraph_re = re.compile(r'(.*?)^$(.*)', re.MULTILINE | re.DOTALL)
-            match = paragraph_re.match(m.group(1))
-            contents = match.group(1)
-            text, _ = whitespace_re.subn(' ',
-                    contents) if contents else ('', None)
-            yield Field(text + match.group(2), m.group(2))
+            match = paragraph_re.match(field_contents)
+            first_paragraph = match.group(1)
+            first_paragraph, _ = whitespace_re.subn(' ',
+                    first_paragraph) if first_paragraph else ('', None)
+            tail_paragraphs = ('\n' + match.group(2)) if match.group(2) else ''
+            yield Field(field_name,
+                    text_wrapper.fill(first_paragraph) + tail_paragraphs)
         # If the field is any other field
         elif m.lastindex == 3 or m.lastindex == 4:
             contents = m.group(4)
@@ -173,23 +179,27 @@ def convert_file(file):
     sys.stdout.write(contents)
 
 
+def get_lib_path():
+    """ Return the most likely location of the clang library.  """
+    return {
+            'Darwin': '/usr/local/Cellar/llvm/4.0.0/lib/libclang.dylib',
+            'Linux': '/usr/lib/llvm-3.8/lib/libclang.so.1',
+        }[platform.system()]
+
+
 def main():
     """ Run convert_file from the command-line.  """
     parser = argparse.ArgumentParser()
     parser.add_argument('file', type=str, help='The file to process')
+    parser.add_argument('--libclang', type=str, help='The clang library')
     args = parser.parse_args()
 
-    lib_path = '/usr/lib/llvm-3.8/lib/libclang.so.1'
-    # lib_path = '/usr/local/Cellar/llvm/4.0.0/lib/libclang.dylib'
+    lib_path = args.libclang if args.libclang else get_lib_path()
 
-    # TODO set from cmdline
     if not clang.cindex.Config.loaded:
         clang.cindex.Config.set_library_file(lib_path)
 
-    try:
-        convert_file(args.file)
-    except:
-        return 1
+    convert_file(args.file)
 
     return 0
 
