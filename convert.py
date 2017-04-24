@@ -36,7 +36,13 @@ def parse_fields(block_contents):
     for m in field_re.finditer(block_contents):
         # If the field is a Purpose field
         if m.lastindex == 2:
-            yield Field(m.group(1), m.group(2))
+            # Remove spacing from first paragraph
+            paragraph_re = re.compile(r'(.*?)^$(.*)', re.MULTILINE | re.DOTALL)
+            match = paragraph_re.match(m.group(1))
+            contents = match.group(1)
+            text, _ = whitespace_re.subn(' ',
+                    contents) if contents else ('', None)
+            yield Field(text + match.group(2), m.group(2))
         # If the field is any other field
         elif m.lastindex == 3 or m.lastindex == 4:
             contents = m.group(4)
@@ -173,8 +179,8 @@ def main():
     parser.add_argument('file', type=str, help='The file to process')
     args = parser.parse_args()
 
-    # lib_path = '/usr/lib/llvm-3.8/lib/libclang.so.1'
-    lib_path = '/usr/local/Cellar/llvm/4.0.0/lib/libclang.dylib'
+    lib_path = '/usr/lib/llvm-3.8/lib/libclang.so.1'
+    # lib_path = '/usr/local/Cellar/llvm/4.0.0/lib/libclang.dylib'
 
     # TODO set from cmdline
     if not clang.cindex.Config.loaded:
