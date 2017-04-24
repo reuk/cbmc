@@ -1,4 +1,4 @@
-import difflib, argparse, subprocess, sys
+import difflib, argparse, subprocess, sys, os
 
 
 def preprocess(compiler, file_contents):
@@ -40,13 +40,19 @@ def equal_to_file_on_branch(filename, branch, compiler):
                 process(file_contents_from_branch(filename, branch)))
 
 
+def process_single_file(filename, branch, compiler):
+    """ Like equal_to_file_on_branch, but also checks the file extension.  """
+    _, ext = os.path.splitext(filename)
+    return ((ext == '.h' or ext == '.cpp') and 
+            not equal_to_file_on_branch(filename, branch, compiler))
+
+
 def main():
     """
     Open a file and compare its preprocessor output to the output from the same
     file on a different branch.  Return 0 if the outputs match, or 1 otherwise.
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument('file', type=str, help='The file to check')
     parser.add_argument(
             '--branch', type=str, default='upstream/master',
             help='The branch to compare')
@@ -55,9 +61,14 @@ def main():
             help='The compiler to use')
     args = parser.parse_args()
 
-    if equal_to_file_on_branch(args.file, args.branch, args.compiler):
-        return 0
-    return 1
+    for root, dirs, files in os.walk('.'):
+        for f in files:
+            full_path = os.path.join(root, f)
+            if process_single_file(full_path, args.branch, args.compiler):
+                print(full_path)
+                return 1
+
+    return 0
 
 
 if __name__ == "__main__":
