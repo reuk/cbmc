@@ -44,3 +44,10 @@ brew install llvm --with-python --with-lldb --with-clang
 # Make sure Python can find the bindings
 echo /usr/local/opt/llvm/lib/python2.7/site-packages >> /usr/local/lib/python2.7/site-packages/llvm.pth
 ```
+
+## ubuntu
+
+```
+# Get LLVM with Python bindings
+sudo apt-get install clang-3.8 python-clang-3.8
+```
