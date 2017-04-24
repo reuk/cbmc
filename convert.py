@@ -30,12 +30,19 @@ def function_from_block(block):
 def parse_fields(block_contents):
     """ Extract the named fields of an old-style comment block.  """
     field_re = re.compile(
-            r'\n *( *[a-zA-Z0-9]+?):\s*?(\S.*?)?^$', re.MULTILINE | re.DOTALL)
+            r'(?:\n *(Purpose):(.*))|(?:\n *([a-zA-Z0-9]+?):\s*?(\S.*?)?^$)',
+            re.MULTILINE | re.DOTALL)
     whitespace_re = re.compile(r'\n\s*', re.MULTILINE | re.DOTALL)
     for m in field_re.finditer(block_contents):
-        contents = m.group(2)
-        text, _ = whitespace_re.subn(' ', contents) if contents else ('', None)
-        yield Field(m.group(1), text)
+        # If the field is a Purpose field
+        if m.lastindex == 2:
+            yield Field(m.group(1), m.group(2))
+        # If the field is any other field
+        elif m.lastindex == 3 or m.lastindex == 4:
+            contents = m.group(4)
+            text, _ = whitespace_re.subn(' ',
+                    contents) if contents else ('', None)
+            yield Field(m.group(3), text)
 
 
 Block = collections.namedtuple('Block', ['pos', 'fields'])
@@ -92,7 +99,7 @@ def convert_function_doc(function, file, definitions):
     sections = []
 
     if function.purpose:
-        sections.append(text_wrapper.fill(function.purpose))
+        sections.append(function.purpose.strip())
 
     if function.inputs:
         sections.append(text_wrapper.fill(function.inputs))
@@ -102,19 +109,20 @@ def convert_function_doc(function, file, definitions):
 
     if sections:
         text = '\n\n'.join(sections)
-        text, _ = re.subn(r'^(?=\S)', r'/// ', text, flags=re.MULTILINE)
-        text, _ = re.subn(r'^(?=$)', r'///', text, flags=re.MULTILINE)
+        if text:
+            text, _ = re.subn(r'^(?!$)', r'/// ', text, flags=re.MULTILINE)
+            text, _ = re.subn(r'^(?=$)', r'///', text, flags=re.MULTILINE)
         return text + '\n'
 
     return ''
 
 
-def replace_block(match, file, definitions):
+def replace_block(start, block_contents, file, definitions):
     """
     Replace an old-style documentation block with the doxygen equivalent
     """
-    block = Block(match.start(),
-            {f.name: f.contents for f in (parse_fields(match.group()))})
+    block = Block(start,
+            {f.name: f.contents for f in parse_fields(block_contents)})
 
     if is_header_doc(block):
         return convert_header_doc(header_from_block(block))
@@ -122,6 +130,9 @@ def replace_block(match, file, definitions):
     if is_function_doc(block):
         return convert_function_doc(
                 function_from_block(block), file, definitions)
+
+    warn('block in file %s has unrecognised format:\n%s' %
+            (file, block_contents))
 
     return ''
 
@@ -149,9 +160,11 @@ def convert_file(file):
     with open(file) as f:
         contents = f.read()
 
-    block_re = re.compile(r'^/\*+\\$.*?^\\\*+/$\s*', re.MULTILINE | re.DOTALL)
+    block_re = re.compile(
+            r'^/\*+\\$(.*?)^\\\*+/$\s*', re.MULTILINE | re.DOTALL)
     contents, _ = block_re.subn(
-            lambda match: replace_block(match, file, definitions), contents)
+            lambda match: replace_block(match.start(), match.group(1), file,
+                definitions), contents)
 
     print(contents)
 
@@ -162,8 +175,8 @@ def main():
     parser.add_argument('file', type=str, help='The file to process')
     args = parser.parse_args()
 
-    lib_path = '/usr/lib/llvm-3.8/lib/libclang.so.1'
-    # lib_path = '/usr/local/Cellar/llvm/4.0.0/lib/libclang.so'
+    # lib_path = '/usr/lib/llvm-3.8/lib/libclang.so.1'
+    lib_path = '/usr/local/Cellar/llvm/4.0.0/lib/libclang.dylib'
 
     # TODO set from cmdline
     if not clang.cindex.Config.loaded:

@@ -2,10 +2,12 @@
 
 -[ ] Set up doxygen config
 
--[ ] Handle multi-paragraph fields properly
-
 -[ ] If any word in any field matches the name of a function parameter, prepend
      it with `\p`
+
+-[ ] add filename to 'no function with name' message
+
+-[x] Handle multi-paragraph fields properly
 
 -[x] Issue a warning if a doc block doesn't appear next to the named function
 
