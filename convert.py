@@ -11,20 +11,24 @@ Function = collections.namedtuple('Function',
 
 
 def warn(message):
+    """ Print a labelled message to stderr.  """
     sys.stderr.write('Warning: %s\n' % message)
 
 
 def header_from_block(block):
+    """ Create a Header structure from a parsed Block.  """
     return Header(block.fields['Module'], block.fields['Author'])
 
 
 def function_from_block(block):
+    """ Create a Function structure from a parsed Block.  """
     return Function(block.pos, block.fields['Function'],
             block.fields['Purpose'], block.fields['Inputs'],
             block.fields['Outputs'])
 
 
 def parse_fields(block_contents):
+    """ Extract the named fields of an old-style comment block.  """
     field_re = re.compile(
             r'\n *( *[a-zA-Z0-9]+?):\s*?(\S.*?)?^$', re.MULTILINE | re.DOTALL)
     whitespace_re = re.compile(r'\n\s*', re.MULTILINE | re.DOTALL)
@@ -38,23 +42,28 @@ Block = collections.namedtuple('Block', ['pos', 'fields'])
 
 
 def has_field(block, field_name):
+    """ Return whether the block has a field with the given name.  """
     return field_name in block.fields
 
 
 def is_header_doc(block):
+    """ Return whether the block appears to be a file header.  """
     return has_field(block, 'Module') and has_field(block, 'Author')
 
 
 def convert_header_doc(header):
+    """ Return a doxygen-style header string.  """
     return ''
 
 
 def is_function_doc(block):
+    """ Return whether the block appears to be a function descriptor.  """
     return (has_field(block, 'Function') and has_field(block, 'Inputs') and
             has_field(block, 'Outputs') and has_field(block, 'Purpose'))
 
 
 def convert_function_doc(function, file, definitions):
+    """ Return a doxygen-style doc string for the supplied Function.  """
     function_name_re = re.compile(r'(?:.*?::)?(\S*)')
     function_name = function_name_re.match(function.name).group(1)
 
@@ -101,6 +110,9 @@ def convert_function_doc(function, file, definitions):
 
 
 def replace_block(match, file, definitions):
+    """
+    Replace an old-style documentation block with the doxygen equivalent
+    """
     block = Block(match.start(),
             {f.name: f.contents for f in (parse_fields(match.group()))})
 
@@ -116,6 +128,9 @@ def replace_block(match, file, definitions):
 
 def method_definitions(cursor):
     """
+    Return each syntactic item which appears to be a documentable definition.
+
+    Inspired by
     http://stackoverflow.com/questions/37336867/how-to-get-class-method-definitions-using-clang-python-bindings
     """
     for i in cursor.walk_preorder():
@@ -126,11 +141,7 @@ def method_definitions(cursor):
 
 
 def convert_file(file):
-    # TODO set from cmdline
-    if not clang.cindex.Config.loaded:
-        clang.cindex.Config.set_library_path(
-                '/usr/local/Cellar/llvm/4.0.0/lib')
-
+    """ Replace documentation in file with doxygen-styled comments.  """
     index = clang.cindex.Index.create()
     translation_unit = index.parse(file, ['-x', 'c++'])
     definitions = list(method_definitions(translation_unit.cursor))
@@ -144,10 +155,19 @@ def convert_file(file):
 
     print(contents)
 
+
 def main():
+    """ Run convert_file from the command-line.  """
     parser = argparse.ArgumentParser()
     parser.add_argument('file', type=str, help='The file to process')
     args = parser.parse_args()
+
+    lib_path = '/usr/lib/llvm-3.8/lib/libclang.so.1'
+    # lib_path = '/usr/local/Cellar/llvm/4.0.0/lib/libclang.so'
+
+    # TODO set from cmdline
+    if not clang.cindex.Config.loaded:
+        clang.cindex.Config.set_library_file(lib_path)
 
     try:
         convert_file(args.file)
