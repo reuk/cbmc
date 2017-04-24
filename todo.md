@@ -4,7 +4,7 @@
 
 -[ ] Fix function parameter formatting
 
--[ ] multithread conversion script
+-[ ] Fix class docs
 
 -[x] keep module in file header
 
