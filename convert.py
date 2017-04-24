@@ -1,8 +1,27 @@
-import re, collections
+import re, collections, textwrap, sys, argparse
 import clang.cindex
 
 
 Field = collections.namedtuple('Field', ['name', 'contents'])
+
+Header = collections.namedtuple('Header', ['module', 'author'])
+
+Function = collections.namedtuple('Function',
+        ['pos', 'name', 'purpose', 'inputs', 'returns'])
+
+
+def warn(message):
+    sys.stderr.write('Warning: %s\n' % message)
+
+
+def header_from_block(block):
+    return Header(block.fields['Module'], block.fields['Author'])
+
+
+def function_from_block(block):
+    return Function(block.pos, block.fields['Function'],
+            block.fields['Purpose'], block.fields['Inputs'],
+            block.fields['Outputs'])
 
 
 def parse_fields(block_contents):
@@ -15,18 +34,18 @@ def parse_fields(block_contents):
         yield Field(m.group(1), text)
 
 
-Block = collections.namedtuple('Block', ['fields'])
+Block = collections.namedtuple('Block', ['pos', 'fields'])
 
 
 def has_field(block, field_name):
     return field_name in block.fields
 
 
-def is_file_header(block):
+def is_header_doc(block):
     return has_field(block, 'Module') and has_field(block, 'Author')
 
 
-def convert_file_header(block):
+def convert_header_doc(header):
     return ''
 
 
@@ -35,39 +54,75 @@ def is_function_doc(block):
             has_field(block, 'Outputs') and has_field(block, 'Purpose'))
 
 
+def convert_function_doc(function, file, definitions):
+    function_name_re = re.compile(r'(?:.*?::)?(\S*)')
+    function_name = function_name_re.match(function.name).group(1)
+
+    # Search definitions for matching name
+    definition = next(
+            (x for x in definitions
+                if x.spelling == function_name and
+                function.pos < x.location.offset and
+                file == str(x.location.file)), None)
+
+    if definition:
+        # Check that there are no other definitions between the comment and the
+        # function we're probably documenting
+        for d in definitions:
+            if (function.pos < d.location.offset and
+                    d.location.offset < definition.location.offset and
+                    file == str(d.location.file)):
+                warn('docs for %s do not immediately precede that function' %
+                        d.spelling)
+        # TODO Now we can be smart about finding function parameter names
+    else:
+        warn('no function with name "%s" found' % function_name)
+
+    text_wrapper = textwrap.TextWrapper(width=75)
+
+    sections = []
+
+    if function.purpose:
+        sections.append(text_wrapper.fill(function.purpose))
+
+    if function.inputs:
+        sections.append(text_wrapper.fill(function.inputs))
+
+    if function.returns:
+        sections.append(text_wrapper.fill('\\returns %s' % function.returns))
+
+    if sections:
+        text = '\n\n'.join(sections)
+        text, _ = re.subn(r'^(?=\S)', r'/// ', text, flags=re.MULTILINE)
+        text, _ = re.subn(r'^(?=$)', r'///', text, flags=re.MULTILINE)
+        return text + '\n'
+
+    return ''
+
+
+def replace_block(match, file, definitions):
+    block = Block(match.start(),
+            {f.name: f.contents for f in (parse_fields(match.group()))})
+
+    if is_header_doc(block):
+        return convert_header_doc(header_from_block(block))
+
+    if is_function_doc(block):
+        return convert_function_doc(
+                function_from_block(block), file, definitions)
+
+    return ''
+
+
 def method_definitions(cursor):
     """
     http://stackoverflow.com/questions/37336867/how-to-get-class-method-definitions-using-clang-python-bindings
     """
     for i in cursor.walk_preorder():
-        if i.kind != clang.cindex.CursorKind.CXX_METHOD:
-            continue
-        if not i.is_definition():
-            continue
-        yield i
-
-
-def convert_function_doc(block, definitions):
-    function_name = block.fields['Function']
-    print('converting %s' % function_name)
-
-    # TODO search definitions for matching name
-
-    # TODO if no match, just use the immediately following function def
-
-    return ''
-
-
-def replace_block(match, definitions):
-    block = Block({f.name: f.contents for f in (parse_fields(match.group()))})
-
-    if is_file_header(block):
-        return convert_file_header(block)
-
-    if is_function_doc(block):
-        return convert_function_doc(block, definitions)
-
-    return ''
+        if ((i.kind == clang.cindex.CursorKind.CXX_METHOD or
+                i.kind == clang.cindex.CursorKind.CONSTRUCTOR) and
+                i.is_definition()):
+            yield i
 
 
 def convert_file(file):
@@ -83,8 +138,23 @@ def convert_file(file):
     with open(file) as f:
         contents = f.read()
 
-    block_re = re.compile(r'^/\*+\\$.*?^\\\*+/$', re.MULTILINE | re.DOTALL)
+    block_re = re.compile(r'^/\*+\\$.*?^\\\*+/$\s*', re.MULTILINE | re.DOTALL)
     contents, _ = block_re.subn(
-            lambda match: replace_block(match, definitions), contents)
+            lambda match: replace_block(match, file, definitions), contents)
 
     print(contents)
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('file', type=str, help='The file to process')
+    args = parser.parse_args()
+
+    try:
+        convert_file(args.file)
+        return 0
+    except:
+        return 1
+
+
+if __name__ == '__main__':
+    sys.exit(main())

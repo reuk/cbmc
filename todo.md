@@ -1,18 +1,18 @@
 # todo
 
 -[ ] Set up doxygen config
--[ ] Work out what information we need to parse for
-  - files
-  - functions
-  - classes
+
+-[ ] Handle multi-paragraph fields properly
+
+-[ ] If any word in any field matches the name of a function parameter, prepend
+     it with `\p`
+
+-[x] Issue a warning if a doc block doesn't appear next to the named function
 
 -[x] Replace file headers
 
--[ ] Handle multi-paragraph fields gracefully
--[ ] If any word in any field matches the name of a function parameter, prepend
-     it with `\p`
--[ ] Write a function to format Block into Doxygen style
-  -[ ] line wrapping
+-[x] Write a function to format Block into Doxygen style
+  -[x] line wrapping
 
 -[x] Work out how to properly substitute a text range while running finditer
   - Use re.sub instead
@@ -25,6 +25,8 @@ Doc blocks in cpp_typecheck_conversions.cpp are tricky, because the Purpose
 field may contain multiple paragraphs separated by blank lines.
 Expand field parser so that entries that don't start with `<word>:` are appended
 to the previous field.
+
+Might it be easier to extract blocks and insert them separately?
 
 # setup
 
