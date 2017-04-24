@@ -1,10 +1,10 @@
-import difflib, argparse, subprocess, sys, os
+import difflib, argparse, subprocess, sys, os, multiprocessing, itertools
 
 
 def preprocess(compiler, file_contents):
     """ Get output from the preprocessing pass on a file.  """
     return subprocess.Popen(
-            [compiler, '-E', '-'], 
+            [compiler, '-E', '-'],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             stdin=subprocess.PIPE).communicate(input=file_contents)[0]
@@ -12,7 +12,7 @@ def preprocess(compiler, file_contents):
 
 def preprocess_file(compiler, filename):
     """ Open a file and get the preprocessor output.  """
-    with open(filename) as f:
+    with open(filename, 'rb') as f:
         return preprocess(compiler, f.read())
 
 
@@ -33,18 +33,33 @@ def equal_to_file_on_branch(filename, branch, compiler):
     from another branch, and return whether the two files have (for all intents
     and purposes) the same contents.
     """
-    with open(filename) as f:
-        def process(text):
-            return remove_empty_lines(preprocess(compiler, text))
-        return (process(f.read()) ==
-                process(file_contents_from_branch(filename, branch)))
+    with open(filename, 'rb') as f:
+        def p(text):
+            return preprocess(compiler, text)
+        return (p(f.read()) ==
+                p(file_contents_from_branch(filename, branch)))
 
 
 def process_single_file(filename, branch, compiler):
     """ Like equal_to_file_on_branch, but also checks the file extension.  """
     _, ext = os.path.splitext(filename)
-    return ((ext == '.h' or ext == '.cpp') and 
+    return ((ext == '.h' or ext == '.cpp') and
             not equal_to_file_on_branch(filename, branch, compiler))
+
+
+def is_source(filename):
+    """ Return whether the file appears to be a C++ source file.  """
+    _, ext = os.path.splitext(filename)
+    return ext == '.h' or ext == '.cpp'
+
+
+def process(tup):
+    """
+    Check a single file, and return its name if the check fails, otherwise
+    return None.
+    """
+    failed = process_single_file(*tup)
+    return file if failed else None
 
 
 def main():
@@ -61,12 +76,17 @@ def main():
             help='The compiler to use')
     args = parser.parse_args()
 
-    for root, dirs, files in os.walk('.'):
-        for f in files:
-            full_path = os.path.join(root, f)
-            if process_single_file(full_path, args.branch, args.compiler):
-                print(full_path)
-                return 1
+    all_files = [os.path.join(root, file)
+            for root, _, files in os.walk('.') for file in files]
+    source_files = filter(is_source, all_files)
+
+    zipped = zip(
+            source_files,
+            itertools.cycle([args.branch]),
+            itertools.cycle([args.compiler]))
+
+    print('\n'.join(
+        filter(None, multiprocessing.Pool(10).map(process, zipped))))
 
     return 0
 
