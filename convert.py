@@ -65,9 +65,7 @@ def convert_header_doc(header):
 
 def is_function_doc(block):
     """ Return whether the block appears to be a function descriptor.  """
-    return (has_field(block, 'Function') and has_field(block, 'Inputs') and
-            has_field(block, 'Outputs') and has_field(block, 'Purpose'))
-
+    return has_field(block, 'Function')
 
 def convert_function_doc(function, file, definitions):
     """ Return a doxygen-style doc string for the supplied Function.  """
@@ -111,7 +109,7 @@ def convert_function_doc(function, file, definitions):
         text = '\n\n'.join(sections)
         if text:
             text, _ = re.subn(r'^(?!$)', r'/// ', text, flags=re.MULTILINE)
-            text, _ = re.subn(r'^(?=$)', r'///', text, flags=re.MULTILINE)
+            text, _ = re.subn(r'^(?=$)', r'///' , text, flags=re.MULTILINE)
         return text + '\n'
 
     return ''
@@ -166,7 +164,7 @@ def convert_file(file):
             lambda match: replace_block(match.start(), match.group(1), file,
                 definitions), contents)
 
-    print(contents)
+    sys.stdout.write(contents)
 
 
 def main():
@@ -184,9 +182,10 @@ def main():
 
     try:
         convert_file(args.file)
-        return 0
     except:
         return 1
+
+    return 0
 
 
 if __name__ == '__main__':
