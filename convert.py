@@ -5,9 +5,13 @@ Field = collections.namedtuple('Field', ['name', 'contents'])
 
 
 def parse_fields(block_contents):
-    field_re = re.compile(r'\n *([\S ]+?):\s*?(\S.*?)?^$', re.MULTILINE | re.DOTALL)
+    field_re = re.compile(
+            r'\n *([\S ]+?):\s*?(\S.*?)?^$', re.MULTILINE | re.DOTALL)
+    whitespace_re = re.compile(r'\n\s*', re.MULTILINE | re.DOTALL)
     for m in field_re.finditer(block_contents):
-        yield Field(m.group(1), m.group(2))
+        contents = m.group(2)
+        text, _ = whitespace_re.subn(' ', contents) if contents else ('', None)
+        yield Field(m.group(1), text)
 
 
 Block = collections.namedtuple('Block', ['fields'])
@@ -29,4 +33,6 @@ def convert_file(file):
         contents = f.read()
 
     for block in match_blocks(contents):
-        print(block)
+        print('Block:')
+        for field in block.fields:
+            print('%s: %s' % (field.name, field.contents))
