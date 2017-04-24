@@ -12,3 +12,12 @@ Doc blocks in cpp_typecheck_conversions.cpp are tricky, because the Purpose
 field may contain multiple paragraphs separated by blank lines.
 Expand field parser so that entries that don't start with `<word>:` are appended
 to the previous field.
+
+-[ ] If we can't parse a field, add it to the purpose field
+-[ ] If any word in any field matches the name of a function parameter, prepend
+     it with `\p`
+-[ ] Write a function to format Block into Doxygen style
+  -[ ] line wrapping
+
+-[ ] Work out how to properly substitute a text range while running finditer
+  -[ ] Use re.sub probably
