@@ -85,8 +85,11 @@ def main():
             itertools.cycle([args.branch]),
             itertools.cycle([args.compiler]))
 
-    print('\n'.join(
-        filter(None, multiprocessing.Pool(10).map(process, zipped))))
+    results = filter(None, multiprocessing.Pool(10).map(process, zipped))
+
+    if results:
+        print('\n'.join(results))
+        return 1
 
     return 0
 
