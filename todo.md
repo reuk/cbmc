@@ -7,6 +7,10 @@
 
 -[ ] add filename to 'no function with name' message
 
+-[ ] stop adding blank lines to the ends of files
+
+-[ ] comments look weird if the comment block has just a returns statement
+
 -[x] Handle multi-paragraph fields properly
 
 -[x] Issue a warning if a doc block doesn't appear next to the named function
