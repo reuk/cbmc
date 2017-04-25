@@ -1,11 +1,5 @@
-/*******************************************************************\
-
-Module: A minimalistic BDD library, following Bryant's original paper
-        and Andersen's lecture notes
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file A minimalistic BDD library, following Bryant's original paper
+/// and Andersen's lecture notes
 
 #include <cassert>
 

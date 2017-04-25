@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Read goto object files.
-
-Author: CM Wintersteiger
-
-Date: June 2006
-
-\*******************************************************************/
+/// \file Read goto object files.
 
 #include <util/namespace.h>
 #include <util/message.h>
@@ -16,18 +8,11 @@ Date: June 2006
 #include "goto_functions.h"
 #include "read_bin_goto_object.h"
 
-/*******************************************************************\
-
-Function: read_goto_object_v3
-
-  Inputs: input stream, symbol_table, functions
-
- Outputs: true on error, false otherwise
-
- Purpose: read goto binary format v3
-
-\*******************************************************************/
-
+/// read goto binary format v3
+///
+/// parameters: input stream, symbol_table, functions
+///
+/// \returns true on error, false otherwise
 bool read_bin_goto_object_v3(
   std::istream &in,
   const std::string &filename,
@@ -168,18 +153,11 @@ bool read_bin_goto_object_v3(
   return false;
 }
 
-/*******************************************************************\
-
-Function: read_goto_object
-
-  Inputs: input stream, symbol table, functions
-
- Outputs: true on error, false otherwise
-
- Purpose: reads a goto binary file back into a symbol and a function table
-
-\*******************************************************************/
-
+/// reads a goto binary file back into a symbol and a function table
+///
+/// parameters: input stream, symbol table, functions
+///
+/// \returns true on error, false otherwise
 bool read_bin_goto_object(
   std::istream &in,
   const std::string &filename,

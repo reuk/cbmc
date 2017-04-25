@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Jsil Language
-
-Author: Michael Tautschnig, tautschn@amazon.com
-
-\*******************************************************************/
+/// \file Jsil Language
 
 #ifndef CPROVER_JSIL_JSIL_LANGUAGE_H
 #define CPROVER_JSIL_JSIL_LANGUAGE_H

@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Type Naming for C
-
-Author: Daniel Kroening, kroening@cs.cmu.edu
-
-\*******************************************************************/
+/// \file Type Naming for C
 
 #include <util/std_types.h>
 #include <util/arith_tools.h>
@@ -21,18 +15,6 @@ static std::string type2name(
   const typet &type,
   const namespacet &ns,
   symbol_numbert &symbol_number);
-
-/*******************************************************************\
-
-Function: type2name_symbol
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 static std::string type2name_symbol(
   const typet &type,
@@ -89,18 +71,6 @@ static std::string type2name_symbol(
 
   return result;
 }
-
-/*******************************************************************\
-
-Function: type2name
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 static bool parent_is_sym_check=false;
 static std::string type2name(
@@ -278,36 +248,12 @@ static std::string type2name(
   return result;
 }
 
-/*******************************************************************\
-
-Function: type2name
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 std::string type2name(const typet &type, const namespacet &ns)
 {
   parent_is_sym_check=true;
   symbol_numbert symbol_number;
   return type2name(type, ns, symbol_number);
 }
-
-/*******************************************************************\
-
-Function: type2name
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 std::string type2name(const typet &type)
 {

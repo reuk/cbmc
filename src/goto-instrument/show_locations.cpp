@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Show program locations
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Show program locations
 
 #include <iostream>
 
@@ -14,18 +8,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <langapi/language_util.h>
 
 #include "show_locations.h"
-
-/*******************************************************************\
-
-Function: show_locations
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void show_locations(
   ui_message_handlert::uit ui,
@@ -70,18 +52,6 @@ void show_locations(
     }
   }
 }
-
-/*******************************************************************\
-
-Function: show_locations
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void show_locations(
   ui_message_handlert::uit ui,

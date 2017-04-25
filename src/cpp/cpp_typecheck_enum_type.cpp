@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: C++ Language Type Checking
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file C++ Language Type Checking
 
 #include <util/arith_tools.h>
 
@@ -13,18 +7,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "cpp_typecheck.h"
 #include "cpp_enum_type.h"
-
-/*******************************************************************\
-
-Function: cpp_typecheckt::typecheck_enum_body
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void cpp_typecheckt::typecheck_enum_body(symbolt &enum_symbol)
 {
@@ -88,18 +70,6 @@ void cpp_typecheckt::typecheck_enum_body(symbolt &enum_symbol)
     ++i;
   }
 }
-
-/*******************************************************************\
-
-Function: cpp_typecheckt::typecheck_enum_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void cpp_typecheckt::typecheck_enum_type(typet &type)
 {

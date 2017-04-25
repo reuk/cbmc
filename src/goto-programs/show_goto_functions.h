@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Show the goto functions
-
-Author: Peter Schrammel
-
-\*******************************************************************/
+/// \file Show the goto functions
 
 #ifndef CPROVER_GOTO_PROGRAMS_SHOW_GOTO_FUNCTIONS_H
 #define CPROVER_GOTO_PROGRAMS_SHOW_GOTO_FUNCTIONS_H

@@ -1,30 +1,10 @@
-/*******************************************************************\
-
-Module: binary irep conversions with hashing
-
-Author: CM Wintersteiger
-
-Date: May 2007
-
-\*******************************************************************/
+/// \file binary irep conversions with hashing
 
 #include <sstream>
 #include <iostream>
 
 #include "irep_serialization.h"
 #include "string_hash.h"
-
-/*******************************************************************\
-
-Function: irep_serializationt::write_irep
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void irep_serializationt::write_irep(
   std::ostream &out,
@@ -55,18 +35,6 @@ void irep_serializationt::write_irep(
   out.put(0); // terminator
 }
 
-/*******************************************************************\
-
-Function: irep_serializationt::reference_convert
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void irep_serializationt::reference_convert(
   std::istream &in,
   irept &irep)
@@ -84,18 +52,6 @@ void irep_serializationt::reference_convert(
     insert_on_read(id, irep);
   }
 }
-
-/*******************************************************************\
-
-Function: irep_serializationt::read_irep
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void irep_serializationt::read_irep(
   std::istream &in,
@@ -132,18 +88,6 @@ void irep_serializationt::read_irep(
   }
 }
 
-/*******************************************************************\
-
-Function: irep_serializationt::reference_convert
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void irep_serializationt::reference_convert(
   const irept &irep,
   std::ostream &out)
@@ -166,18 +110,11 @@ void irep_serializationt::reference_convert(
   }
 }
 
-/*******************************************************************\
-
-Function: irep_serializationt::insert_on_write
-
-  Inputs: a size_t and an irep
-
- Outputs: true on success, false otherwise
-
- Purpose: inserts an irep into the hashtable
-
-\*******************************************************************/
-
+/// inserts an irep into the hashtable
+///
+/// parameters: a size_t and an irep
+///
+/// \returns true on success, false otherwise
 std::size_t irep_serializationt::insert_on_write(std::size_t h)
 {
   std::pair<ireps_containert::ireps_on_writet::const_iterator, bool> res=
@@ -190,19 +127,12 @@ std::size_t irep_serializationt::insert_on_write(std::size_t h)
     return res.first->second;
 }
 
-/*******************************************************************\
-
-Function: irep_serializationt::insert_on_read
-
-  Inputs: a size_t and an irep
-
- Outputs: true on success, false otherwise
-
- Purpose: inserts an irep into the hashtable, but only the id-hashtable
-          (only to be used upon reading ireps from a file)
-
-\*******************************************************************/
-
+/// inserts an irep into the hashtable, but only the id-hashtable (only to be
+/// used upon reading ireps from a file)
+///
+/// parameters: a size_t and an irep
+///
+/// \returns true on success, false otherwise
 std::size_t irep_serializationt::insert_on_read(
   std::size_t id,
   const irept &i)
@@ -222,19 +152,11 @@ std::size_t irep_serializationt::insert_on_read(
   return id;
 }
 
-/*******************************************************************\
-
-Function: write_gb_word
-
-  Inputs: an output stream and a number
-
- Outputs: nothing
-
- Purpose: outputs 4 characters for a long,
-          most-significand byte first
-
-\*******************************************************************/
-
+/// outputs 4 characters for a long, most-significand byte first
+///
+/// parameters: an output stream and a number
+///
+/// \returns nothing
 void write_gb_word(std::ostream &out, std::size_t u)
 {
   // we write 7 bits each time, until we have zero
@@ -254,18 +176,11 @@ void write_gb_word(std::ostream &out, std::size_t u)
   }
 }
 
-/*******************************************************************\
-
-Function: irep_serializationt::read_gb_word
-
-  Inputs: a stream
-
- Outputs: a long
-
- Purpose: reads 4 characters and builds a long int from them
-
-\*******************************************************************/
-
+/// reads 4 characters and builds a long int from them
+///
+/// parameters: a stream
+///
+/// \returns a long
 std::size_t irep_serializationt::read_gb_word(std::istream &in)
 {
   std::size_t res=0;
@@ -284,18 +199,11 @@ std::size_t irep_serializationt::read_gb_word(std::istream &in)
   return res;
 }
 
-/*******************************************************************\
-
-Function: write_gb_string
-
-  Inputs: an output stream and a string
-
- Outputs: nothing
-
- Purpose: outputs the string and then a zero byte.
-
-\*******************************************************************/
-
+/// outputs the string and then a zero byte.
+///
+/// parameters: an output stream and a string
+///
+/// \returns nothing
 void write_gb_string(std::ostream &out, const std::string &s)
 {
   for(std::string::const_iterator it=s.begin();
@@ -310,18 +218,11 @@ void write_gb_string(std::ostream &out, const std::string &s)
   out.put(0);
 }
 
-/*******************************************************************\
-
-Function: irep_serializationt::read_gb_string
-
-  Inputs: a stream
-
- Outputs: a string
-
- Purpose: reads a string from the stream
-
-\*******************************************************************/
-
+/// reads a string from the stream
+///
+/// parameters: a stream
+///
+/// \returns a string
 irep_idt irep_serializationt::read_gb_string(std::istream &in)
 {
   char c;
@@ -343,18 +244,11 @@ irep_idt irep_serializationt::read_gb_string(std::istream &in)
   return irep_idt(std::string(read_buffer.data(), length));
 }
 
-/*******************************************************************\
-
-Function: irep_serializationt::write_string_ref
-
-  Inputs: an output stream and a string
-
- Outputs: nothing
-
- Purpose: outputs the string reference
-
-\*******************************************************************/
-
+/// outputs the string reference
+///
+/// parameters: an output stream and a string
+///
+/// \returns nothing
 void irep_serializationt::write_string_ref(
   std::ostream &out,
   const irep_idt &s)
@@ -373,18 +267,11 @@ void irep_serializationt::write_string_ref(
   }
 }
 
-/*******************************************************************\
-
-Function: irep_serializationt::read_string_ref
-
-  Inputs: a stream
-
- Outputs: a string
-
- Purpose: reads a string reference from the stream
-
-\*******************************************************************/
-
+/// reads a string reference from the stream
+///
+/// parameters: a stream
+///
+/// \returns a string
 irep_idt irep_serializationt::read_string_ref(std::istream &in)
 {
   std::size_t id = read_gb_word(in);

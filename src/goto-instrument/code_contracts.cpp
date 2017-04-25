@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Verify and use annotated invariants and pre/post-conditions
-
-Author: Michael Tautschnig
-
-Date: February 2016
-
-\*******************************************************************/
+/// \file Verify and use annotated invariants and pre/post-conditions
 
 #include <util/cprover_prefix.h>
 #include <util/fresh_symbol.h>
@@ -58,18 +50,6 @@ protected:
     const typet &type,
     const source_locationt &source_location);
 };
-
-/*******************************************************************\
-
-Function: check_apply_invariants
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 static void check_apply_invariants(
   goto_functionst::goto_functiont &goto_function,
@@ -169,18 +149,6 @@ static void check_apply_invariants(
     loop_end->guard.make_not();
 }
 
-/*******************************************************************\
-
-Function: code_contractst::apply_contract
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void code_contractst::apply_contract(
   goto_programt &goto_program,
   goto_programt::targett target)
@@ -241,18 +209,6 @@ void code_contractst::apply_contract(
   summarized.insert(function);
 }
 
-/*******************************************************************\
-
-Function: code_contractst::code_contracts
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void code_contractst::code_contracts(
   goto_functionst::goto_functiont &goto_function)
 {
@@ -276,18 +232,6 @@ void code_contractst::code_contracts(
       apply_contract(goto_function.body, it);
 }
 
-/*******************************************************************\
-
-Function: code_contractst::new_tmp_symbol
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 const symbolt &code_contractst::new_tmp_symbol(
   const typet &type,
   const source_locationt &source_location)
@@ -300,18 +244,6 @@ const symbolt &code_contractst::new_tmp_symbol(
     irep_idt(),
     symbol_table);
 }
-
-/*******************************************************************\
-
-Function: code_contractst::add_contract_check
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void code_contractst::add_contract_check(
   const irep_idt &function,
@@ -436,18 +368,6 @@ void code_contractst::add_contract_check(
   dest.destructive_insert(dest.instructions.begin(), check);
 }
 
-/*******************************************************************\
-
-Function: code_contractst::operator()
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void code_contractst::operator()()
 {
   Forall_goto_functions(it, goto_functions)
@@ -467,18 +387,6 @@ void code_contractst::operator()()
 
   goto_functions.update();
 }
-
-/*******************************************************************\
-
-Function: code_contracts
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void code_contracts(
   symbol_tablet &symbol_table,

@@ -1,13 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening
-
-Date: April 2010
-
-\*******************************************************************/
-
 #ifndef CPROVER_ANALYSES_GOTO_RW_H
 #define CPROVER_ANALYSES_GOTO_RW_H
 

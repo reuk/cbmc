@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Concrete Symbolic Transformer
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Concrete Symbolic Transformer
 
 // NOLINT(build/header_guard) as this file is also symlinked
 #ifndef CPROVER_PATH_SYMEX_PATH_SYMEX_H

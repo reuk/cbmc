@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #ifndef CPROVER_UTIL_BV_ARITHMETIC_H
 #define CPROVER_UTIL_BV_ARITHMETIC_H
 

@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: CBMC Command Line Option Processing
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file CBMC Command Line Option Processing
 
 #include <fstream>
 #include <cstdlib> // exit()
@@ -58,18 +52,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "version.h"
 #include "xml_interface.h"
 
-/*******************************************************************\
-
-Function: cbmc_parse_optionst::cbmc_parse_optionst
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 cbmc_parse_optionst::cbmc_parse_optionst(int argc, const char **argv):
   parse_options_baset(CBMC_OPTIONS, argc, argv),
   xml_interfacet(cmdline),
@@ -77,18 +59,6 @@ cbmc_parse_optionst::cbmc_parse_optionst(int argc, const char **argv):
   ui_message_handler(cmdline, "CBMC " CBMC_VERSION)
 {
 }
-
-/*******************************************************************\
-
-Function: cbmc_parse_optionst::cbmc_parse_optionst
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 ::cbmc_parse_optionst::cbmc_parse_optionst(
   int argc,
@@ -100,18 +70,6 @@ Function: cbmc_parse_optionst::cbmc_parse_optionst
   ui_message_handler(cmdline, "CBMC " CBMC_VERSION)
 {
 }
-
-/*******************************************************************\
-
-Function: cbmc_parse_optionst::eval_verbosity
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void cbmc_parse_optionst::eval_verbosity()
 {
@@ -127,18 +85,6 @@ void cbmc_parse_optionst::eval_verbosity()
 
   ui_message_handler.set_verbosity(v);
 }
-
-/*******************************************************************\
-
-Function: cbmc_parse_optionst::get_command_line_options
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void cbmc_parse_optionst::get_command_line_options(optionst &options)
 {
@@ -442,18 +388,7 @@ void cbmc_parse_optionst::get_command_line_options(optionst &options)
       cmdline.get_value("symex-coverage-report"));
 }
 
-/*******************************************************************\
-
-Function: cbmc_parse_optionst::doit
-
-  Inputs:
-
- Outputs:
-
- Purpose: invoke main modules
-
-\*******************************************************************/
-
+/// invoke main modules
 int cbmc_parse_optionst::doit()
 {
   if(cmdline.isset("version"))
@@ -552,18 +487,6 @@ int cbmc_parse_optionst::doit()
   return do_bmc(bmc, goto_functions);
 }
 
-/*******************************************************************\
-
-Function: cbmc_parse_optionst::set_properties
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 bool cbmc_parse_optionst::set_properties(goto_functionst &goto_functions)
 {
   try
@@ -594,18 +517,6 @@ bool cbmc_parse_optionst::set_properties(goto_functionst &goto_functions)
 
   return false;
 }
-
-/*******************************************************************\
-
-Function: cbmc_parse_optionst::get_goto_program
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 int cbmc_parse_optionst::get_goto_program(
   const optionst &options,
@@ -773,18 +684,6 @@ int cbmc_parse_optionst::get_goto_program(
   return -1; // no error, continue
 }
 
-/*******************************************************************\
-
-Function: cbmc_parse_optionst::preprocessing
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void cbmc_parse_optionst::preprocessing()
 {
   try
@@ -840,18 +739,6 @@ void cbmc_parse_optionst::preprocessing()
     error() << "Out of memory" << eom;
   }
 }
-
-/*******************************************************************\
-
-Function: cbmc_parse_optionst::process_goto_program
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool cbmc_parse_optionst::process_goto_program(
   const optionst &options,
@@ -987,18 +874,7 @@ bool cbmc_parse_optionst::process_goto_program(
   return false;
 }
 
-/*******************************************************************\
-
-Function: cbmc_parse_optionst::do_bmc
-
-  Inputs:
-
- Outputs:
-
- Purpose: invoke main modules
-
-\*******************************************************************/
-
+/// invoke main modules
 int cbmc_parse_optionst::do_bmc(
   bmct &bmc,
   const goto_functionst &goto_functions)
@@ -1029,18 +905,7 @@ int cbmc_parse_optionst::do_bmc(
   return result;
 }
 
-/*******************************************************************\
-
-Function: cbmc_parse_optionst::help
-
-  Inputs:
-
- Outputs:
-
- Purpose: display command line help
-
-\*******************************************************************/
-
+/// display command line help
 void cbmc_parse_optionst::help()
 {
   std::cout <<

@@ -1,27 +1,8 @@
-/*******************************************************************\
-
-Module: Value Set Domain (Flow Insensitive)
-
-Author: Daniel Kroening, kroening@kroening.com
-        CM Wintersteiger
-
-\*******************************************************************/
+/// \file Value Set Domain (Flow Insensitive)
 
 #include <util/std_code.h>
 
 #include "value_set_domain_fi.h"
-
-/*******************************************************************\
-
-Function: value_set_domain_fit::transform
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool value_set_domain_fit::transform(
   const namespacet &ns,

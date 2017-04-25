@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Language Registration
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Language Registration
 
 #include <langapi/mode.h>
 
@@ -13,18 +7,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <java_bytecode/java_bytecode_language.h>
 
 #include "goto_instrument_parse_options.h"
-
-/*******************************************************************\
-
-Function: goto_instrument_parse_optionst::register_languages
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_instrument_parse_optionst::register_languages()
 {

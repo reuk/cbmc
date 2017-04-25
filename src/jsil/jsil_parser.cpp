@@ -1,26 +1,8 @@
-/*******************************************************************\
-
-Module: Jsil Language
-
-Author: Michael Tautschnig, tautschn@amazon.com
-
-\*******************************************************************/
+/// \file Jsil Language
 
 #include "jsil_parser.h"
 
 jsil_parsert jsil_parser;
-
-/*******************************************************************\
-
-Function: yyjsilerror
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 extern char *yyjsiltext;
 

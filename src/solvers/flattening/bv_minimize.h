@@ -1,15 +1,4 @@
-/*******************************************************************\
-
-Module: SAT-optimizer for minimizing expressions
-
-Author: Georg Weissenbacher
-
-Date: July 2006
-
-Purpose: Find a satisfying assignment that minimizes a given set
-         of symbols
-
-\*******************************************************************/
+/// \file SAT-optimizer for minimizing expressions
 
 #ifndef CPROVER_SOLVERS_FLATTENING_BV_MINIMIZE_H
 #define CPROVER_SOLVERS_FLATTENING_BV_MINIMIZE_H

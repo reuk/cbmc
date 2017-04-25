@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Weakest Preconditions
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Weakest Preconditions
 
 #ifndef CPROVER_GOTO_PROGRAMS_WP_H
 #define CPROVER_GOTO_PROGRAMS_WP_H

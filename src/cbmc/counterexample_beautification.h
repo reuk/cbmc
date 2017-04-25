@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Counterexample Beautification
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Counterexample Beautification
 
 #ifndef CPROVER_CBMC_COUNTEREXAMPLE_BEAUTIFICATION_H
 #define CPROVER_CBMC_COUNTEREXAMPLE_BEAUTIFICATION_H

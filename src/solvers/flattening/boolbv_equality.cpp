@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <iostream>
 
 #include <util/std_expr.h>
@@ -15,18 +7,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "flatten_byte_operators.h"
 #include "boolbv.h"
-
-/*******************************************************************\
-
-Function: boolbvt::convert_equality
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 literalt boolbvt::convert_equality(const equal_exprt &expr)
 {
@@ -72,18 +52,6 @@ literalt boolbvt::convert_equality(const equal_exprt &expr)
 
   return bv_utils.equal(bv0, bv1);
 }
-
-/*******************************************************************\
-
-Function: boolbvt::convert_verilog_case_equality
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 literalt boolbvt::convert_verilog_case_equality(
   const binary_relation_exprt &expr)

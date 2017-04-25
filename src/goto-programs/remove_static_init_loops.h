@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Unwind loops in static initializers
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Unwind loops in static initializers
 
 #include <goto-programs/goto_functions.h>
 

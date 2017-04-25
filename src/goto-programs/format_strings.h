@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Format String Parser
-
-Author: CM Wintersteiger
-
-\*******************************************************************/
+/// \file Format String Parser
 
 #ifndef CPROVER_GOTO_PROGRAMS_FORMAT_STRINGS_H
 #define CPROVER_GOTO_PROGRAMS_FORMAT_STRINGS_H

@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: util
-
-Author: Reuben Thomas, reuben.thomas@me.com
-
-\*******************************************************************/
+/// \file util
 
 #ifndef CPROVER_UTIL_IREP_IDS_H
 #define CPROVER_UTIL_IREP_IDS_H

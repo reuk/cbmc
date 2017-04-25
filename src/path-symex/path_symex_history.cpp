@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: History of path-based symbolic simulator
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file History of path-based symbolic simulator
 
 #include <algorithm>
 
@@ -13,18 +7,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <langapi/language_util.h>
 
 #include "path_symex_history.h"
-
-/*******************************************************************\
-
-Function: path_symex_stept::output
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void path_symex_stept::output(std::ostream &out) const
 {
@@ -45,18 +27,6 @@ void path_symex_stept::output(std::ostream &out) const
   out << "\n";
 }
 
-/*******************************************************************\
-
-Function: path_symex_stept::convert
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void path_symex_stept::convert(decision_proceduret &dest) const
 {
   if(ssa_rhs.is_not_nil())
@@ -65,18 +35,6 @@ void path_symex_stept::convert(decision_proceduret &dest) const
   if(guard.is_not_nil())
     dest << guard;
 }
-
-/*******************************************************************\
-
-Function: path_symex_step_reft::build_history
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void path_symex_step_reft::build_history(
   std::vector<path_symex_step_reft> &dest) const

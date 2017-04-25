@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: CFG for One Function
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file CFG for One Function
 
 #if 0
 #include <iterator>
@@ -20,18 +14,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #endif
 
 #include "local_cfg.h"
-
-/*******************************************************************\
-
-Function: local_cfgt::build
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void local_cfgt::build(const goto_programt &goto_program)
 {

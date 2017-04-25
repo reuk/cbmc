@@ -1,13 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening
-
-Date: August 2012
-
-\*******************************************************************/
-
 #ifndef CPROVER_UTIL_RUN_H
 #define CPROVER_UTIL_RUN_H
 

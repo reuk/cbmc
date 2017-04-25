@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
@@ -13,18 +5,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "xml_parser.h"
 
 xml_parsert xml_parser;
-
-/*******************************************************************\
-
-Function: parse_xml
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 // 'do it all' function
 bool parse_xml(
@@ -48,18 +28,6 @@ bool parse_xml(
 
   return result;
 }
-
-/*******************************************************************\
-
-Function: parse_xml
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 // 'do it all' function
 bool parse_xml(

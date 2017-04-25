@@ -1,11 +1,4 @@
-/*******************************************************************\
-
-Module: Counterexample-Guided Inductive Synthesis
-
-Author: Daniel Kroening, kroening@kroening.com
-        Pascal Kesseli, pascal.kesseli@cs.ox.ac.uk
-
-\*******************************************************************/
+/// \file Counterexample-Guided Inductive Synthesis
 
 #ifndef CPROVER_CEGIS_INVARIANT_FITNESS_CONCRETE_FITNESS_SOURCE_PROVIDER_H
 #define CPROVER_CEGIS_INVARIANT_FITNESS_CONCRETE_FITNESS_SOURCE_PROVIDER_H

@@ -1,24 +1,6 @@
-/*******************************************************************\
-
-Module: C++ Language Type Checking
-
-Author: Daniel Kroening, kroening@cs.cmu.edu
-
-\*******************************************************************/
+/// \file C++ Language Type Checking
 
 #include "cpp_typecheck.h"
-
-/*******************************************************************\
-
-Function: cpp_typecheckt::find_dtor
-
-  Inputs:
-
- Outputs:
-
-    Note:
-
-\*******************************************************************/
 
 bool cpp_typecheckt::find_dtor(const symbolt &symbol) const
 {
@@ -34,20 +16,7 @@ bool cpp_typecheckt::find_dtor(const symbolt &symbol) const
   return false;
 }
 
-/*******************************************************************\
-
-Function: default_dtor
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-    Note:
-
-\*******************************************************************/
-
+/// Note:
 void cpp_typecheckt::default_dtor(
   const symbolt &symbol,
   cpp_declarationt &dtor)
@@ -77,20 +46,9 @@ void cpp_typecheckt::default_dtor(
   dtor.move_to_operands(decl);
 }
 
-/*******************************************************************\
-
-Function: cpp_typecheckt::dtor
-
-  Inputs:
-
- Outputs:
-
- Purpose: produces destructor code for a class object
-
-    Note:
-
-\*******************************************************************/
-
+/// produces destructor code for a class object
+///
+///    Note:
 codet cpp_typecheckt::dtor(const symbolt &symbol)
 {
   assert(symbol.type.id()==ID_struct ||

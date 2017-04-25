@@ -1,24 +1,6 @@
-/*******************************************************************\
-
-Module: Symbolic Execution
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Symbolic Execution
 
 #include "symex_target.h"
-
-/*******************************************************************\
-
-Function: operator <
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool operator<(
   const symex_targett::sourcet &a,

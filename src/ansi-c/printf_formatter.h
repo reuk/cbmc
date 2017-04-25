@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: printf Formatting
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file printf Formatting
 
 #ifndef CPROVER_ANSI_C_PRINTF_FORMATTER_H
 #define CPROVER_ANSI_C_PRINTF_FORMATTER_H

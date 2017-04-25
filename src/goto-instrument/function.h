@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Function Entering and Exiting
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Function Entering and Exiting
 
 #ifndef CPROVER_GOTO_INSTRUMENT_FUNCTION_H
 #define CPROVER_GOTO_INSTRUMENT_FUNCTION_H

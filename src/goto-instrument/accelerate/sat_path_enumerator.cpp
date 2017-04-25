@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Loop Acceleration
-
-Author: Matt Lewis
-
-\*******************************************************************/
+/// \file Loop Acceleration
 
 #include <iostream>
 #include <map>

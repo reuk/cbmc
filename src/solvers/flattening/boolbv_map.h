@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #ifndef CPROVER_SOLVERS_FLATTENING_BOOLBV_MAP_H
 #define CPROVER_SOLVERS_FLATTENING_BOOLBV_MAP_H
 

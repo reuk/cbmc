@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: CBMC/CEGIS Command Line Option Processing
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file CBMC/CEGIS Command Line Option Processing
 
 #ifndef CPROVER_CEGIS_RUNNER_CEGIS_PARSE_OPTIONS_H
 #define CPROVER_CEGIS_RUNNER_CEGIS_PARSE_OPTIONS_H

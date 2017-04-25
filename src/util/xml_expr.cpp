@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Expressions in XML
-
-Author: Daniel Kroening
-
-  Date: November 2005
-
-\*******************************************************************/
+/// \file Expressions in XML
 
 #include "namespace.h"
 #include "expr.h"
@@ -18,18 +10,6 @@ Author: Daniel Kroening
 #include "config.h"
 
 #include "xml_expr.h"
-
-/*******************************************************************\
-
-Function: xml
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 xmlt xml(const source_locationt &location)
 {
@@ -51,18 +31,6 @@ xmlt xml(const source_locationt &location)
 
   return result;
 }
-
-/*******************************************************************\
-
-Function: xml
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 xmlt xml(
   const typet &type,
@@ -158,18 +126,6 @@ xmlt xml(
 
   return result;
 }
-
-/*******************************************************************\
-
-Function: xml
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 xmlt xml(
   const exprt &expr,

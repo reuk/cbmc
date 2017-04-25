@@ -1,25 +1,7 @@
-/*******************************************************************\
-
-Module: ILP construction for cycles affecting user-assertions
-        and resolution
-
-Author: Vincent Nimal
-
-\*******************************************************************/
+/// \file ILP construction for cycles affecting user-assertions        and
+/// resolution
 
 #include "fence_user_def.h"
-
-/*******************************************************************\
-
-Function:
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool fence_user_def_insertert::contains_user_def(
   const event_grapht::critical_cyclet &cycle) const
@@ -39,18 +21,6 @@ bool fence_user_def_insertert::contains_user_def(
 
   return cycle.has_user_defined_fence;
 }
-
-/*******************************************************************\
-
-Function:
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void fence_user_def_insertert::process_cycles_selection()
 {

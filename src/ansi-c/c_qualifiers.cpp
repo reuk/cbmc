@@ -1,26 +1,6 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <ostream>
 
 #include "c_qualifiers.h"
-
-/*******************************************************************\
-
-Function: c_qualifierst::as_string
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 std::string c_qualifierst::as_string() const
 {
@@ -50,18 +30,6 @@ std::string c_qualifierst::as_string() const
   return qualifiers;
 }
 
-/*******************************************************************\
-
-Function: c_qualifierst::read
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void c_qualifierst::read(const typet &src)
 {
   if(src.get_bool(ID_C_constant))
@@ -88,18 +56,6 @@ void c_qualifierst::read(const typet &src)
   if(src.get_bool(ID_C_noreturn))
     is_noreturn=true;
 }
-
-/*******************************************************************\
-
-Function: c_qualifierst::write
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void c_qualifierst::write(typet &dest) const
 {
@@ -144,18 +100,6 @@ void c_qualifierst::write(typet &dest) const
     dest.remove(ID_C_noreturn);
 }
 
-/*******************************************************************\
-
-Function: c_qualifierst::clear
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void c_qualifierst::clear(typet &dest)
 {
   dest.remove(ID_C_constant);
@@ -167,18 +111,7 @@ void c_qualifierst::clear(typet &dest)
   dest.remove(ID_C_noreturn);
 }
 
-/*******************************************************************\
-
-Function: operator <<
-
-  Inputs:
-
- Outputs:
-
- Purpose: pretty-print the qualifiers
-
-\*******************************************************************/
-
+/// pretty-print the qualifiers
 std::ostream &operator << (
   std::ostream &out,
   const c_qualifierst &c_qualifiers)

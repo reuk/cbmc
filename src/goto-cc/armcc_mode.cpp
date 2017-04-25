@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Command line option container
-
-Author: CM Wintersteiger, 2006
-
-\*******************************************************************/
+/// \file Command line option container
 
 #ifdef _WIN32
 #define EX_OK 0
@@ -24,18 +18,7 @@ Author: CM Wintersteiger, 2006
 #include "armcc_mode.h"
 #include "compile.h"
 
-/*******************************************************************\
-
-Function: armcc_modet::doit
-
-  Inputs:
-
- Outputs:
-
- Purpose: does it.
-
-\*******************************************************************/
-
+/// does it.
 int armcc_modet::doit()
 {
   if(cmdline.isset('?') || cmdline.isset("help"))
@@ -197,18 +180,7 @@ int armcc_modet::doit()
   return compiler.doit() ? EX_USAGE : EX_OK;
 }
 
-/*******************************************************************\
-
-Function: armcc_modet::help_mode
-
-  Inputs:
-
- Outputs:
-
- Purpose: display command line help
-
-\*******************************************************************/
-
+/// display command line help
 void armcc_modet::help_mode()
 {
   std::cout << "goto-armcc understands the options "

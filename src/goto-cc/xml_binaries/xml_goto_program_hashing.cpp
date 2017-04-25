@@ -1,13 +1,5 @@
-/*******************************************************************\
-
-Module: Convert goto programs to xml structures and back (with irep
-        hashing)
-
-Author: CM Wintersteiger
-
-Date: July 2006
-
-\*******************************************************************/
+/// \file Convert goto programs to xml structures and back (with irep
+/// hashing)
 
 #include <sstream>
 #include <iostream>
@@ -15,19 +7,12 @@ Date: July 2006
 #include "xml_irep_hashing.h"
 #include "xml_goto_program_hashing.h"
 
-/*******************************************************************\
-
-Function: xml_goto_program_convertt::convert
-
-  Inputs: goto program and an xml structure to fill
-
- Outputs: none
-
- Purpose: constructs the xml structure according to the goto program
-          and the namespace into the given xml object.
-
-\*******************************************************************/
-
+/// constructs the xml structure according to the goto program and the
+/// namespace into the given xml object.
+///
+/// parameters: goto program and an xml structure to fill
+///
+/// \returns none
 void xml_goto_program_convertt::convert(
   const goto_programt &goto_program,
   xmlt &xml)
@@ -196,18 +181,12 @@ void xml_goto_program_convertt::convert(
   }
 }
 
-/*******************************************************************\
-
-Function: xml_goto_program_convertt::convert
-
-  Inputs: an xml structure and a goto program to fill
-
- Outputs: none
-
- Purpose: constructs the goto program according to the xml structure
-          and the namespace into the given goto program object.
-
-\*******************************************************************/
+/// constructs the goto program according to the xml structure and the
+/// namespace into the given goto program object.
+///
+/// parameters: an xml structure and a goto program to fill
+///
+/// \returns none
 void xml_goto_program_convertt::convert(
   const xmlt &xml,
   goto_programt &goto_program)
@@ -393,18 +372,12 @@ void xml_goto_program_convertt::convert(
   // std::cout << "TNI: " << goto_program.target_numbers.size() << std::endl;
 }
 
-/*******************************************************************\
-
-Function: xml_goto_program_convertt::find_instruction
-
-  Inputs: a target label string, the instructions list and an xml program
-
- Outputs: iterator to the found instruction or .end()
-
- Purpose: finds the index of the instruction labelled with the given
-          target label in the given xml-program
-
-\*******************************************************************/
+/// finds the index of the instruction labelled with the given target label in
+/// the given xml-program
+///
+/// parameters: a target label string, the instructions list and an xml program
+///
+/// \returns iterator to the found instruction or .end()
 goto_programt::targett xml_goto_program_convertt::find_instruction(
   const xmlt &xml,
   goto_programt::instructionst &instructions,

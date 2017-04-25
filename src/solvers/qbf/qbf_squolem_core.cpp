@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Squolem Backend (with proofs)
-
-Author: CM Wintersteiger
-
-\*******************************************************************/
+/// \file Squolem Backend (with proofs)
 
 #include <algorithm>
 
@@ -15,34 +9,10 @@ Author: CM Wintersteiger
 
 #include "qbf_squolem_core.h"
 
-/*******************************************************************\
-
-Function: qbf_squolem_coret::qbf_squolem_coret
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 qbf_squolem_coret::qbf_squolem_coret() : squolem(NULL)
 {
   setup();
 }
-
-/*******************************************************************\
-
-Function: qbf_squolem_coret::setup
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void qbf_squolem_coret::setup(void)
 {
@@ -65,18 +35,6 @@ void qbf_squolem_coret::setup(void)
 //  squolem->options.set_predictOnLiteralBound(true);
 }
 
-/*******************************************************************\
-
-Function: qbf_squolem_coret::reset
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void qbf_squolem_coret::reset(void)
 {
   squolem->reset();
@@ -85,36 +43,12 @@ void qbf_squolem_coret::reset(void)
   setup();
 }
 
-/*******************************************************************\
-
-Function: qbf_squolem_coret::~qbf_squolem_coret
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 qbf_squolem_coret::~qbf_squolem_coret()
 {
   squolem->reset();
   delete(squolem);
   squolem=NULL;
 }
-
-/*******************************************************************\
-
-Function: qbf_squolem_coret::l_get
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 tvt qbf_squolem_coret::l_get(literalt a) const
 {
@@ -131,34 +65,10 @@ tvt qbf_squolem_coret::l_get(literalt a) const
     return tvt(tvt::tv_enumt::TV_UNKNOWN);
 }
 
-/*******************************************************************\
-
-Function: qbf_squolem_coret::solver_text
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 const std::string qbf_squolem_coret::solver_text()
 {
   return "Squolem (Certifying)";
 }
-
-/*******************************************************************\
-
-Function: qbf_squolem_coret::prop_solve
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 propt::resultt qbf_squolem_coret::prop_solve()
 {
@@ -187,34 +97,10 @@ propt::resultt qbf_squolem_coret::prop_solve()
   return P_ERROR;
 }
 
-/*******************************************************************\
-
-Function: qbf_squolem_coret::is_in_core
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 bool qbf_squolem_coret::is_in_core(literalt l) const
 {
   return squolem->inCore(l.var_no());
 }
-
-/*******************************************************************\
-
-Function: qbf_squolem_coret::m_get
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 qbf_squolem_coret::modeltypet qbf_squolem_coret::m_get(literalt a) const
 {
@@ -227,18 +113,6 @@ qbf_squolem_coret::modeltypet qbf_squolem_coret::m_get(literalt a) const
   else
     return M_DONTCARE;
 }
-
-/*******************************************************************\
-
-Function: qbf_squolem_coret::lcnf
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void qbf_squolem_coret::lcnf(const bvt &bv)
 {
@@ -269,18 +143,6 @@ void qbf_squolem_coret::lcnf(const bvt &bv)
     early_decision=true;
 }
 
-/*******************************************************************\
-
-Function: qbf_squolem_coret::add_quantifier
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void qbf_squolem_coret::add_quantifier(const quantifiert &quantifier)
 {
   squolem->quantifyVariableInner(
@@ -290,35 +152,11 @@ void qbf_squolem_coret::add_quantifier(const quantifiert &quantifier)
   qdimacs_cnft::add_quantifier(quantifier); // necessary?
 }
 
-/*******************************************************************\
-
-Function: qbf_squolem_coret::set_no_variables
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void qbf_squolem_coret::set_no_variables(unsigned no)
 {
   squolem->setLastVariable(no+1);
   cnft::set_no_variables(no);
 }
-
-/*******************************************************************\
-
-Function: qbf_squolem_coret::set_quantifier
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void qbf_squolem_coret::set_quantifier(
   const quantifiert::typet type,
@@ -328,51 +166,15 @@ void qbf_squolem_coret::set_quantifier(
   squolem->requantifyVariable(l.var_no(), type==quantifiert::UNIVERSAL);
 }
 
-/*******************************************************************\
-
-Function: qbf_squolem_coret::set_debug_filename
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void qbf_squolem_coret::set_debug_filename(const std::string &str)
 {
   squolem->options.set_debugFilename(str.c_str());
 }
 
-/*******************************************************************\
-
-Function: qbf_squolem_coret::write_qdimacs_cnf
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void qbf_squolem_coret::write_qdimacs_cnf(std::ostream &out)
 {
   squolem->saveQCNF(out);
 }
-
-/*******************************************************************\
-
-Function: qbf_squolem_coret::f_get
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 const exprt qbf_squolem_coret::f_get(literalt l)
 {
@@ -435,18 +237,6 @@ const exprt qbf_squolem_coret::f_get(literalt l)
   }
 }
 
-/*******************************************************************\
-
-Function: qbf_squolem_coret::f_get_cnf
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 const exprt qbf_squolem_coret::f_get_cnf(WitnessStack *wsp)
 {
   Clause *p=wsp->negWits;
@@ -488,18 +278,6 @@ const exprt qbf_squolem_coret::f_get_cnf(WitnessStack *wsp)
 
   return and_exprt(operands);
 }
-
-/*******************************************************************\
-
-Function: qbf_squolem_coret::f_get_dnf
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 const exprt qbf_squolem_coret::f_get_dnf(WitnessStack *wsp)
 {

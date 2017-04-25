@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: C++ Parser: Token Buffer
-
-Author: Daniel Kroening, kroening@cs.cmu.edu
-
-\*******************************************************************/
+/// \file C++ Parser: Token Buffer
 
 #ifndef CPROVER_CPP_CPP_TOKEN_BUFFER_H
 #define CPROVER_CPP_CPP_TOKEN_BUFFER_H

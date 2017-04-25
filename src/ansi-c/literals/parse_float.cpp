@@ -1,26 +1,8 @@
-/*******************************************************************\
-
-Module: Conversion of Expressions
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Conversion of Expressions
 
 #include <cctype>
 
 #include "parse_float.h"
-
-/*******************************************************************\
-
-Function: convert_ct::parse_float
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void parse_float(
   const std::string &src,

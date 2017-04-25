@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #ifndef CPROVER_JSON_JSON_PARSER_H
 #define CPROVER_JSON_JSON_PARSER_H
 

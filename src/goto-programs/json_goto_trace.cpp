@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Traces of GOTO Programs
-
-Author: Daniel Kroening
-
-  Date: November 2005
-
-\*******************************************************************/
+/// \file Traces of GOTO Programs
 
 #include <cassert>
 
@@ -15,18 +7,6 @@ Author: Daniel Kroening
 #include <langapi/language_util.h>
 
 #include "json_goto_trace.h"
-
-/*******************************************************************\
-
-Function: convert
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void convert(
   const namespacet &ns,

@@ -1,11 +1,4 @@
-/*******************************************************************\
-
-Module: Counterexample-Guided Inductive Synthesis
-
-Author: Daniel Kroening, kroening@kroening.com
-        Pascal Kesseli, pascal.kesseli@cs.ox.ac.uk
-
-\*******************************************************************/
+/// \file Counterexample-Guided Inductive Synthesis
 
 #include <util/arith_tools.h>
 #include <util/bv_arithmetic.h>

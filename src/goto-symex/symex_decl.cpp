@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Symbolic Execution
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Symbolic Execution
 
 #include <cassert>
 
@@ -16,18 +10,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <analyses/dirty.h>
 
 #include "goto_symex.h"
-
-/*******************************************************************\
-
-Function: goto_symext::symex_decl
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_symext::symex_decl(statet &state)
 {
@@ -46,18 +28,6 @@ void goto_symext::symex_decl(statet &state)
 
   symex_decl(state, to_symbol_expr(code.op0()));
 }
-
-/*******************************************************************\
-
-Function: goto_symext::symex_decl
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_symext::symex_decl(statet &state, const symbol_exprt &expr)
 {

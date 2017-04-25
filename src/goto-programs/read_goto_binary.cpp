@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Read Goto Programs
-
-Author:
-
-\*******************************************************************/
+/// \file Read Goto Programs
 
 #if defined(__linux__) || \
     defined(__FreeBSD_kernel__) || \
@@ -34,18 +28,6 @@ Author:
 #include "elf_reader.h"
 #include "osx_fat_reader.h"
 
-/*******************************************************************\
-
-Function: read_goto_binary
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 bool read_goto_binary(
   const std::string &filename,
   goto_modelt &dest,
@@ -54,18 +36,6 @@ bool read_goto_binary(
   return read_goto_binary(
     filename, dest.symbol_table, dest.goto_functions, message_handler);
 }
-
-/*******************************************************************\
-
-Function: read_goto_binary
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool read_goto_binary(
   const std::string &filename,
@@ -172,18 +142,6 @@ bool read_goto_binary(
   return true;
 }
 
-/*******************************************************************\
-
-Function: is_goto_binary
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 bool is_goto_binary(const std::string &filename)
 {
   #ifdef _MSC_VER
@@ -245,18 +203,6 @@ bool is_goto_binary(const std::string &filename)
   return false;
 }
 
-/*******************************************************************\
-
-Function: rename_symbols_in_function
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 static void rename_symbols_in_function(
   goto_functionst::goto_functiont &function,
   const rename_symbolt &rename_symbol)
@@ -270,18 +216,6 @@ static void rename_symbols_in_function(
     rename_symbol(iit->guard);
   }
 }
-
-/*******************************************************************\
-
-Function: link_functions
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 static bool link_functions(
   symbol_tablet &dest_symbol_table,
@@ -384,18 +318,11 @@ static bool link_functions(
   return false;
 }
 
-/*******************************************************************\
-
-Function: read_object_and_link
-
-  Inputs: a file_name
-
- Outputs: true on error, false otherwise
-
- Purpose: reads an object file
-
-\*******************************************************************/
-
+/// reads an object file
+///
+/// parameters: a file_name
+///
+/// \returns true on error, false otherwise
 bool read_object_and_link(
   const std::string &file_name,
   symbol_tablet &symbol_table,
@@ -435,18 +362,11 @@ bool read_object_and_link(
   return false;
 }
 
-/*******************************************************************\
-
-Function: read_object_and_link
-
-  Inputs: a file_name
-
- Outputs: true on error, false otherwise
-
- Purpose: reads an object file
-
-\*******************************************************************/
-
+/// reads an object file
+///
+/// parameters: a file_name
+///
+/// \returns true on error, false otherwise
 bool read_object_and_link(
   const std::string &file_name,
   goto_modelt &goto_model,

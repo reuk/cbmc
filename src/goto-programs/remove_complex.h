@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Remove the 'complex' data type by compilation into structs
-
-Author: Daniel Kroening
-
-Date:   September 2014
-
-\*******************************************************************/
+/// \file Remove the 'complex' data type by compilation into structs
 
 #ifndef CPROVER_GOTO_PROGRAMS_REMOVE_COMPLEX_H
 #define CPROVER_GOTO_PROGRAMS_REMOVE_COMPLEX_H

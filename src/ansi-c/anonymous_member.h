@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: C Language Type Checking
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file C Language Type Checking
 
 #ifndef CPROVER_ANSI_C_ANONYMOUS_MEMBER_H
 #define CPROVER_ANSI_C_ANONYMOUS_MEMBER_H

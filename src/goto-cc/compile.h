@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Compile and link source and object files.
-
-Author: CM Wintersteiger
-
-Date: June 2006
-
-\*******************************************************************/
+/// \file Compile and link source and object files.
 
 #ifndef CPROVER_GOTO_CC_COMPILE_H
 #define CPROVER_GOTO_CC_COMPILE_H

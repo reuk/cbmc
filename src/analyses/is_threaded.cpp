@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Over-approximate Concurrency for Threaded Goto Programs
-
-Author: Daniel Kroening
-
-Date: October 2012
-
-\*******************************************************************/
+/// \file Over-approximate Concurrency for Threaded Goto Programs
 
 #include "ai.h"
 #include "is_threaded.h"
@@ -77,18 +69,6 @@ public:
     is_threaded=false;
   }
 };
-
-/*******************************************************************\
-
-Function: is_threadedt::compute
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void is_threadedt::compute(const goto_functionst &goto_functions)
 {

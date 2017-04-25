@@ -1,28 +1,10 @@
-/*******************************************************************\
-
-Module: Branch Instrumentation
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Branch Instrumentation
 
 #include <util/cprover_prefix.h>
 #include <util/prefix.h>
 
 #include "function.h"
 #include "branch.h"
-
-/*******************************************************************\
-
-Function: branch
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void branch(
   symbol_tablet &symbol_table,

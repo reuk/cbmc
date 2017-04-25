@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: A special command line object for Bruce's C Compiler
-
-Author: Michael Tautschnig
-
-\*******************************************************************/
+/// \file A special command line object for Bruce's C Compiler
 
 #include <cassert>
 #include <iostream>
@@ -12,18 +6,6 @@ Author: Michael Tautschnig
 #include <util/prefix.h>
 
 #include "bcc_cmdline.h"
-
-/*******************************************************************\
- 
-Function: bcc_cmdlinet::parse
- 
-  Inputs: argument count, argument strings
- 
- Outputs: none
- 
- Purpose: parses the commandline options into a cmdlinet
-
-\*******************************************************************/
 
 // non-bcc options
 const char *goto_bcc_options_with_argument[]=

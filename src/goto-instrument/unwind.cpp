@@ -1,11 +1,4 @@
-/*******************************************************************\
-
-Module: Loop unwinding
-
-Author: Daniel Kroening, kroening@kroening.com
-        Daniel Poetzl
-
-\*******************************************************************/
+/// \file Loop unwinding
 
 #ifdef DEBUG
 #include <iostream>
@@ -17,18 +10,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "unwind.h"
 #include "loop_utils.h"
-
-/*******************************************************************\
-
-Function: parse_unwindset
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void parse_unwindset(const std::string &us, unwind_sett &unwind_set)
 {
@@ -63,18 +44,6 @@ void parse_unwindset(const std::string &us, unwind_sett &unwind_set)
     unwind_set[func][loop_id]=loop_bound;
   }
 }
-
-/*******************************************************************\
-
-Function: copy_segment
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_unwindt::copy_segment(
   const goto_programt::const_targett start,
@@ -130,18 +99,6 @@ void goto_unwindt::copy_segment(
   }
 }
 
-/*******************************************************************\
-
-Function: unwind
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void goto_unwindt::unwind(
   goto_programt &goto_program,
   const goto_programt::const_targett loop_head,
@@ -153,18 +110,6 @@ void goto_unwindt::unwind(
   unwind(goto_program, loop_head, loop_exit, k, unwind_strategy,
          iteration_points);
 }
-
-/*******************************************************************\
-
-Function: unwind
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_unwindt::unwind(
   goto_programt &goto_program,
@@ -334,18 +279,6 @@ void goto_unwindt::unwind(
   goto_program.destructive_insert(loop_exit, copies);
 }
 
-/*******************************************************************\
-
-Function: get_k
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 int goto_unwindt::get_k(
   const irep_idt func,
   const unsigned loop_id,
@@ -368,18 +301,6 @@ int goto_unwindt::get_k(
 
   return k;
 }
-
-/*******************************************************************\
-
-Function: unwind
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_unwindt::unwind(
   goto_programt &goto_program,
@@ -430,18 +351,6 @@ void goto_unwindt::unwind(
   }
 }
 
-/*******************************************************************\
-
-Function: operator()
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void goto_unwindt::operator()(
   goto_functionst &goto_functions,
   const unwind_sett &unwind_set,
@@ -466,18 +375,6 @@ void goto_unwindt::operator()(
     unwind(goto_program, unwind_set, k, unwind_strategy);
   }
 }
-
-/*******************************************************************\
-
-Function: show_log_json
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 // call after calling goto_functions.update()!
 jsont goto_unwindt::unwind_logt::output_log_json() const

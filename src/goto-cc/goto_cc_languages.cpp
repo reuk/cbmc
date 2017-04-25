@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Language Registration
-
-Author: CM Wintersteiger
-
-\*******************************************************************/
+/// \file Language Registration
 
 #include <langapi/mode.h>
 
@@ -18,18 +12,6 @@ Author: CM Wintersteiger
 #endif
 
 #include "goto_cc_mode.h"
-
-/*******************************************************************\
-
-Function: goto_cc_modet::register_languages
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_cc_modet::register_languages()
 {

@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #ifndef CPROVER_SOLVERS_PROP_LITERAL_EXPR_H
 #define CPROVER_SOLVERS_PROP_LITERAL_EXPR_H
 

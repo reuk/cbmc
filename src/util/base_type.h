@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Base Type Computation
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Base Type Computation
 
 #ifndef CPROVER_UTIL_BASE_TYPE_H
 #define CPROVER_UTIL_BASE_TYPE_H
@@ -25,14 +19,6 @@ bool base_type_eq(
   const exprt &expr1,
   const exprt &expr2,
   const namespacet &ns);
-
-/*******************************************************************\
-
-   Class: base_type_eqt
-
- Purpose:
-
-\*******************************************************************/
 
 class base_type_eqt
 {

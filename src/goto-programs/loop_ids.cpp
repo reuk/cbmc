@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Loop IDs
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Loop IDs
 
 #include <iostream>
 
@@ -15,36 +9,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "loop_ids.h"
 
-/*******************************************************************\
-
-Function: show_loop_ids
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void show_loop_ids(
   ui_message_handlert::uit ui,
   const goto_modelt &goto_model)
 {
   show_loop_ids(ui, goto_model.goto_functions);
 }
-
-/*******************************************************************\
-
-Function: show_loop_ids
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void show_loop_ids(
   ui_message_handlert::uit ui,
@@ -112,18 +82,6 @@ void show_loop_ids_json(
     }
   }
 }
-
-/*******************************************************************\
-
-Function: show_loop_ids
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void show_loop_ids(
   ui_message_handlert::uit ui,

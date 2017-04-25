@@ -1,27 +1,14 @@
-/*******************************************************************\
-
-Module: Generates string constraints for functions generating strings
-        from other types, in particular int, long, float, double, char, bool
-
-Author: Romain Brenguier, romain.brenguier@diffblue.com
-
-\*******************************************************************/
+/// \file Generates string constraints for functions generating strings
+/// from other types, in particular int, long, float, double, char, bool
 
 #include <solvers/refinement/string_constraint_generator.h>
 #include <solvers/floatbv/float_bv.h>
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_from_int
-
-  Inputs: function application with one integer argument
-
- Outputs: a new string expression
-
- Purpose: add axioms corresponding to the String.valueOf(I) java function
-
-\*******************************************************************/
-
+/// add axioms corresponding to the String.valueOf(I) java function
+///
+/// parameters: function application with one integer argument
+///
+/// \returns a new string expression
 string_exprt string_constraint_generatort::add_axioms_from_int(
   const function_application_exprt &expr)
 {
@@ -29,18 +16,11 @@ string_exprt string_constraint_generatort::add_axioms_from_int(
   return add_axioms_from_int(args(expr, 1)[0], MAX_INTEGER_LENGTH, ref_type);
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_from_long
-
-  Inputs: function application with one long argument
-
- Outputs: a new string expression
-
- Purpose: add axioms corresponding to the String.valueOf(J) java function
-
-\*******************************************************************/
-
+/// add axioms corresponding to the String.valueOf(J) java function
+///
+/// parameters: function application with one long argument
+///
+/// \returns a new string expression
 string_exprt string_constraint_generatort::add_axioms_from_long(
   const function_application_exprt &expr)
 {
@@ -48,56 +28,35 @@ string_exprt string_constraint_generatort::add_axioms_from_long(
   return add_axioms_from_int(args(expr, 1)[0], MAX_LONG_LENGTH, ref_type);
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_from_float
-
-  Inputs: function application with one float argument
-
- Outputs: a new string expression
-
- Purpose: add axioms corresponding to the String.valueOf(F) java function
-
-\*******************************************************************/
-
+/// add axioms corresponding to the String.valueOf(F) java function
+///
+/// parameters: function application with one float argument
+///
+/// \returns a new string expression
 string_exprt string_constraint_generatort::add_axioms_from_float(
   const function_application_exprt &f)
 {
   return add_axioms_from_float(args(f, 1)[0], false);
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_from_double
-
-  Inputs: function application with one double argument
-
- Outputs: a new string expression
-
- Purpose: add axioms corresponding to the String.valueOf(D) java function
-
-\*******************************************************************/
-
+/// add axioms corresponding to the String.valueOf(D) java function
+///
+/// parameters: function application with one double argument
+///
+/// \returns a new string expression
 string_exprt string_constraint_generatort::add_axioms_from_double(
   const function_application_exprt &f)
 {
   return add_axioms_from_float(args(f, 1)[0], true);
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_from_float
-
-  Inputs: float expression and Boolean signaling that the argument has
-          double precision
-
- Outputs: a new string expression
-
- Purpose: add axioms corresponding to the String.valueOf(F) java function
-          Warning: we currently only have partial specification
-
-\*******************************************************************/
-
+/// add axioms corresponding to the String.valueOf(F) java function Warning: we
+/// currently only have partial specification
+///
+/// parameters: float expression and Boolean signaling that the argument has
+///   double precision
+///
+/// \returns a new string expression
 string_exprt string_constraint_generatort::add_axioms_from_float(
   const exprt &f, bool double_precision)
 {
@@ -190,18 +149,11 @@ string_exprt string_constraint_generatort::add_axioms_from_float(
 }
 
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_from_bool
-
-  Inputs: function application with on Boolean argument
-
- Outputs: a new string expression
-
- Purpose: add axioms corresponding to the String.valueOf(Z) java function
-
-\*******************************************************************/
-
+/// add axioms corresponding to the String.valueOf(Z) java function
+///
+/// parameters: function application with on Boolean argument
+///
+/// \returns a new string expression
 string_exprt string_constraint_generatort::add_axioms_from_bool(
   const function_application_exprt &f)
 {
@@ -210,19 +162,12 @@ string_exprt string_constraint_generatort::add_axioms_from_bool(
 }
 
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_from_bool
-
-  Inputs: Boolean expression
-
- Outputs: a new string expression
-
- Purpose: add axioms stating that the returned string equals "true" when
-          the Boolean expression is true and "false" when it is false
-
-\*******************************************************************/
-
+/// add axioms stating that the returned string equals "true" when the Boolean
+/// expression is true and "false" when it is false
+///
+/// parameters: Boolean expression
+///
+/// \returns a new string expression
 string_exprt string_constraint_generatort::add_axioms_from_bool(
   const exprt &b, const refined_string_typet &ref_type)
 {
@@ -267,38 +212,23 @@ string_exprt string_constraint_generatort::add_axioms_from_bool(
   return res;
 }
 
-/*******************************************************************\
-
-Function: smallest_by_digit
-
-  Inputs: number of digit
-
- Outputs: an integer with the right number of digit
-
- Purpose: gives the smallest integer with the specified number of digits
-
-\*******************************************************************/
-
+/// gives the smallest integer with the specified number of digits
+///
+/// parameters: number of digit
+///
+/// \returns an integer with the right number of digit
 static mp_integer smallest_by_digit(int nb)
 {
   return power(10, nb-1);
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_from_int
-
-  Inputs: a signed integer expression, and a maximal size for the string
-          representation
-
- Outputs: a string expression
-
- Purpose: add axioms to say the string corresponds to the result of
-          String.valueOf(I) or String.valueOf(J) java functions applied on the
-          integer expression
-
-\*******************************************************************/
-
+/// add axioms to say the string corresponds to the result of String.valueOf(I)
+/// or String.valueOf(J) java functions applied on the integer expression
+///
+/// parameters: a signed integer expression, and a maximal size for the string
+///   representation
+///
+/// \returns a string expression
 string_exprt string_constraint_generatort::add_axioms_from_int(
   const exprt &i, size_t max_size, const refined_string_typet &ref_type)
 {
@@ -400,18 +330,11 @@ string_exprt string_constraint_generatort::add_axioms_from_int(
   return res;
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::int_of_hex_char
-
-  Inputs: a character expression in the following set: 0123456789abcdef
-
- Outputs: an integer expression
-
- Purpose: returns the value represented by the character
-
-\*******************************************************************/
-
+/// returns the value represented by the character
+///
+/// parameters: a character expression in the following set: 0123456789abcdef
+///
+/// \returns an integer expression
 exprt string_constraint_generatort::int_of_hex_char(const exprt &chr) const
 {
   exprt zero_char=constant_char('0', chr.type());
@@ -423,19 +346,12 @@ exprt string_constraint_generatort::int_of_hex_char(const exprt &chr) const
     minus_exprt(chr, zero_char));
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_from_int_hex
-
-  Inputs: one integer argument
-
- Outputs: a new string expression
-
- Purpose: add axioms stating that the returned string corresponds to the
-          integer argument written in hexadecimal
-
-\*******************************************************************/
-
+/// add axioms stating that the returned string corresponds to the integer
+/// argument written in hexadecimal
+///
+/// parameters: one integer argument
+///
+/// \returns a new string expression
 string_exprt string_constraint_generatort::add_axioms_from_int_hex(
   const exprt &i, const refined_string_typet &ref_type)
 {
@@ -489,18 +405,11 @@ string_exprt string_constraint_generatort::add_axioms_from_int_hex(
   return res;
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_for_int_hex
-
-  Inputs: function application with integer argument
-
- Outputs: a new string expression
-
- Purpose: add axioms corresponding to the Integer.toHexString(I) java function
-
-\*******************************************************************/
-
+/// add axioms corresponding to the Integer.toHexString(I) java function
+///
+/// parameters: function application with integer argument
+///
+/// \returns a new string expression
 string_exprt string_constraint_generatort::add_axioms_from_int_hex(
   const function_application_exprt &f)
 {
@@ -508,18 +417,11 @@ string_exprt string_constraint_generatort::add_axioms_from_int_hex(
   return add_axioms_from_int_hex(args(f, 1)[0], ref_type);
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_from_char
-
-  Inputs: function application one char argument
-
- Outputs: a new string expression
-
- Purpose: add axioms corresponding to the String.valueOf(C) java function
-
-\*******************************************************************/
-
+/// add axioms corresponding to the String.valueOf(C) java function
+///
+/// parameters: function application one char argument
+///
+/// \returns a new string expression
 string_exprt string_constraint_generatort::add_axioms_from_char(
   const function_application_exprt &f)
 {
@@ -527,19 +429,12 @@ string_exprt string_constraint_generatort::add_axioms_from_char(
   return add_axioms_from_char(args(f, 1)[0], ref_type);
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_from_char
-
-  Inputs: one expression of type char
-
- Outputs: a new string expression
-
- Purpose: add axioms stating that the returned string has length 1 and
-          the character it contains correspond to the input expression
-
-\*******************************************************************/
-
+/// add axioms stating that the returned string has length 1 and the character
+/// it contains correspond to the input expression
+///
+/// parameters: one expression of type char
+///
+/// \returns a new string expression
 string_exprt string_constraint_generatort::add_axioms_from_char(
   const exprt &c, const refined_string_typet &ref_type)
 {
@@ -549,19 +444,12 @@ string_exprt string_constraint_generatort::add_axioms_from_char(
   return res;
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_for_value_of
-
-  Inputs: function application with one or three arguments
-
- Outputs: a new string expression
-
- Purpose: add axioms corresponding to the String.valueOf([C) and
-          String.valueOf([CII) functions
-
-\*******************************************************************/
-
+/// add axioms corresponding to the String.valueOf([C) and String.valueOf([CII)
+/// functions
+///
+/// parameters: function application with one or three arguments
+///
+/// \returns a new string expression
 string_exprt string_constraint_generatort::add_axioms_for_value_of(
   const function_application_exprt &f)
 {
@@ -595,18 +483,11 @@ string_exprt string_constraint_generatort::add_axioms_for_value_of(
   }
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_for_parse_int
-
-  Inputs: function application with one string expression
-
- Outputs: an integer expression
-
- Purpose: add axioms corresponding to the Integer.parseInt java function
-
-\*******************************************************************/
-
+/// add axioms corresponding to the Integer.parseInt java function
+///
+/// parameters: function application with one string expression
+///
+/// \returns an integer expression
 exprt string_constraint_generatort::add_axioms_for_parse_int(
   const function_application_exprt &f)
 {

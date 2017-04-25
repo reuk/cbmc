@@ -1,31 +1,9 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening
-
-  Date: November 2005
-
-\*******************************************************************/
-
 #include <iostream>
 #include <string>
 
 #include "xml_irep.h"
 #include "irep.h"
 #include "xml.h"
-
-/*******************************************************************\
-
-Function: convert
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void convert(
   const irept &irep,
@@ -54,18 +32,6 @@ void convert(
     convert(it->second, x_com);
   }
 }
-
-/*******************************************************************\
-
-Function: convert
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void convert(
   const xmlt &xml,

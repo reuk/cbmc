@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@cs.cmu.edu
-
-\*******************************************************************/
-
 #ifndef CPROVER_CPP_CPP_TEMPLATE_PARAMETER_H
 #define CPROVER_CPP_CPP_TEMPLATE_PARAMETER_H
 

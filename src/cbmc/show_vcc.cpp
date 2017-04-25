@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Symbolic Execution of ANSI-C
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Symbolic Execution of ANSI-C
 
 #include <iostream>
 #include <fstream>
@@ -19,18 +13,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/json_expr.h>
 
 #include "bmc.h"
-
-/*******************************************************************\
-
-Function: bmct::show_vcc_plain
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void bmct::show_vcc_plain(std::ostream &out)
 {
@@ -90,18 +72,6 @@ void bmct::show_vcc_plain(std::ostream &out)
   }
 }
 
-/*******************************************************************\
-
-Function: bmct::show_vcc_json
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void bmct::show_vcc_json(std::ostream &out)
 {
   json_objectt json_result;
@@ -159,18 +129,6 @@ void bmct::show_vcc_json(std::ostream &out)
 
   out << ",\n" << json_result;
 }
-
-/*******************************************************************\
-
-Function: bmct::show_vcc
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void bmct::show_vcc()
 {

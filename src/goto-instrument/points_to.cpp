@@ -1,24 +1,6 @@
-/*******************************************************************\
-
-Module: Field-sensitive, location-insensitive points-to analysis
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Field-sensitive, location-insensitive points-to analysis
 
 #include "points_to.h"
-
-/*******************************************************************\
-
-Function: points_tot::fixedpoint
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void points_tot::fixedpoint()
 {
@@ -42,18 +24,6 @@ void points_tot::fixedpoint()
   while(added);
 }
 
-/*******************************************************************\
-
-Function: points_tot::output
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void points_tot::output(std::ostream &out) const
 {
   for(value_mapt::const_iterator
@@ -74,18 +44,6 @@ void points_tot::output(std::ostream &out) const
     out << std::endl;
   }
 }
-
-/*******************************************************************\
-
-Function: points_tot::transform
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool points_tot::transform(const cfgt::nodet &e)
 {

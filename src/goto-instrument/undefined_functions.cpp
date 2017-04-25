@@ -1,30 +1,10 @@
-/*******************************************************************\
-
-Module: Handling of functions without body
-
-Author: Michael Tautschnig
-
-Date: July 2016
-
-\*******************************************************************/
+/// \file Handling of functions without body
 
 #include <ostream>
 
 #include <goto-programs/goto_functions.h>
 
 #include "undefined_functions.h"
-
-/*******************************************************************\
-
-Function: list_undefined_functions
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void list_undefined_functions(
   const goto_functionst &goto_functions,
@@ -36,18 +16,6 @@ void list_undefined_functions(
        !it->second.body_available())
       os << it->first << std::endl;
 }
-
-/*******************************************************************\
-
-Function: undefined_function_abort_path
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void undefined_function_abort_path(goto_functionst &goto_functions)
 {

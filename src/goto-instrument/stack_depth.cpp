@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Stack depth checks
-
-Author: Daniel Kroening, Michael Tautschnig
-
-Date: November 2011
-
-\*******************************************************************/
+/// \file Stack depth checks
 
 #include <util/symbol_table.h>
 #include <util/std_expr.h>
@@ -17,18 +9,6 @@ Date: November 2011
 #include <goto-programs/goto_functions.h>
 
 #include "stack_depth.h"
-
-/*******************************************************************\
-
-Function: add_stack_depth_symbol
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 symbol_exprt add_stack_depth_symbol(symbol_tablet &symbol_table)
 {
@@ -50,18 +30,6 @@ symbol_exprt add_stack_depth_symbol(symbol_tablet &symbol_table)
 
   return symbol_exprt(identifier, type);
 }
-
-/*******************************************************************\
-
-Function: stack_depth
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void stack_depth(
   goto_programt &goto_program,
@@ -102,18 +70,6 @@ void stack_depth(
 
   goto_program.insert_before_swap(last, minus_ins);
 }
-
-/*******************************************************************\
-
-Function: stack_depth
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void stack_depth(
   symbol_tablet &symbol_table,

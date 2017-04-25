@@ -1,26 +1,8 @@
-/*******************************************************************\
-
-Module: ANSI-C Conversion / Type Checking
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file ANSI-C Conversion / Type Checking
 
 #include <util/arith_tools.h>
 
 #include "c_typecheck_base.h"
-
-/*******************************************************************\
-
-Function: c_typecheck_baset::add_argc_argv
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void c_typecheck_baset::add_argc_argv(const symbolt &main_symbol)
 {

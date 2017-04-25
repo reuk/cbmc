@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Field-insensitive, location-sensitive bitvector analysis
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Field-insensitive, location-sensitive bitvector analysis
 
 #ifndef CPROVER_ANALYSES_CUSTOM_BITVECTOR_ANALYSIS_H
 #define CPROVER_ANALYSES_CUSTOM_BITVECTOR_ANALYSIS_H
@@ -14,14 +8,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "ai.h"
 #include "local_may_alias.h"
-
-/*******************************************************************\
-
-   Class: custom_bitvector_domaint
-
- Purpose:
-
-\*******************************************************************/
 
 class custom_bitvector_analysist;
 

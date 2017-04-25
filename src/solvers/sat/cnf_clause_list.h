@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: CNF Generation
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file CNF Generation
 
 #ifndef CPROVER_SOLVERS_SAT_CNF_CLAUSE_LIST_H
 #define CPROVER_SOLVERS_SAT_CNF_CLAUSE_LIST_H

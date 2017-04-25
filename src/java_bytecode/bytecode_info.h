@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #ifndef CPROVER_JAVA_BYTECODE_BYTECODE_INFO_H
 #define CPROVER_JAVA_BYTECODE_BYTECODE_INFO_H
 

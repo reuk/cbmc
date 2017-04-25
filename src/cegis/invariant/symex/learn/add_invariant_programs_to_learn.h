@@ -1,11 +1,4 @@
-/*******************************************************************\
-
-Module: Counterexample-Guided Inductive Synthesis
-
-Author: Daniel Kroening, kroening@kroening.com
-        Pascal Kesseli, pascal.kesseli@cs.ox.ac.uk
-
-\*******************************************************************/
+/// \file Counterexample-Guided Inductive Synthesis
 
 #ifndef CPROVER_CEGIS_INVARIANT_SYMEX_LEARN_ADD_INVARIANT_PROGRAMS_TO_LEARN_H
 #define CPROVER_CEGIS_INVARIANT_SYMEX_LEARN_ADD_INVARIANT_PROGRAMS_TO_LEARN_H

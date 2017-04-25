@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Remove Instance-of Operators
-
-Author: Chris Smowton, chris.smowton@diffblue.com
-
-\*******************************************************************/
+/// \file Remove Instance-of Operators
 
 #ifndef CPROVER_GOTO_PROGRAMS_REMOVE_INSTANCEOF_H
 #define CPROVER_GOTO_PROGRAMS_REMOVE_INSTANCEOF_H

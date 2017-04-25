@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Value Set
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Value Set
 
 #include "ref_expr_set.h"
 

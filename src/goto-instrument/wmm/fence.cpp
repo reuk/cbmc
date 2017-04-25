@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Fences for instrumentation
-
-Author: Vincent Nimal
-
-Date: February 2012
-
-\*******************************************************************/
+/// \file Fences for instrumentation
 
 #include <util/namespace.h>
 

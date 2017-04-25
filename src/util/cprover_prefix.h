@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #ifndef CPROVER_UTIL_CPROVER_PREFIX_H
 #define CPROVER_UTIL_CPROVER_PREFIX_H
 

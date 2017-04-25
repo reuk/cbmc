@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Extract class identifier
-
-Author: Chris Smowton, chris.smowton@diffblue.com
-
-\*******************************************************************/
+/// \file Extract class identifier
 
 #ifndef CPROVER_GOTO_PROGRAMS_CLASS_IDENTIFIER_H
 #define CPROVER_GOTO_PROGRAMS_CLASS_IDENTIFIER_H

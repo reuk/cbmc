@@ -1,28 +1,9 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <ostream>
 
 #include "source_location.h"
 #include "file_util.h"
 
-/*******************************************************************\
-
-Function: source_locationt::as_string
-
-  Inputs: print_cwd, print the absolute path to the file
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
+/// parameters: print_cwd, print the absolute path to the file
 std::string source_locationt::as_string(bool print_cwd) const
 {
   std::string dest;
@@ -71,18 +52,6 @@ std::string source_locationt::as_string(bool print_cwd) const
 
   return dest;
 }
-
-/*******************************************************************\
-
-Function: operator<<
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 std::ostream &operator << (
   std::ostream &out,

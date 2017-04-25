@@ -1,11 +1,4 @@
-/*******************************************************************\
-
-Module: SMT Version 1 Backend
-
-Author: Daniel Kroening, kroening@kroening.com
-Revision: Roberto Bruttomesso, roberto.bruttomesso@unisi.ch
-
-\*******************************************************************/
+/// \file SMT Version 1 Backend
 
 #ifndef CPROVER_SOLVERS_SMT1_SMT1_CONV_H
 #define CPROVER_SOLVERS_SMT1_SMT1_CONV_H

@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Symbolic Execution of ANSI-C
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Symbolic Execution of ANSI-C
 
 #include <cassert>
 
@@ -25,18 +19,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "goto_symex.h"
 #include "goto_symex_state.h"
-
-/*******************************************************************\
-
-Function: goto_symext::symex_malloc
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 inline static typet c_sizeof_type_rec(const exprt &expr)
 {
@@ -195,18 +177,6 @@ void goto_symext::symex_malloc(
   symex_assign_rec(state, code_assignt(lhs, rhs));
 }
 
-/*******************************************************************\
-
-Function: goto_symext::symex_gcc_builtin_va_arg_next
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 irep_idt get_symbol(const exprt &src)
 {
   if(src.id()==ID_typecast)
@@ -271,18 +241,6 @@ void goto_symext::symex_gcc_builtin_va_arg_next(
   symex_assign_rec(state, code_assignt(lhs, rhs));
 }
 
-/*******************************************************************\
-
-Function: goto_symext::get_string_argument_rec
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 irep_idt get_string_argument_rec(const exprt &src)
 {
   if(src.id()==ID_typecast)
@@ -309,36 +267,12 @@ irep_idt get_string_argument_rec(const exprt &src)
   return "";
 }
 
-/*******************************************************************\
-
-Function: goto_symext::get_string_argument
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 irep_idt get_string_argument(const exprt &src, const namespacet &ns)
 {
   exprt tmp=src;
   simplify(tmp, ns);
   return get_string_argument_rec(tmp);
 }
-
-/*******************************************************************\
-
-Function: goto_symext::symex_printf
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_symext::symex_printf(
   statet &state,
@@ -367,18 +301,6 @@ void goto_symext::symex_printf(
       state.source, "printf", format_string, args);
 }
 
-/*******************************************************************\
-
-Function: goto_symext::symex_input
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void goto_symext::symex_input(
   statet &state,
   const codet &code)
@@ -404,18 +326,6 @@ void goto_symext::symex_input(
   target.input(state.guard.as_expr(), state.source, input_id, args);
 }
 
-/*******************************************************************\
-
-Function: goto_symext::symex_output
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void goto_symext::symex_output(
   statet &state,
   const codet &code)
@@ -440,18 +350,6 @@ void goto_symext::symex_output(
 
   target.output(state.guard.as_expr(), state.source, output_id, args);
 }
-
-/*******************************************************************\
-
-Function: goto_symext::symex_cpp_new
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_symext::symex_cpp_new(
   statet &state,
@@ -513,36 +411,12 @@ void goto_symext::symex_cpp_new(
   symex_assign_rec(state, code_assignt(lhs, rhs));
 }
 
-/*******************************************************************\
-
-Function: goto_symext::symex_cpp_delete
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void goto_symext::symex_cpp_delete(
   statet &state,
   const codet &code)
 {
   // bool do_array=code.get(ID_statement)==ID_cpp_delete_array;
 }
-
-/*******************************************************************\
-
-Function: goto_symext::symex_trace
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_symext::symex_trace(
   statet &state,
@@ -583,18 +457,6 @@ void goto_symext::symex_trace(
   }
 }
 
-/*******************************************************************\
-
-Function: goto_symext::symex_fkt
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void goto_symext::symex_fkt(
   statet &state,
   const code_function_callt &code)
@@ -617,18 +479,6 @@ void goto_symext::symex_fkt(
   fc.swap(new_fc);
   #endif
 }
-
-/*******************************************************************\
-
-Function: goto_symext::symex_macro
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_symext::symex_macro(
   statet &state,

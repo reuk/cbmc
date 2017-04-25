@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #ifndef CPROVER_UTIL_FIND_MACROS_H
 #define CPROVER_UTIL_FIND_MACROS_H
 

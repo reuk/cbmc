@@ -1,13 +1,5 @@
-/*******************************************************************\
-
-Module: Convert goto functions into xml structures and back (with irep
-        hashing).
-
-Author: CM Wintersteiger
-
-Date: July 2006
-
-\*******************************************************************/
+/// \file Convert goto functions into xml structures and back (with irep
+/// hashing).
 
 #ifndef CPROVER_GOTO_CC_XML_BINARIES_XML_GOTO_FUNCTION_HASHING_H
 #define CPROVER_GOTO_CC_XML_BINARIES_XML_GOTO_FUNCTION_HASHING_H

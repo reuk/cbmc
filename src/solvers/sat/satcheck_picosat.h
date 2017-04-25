@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
-
-\*******************************************************************/
-
 #ifndef CPROVER_SOLVERS_SAT_SATCHECK_PICOSAT_H
 #define CPROVER_SOLVERS_SAT_SATCHECK_PICOSAT_H
 

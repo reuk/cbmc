@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Helper functions for k-induction and loop invariants
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Helper functions for k-induction and loop invariants
 
 #include <util/std_expr.h>
 
@@ -12,18 +6,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <analyses/local_may_alias.h>
 
 #include "loop_utils.h"
-
-/*******************************************************************\
-
-Function: get_loop_exit
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 goto_programt::targett get_loop_exit(const loopt &loop)
 {
@@ -42,18 +24,6 @@ goto_programt::targett get_loop_exit(const loopt &loop)
 
   return ++last;
 }
-
-/*******************************************************************\
-
-Function: build_havoc_code
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void build_havoc_code(
   const goto_programt::targett loop_head,
@@ -75,18 +45,6 @@ void build_havoc_code(
     t->code.add_source_location()=loop_head->source_location;
   }
 }
-
-/*******************************************************************\
-
-Function: get_modifies_lhs
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 static void get_modifies_lhs(
   const local_may_aliast &local_may_alias,
@@ -117,18 +75,6 @@ static void get_modifies_lhs(
     get_modifies_lhs(local_may_alias, t, if_expr.false_case(), modifies);
   }
 }
-
-/*******************************************************************\
-
-Function: get_modifies
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void get_modifies(
   const local_may_aliast &local_may_alias,

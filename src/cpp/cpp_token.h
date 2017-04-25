@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: C++ Parser: Token
-
-Author: Daniel Kroening, kroening@cs.cmu.edu
-
-\*******************************************************************/
+/// \file C++ Parser: Token
 
 #ifndef CPROVER_CPP_CPP_TOKEN_H
 #define CPROVER_CPP_CPP_TOKEN_H

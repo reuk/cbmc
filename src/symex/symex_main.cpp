@@ -1,26 +1,8 @@
-/*******************************************************************\
-
-Module: Symex Main Module
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Symex Main Module
 
 #include <util/unicode.h>
 
 #include "symex_parse_options.h"
-
-/*******************************************************************\
-
-Function: main
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 #ifdef _MSC_VER
 int wmain(int argc, const wchar_t **argv_wide)

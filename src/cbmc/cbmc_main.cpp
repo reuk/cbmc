@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: CBMC Main Module
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file CBMC Main Module
 
 /*
 
@@ -21,18 +15,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #endif
 
 #include "cbmc_parse_options.h"
-
-/*******************************************************************\
-
-Function: main / wmain
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 #ifdef IREP_HASH_STATS
 extern unsigned long long irep_hash_cnt;

@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: JAVA Bytecode Language Conversion
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file JAVA Bytecode Language Conversion
 
 #ifdef DEBUG
 #include <iostream>
@@ -71,18 +65,6 @@ protected:
   void add_array_types();
   void add_string_type();
 };
-
-/*******************************************************************\
-
-Function: java_bytecode_convert_classt::convert
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void java_bytecode_convert_classt::convert(const classt &c)
 {
@@ -180,18 +162,6 @@ void java_bytecode_convert_classt::convert(const classt &c)
     java_root_class(*class_symbol);
 }
 
-/*******************************************************************\
-
-Function: java_bytecode_convert_classt::generate_class_stub
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void java_bytecode_convert_classt::generate_class_stub(
   const irep_idt &class_name)
 {
@@ -225,18 +195,6 @@ void java_bytecode_convert_classt::generate_class_stub(
     java_root_class(*class_symbol);
   }
 }
-
-/*******************************************************************\
-
-Function: java_bytecode_convert_classt::convert
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void java_bytecode_convert_classt::convert(
   symbolt &class_symbol,
@@ -297,18 +255,6 @@ void java_bytecode_convert_classt::convert(
   }
 }
 
-/*******************************************************************\
-
-Function: java_bytecode_convert_classt::add_array_types
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void java_bytecode_convert_classt::add_array_types()
 {
   const std::string letters="ijsbcfdza";
@@ -343,18 +289,6 @@ void java_bytecode_convert_classt::add_array_types()
     symbol_table.add(symbol);
   }
 }
-
-/*******************************************************************\
-
-Function: java_bytecode_convert_class
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool java_bytecode_convert_class(
   const java_bytecode_parse_treet &parse_tree,
@@ -396,15 +330,8 @@ bool java_bytecode_convert_class(
   return true;
 }
 
-/*******************************************************************\
-
-Function: java_bytecode_convert_classt::add_string_type
-
- Purpose: Implements the java.lang.String type in the case that
-          we provide an internal implementation.
-
-\*******************************************************************/
-
+/// Implements the java.lang.String type in the case that we provide an
+/// internal implementation.
 void java_bytecode_convert_classt::add_string_type()
 {
   class_typet string_type;

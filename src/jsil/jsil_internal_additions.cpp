@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Jsil Language
-
-Author: Michael Tautschnig, tautschn@amazon.com
-
-\*******************************************************************/
+/// \file Jsil Language
 
 #include <util/std_types.h>
 #include <util/cprover_prefix.h>
@@ -15,18 +9,6 @@ Author: Michael Tautschnig, tautschn@amazon.com
 #include "jsil_types.h"
 
 #include "jsil_internal_additions.h"
-
-/*******************************************************************\
-
-Function: jsil_internal_additions
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void jsil_internal_additions(symbol_tablet &dest)
 {

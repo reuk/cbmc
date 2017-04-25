@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Pointer Logic
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Pointer Logic
 
 #ifndef CPROVER_SOLVERS_FLATTENING_POINTER_LOGIC_H
 #define CPROVER_SOLVERS_FLATTENING_POINTER_LOGIC_H

@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <algorithm>
 #include <iostream>
 
@@ -14,18 +6,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "boolbv.h"
 
 #include "../floatbv/float_utils.h"
-
-/*******************************************************************\
-
-Function: boolbvt::convert_floatbv_typecast
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bvt boolbvt::convert_floatbv_typecast(const floatbv_typecast_exprt &expr)
 {
@@ -83,18 +63,6 @@ bvt boolbvt::convert_floatbv_typecast(const floatbv_typecast_exprt &expr)
   else
     return conversion_failed(expr);
 }
-
-/*******************************************************************\
-
-Function: boolbvt::convert_floatbv_op
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bvt boolbvt::convert_floatbv_op(const exprt &expr)
 {

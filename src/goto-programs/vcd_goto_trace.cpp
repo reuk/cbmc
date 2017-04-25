@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Traces of GOTO Programs in VCD (Value Change Dump) Format
-
-Author: Daniel Kroening
-
-Date: June 2011
-
-\*******************************************************************/
+/// \file Traces of GOTO Programs in VCD (Value Change Dump) Format
 
 #include <ctime>
 #include <ostream>
@@ -17,18 +9,6 @@ Date: June 2011
 #include <util/numbering.h>
 
 #include "vcd_goto_trace.h"
-
-/*******************************************************************\
-
-Function: output_vcd
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 std::string as_vcd_binary(
   const exprt &expr,
@@ -89,18 +69,6 @@ std::string as_vcd_binary(
 
   return "";
 }
-
-/*******************************************************************\
-
-Function: output_vcd
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void output_vcd(
   const namespacet &ns,

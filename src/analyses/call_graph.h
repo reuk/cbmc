@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Function Call Graphs
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Function Call Graphs
 
 #ifndef CPROVER_ANALYSES_CALL_GRAPH_H
 #define CPROVER_ANALYSES_CALL_GRAPH_H

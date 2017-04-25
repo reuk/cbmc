@@ -1,14 +1,8 @@
-/*******************************************************************\
-
-Module: String support via creating string constraints and progressively
-        instantiating the universal constraints as needed.
-	The procedure is described in the PASS paper at HVC'13:
-        "PASS: String Solving with Parameterized Array and Interval Automaton"
-        by Guodong Li and Indradeep Ghosh
-
-Author: Alberto Griggio, alberto.griggio@gmail.com
-
-\*******************************************************************/
+/// \file  String support via creating string constraints and progressively
+/// instantiating the universal constraints as needed.         The procedure is
+/// described in the PASS paper at HVC'13:         "PASS: String Solving with
+/// Parameterized Array and Interval Automaton"         by Guodong Li and
+/// Indradeep Ghosh
 
 #ifndef CPROVER_SOLVERS_REFINEMENT_STRING_REFINEMENT_H
 #define CPROVER_SOLVERS_REFINEMENT_STRING_REFINEMENT_H

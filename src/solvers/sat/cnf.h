@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: CNF Generation, via Tseitin
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file CNF Generation, via Tseitin
 
 #ifndef CPROVER_SOLVERS_SAT_CNF_H
 #define CPROVER_SOLVERS_SAT_CNF_H

@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: CM Wintersteiger
-
-\*******************************************************************/
-
 #ifndef CPROVER_SOLVERS_QBF_QDIMACS_CORE_H
 #define CPROVER_SOLVERS_QBF_QDIMACS_CORE_H
 

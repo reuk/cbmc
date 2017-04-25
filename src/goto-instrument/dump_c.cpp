@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Dump Goto-Program as C/C++ Source
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Dump Goto-Program as C/C++ Source
 
 #include <sstream>
 #include <cctype>
@@ -24,35 +18,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "dump_c.h"
 
-/*******************************************************************\
-
-Function: operator<<
-
-Inputs:
-
-Outputs:
-
-Purpose:
-
-\*******************************************************************/
-
 inline std::ostream &operator << (std::ostream &out, dump_ct &src)
 {
   src(out);
   return out;
 }
-
-/*******************************************************************\
-
-Function: dump_ct::operator()
-
-Inputs:
-
-Outputs:
-
-Purpose:
-
-\*******************************************************************/
 
 void dump_ct::operator()(std::ostream &os)
 {
@@ -294,18 +264,7 @@ void dump_ct::operator()(std::ostream &os)
   os << func_body_stream.str();
 }
 
-/*******************************************************************\
-
-Function: dump_ct::convert_compound_declarations
-
-Inputs:
-
-Outputs:
-
-Purpose: declare compound types
-
-\*******************************************************************/
-
+/// declare compound types
 void dump_ct::convert_compound_declaration(
     const symbolt &symbol,
     std::ostream &os_body)
@@ -319,18 +278,6 @@ void dump_ct::convert_compound_declaration(
      symbol.type.id()==ID_c_enum)
     convert_compound(symbol.type, symbol_typet(symbol.name), true, os_body);
 }
-
-/*******************************************************************\
-
-Function: dump_ct::convert_compound
-
-Inputs:
-
-Outputs:
-
-Purpose:
-
-\*******************************************************************/
 
 void dump_ct::convert_compound(
   const typet &type,
@@ -384,18 +331,6 @@ void dump_ct::convert_compound(
   else if(type.id()==ID_c_enum)
     convert_compound_enum(type, os);
 }
-
-/*******************************************************************\
-
-Function: dump_ct::convert_compound
-
-Inputs:
-
-Outputs:
-
-Purpose:
-
-\*******************************************************************/
 
 void dump_ct::convert_compound(
   const struct_union_typet &type,
@@ -553,18 +488,6 @@ void dump_ct::convert_compound(
   os << std::endl;
 }
 
-/*******************************************************************\
-
-Function: dump_ct::convert_compound_enum
-
-Inputs:
-
-Outputs:
-
-Purpose:
-
-\*******************************************************************/
-
 void dump_ct::convert_compound_enum(
   const typet &type,
   std::ostream &os)
@@ -607,18 +530,6 @@ void dump_ct::convert_compound_enum(
 
   os << ";\n\n";
 }
-
-/*******************************************************************\
-
-Function: dump_ct::init_system_library_map
-
-Inputs:
-
-Outputs:
-
-Purpose:
-
-\*******************************************************************/
 
 #define ADD_TO_SYSTEM_LIBRARY(v, header) \
   for(size_t i=0; i<sizeof(v)/sizeof(char*); ++i) \
@@ -800,18 +711,6 @@ void dump_ct::init_system_library_map()
   ADD_TO_SYSTEM_LIBRARY(sys_wait_syms, "sys/wait.h");
 }
 
-/*******************************************************************\
-
-Function: dump_ct::ignore
-
-Inputs:
-
-Outputs:
-
-Purpose:
-
-\*******************************************************************/
-
 bool dump_ct::ignore(const symbolt &symbol)
 {
   const std::string &name_str=id2string(symbol.name);
@@ -861,18 +760,6 @@ bool dump_ct::ignore(const symbolt &symbol)
   return false;
 }
 
-/*******************************************************************\
-
-Function: dump_ct::cleanup_decl
-
-Inputs:
-
-Outputs:
-
-Purpose:
-
-\*******************************************************************/
-
 void dump_ct::cleanup_decl(
   code_declt &decl,
   std::list<irep_idt> &local_static,
@@ -912,18 +799,6 @@ void dump_ct::cleanup_decl(
   assert(b.operands().size()==1);
   decl.swap(b.op0());
 }
-
-/*******************************************************************\
-
-Function: dump_ct::convert_global_variables
-
-Inputs:
-
-Outputs:
-
-Purpose:
-
-\*******************************************************************/
 
 void dump_ct::convert_global_variable(
     const symbolt &symbol,
@@ -987,18 +862,6 @@ void dump_ct::convert_global_variable(
     os << expr_to_string(d) << std::endl;
   }
 }
-
-/*******************************************************************\
-
-Function: dump_ct::convert_function_declarations
-
-Inputs:
-
-Outputs:
-
-Purpose:
-
-\*******************************************************************/
 
 void dump_ct::convert_function_declaration(
     const symbolt &symbol,
@@ -1067,18 +930,6 @@ void dump_ct::convert_function_declaration(
     os_decl << make_decl(symbol.name, symbol.type) << ";" << std::endl;
   }
 }
-
-/*******************************************************************\
-
-Function: find_block_position_rec
-
-Inputs:
-
-Outputs:
-
-Purpose:
-
-\*******************************************************************/
 
 static bool find_block_position_rec(
   const irep_idt &identifier,
@@ -1159,18 +1010,6 @@ static bool find_block_position_rec(
   return false;
 }
 
-/*******************************************************************\
-
-Function: dump_ct::insert_local_static_decls
-
-Inputs:
-
-Outputs:
-
-Purpose:
-
-\*******************************************************************/
-
 void dump_ct::insert_local_static_decls(
   code_blockt &b,
   const std::list<irep_idt> &local_static,
@@ -1204,18 +1043,6 @@ void dump_ct::insert_local_static_decls(
     }
   }
 }
-
-/*******************************************************************\
-
-Function: dump_ct::insert_local_type_decls
-
-Inputs:
-
-Outputs:
-
-Purpose:
-
-\*******************************************************************/
 
 void dump_ct::insert_local_type_decls(
   code_blockt &b,
@@ -1253,18 +1080,6 @@ void dump_ct::insert_local_type_decls(
     }
   }
 }
-
-/*******************************************************************\
-
-Function: dump_ct::cleanup_expr
-
-Inputs:
-
-Outputs:
-
-Purpose:
-
-\*******************************************************************/
 
 void dump_ct::cleanup_expr(exprt &expr)
 {
@@ -1413,18 +1228,6 @@ void dump_ct::cleanup_expr(exprt &expr)
   }
 }
 
-/*******************************************************************\
-
-Function: dump_ct::cleanup_type
-
-Inputs:
-
-Outputs:
-
-Purpose:
-
-\*******************************************************************/
-
 void dump_ct::cleanup_type(typet &type)
 {
   Forall_subtypes(it, type)
@@ -1450,18 +1253,6 @@ void dump_ct::cleanup_type(typet &type)
          !type.get(ID_tag).empty());
 }
 
-/*******************************************************************\
-
-Function: dump_ct::type_to_string
-
-Inputs:
-
-Outputs:
-
-Purpose:
-
-\*******************************************************************/
-
 std::string dump_ct::type_to_string(const typet &type)
 {
   std::string ret;
@@ -1470,18 +1261,6 @@ std::string dump_ct::type_to_string(const typet &type)
   language->from_type(t, ret, ns);
   return ret;
 }
-
-/*******************************************************************\
-
-Function: dump_ct::expr_to_string
-
-Inputs:
-
-Outputs:
-
-Purpose:
-
-\*******************************************************************/
 
 std::string dump_ct::expr_to_string(const exprt &expr)
 {
@@ -1492,18 +1271,6 @@ std::string dump_ct::expr_to_string(const exprt &expr)
   return ret;
 }
 
-/*******************************************************************\
-
-Function: dump_c
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void dump_c(
   const goto_functionst &src,
   const bool use_system_headers,
@@ -1513,18 +1280,6 @@ void dump_c(
   dump_ct goto2c(src, use_system_headers, ns, new_ansi_c_language);
   out << goto2c;
 }
-
-/*******************************************************************\
-
-Function: dump_cpp
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void dump_cpp(
   const goto_functionst &src,

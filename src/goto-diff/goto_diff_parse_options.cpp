@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: GOTO-DIFF Command Line Option Processing
-
-Author: Peter Schrammel
-
-\*******************************************************************/
+/// \file GOTO-DIFF Command Line Option Processing
 
 #include <fstream>
 #include <cstdlib> // exit()
@@ -44,18 +38,6 @@ Author: Peter Schrammel
 #include "unified_diff.h"
 #include "change_impact.h"
 
-/*******************************************************************\
-
-Function: goto_diff_parse_optionst::goto_diff_parse_optionst
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 goto_diff_parse_optionst::goto_diff_parse_optionst(int argc, const char **argv):
   parse_options_baset(GOTO_DIFF_OPTIONS, argc, argv),
   goto_diff_languagest(cmdline, ui_message_handler),
@@ -63,18 +45,6 @@ goto_diff_parse_optionst::goto_diff_parse_optionst(int argc, const char **argv):
   languages2(cmdline, ui_message_handler)
 {
 }
-
-/*******************************************************************\
-
-Function: goto_diff_parse_optionst::goto_diff_parse_optionst
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 ::goto_diff_parse_optionst::goto_diff_parse_optionst(
   int argc,
@@ -86,18 +56,6 @@ Function: goto_diff_parse_optionst::goto_diff_parse_optionst
   languages2(cmdline, ui_message_handler)
 {
 }
-
-/*******************************************************************\
-
-Function: goto_diff_parse_optionst::eval_verbosity
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_diff_parse_optionst::eval_verbosity()
 {
@@ -113,18 +71,6 @@ void goto_diff_parse_optionst::eval_verbosity()
 
   ui_message_handler.set_verbosity(v);
 }
-
-/*******************************************************************\
-
-Function: goto_diff_parse_optionst::get_command_line_options
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_diff_parse_optionst::get_command_line_options(optionst &options)
 {
@@ -280,18 +226,7 @@ void goto_diff_parse_optionst::get_command_line_options(optionst &options)
   }
 }
 
-/*******************************************************************\
-
-Function: goto_diff_parse_optionst::doit
-
-  Inputs:
-
- Outputs:
-
- Purpose: invoke main modules
-
-\*******************************************************************/
-
+/// invoke main modules
 int goto_diff_parse_optionst::doit()
 {
   if(cmdline.isset("version"))
@@ -383,18 +318,6 @@ int goto_diff_parse_optionst::doit()
   return 0;
 }
 
-/*******************************************************************\
-
-Function: goto_diff_parse_optionst::get_goto_program
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 int goto_diff_parse_optionst::get_goto_program(
   const optionst &options,
   goto_diff_languagest &languages,
@@ -451,18 +374,6 @@ int goto_diff_parse_optionst::get_goto_program(
 
   return -1; // no error, continue
 }
-
-/*******************************************************************\
-
-Function: goto_diff_parse_optionst::process_goto_program
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool goto_diff_parse_optionst::process_goto_program(
   const optionst &options,
@@ -550,18 +461,7 @@ bool goto_diff_parse_optionst::process_goto_program(
   return false;
 }
 
-/*******************************************************************\
-
-Function: goto_diff_parse_optionst::help
-
-  Inputs:
-
- Outputs:
-
- Purpose: display command line help
-
-\*******************************************************************/
-
+/// display command line help
 void goto_diff_parse_optionst::help()
 {
   std::cout <<

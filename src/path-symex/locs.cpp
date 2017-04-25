@@ -1,42 +1,12 @@
-/*******************************************************************\
-
-Module: Program Locations
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Program Locations
 
 #include "locs.h"
-
-/*******************************************************************\
-
-Function: locst::locst
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 locst::locst(
   const namespacet &_ns):
   ns(_ns)
 {
 }
-
-/*******************************************************************\
-
-Function: locst::build
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void locst::build(const goto_functionst &goto_functions)
 {
@@ -101,18 +71,6 @@ void locst::build(const goto_functionst &goto_functions)
       throw "locst does not support more than one branch target";
   }
 }
-
-/*******************************************************************\
-
-Function: locst::output
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void locst::output(std::ostream &out) const
 {

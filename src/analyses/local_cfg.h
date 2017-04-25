@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: CFG for One Function
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file CFG for One Function
 
 #ifndef CPROVER_ANALYSES_LOCAL_CFG_H
 #define CPROVER_ANALYSES_LOCAL_CFG_H
@@ -12,14 +6,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/numbering.h>
 
 #include <goto-programs/goto_functions.h>
-
-/*******************************************************************\
-
-   Class: local_cfgt
-
- Purpose:
-
-\*******************************************************************/
 
 class local_cfgt
 {

@@ -1,26 +1,6 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <util/std_types.h>
 
 #include "boolbv.h"
-
-/*******************************************************************\
-
-Function: boolbvt::convert_mult
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bvt boolbvt::convert_mult(const exprt &expr)
 {

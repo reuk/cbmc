@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Coverage Instrumentation
-
-Author: Daniel Kroening
-
-Date: May 2016
-
-\*******************************************************************/
+/// \file Coverage Instrumentation
 
 #ifndef CPROVER_GOTO_INSTRUMENT_COVER_H
 #define CPROVER_GOTO_INSTRUMENT_COVER_H

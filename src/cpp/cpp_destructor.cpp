@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: C++ Language Type Checking
-
-Author: Daniel Kroening, kroening@cs.cmu.edu
-
-\*******************************************************************/
+/// \file C++ Language Type Checking
 
 #include <util/arith_tools.h>
 
@@ -12,18 +6,7 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 #include "cpp_typecheck.h"
 
-/*******************************************************************\
-
-Function: cpp_typecheckt::cpp_destructor
-
-  Inputs:
-
- Outputs: typechecked code
-
- Purpose:
-
-\*******************************************************************/
-
+/// \returns typechecked code
 codet cpp_typecheckt::cpp_destructor(
   const source_locationt &source_location,
   const typet &type,

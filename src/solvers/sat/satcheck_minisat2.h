@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #ifndef CPROVER_SOLVERS_SAT_SATCHECK_MINISAT2_H
 #define CPROVER_SOLVERS_SAT_SATCHECK_MINISAT2_H
 

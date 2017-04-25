@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Variable Numbering
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Variable Numbering
 
 #ifndef CPROVER_PATH_SYMEX_VAR_MAP_H
 #define CPROVER_PATH_SYMEX_VAR_MAP_H

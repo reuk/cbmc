@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <util/expr.h>
 #include <util/std_types.h>
 #include <util/std_expr.h>
@@ -16,19 +8,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "flatten_byte_operators.h"
 
-/*******************************************************************\
-
-Function: flatten_byte_extract
-
-  Inputs:
-
- Outputs:
-
- Purpose: rewrite byte extraction from an array to byte extraction
-          from a concatenation of array index expressions
-
-\*******************************************************************/
-
+/// rewrite byte extraction from an array to byte extraction from a
+/// concatenation of array index expressions
 exprt flatten_byte_extract(
   const byte_extract_exprt &src,
   const namespacet &ns)
@@ -175,18 +156,6 @@ exprt flatten_byte_extract(
     return extractbits;
   }
 }
-
-/*******************************************************************\
-
-Function: flatten_byte_update
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 exprt flatten_byte_update(
   const byte_update_exprt &src,
@@ -441,36 +410,12 @@ exprt flatten_byte_update(
   }
 }
 
-/*******************************************************************\
-
-Function: flatten_byte_update
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 exprt flatten_byte_update(
   const byte_update_exprt &src,
   const namespacet &ns)
 {
   return flatten_byte_update(src, ns, false);
 }
-
-/*******************************************************************\
-
-Function: has_byte_operators
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool has_byte_operator(const exprt &src)
 {
@@ -486,18 +431,6 @@ bool has_byte_operator(const exprt &src)
 
   return false;
 }
-
-/*******************************************************************\
-
-Function: flatten_byte_operators
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 exprt flatten_byte_operators(
   const exprt &src,

@@ -1,11 +1,4 @@
-/*******************************************************************\
-
-Module: Counterexample-Guided Inductive Synthesis
-
-Author: Daniel Kroening, kroening@kroening.com
-        Pascal Kesseli, pascal.kesseli@cs.ox.ac.uk
-
-\*******************************************************************/
+/// \file Counterexample-Guided Inductive Synthesis
 
 #ifndef CPROVER_CEGIS_DANGER_SYMEX_VERIFY_PARALLEL_DANGER_VERIFIER_H
 #define CPROVER_CEGIS_DANGER_SYMEX_VERIFY_PARALLEL_DANGER_VERIFIER_H

@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <cassert>
 
 #include "simplify_expr_class.h"
@@ -14,18 +6,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "std_expr.h"
 #include "pointer_offset_size.h"
 #include "arith_tools.h"
-
-/*******************************************************************\
-
-Function: simplify_exprt::simplify_member
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool simplify_exprt::simplify_member(exprt &expr)
 {

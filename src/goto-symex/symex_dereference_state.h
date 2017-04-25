@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Symbolic Execution of ANSI-C
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Symbolic Execution of ANSI-C
 
 #ifndef CPROVER_GOTO_SYMEX_SYMEX_DEREFERENCE_STATE_H
 #define CPROVER_GOTO_SYMEX_SYMEX_DEREFERENCE_STATE_H
@@ -12,18 +6,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <pointer-analysis/dereference_callback.h>
 
 #include "goto_symex.h"
-
-/*******************************************************************\
-
-   Class: symex_dereference_statet
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 class symex_dereference_statet:
   public dereference_callbackt

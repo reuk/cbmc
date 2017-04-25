@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: memory models
-
-Author: Vincent Nimal
-
-Date: 2012
-
-\*******************************************************************/
+/// \file memory models
 
 #ifndef CPROVER_GOTO_INSTRUMENT_WMM_WMM_H
 #define CPROVER_GOTO_INSTRUMENT_WMM_WMM_H

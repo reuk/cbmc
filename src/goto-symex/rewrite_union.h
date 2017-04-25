@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Symbolic Execution
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Symbolic Execution
 
 #ifndef CPROVER_GOTO_SYMEX_REWRITE_UNION_H
 #define CPROVER_GOTO_SYMEX_REWRITE_UNION_H

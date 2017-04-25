@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <ostream>
 
 #include <util/config.h>
@@ -13,18 +5,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <ansi-c/ansi_c_internal_additions.h>
 
 #include "cpp_internal_additions.h"
-
-/*******************************************************************\
-
-Function: c2cpp
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 std::string c2cpp(const std::string &s)
 {
@@ -48,18 +28,6 @@ std::string c2cpp(const std::string &s)
 
   return result;
 }
-
-/*******************************************************************\
-
-Function: cpp_interal_additions
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void cpp_internal_additions(std::ostream &out)
 {

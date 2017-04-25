@@ -1,11 +1,5 @@
-/*******************************************************************\
-
-Module: ILP construction for cycles containing user-placed fences
-        and resolution
-
-Author: Vincent Nimal
-
-\*******************************************************************/
+/// \file ILP construction for cycles containing user-placed fences        and
+/// resolution
 
 #ifndef CPROVER_MUSKETEER_FENCE_USER_DEF_H
 #define CPROVER_MUSKETEER_FENCE_USER_DEF_H

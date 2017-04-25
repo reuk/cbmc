@@ -1,11 +1,4 @@
-/*******************************************************************\
-
-Module: Flow Insensitive Static Analysis
-
-Author: Daniel Kroening, kroening@kroening.com
-        CM Wintersteiger
-
-\*******************************************************************/
+/// \file Flow Insensitive Static Analysis
 
 #include <cassert>
 
@@ -13,18 +6,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/std_code.h>
 
 #include "flow_insensitive_analysis.h"
-
-/*******************************************************************\
-
-Function: flow_insensitive_abstract_domain_baset::get_guard
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 exprt flow_insensitive_abstract_domain_baset::get_guard(
   locationt from,
@@ -46,18 +27,6 @@ exprt flow_insensitive_abstract_domain_baset::get_guard(
   return from->guard;
 }
 
-/*******************************************************************\
-
-Function: flow_insensitive_abstract_domain_baset::get_return_lhs
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 exprt flow_insensitive_abstract_domain_baset::get_return_lhs(locationt to) const
 {
   // get predecessor of "to"
@@ -76,36 +45,12 @@ exprt flow_insensitive_abstract_domain_baset::get_return_lhs(locationt to) const
   return code.lhs();
 }
 
-/*******************************************************************\
-
-Function: flow_insensitive_analysis_baset::operator()
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void flow_insensitive_analysis_baset::operator()(
   const goto_functionst &goto_functions)
 {
   initialize(goto_functions);
   fixedpoint(goto_functions);
 }
-
-/*******************************************************************\
-
-Function: flow_insensitive_analysis_baset::operator()
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void flow_insensitive_analysis_baset::operator()(
   const goto_programt &goto_program)
@@ -114,18 +59,6 @@ void flow_insensitive_analysis_baset::operator()(
   goto_functionst goto_functions;
   fixedpoint(goto_program, goto_functions);
 }
-
-/*******************************************************************\
-
-Function: flow_insensitive_analysis_baset::output
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void flow_insensitive_analysis_baset::output(
   const goto_functionst &goto_functions,
@@ -142,18 +75,6 @@ void flow_insensitive_analysis_baset::output(
   }
 }
 
-/*******************************************************************\
-
-Function: flow_insensitive_analysis_baset::output
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void flow_insensitive_analysis_baset::output(
   const goto_programt &goto_program,
   const irep_idt &identifier,
@@ -161,18 +82,6 @@ void flow_insensitive_analysis_baset::output(
 {
   get_state().output(ns, out);
 }
-
-/*******************************************************************\
-
-Function: flow_insensitive_analysis_baset::get_next
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 flow_insensitive_analysis_baset::locationt
 flow_insensitive_analysis_baset::get_next(
@@ -190,18 +99,6 @@ flow_insensitive_analysis_baset::get_next(
 
   return l;
 }
-
-/*******************************************************************\
-
-Function: flow_insensitive_analysis_baset::fixedpoint
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool flow_insensitive_analysis_baset::fixedpoint(
   const goto_programt &goto_program,
@@ -230,18 +127,6 @@ bool flow_insensitive_analysis_baset::fixedpoint(
 
   return new_data;
 }
-
-/*******************************************************************\
-
-Function: flow_insensitive_analysis_baset::visit
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool flow_insensitive_analysis_baset::visit(
   locationt l,
@@ -312,18 +197,6 @@ bool flow_insensitive_analysis_baset::visit(
 
   return new_data;
 }
-
-/*******************************************************************\
-
-Function: flow_insensitive_analysis_baset::do_function_call
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool flow_insensitive_analysis_baset::do_function_call(
   locationt l_call,
@@ -404,18 +277,6 @@ bool flow_insensitive_analysis_baset::do_function_call(
 
   return new_data;
 }
-
-/*******************************************************************\
-
-Function: flow_insensitive_analysis_baset::do_function_call_rec
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool flow_insensitive_analysis_baset::do_function_call_rec(
   locationt l_call,
@@ -526,18 +387,6 @@ bool flow_insensitive_analysis_baset::do_function_call_rec(
   return new_data;
 }
 
-/*******************************************************************\
-
-Function: flow_insensitive_analysis_baset::fixedpoint
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void flow_insensitive_analysis_baset::fixedpoint(
   const goto_functionst &goto_functions)
 {
@@ -551,18 +400,6 @@ void flow_insensitive_analysis_baset::fixedpoint(
     }
 }
 
-/*******************************************************************\
-
-Function: flow_insensitive_analysis_baset::fixedpoint
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 bool flow_insensitive_analysis_baset::fixedpoint(
   const goto_functionst::function_mapt::const_iterator it,
   const goto_functionst &goto_functions)
@@ -571,35 +408,11 @@ bool flow_insensitive_analysis_baset::fixedpoint(
   return fixedpoint(it->second.body, goto_functions);
 }
 
-/*******************************************************************\
-
-Function: flow_insensitive_analysis_baset::update
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void flow_insensitive_analysis_baset::update(
   const goto_functionst &goto_functions)
 {
   // no need to copy value sets around
 }
-
-/*******************************************************************\
-
-Function: flow_insensitive_analysis_baset::update
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void flow_insensitive_analysis_baset::update(
   const goto_programt &goto_program)

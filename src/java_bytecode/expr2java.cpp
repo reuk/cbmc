@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@cs.cmu.edu
-
-\*******************************************************************/
-
 #include <cassert>
 
 #include <util/namespace.h>
@@ -20,18 +12,6 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 #include "java_types.h"
 #include "expr2java.h"
-
-/*******************************************************************\
-
-Function: expr2javat::convert_code_function_call
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 std::string expr2javat::convert_code_function_call(
   const code_function_callt &src,
@@ -103,18 +83,6 @@ std::string expr2javat::convert_code_function_call(
   return dest;
 }
 
-/*******************************************************************\
-
-Function: expr2javat::convert_struct
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 std::string expr2javat::convert_struct(
   const exprt &src,
   unsigned &precedence)
@@ -178,18 +146,6 @@ std::string expr2javat::convert_struct(
 
   return dest;
 }
-
-/*******************************************************************\
-
-Function: expr2javat::convert_constant
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 std::string expr2javat::convert_constant(
   const constant_exprt &src,
@@ -274,18 +230,6 @@ std::string expr2javat::convert_constant(
   return expr2ct::convert_constant(src, precedence);
 }
 
-/*******************************************************************\
-
-Function: expr2javat::convert_rec
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 std::string expr2javat::convert_rec(
   const typet &src,
   const c_qualifierst &qualifiers,
@@ -360,36 +304,12 @@ std::string expr2javat::convert_rec(
     return expr2ct::convert_rec(src, qualifiers, declarator);
 }
 
-/*******************************************************************\
-
-Function: expr2javat::convert_java_this
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 std::string expr2javat::convert_java_this(
   const exprt &src,
   unsigned precedence)
 {
   return "this";
 }
-
-/*******************************************************************\
-
-Function: expr2javat::convert_java_instanceof
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 std::string expr2javat::convert_java_instanceof(
   const exprt &src,
@@ -403,18 +323,6 @@ std::string expr2javat::convert_java_instanceof(
 
   return convert(src.op0())+" instanceof "+convert(src.op1().type());
 }
-
-/*******************************************************************\
-
-Function: expr2javat::convert_java_new
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 std::string expr2javat::convert_java_new(
   const exprt &src,
@@ -441,18 +349,6 @@ std::string expr2javat::convert_java_new(
   return dest;
 }
 
-/*******************************************************************\
-
-Function: expr2javat::convert_code_java_delete
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 std::string expr2javat::convert_code_java_delete(
   const exprt &src,
   unsigned indent)
@@ -471,18 +367,6 @@ std::string expr2javat::convert_code_java_delete(
 
   return dest;
 }
-
-/*******************************************************************\
-
-Function: expr2javat::convert
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 std::string expr2javat::convert(
   const exprt &src,
@@ -519,18 +403,6 @@ std::string expr2javat::convert(
     return expr2ct::convert(src, precedence);
 }
 
-/*******************************************************************\
-
-Function: expr2javat::convert_code
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 std::string expr2javat::convert_code(
   const codet &src,
   unsigned indent)
@@ -547,36 +419,12 @@ std::string expr2javat::convert_code(
   return expr2ct::convert_code(src, indent);
 }
 
-/*******************************************************************\
-
-Function: expr2java
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 std::string expr2java(const exprt &expr, const namespacet &ns)
 {
   expr2javat expr2java(ns);
   expr2java.get_shorthands(expr);
   return expr2java.convert(expr);
 }
-
-/*******************************************************************\
-
-Function: type2java
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 std::string type2java(const typet &type, const namespacet &ns)
 {

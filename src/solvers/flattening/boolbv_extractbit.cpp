@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <cassert>
 #include <algorithm>
 
@@ -14,18 +6,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/std_types.h>
 
 #include "boolbv.h"
-
-/*******************************************************************\
-
-Function: boolbvt::convert_extractbit
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 literalt boolbvt::convert_extractbit(const extractbit_exprt &expr)
 {

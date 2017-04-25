@@ -1,26 +1,8 @@
-/*******************************************************************\
-
-Module: Literals
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Literals
 
 #include <ostream>
 
 #include "literal.h"
-
-/*******************************************************************\
-
-Function: operator <<
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 std::ostream &operator << (std::ostream &out, literalt l)
 {

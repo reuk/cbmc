@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Base class for command line interpretation
-
-Author: CM Wintersteiger
-
-Date: June 2006
-
-\*******************************************************************/
+/// \file Base class for command line interpretation
 
 #ifndef CPROVER_GOTO_CC_GCC_MODE_H
 #define CPROVER_GOTO_CC_GCC_MODE_H

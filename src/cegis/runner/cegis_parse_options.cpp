@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: CEGIS Command Line Option Processing
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file CEGIS Command Line Option Processing
 
 #include <iostream>
 
@@ -20,18 +14,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <cegis/refactor/facade/refactor_runner.h>
 
 #include <cegis/runner/cegis_parse_options.h>
-
-/*******************************************************************\
-
-Function: cegis_parse_optionst::cegis_parse_optionst
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 cegis_parse_optionst::cegis_parse_optionst(int argc, const char **argv):
   cbmc_parse_optionst(argc, argv, CEGIS_OPTIONS)
@@ -49,18 +31,6 @@ void set_integer_option(optionst &opt, const cmdlinet &cmd,
   opt.set_option(name, static_cast<unsigned int>(value));
 }
 }
-
-/*******************************************************************\
-
-Function: cegis_parse_optionst::get_command_line_options
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void cegis_parse_optionst::get_command_line_options(optionst &options)
 {
@@ -93,18 +63,7 @@ void cegis_parse_optionst::get_command_line_options(optionst &options)
   }
 }
 
-/*******************************************************************\
-
-Function: cegis_parse_optionst::do_bmc
-
-  Inputs:
-
- Outputs:
-
- Purpose: invoke main modules
-
-\*******************************************************************/
-
+/// invoke main modules
 int cegis_parse_optionst::do_bmc(
   bmct &bmc,
   const goto_functionst &goto_functions)
@@ -126,18 +85,7 @@ int cegis_parse_optionst::do_bmc(
   return cbmc_parse_optionst::do_bmc(bmc, goto_functions);
 }
 
-/*******************************************************************\
-
-Function: cegis_parse_optionst::help
-
-  Inputs:
-
- Outputs:
-
- Purpose: print help
-
-\*******************************************************************/
-
+/// print help
 void cegis_parse_optionst::help()
 {
   std::cout <<

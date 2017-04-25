@@ -1,14 +1,8 @@
-/*******************************************************************\
-
-Module: Generates string constraints to link results from string functions
-        with their arguments. This is inspired by the PASS paper at HVC'13:
-        "PASS: String Solving with Parameterized Array and Interval Automaton"
-        by Guodong Li and Indradeep Ghosh, which gives examples of constraints
-        for several functions.
-
-Author: Romain Brenguier, romain.brenguier@diffblue.com
-
-\*******************************************************************/
+/// \file Generates string constraints to link results from string functions
+/// with their arguments. This is inspired by the PASS paper at HVC'13:
+/// "PASS: String Solving with Parameterized Array and Interval Automaton"
+/// by Guodong Li and Indradeep Ghosh, which gives examples of constraints
+/// for several functions.
 
 #include <ansi-c/string_constant.h>
 #include <java_bytecode/java_types.h>
@@ -19,39 +13,25 @@ Author: Romain Brenguier, romain.brenguier@diffblue.com
 
 unsigned string_constraint_generatort::next_symbol_id=1;
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::constant_char
-
-  Inputs: integer representing a character, and a type for characters;
-          we do not use char type here because in some languages
-          (for instance java) characters use more than 8 bits.
-
- Outputs: constant expression corresponding to the character.
-
- Purpose: generate constant character expression with character type.
-
-\*******************************************************************/
-
+/// generate constant character expression with character type.
+///
+/// parameters: integer representing a character, and a type for characters; we
+///   do not use char type here because in some languages (for instance java)
+///   characters use more than 8 bits.
+///
+/// \returns constant expression corresponding to the character.
 constant_exprt string_constraint_generatort::constant_char(
   int i, const typet &char_type)
 {
   return from_integer(i, char_type);
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generator::fresh_symbol
-
-  Inputs: a prefix and a type
-
- Outputs: a symbol of type tp whose name starts with
-          "string_refinement#" followed by prefix
-
- Purpose: generate a new symbol expression of the given type with some prefix
-
-\*******************************************************************/
-
+/// generate a new symbol expression of the given type with some prefix
+///
+/// parameters: a prefix and a type
+///
+/// \returns a symbol of type tp whose name starts with "string_refinement#"
+///   followed by prefix
 symbol_exprt string_constraint_generatort::fresh_symbol(
   const irep_idt &prefix, const typet &type)
 {
@@ -61,37 +41,22 @@ symbol_exprt string_constraint_generatort::fresh_symbol(
   return symbol_exprt(name, type);
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::fresh_univ_index
-
-  Inputs: a prefix
-
- Outputs: a symbol of index type whose name starts with the prefix
-
- Purpose: generate an index symbol to be used as an universaly quantified
-          variable
-
-\*******************************************************************/
-
+/// generate an index symbol to be used as an universaly quantified variable
+///
+/// parameters: a prefix
+///
+/// \returns a symbol of index type whose name starts with the prefix
 symbol_exprt string_constraint_generatort::fresh_univ_index(
   const irep_idt &prefix, const typet &type)
 {
   return fresh_symbol(prefix, type);
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::fresh_exist_index
-
-  Inputs: a prefix
-
- Outputs: a symbol of index type whose name starts with the prefix
-
- Purpose: generate an index symbol which is existentially quantified
-
-\*******************************************************************/
-
+/// generate an index symbol which is existentially quantified
+///
+/// parameters: a prefix
+///
+/// \returns a symbol of index type whose name starts with the prefix
 symbol_exprt string_constraint_generatort::fresh_exist_index(
   const irep_idt &prefix, const typet &type)
 {
@@ -100,18 +65,11 @@ symbol_exprt string_constraint_generatort::fresh_exist_index(
   return s;
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::fresh_boolean
-
-  Inputs: a prefix
-
- Outputs: a symbol of index type whose name starts with the prefix
-
- Purpose: generate a Boolean symbol which is existentially quantified
-
-\*******************************************************************/
-
+/// generate a Boolean symbol which is existentially quantified
+///
+/// parameters: a prefix
+///
+/// \returns a symbol of index type whose name starts with the prefix
 symbol_exprt string_constraint_generatort::fresh_boolean(
   const irep_idt &prefix)
 {
@@ -120,19 +78,11 @@ symbol_exprt string_constraint_generatort::fresh_boolean(
   return b;
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::fresh_string
-
-  Inputs: a type for string
-
- Outputs: a string expression
-
- Purpose: construct a string expression whose length and content are new
-          variables
-
-\*******************************************************************/
-
+/// construct a string expression whose length and content are new variables
+///
+/// parameters: a type for string
+///
+/// \returns a string expression
 string_exprt string_constraint_generatort::fresh_string(
   const refined_string_typet &type)
 {
@@ -142,20 +92,13 @@ string_exprt string_constraint_generatort::fresh_string(
   return string_exprt(length, content, type);
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_for_string_expr
-
-  Inputs: an expression of type string
-
- Outputs: a string expression that is linked to the argument through
-          axioms that are added to the list
-
- Purpose: obtain a refined string expression corresponding to string
-          variable of string function call
-
-\*******************************************************************/
-
+/// obtain a refined string expression corresponding to string variable of
+/// string function call
+///
+/// parameters: an expression of type string
+///
+/// \returns a string expression that is linked to the argument through axioms
+///   that are added to the list
 string_exprt string_constraint_generatort::add_axioms_for_string_expr(
   const exprt &unrefined_string)
 {
@@ -199,18 +142,11 @@ string_exprt string_constraint_generatort::add_axioms_for_string_expr(
   return s;
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_for_if
-
-  Inputs: an if expression
-
- Outputs: a string expression
-
- Purpose: add axioms for an if expression which should return a string
-
-\*******************************************************************/
-
+/// add axioms for an if expression which should return a string
+///
+/// parameters: an if expression
+///
+/// \returns a string expression
 string_exprt string_constraint_generatort::add_axioms_for_if(
   const if_exprt &expr)
 {
@@ -238,21 +174,14 @@ string_exprt string_constraint_generatort::add_axioms_for_if(
   return res;
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::find_or_add_string_of_symbol
-
-  Inputs: a symbol expression
-
- Outputs: a string expression
-
- Purpose: if a symbol represent a string is present in the symbol_to_string
-          table, returns the corresponding string, if the symbol is not yet
-          present, creates a new string with the correct type depending on
-          whether the mode is java or c, adds it to the table and returns it.
-
-\*******************************************************************/
-
+/// if a symbol represent a string is present in the symbol_to_string table,
+/// returns the corresponding string, if the symbol is not yet present, creates
+/// a new string with the correct type depending on whether the mode is java or
+/// c, adds it to the table and returns it.
+///
+/// parameters: a symbol expression
+///
+/// \returns a string expression
 string_exprt string_constraint_generatort::find_or_add_string_of_symbol(
   const symbol_exprt &sym)
 {
@@ -263,20 +192,13 @@ string_exprt string_constraint_generatort::find_or_add_string_of_symbol(
   return entry.first->second;
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_for_function_application
-
-  Inputs: an expression containing a function application
-
- Outputs: expression corresponding to the result of the function application
-
- Purpose: strings contained in this call are converted to objects of type
-          `string_exprt`, through adding axioms. Axioms are then added to
-          enforce that the result corresponds to the function application.
-
-\*******************************************************************/
-
+/// strings contained in this call are converted to objects of type
+/// `string_exprt`, through adding axioms. Axioms are then added to enforce
+/// that the result corresponds to the function application.
+///
+/// parameters: an expression containing a function application
+///
+/// \returns expression corresponding to the result of the function application
 exprt string_constraint_generatort::add_axioms_for_function_application(
   const function_application_exprt &expr)
 {
@@ -414,19 +336,12 @@ exprt string_constraint_generatort::add_axioms_for_function_application(
   }
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_for_copy
-
-  Inputs: function application with one argument, which is a string
-
- Outputs: a new string expression
-
- Purpose: add axioms to say that the returned string expression is equal to
-          the argument of the function application
-
-\*******************************************************************/
-
+/// add axioms to say that the returned string expression is equal to the
+/// argument of the function application
+///
+/// parameters: function application with one argument, which is a string
+///
+/// \returns a new string expression
 string_exprt string_constraint_generatort::add_axioms_for_copy(
   const function_application_exprt &f)
 {
@@ -446,18 +361,11 @@ string_exprt string_constraint_generatort::add_axioms_for_copy(
   return res;
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_for_java_char_array
-
-  Inputs: an expression corresponding to a java object of type char array
-
- Outputs: a new string expression
-
- Purpose: add axioms corresponding to the String.valueOf([C) java function
-
-\*******************************************************************/
-
+/// add axioms corresponding to the String.valueOf([C) java function
+///
+/// parameters: an expression corresponding to a java object of type char array
+///
+/// \returns a new string expression
 string_exprt string_constraint_generatort::add_axioms_for_java_char_array(
   const exprt &char_array)
 {
@@ -471,18 +379,11 @@ string_exprt string_constraint_generatort::add_axioms_for_java_char_array(
   return res;
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_for_length
-
-  Inputs: function application with one string argument
-
- Outputs: a string expression of index type
-
- Purpose: add axioms corresponding to the String.length java function
-
-\*******************************************************************/
-
+/// add axioms corresponding to the String.length java function
+///
+/// parameters: function application with one string argument
+///
+/// \returns a string expression of index type
 exprt string_constraint_generatort::add_axioms_for_length(
   const function_application_exprt &f)
 {
@@ -490,21 +391,14 @@ exprt string_constraint_generatort::add_axioms_for_length(
   return str.length();
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_from_char_array
-
-  Inputs: a length expression, an array expression, a offset index, and a
-          count index
-
- Outputs: a new string expression
-
- Purpose: add axioms stating that the content of the returned string
-          equals to the content of the array argument, starting at offset and
-          with `count` characters
-
-\*******************************************************************/
-
+/// add axioms stating that the content of the returned string equals to the
+/// content of the array argument, starting at offset and with `count`
+/// characters
+///
+/// parameters: a length expression, an array expression, a offset index, and a
+///   count index
+///
+/// \returns a new string expression
 string_exprt string_constraint_generatort::add_axioms_from_char_array(
   const exprt &length,
   const exprt &data,
@@ -532,20 +426,13 @@ string_exprt string_constraint_generatort::add_axioms_from_char_array(
   return str;
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_from_char_array
-
-  Inputs: function application with 2 arguments and 2 additional optional
-          arguments: length, char array, offset and count
-
- Outputs: a new string expression
-
- Purpose: add axioms corresponding to the String.<init>:(I[CII)
-          and String.<init>:(I[C) java functions
-
-\*******************************************************************/
-
+/// add axioms corresponding to the String.<init>:(I[CII) and
+/// String.<init>:(I[C) java functions
+///
+/// parameters: function application with 2 arguments and 2 additional optional
+///   arguments: length, char array, offset and count
+///
+/// \returns a new string expression
 string_exprt string_constraint_generatort::add_axioms_from_char_array(
   const function_application_exprt &f)
 {
@@ -567,36 +454,22 @@ string_exprt string_constraint_generatort::add_axioms_from_char_array(
   return add_axioms_from_char_array(tab_length, data, offset, count);
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_for_is_positive_index
-
-  Inputs: an index expression
-
- Outputs: a Boolean expression
-
- Purpose: expression true exactly when the index is positive
-
-\*******************************************************************/
-
+/// expression true exactly when the index is positive
+///
+/// parameters: an index expression
+///
+/// \returns a Boolean expression
 exprt string_constraint_generatort::axiom_for_is_positive_index(const exprt &x)
 {
   return binary_relation_exprt(
     x, ID_ge, from_integer(0, x.type()));
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_for_char_literal
-
-  Inputs: function application with one character argument
-
- Outputs: a new character expression
-
- Purpose: add axioms stating that the returned value is equal to the argument
-
-\*******************************************************************/
-
+/// add axioms stating that the returned value is equal to the argument
+///
+/// parameters: function application with one character argument
+///
+/// \returns a new character expression
 exprt string_constraint_generatort::add_axioms_for_char_literal(
   const function_application_exprt &f)
 {
@@ -622,19 +495,13 @@ exprt string_constraint_generatort::add_axioms_for_char_literal(
   }
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_for_char_at
-
-  Inputs: function application with two arguments: a string and an integer
-
- Outputs: a character expression
-
- Purpose: add axioms stating that the character of the string at the given
-          position is equal to the returned value
-
-\*******************************************************************/
-
+/// add axioms stating that the character of the string at the given position
+/// is equal to the returned value
+///
+/// parameters: function application with two arguments: a string and an
+///   integer
+///
+/// \returns a character expression
 exprt string_constraint_generatort::add_axioms_for_char_at(
   const function_application_exprt &f)
 {
@@ -645,18 +512,11 @@ exprt string_constraint_generatort::add_axioms_for_char_at(
   return char_sym;
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::add_axioms_for_to_char_array
-
-  Inputs: function application with one string argument
-
- Outputs: a char array expression
-
- Purpose: add axioms corresponding to the String.toCharArray java function
-
-\*******************************************************************/
-
+/// add axioms corresponding to the String.toCharArray java function
+///
+/// parameters: function application with one string argument
+///
+/// \returns a char array expression
 exprt string_constraint_generatort::add_axioms_for_to_char_array(
   const function_application_exprt &f)
 {
@@ -664,17 +524,10 @@ exprt string_constraint_generatort::add_axioms_for_to_char_array(
   return str.content();
 }
 
-/*******************************************************************\
-
-Function: string_constraint_generatort::set_string_symbol_equal_to_expr
-
-  Inputs: a symbol and a string
-
- Purpose: add a correspondence to make sure the symbol points to the
-          same string as the second argument
-
-\*******************************************************************/
-
+/// add a correspondence to make sure the symbol points to the same string as
+/// the second argument
+///
+/// parameters: a symbol and a string
 void string_constraint_generatort::set_string_symbol_equal_to_expr(
   const symbol_exprt &sym, const exprt &str)
 {

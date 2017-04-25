@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: ANSI-C Language Conversion
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file ANSI-C Language Conversion
 
 #ifndef CPROVER_ANSI_C_ANSI_C_CONVERT_TYPE_H
 #define CPROVER_ANSI_C_ANSI_C_CONVERT_TYPE_H

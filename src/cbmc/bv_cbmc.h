@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #ifndef CPROVER_CBMC_BV_CBMC_H
 #define CPROVER_CBMC_BV_CBMC_H
 

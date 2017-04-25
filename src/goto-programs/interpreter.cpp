@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Interpreter for GOTO Programs
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Interpreter for GOTO Programs
 
 #include <cctype>
 #include <cstdio>
@@ -16,18 +10,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "interpreter.h"
 #include "interpreter_class.h"
-
-/*******************************************************************\
-
-Function: interpretert::operator()
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void interpretert::operator()()
 {
@@ -58,18 +40,6 @@ void interpretert::operator()()
   }
 }
 
-/*******************************************************************\
-
-Function: interpretert::show_state
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void interpretert::show_state()
 {
   std::cout << std::endl;
@@ -88,18 +58,6 @@ void interpretert::show_state()
   std::cout << std::endl;
 }
 
-/*******************************************************************\
-
-Function: interpretert::command
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void interpretert::command()
 {
   #define BUFSIZE 100
@@ -115,18 +73,6 @@ void interpretert::command()
   if(ch=='q')
     done=true;
 }
-
-/*******************************************************************\
-
-Function: interpretert::step
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void interpretert::step()
 {
@@ -221,18 +167,6 @@ void interpretert::step()
   PC=next_PC;
 }
 
-/*******************************************************************\
-
-Function: interpretert::execute_goto
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void interpretert::execute_goto()
 {
   if(evaluate_boolean(PC->guard))
@@ -246,18 +180,6 @@ void interpretert::execute_goto()
     next_PC=PC->targets.front();
   }
 }
-
-/*******************************************************************\
-
-Function: interpretert::execute_other
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void interpretert::execute_other()
 {
@@ -273,34 +195,10 @@ void interpretert::execute_other()
     throw "unexpected OTHER statement: "+id2string(statement);
 }
 
-/*******************************************************************\
-
-Function: interpretert::execute_decl
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void interpretert::execute_decl()
 {
   assert(PC->code.get_statement()==ID_decl);
 }
-
-/*******************************************************************\
-
-Function: interpretert::execute_assign
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void interpretert::execute_assign()
 {
@@ -324,18 +222,6 @@ void interpretert::execute_assign()
   }
 }
 
-/*******************************************************************\
-
-Function: interpretert::assign
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void interpretert::assign(
   mp_integer address,
   const std::vector<mp_integer> &rhs)
@@ -352,53 +238,17 @@ void interpretert::assign(
   }
 }
 
-/*******************************************************************\
-
-Function: interpretert::execute_assume
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void interpretert::execute_assume()
 {
   if(!evaluate_boolean(PC->guard))
     throw "assumption failed";
 }
 
-/*******************************************************************\
-
-Function: interpretert::execute_assert
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void interpretert::execute_assert()
 {
   if(!evaluate_boolean(PC->guard))
     throw "assertion failed";
 }
-
-/*******************************************************************\
-
-Function: interpretert::execute_function_call
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void interpretert::execute_function_call()
 {
@@ -502,18 +352,6 @@ void interpretert::execute_function_call()
     throw "no body for "+id2string(identifier);
 }
 
-/*******************************************************************\
-
-Function: interpretert::build_memory_map
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void interpretert::build_memory_map()
 {
   // put in a dummy for NULL
@@ -528,18 +366,6 @@ void interpretert::build_memory_map()
   // for the locals
   stack_pointer=memory.size();
 }
-
-/*******************************************************************\
-
-Function: interpretert::build_memory_map
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void interpretert::build_memory_map(const symbolt &symbol)
 {
@@ -569,18 +395,6 @@ void interpretert::build_memory_map(const symbolt &symbol)
     }
   }
 }
-
-/*******************************************************************\
-
-Function: interpretert::get_size
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 unsigned interpretert::get_size(const typet &type) const
 {
@@ -637,18 +451,6 @@ unsigned interpretert::get_size(const typet &type) const
   else
     return 1;
 }
-
-/*******************************************************************\
-
-Function: interpreter
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void interpreter(
   const symbol_tablet &symbol_table,

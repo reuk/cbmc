@@ -1,24 +1,6 @@
-/*******************************************************************\
-
-Module: Syntactic GOTO-DIFF
-
-Author: Peter Schrammel
-
-\*******************************************************************/
+/// \file Syntactic GOTO-DIFF
 
 #include "syntactic_diff.h"
-
-/*******************************************************************\
-
-Function: syntactic_difft::operator()
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool syntactic_difft::operator()()
 {

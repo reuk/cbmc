@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Abstract interface to support a programming language
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Abstract interface to support a programming language
 
 #ifndef CPROVER_UTIL_LANGUAGE_H
 #define CPROVER_UTIL_LANGUAGE_H

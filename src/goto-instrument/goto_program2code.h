@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Dump Goto-Program as C/C++ Source
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Dump Goto-Program as C/C++ Source
 
 #ifndef CPROVER_GOTO_INSTRUMENT_GOTO_PROGRAM2CODE_H
 #define CPROVER_GOTO_INSTRUMENT_GOTO_PROGRAM2CODE_H

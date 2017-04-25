@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Syntactic GOTO-DIFF
-
-Author: Peter Schrammel
-
-\*******************************************************************/
+/// \file Syntactic GOTO-DIFF
 
 #ifndef CPROVER_GOTO_DIFF_SYNTACTIC_DIFF_H
 #define CPROVER_GOTO_DIFF_SYNTACTIC_DIFF_H

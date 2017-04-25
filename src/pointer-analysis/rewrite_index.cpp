@@ -1,27 +1,10 @@
-/*******************************************************************\
-
-Module: Pointer Dereferencing
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Pointer Dereferencing
 
 #include <util/std_expr.h>
 
 #include "rewrite_index.h"
 
-/*******************************************************************\
-
-Function: rewrite_index
-
-  Inputs:
-
- Outputs:
-
- Purpose: rewrite a[i] to *(a+i)
-
-\*******************************************************************/
-
+/// rewrite a[i] to *(a+i)
 dereference_exprt rewrite_index(const index_exprt &index_expr)
 {
   dereference_exprt result;

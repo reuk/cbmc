@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Symbolic Execution
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Symbolic Execution
 
 #ifndef CPROVER_GOTO_SYMEX_ADJUST_FLOAT_EXPRESSIONS_H
 #define CPROVER_GOTO_SYMEX_ADJUST_FLOAT_EXPRESSIONS_H

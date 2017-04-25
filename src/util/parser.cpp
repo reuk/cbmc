@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include "parser.h"
 
 #ifdef _WIN32
@@ -14,18 +6,6 @@ int isatty(int f)
   return 0;
 }
 #endif
-
-/*******************************************************************\
-
-Function: _newstack
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 exprt &_newstack(parsert &parser, unsigned &x)
 {
@@ -37,18 +17,6 @@ exprt &_newstack(parsert &parser, unsigned &x)
   parser.stack.push_back(static_cast<const exprt &>(get_nil_irep()));
   return parser.stack.back();
 }
-
-/*******************************************************************\
-
-Function:
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void parsert::parse_error(
   const std::string &message,

@@ -1,26 +1,8 @@
-/*******************************************************************\
-
-Module: Value Set
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Value Set
 
 #include <util/std_code.h>
 
 #include "value_set_domain.h"
-
-/*******************************************************************\
-
-Function: value_set_domaint::transform
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void value_set_domaint::transform(
   const namespacet &ns,

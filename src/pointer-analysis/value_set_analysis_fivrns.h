@@ -1,11 +1,4 @@
-/*******************************************************************\
-
-Module: Value Set Analysis (Flow Insensitive, Validity Regions)
-
-Author: Daniel Kroening, kroening@kroening.com,
-        CM Wintersteiger
-
-\*******************************************************************/
+/// \file Value Set Analysis (Flow Insensitive, Validity Regions)
 
 #ifndef CPROVER_POINTER_ANALYSIS_VALUE_SET_ANALYSIS_FIVRNS_H
 #define CPROVER_POINTER_ANALYSIS_VALUE_SET_ANALYSIS_FIVRNS_H

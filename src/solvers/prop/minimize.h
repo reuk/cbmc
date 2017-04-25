@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: SAT Minimizer
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file SAT Minimizer
 
 #ifndef CPROVER_SOLVERS_PROP_MINIMIZE_H
 #define CPROVER_SOLVERS_PROP_MINIMIZE_H
@@ -15,15 +9,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "prop_conv.h"
 
-/*******************************************************************\
-
-   Class: prop_minimizet
-
- Purpose: Computes a satisfying assignment of minimal cost
-          according to a const function using incremental SAT
-
-\*******************************************************************/
-
+/// Computes a satisfying assignment of minimal cost          according to a
+/// const function using incremental SAT
 class prop_minimizet:public messaget
 {
 public:

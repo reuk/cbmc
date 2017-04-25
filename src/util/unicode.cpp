@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <cstring>
 #include <locale>
 #include <codecvt>
@@ -17,18 +9,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #ifdef _WIN32
 #include <windows.h>
 #endif
-
-/*******************************************************************\
-
-Function: narrow
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 #define BUFSIZE 100
 
@@ -57,18 +37,6 @@ std::string narrow(const wchar_t *s)
   #endif
 }
 
-/*******************************************************************\
-
-Function: widen
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 std::wstring widen(const char *s)
 {
   #ifdef _WIN32
@@ -94,18 +62,6 @@ std::wstring widen(const char *s)
   #endif
 }
 
-/*******************************************************************\
-
-Function: narrow
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 std::string narrow(const std::wstring &s)
 {
   #ifdef _WIN32
@@ -123,18 +79,6 @@ std::string narrow(const std::wstring &s)
   #endif
 }
 
-/*******************************************************************\
-
-Function: widen
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 std::wstring widen(const std::string &s)
 {
   #ifdef _WIN32
@@ -151,18 +95,6 @@ std::wstring widen(const std::string &s)
   return std::wstring(s.begin(), s.end());
   #endif
 }
-
-/*******************************************************************\
-
-Function: utf32_to_utf8
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void utf32_to_utf8(unsigned int c, std::string &result)
 {
@@ -188,18 +120,6 @@ void utf32_to_utf8(unsigned int c, std::string &result)
   }
 }
 
-/*******************************************************************\
-
-Function: utf32_to_utf8
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 std::string utf32_to_utf8(const std::basic_string<unsigned int> &s)
 {
   std::string result;
@@ -212,18 +132,6 @@ std::string utf32_to_utf8(const std::basic_string<unsigned int> &s)
   return result;
 }
 
-/*******************************************************************\
-
-Function: utf16_to_utf8
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 std::string utf16_to_utf8(const std::basic_string<unsigned short int> &s)
 {
   std::string result;
@@ -235,18 +143,6 @@ std::string utf16_to_utf8(const std::basic_string<unsigned short int> &s)
 
   return result;
 }
-
-/*******************************************************************\
-
-Function: narrow_argv
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 const char **narrow_argv(int argc, const wchar_t **argv_wide)
 {
@@ -263,36 +159,22 @@ const char **narrow_argv(int argc, const wchar_t **argv_wide)
   return argv_narrow;
 }
 
-/*******************************************************************\
-
-Function: utf8_to_utf16_big_endian
-
-  Inputs: String in UTF-8 format
-
- Outputs: String in UTF-16BE format
-
- Purpose: Note this requires g++-5 libstdc++ / libc++ / MSVC2010+
-
-\*******************************************************************/
-
+/// Note this requires g++-5 libstdc++ / libc++ / MSVC2010+
+///
+/// parameters: String in UTF-8 format
+///
+/// \returns String in UTF-16BE format
 std::wstring utf8_to_utf16_big_endian(const std::string& in)
 {
   std::wstring_convert<std::codecvt_utf8_utf16<wchar_t> > converter;
   return converter.from_bytes(in);
 }
 
-/*******************************************************************\
-
-Function: utf8_to_utf16_little_endian
-
-  Inputs: String in UTF-8 format
-
- Outputs: String in UTF-16LE format
-
- Purpose: Note this requires g++-5 libstdc++ / libc++ / MSVC2010+
-
-\*******************************************************************/
-
+/// Note this requires g++-5 libstdc++ / libc++ / MSVC2010+
+///
+/// parameters: String in UTF-8 format
+///
+/// \returns String in UTF-16LE format
 std::wstring utf8_to_utf16_little_endian(const std::string& in)
 {
   const std::codecvt_mode mode=std::codecvt_mode::little_endian;
@@ -306,19 +188,10 @@ std::wstring utf8_to_utf16_little_endian(const std::string& in)
   return converter.from_bytes(in);
 }
 
-/*******************************************************************\
-
-Function: utf16_little_endian_to_ascii
-
-  Inputs: String in UTF-16LE format
-
- Outputs: String in US-ASCII format, with \uxxxx escapes for other
-          characters
-
- Purpose:
-
-\*******************************************************************/
-
+/// parameters: String in UTF-16LE format
+///
+/// \returns String in US-ASCII format, with \uxxxx escapes for other
+///   characters
 std::string utf16_little_endian_to_ascii(const std::wstring& in)
 {
   std::ostringstream result;

@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Command line interpretation for goto-cc.
-
-Author: CM Wintersteiger
-
-Date: June 2006
-
-\*******************************************************************/
+/// \file Command line interpretation for goto-cc.
 
 #ifndef CPROVER_GOTO_CC_GOTO_CC_MODE_H
 #define CPROVER_GOTO_CC_GOTO_CC_MODE_H

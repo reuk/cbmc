@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Get a Goto Program
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Get a Goto Program
 
 #include <fstream>
 #include <iostream>
@@ -19,18 +13,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "goto_convert_functions.h"
 #include "read_goto_binary.h"
 #include "get_goto_model.h"
-
-/*******************************************************************\
-
-Function: get_goto_modelt::operator()
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool get_goto_modelt::operator()(const cmdlinet &_cmdline)
 {

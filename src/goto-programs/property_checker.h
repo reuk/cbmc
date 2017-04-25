@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Property Checker Interface
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Property Checker Interface
 
 #ifndef CPROVER_GOTO_PROGRAMS_PROPERTY_CHECKER_H
 #define CPROVER_GOTO_PROGRAMS_PROPERTY_CHECKER_H

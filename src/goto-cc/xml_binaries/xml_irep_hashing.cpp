@@ -1,30 +1,10 @@
-/*******************************************************************\
-
-Module: XML-irep conversions with hashing
-
-Author: CM Wintersteiger
-
-Date: July 2006
-
-\*******************************************************************/
+/// \file XML-irep conversions with hashing
 
 #include <sstream>
 #include <iostream>
 
 #include "xml_irep_hashing.h"
 #include "string_hash.h"
-
-/*******************************************************************\
-
-Function: xml_irep_convertt::convert
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void xml_irep_convertt::convert(
   const irept &irep,
@@ -53,18 +33,6 @@ void xml_irep_convertt::convert(
     reference_convert(it->second, x_com);
   }
 }
-
-/*******************************************************************\
-
-Function: xml_irep_convertt::convert
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void xml_irep_convertt::convert(
   const xmlt &xml,
@@ -112,18 +80,6 @@ void xml_irep_convertt::convert(
   }
 }
 
-/*******************************************************************\
-
-Function: xml_irep_convertt::reference_convert
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void xml_irep_convertt::reference_convert(
   const irept &irep,
   xmlt &xml)
@@ -144,17 +100,6 @@ void xml_irep_convertt::reference_convert(
   }
 }
 
-/*******************************************************************\
-
-Function: xml_irep_convertt::add_with_childs
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 unsigned long xml_irep_convertt::add_with_childs(const irept &iwi)
 {
   unsigned long id=insert((unsigned long)&iwi, iwi);
@@ -191,19 +136,12 @@ unsigned long xml_irep_convertt::add_with_childs(const irept &iwi)
   return id;
 }
 
-/*******************************************************************\
-
-Function: xml_irep_convertt::resolve_references
-
-  Inputs: none
-
- Outputs: none
-
- Purpose: resolves references to ireps from an irep after reading
-          an irep hash map into memory.
-
-\*******************************************************************/
-
+/// resolves references to ireps from an irep after reading an irep hash map
+/// into memory.
+///
+/// parameters: none
+///
+/// \returns none
 void xml_irep_convertt::resolve_references(const irept &cur)
 {
   if(cur.id() == "__REFERENCE__")
@@ -232,18 +170,11 @@ void xml_irep_convertt::resolve_references(const irept &cur)
     resolve_references(iti->second);
 }
 
-/*******************************************************************\
-
-Function: xml_irep_convertt::long_to_string
-
-  Inputs: an irep pointer
-
- Outputs: a new string
-
- Purpose: converts the hash value to a readable string
-
-\*******************************************************************/
-
+/// converts the hash value to a readable string
+///
+/// parameters: an irep pointer
+///
+/// \returns a new string
 std::string xml_irep_convertt::long_to_string(const unsigned long l)
 {
   std::stringstream s;
@@ -251,19 +182,12 @@ std::string xml_irep_convertt::long_to_string(const unsigned long l)
   return s.str();
 }
 
-/*******************************************************************\
-
-Function: xml_irep_convertt::string_to_long
-
-  Inputs: a string
-
- Outputs: an unsigned long
-
- Purpose: converts the string to an unsigned long that used to give
-          a pointer to an irep in an old compilation
-
-\*******************************************************************/
-
+/// converts the string to an unsigned long that used to give a pointer to an
+/// irep in an old compilation
+///
+/// parameters: a string
+///
+/// \returns an unsigned long
 unsigned long xml_irep_convertt::string_to_long(const std::string &s)
 {
   std::stringstream ss(s);
@@ -272,54 +196,33 @@ unsigned long xml_irep_convertt::string_to_long(const std::string &s)
   return res;
 }
 
-/*******************************************************************\
-
-Function: xml_irep_convertt::find_irep_by_id
-
-  Inputs: an id
-
- Outputs: an iterator into the ireps hash set
-
- Purpose: finds an irep in the ireps hash set by its id
-
-\*******************************************************************/
-
+/// finds an irep in the ireps hash set by its id
+///
+/// parameters: an id
+///
+/// \returns an iterator into the ireps hash set
 xml_irep_convertt::ireps_containert::id_containert::const_iterator
   xml_irep_convertt::find_irep_by_id(const unsigned int id)
 {
   return ireps_container.id_container.find(id);
 }
 
-/*******************************************************************\
-
-Function: xml_irep_convertt::find_irep_by_content
-
-  Inputs: an irep
-
- Outputs: an iterator into the ireps hash set
-
- Purpose: finds an irep in the ireps hash set by checking contents
-
-\*******************************************************************/
-
-  xml_irep_convertt::ireps_containert::content_containert::const_iterator
+/// finds an irep in the ireps hash set by checking contents
+///
+/// parameters: an irep
+///
+/// \returns an iterator into the ireps hash set
+xml_irep_convertt::ireps_containert::content_containert::const_iterator
   xml_irep_convertt::find_irep_by_content(const irept &irep)
 {
   return ireps_container.content_container.find(irep);
 }
 
-/*******************************************************************\
-
-Function: xml_irep_convertt::insert
-
-  Inputs: an unsigned long and an irep
-
- Outputs: true on success, false otherwise
-
- Purpose: inserts an irep into the hashtable
-
-\*******************************************************************/
-
+/// inserts an irep into the hashtable
+///
+/// parameters: an unsigned long and an irep
+///
+/// \returns true on success, false otherwise
 unsigned long xml_irep_convertt::insert(
   unsigned long id,
   const irept &i)
@@ -346,18 +249,11 @@ unsigned long xml_irep_convertt::insert(
   }
 }
 
-/*******************************************************************\
-
-Function: xml_irep_convertt::insert
-
-  Inputs: a string and an irep
-
- Outputs: true on success, false otherwise
-
- Purpose: inserts an irep into the hashtable
-
-\*******************************************************************/
-
+/// inserts an irep into the hashtable
+///
+/// parameters: a string and an irep
+///
+/// \returns true on success, false otherwise
 unsigned long xml_irep_convertt::insert(
   const std::string &id,
   const irept &i)
@@ -365,19 +261,11 @@ unsigned long xml_irep_convertt::insert(
   return insert(string_to_long(id), i);
 }
 
-/*******************************************************************\
-
-Function: xml_irep_convertt::convert_map
-
-  Inputs: an xml node
-
- Outputs: nothing
-
- Purpose: converts the current hash map of ireps into the given xml
-          structure
-
-\*******************************************************************/
-
+/// converts the current hash map of ireps into the given xml structure
+///
+/// parameters: an xml node
+///
+/// \returns nothing
 void xml_irep_convertt::convert_map(xmlt &xml)
 {
   ireps_containert::id_containert::iterator hit=
@@ -392,19 +280,12 @@ void xml_irep_convertt::convert_map(xmlt &xml)
   }
 }
 
-/*******************************************************************\
-
-Function: xml_irep_convertt::output_map
-
-  Inputs: an output stream
-
- Outputs: nothing
-
- Purpose: converts the current hash map of ireps into xml nodes and
-          outputs them to the stream
-
-\*******************************************************************/
-
+/// converts the current hash map of ireps into xml nodes and outputs them to
+/// the stream
+///
+/// parameters: an output stream
+///
+/// \returns nothing
 void xml_irep_convertt::output_map(std::ostream &out, unsigned indent)
 {
   ireps_containert::id_containert::iterator hit=

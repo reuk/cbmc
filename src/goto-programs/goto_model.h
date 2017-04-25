@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Symbol Table + CFG
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Symbol Table + CFG
 
 #ifndef CPROVER_GOTO_PROGRAMS_GOTO_MODEL_H
 #define CPROVER_GOTO_PROGRAMS_GOTO_MODEL_H

@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Writing DIMACS Files
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Writing DIMACS Files
 
 #include <fstream>
 #include <iostream>
@@ -12,18 +6,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <solvers/sat/dimacs_cnf.h>
 
 #include "cbmc_dimacs.h"
-
-/*******************************************************************\
-
-Function: cbmc_dimacst::write_dimacs
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool cbmc_dimacst::write_dimacs(const std::string &filename)
 {
@@ -40,18 +22,6 @@ bool cbmc_dimacst::write_dimacs(const std::string &filename)
 
   return write_dimacs(out);
 }
-
-/*******************************************************************\
-
-Function: cbmc_dimacst::write_dimacs
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool cbmc_dimacst::write_dimacs(std::ostream &out)
 {

@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Weak Memory Instrumentation for Threaded Goto Programs
-
-Author: Daniel Kroening, Vincent Nimal
-
-Date: September 2011
-
-\*******************************************************************/
+/// \file Weak Memory Instrumentation for Threaded Goto Programs
 
 /*
  * Strategy: we first overapproximate all the read/write sequences of
@@ -30,18 +22,7 @@ Date: September 2011
 #include "shared_buffers.h"
 #include "goto2graph.h"
 
-/*******************************************************************\
-
-Function: introduce_temporaries
-
-  Inputs:
-
- Outputs:
-
- Purpose: all access to shared variables is pushed into assignments
-
-\*******************************************************************/
-
+/// all access to shared variables is pushed into assignments
 void introduce_temporaries(
   value_setst &value_sets,
   symbol_tablet &symbol_table,
@@ -109,18 +90,6 @@ void introduce_temporaries(
     }
   }
 }
-
-/*******************************************************************\
-
-Function: weak_memory
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void weak_memory(
   memory_modelt model,

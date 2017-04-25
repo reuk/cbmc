@@ -1,29 +1,9 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <cassert>
 
 #include <util/prefix.h>
 #include <util/string2int.h>
 
 #include "boolbv.h"
-
-/*******************************************************************\
-
-Function: boolbvt::convert_overflow
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 literalt boolbvt::convert_overflow(const exprt &expr)
 {

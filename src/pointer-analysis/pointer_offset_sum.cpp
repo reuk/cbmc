@@ -1,24 +1,6 @@
-/*******************************************************************\
-
-Module: Pointer Analysis
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Pointer Analysis
 
 #include "pointer_offset_sum.h"
-
-/*******************************************************************\
-
-Function: pointer_offset_sum
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 exprt pointer_offset_sum(const exprt &a, const exprt &b)
 {

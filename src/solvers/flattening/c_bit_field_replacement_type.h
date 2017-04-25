@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #ifndef CPROVER_SOLVERS_FLATTENING_C_BIT_FIELD_REPLACEMENT_TYPE_H
 #define CPROVER_SOLVERS_FLATTENING_C_BIT_FIELD_REPLACEMENT_TYPE_H
 

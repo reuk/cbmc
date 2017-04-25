@@ -1,13 +1,5 @@
-/*******************************************************************\
-
-Module: Remove 'asm' statements by compiling into suitable standard
-        code
-
-Author: Daniel Kroening
-
-Date:   December 2014
-
-\*******************************************************************/
+/// \file Remove 'asm' statements by compiling into suitable standard
+/// code
 
 #ifndef CPROVER_GOTO_PROGRAMS_REMOVE_ASM_H
 #define CPROVER_GOTO_PROGRAMS_REMOVE_ASM_H

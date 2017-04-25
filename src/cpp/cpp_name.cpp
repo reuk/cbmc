@@ -1,27 +1,9 @@
-/*******************************************************************\
-
-Module: C++ Language Type Checking
-
-Author: Daniel Kroening, kroening@cs.cmu.edu
-
-\*******************************************************************/
+/// \file C++ Language Type Checking
 
 #include <cassert>
 #include <sstream>
 
 #include "cpp_name.h"
-
-/*******************************************************************\
-
-Function: cpp_namet::get_base_name
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 irep_idt cpp_namet::get_base_name() const
 {
@@ -48,18 +30,6 @@ irep_idt cpp_namet::get_base_name() const
 
   return irep_idt();
 }
-
-/*******************************************************************\
-
-Function: cpp_namet::convert
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 #if 0
 void cpp_namet::convert(
@@ -93,18 +63,6 @@ void cpp_namet::convert(
   }
 }
 #endif
-
-/*******************************************************************\
-
-Function: cpp_namet::convert
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 std::string cpp_namet::to_string() const
 {

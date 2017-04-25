@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@cs.cmu.edu
-
-\*******************************************************************/
-
 #ifndef CPROVER_JAVA_BYTECODE_EXPR2JAVA_H
 #define CPROVER_JAVA_BYTECODE_EXPR2JAVA_H
 

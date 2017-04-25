@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Class Hierarchy
-
-Author: Daniel Kroening
-
-Date: April 2016
-
-\*******************************************************************/
+/// \file Class Hierarchy
 
 #ifndef CPROVER_GOTO_PROGRAMS_CLASS_HIERARCHY_H
 #define CPROVER_GOTO_PROGRAMS_CLASS_HIERARCHY_H

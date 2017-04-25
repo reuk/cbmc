@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Main Module
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Main Module
 
 #include <fstream>
 #include <iostream>
@@ -91,18 +85,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "model_argc_argv.h"
 #include "undefined_functions.h"
 
-/*******************************************************************\
-
-Function: goto_instrument_parse_optionst::eval_verbosity
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void goto_instrument_parse_optionst::eval_verbosity()
 {
   unsigned int v=8;
@@ -117,18 +99,7 @@ void goto_instrument_parse_optionst::eval_verbosity()
   ui_message_handler.set_verbosity(v);
 }
 
-/*******************************************************************\
-
-Function: goto_instrument_parse_optionst::doit
-
-  Inputs:
-
- Outputs:
-
- Purpose: invoke main modules
-
-\*******************************************************************/
-
+/// invoke main modules
 int goto_instrument_parse_optionst::doit()
 {
   if(cmdline.isset("version"))
@@ -813,18 +784,6 @@ int goto_instrument_parse_optionst::doit()
   }
 }
 
-/*******************************************************************\
-
-Function: goto_instrument_parse_optionst::do_indirect_call_and_rtti_removal
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void goto_instrument_parse_optionst::do_indirect_call_and_rtti_removal(
   bool force)
 {
@@ -847,21 +806,9 @@ void goto_instrument_parse_optionst::do_indirect_call_and_rtti_removal(
   remove_instanceof(symbol_table, goto_functions);
 }
 
-/*******************************************************************\
-
-Function: goto_instrument_parse_optionst::do_remove_const_function_pointers_only
-
-  Inputs:
-
- Outputs:
-
- Purpose: Remove function pointers that can be resolved by analysing
-          const variables (i.e. can be resolved using
-          remove_const_function_pointers). Function pointers that cannot
-          be resolved will be left as function pointers.
-
-\*******************************************************************/
-
+/// Remove function pointers that can be resolved by analysing const variables
+/// (i.e. can be resolved using remove_const_function_pointers). Function
+/// pointers that cannot be resolved will be left as function pointers.
 void goto_instrument_parse_optionst::do_remove_const_function_pointers_only()
 {
   // Don't bother if we've already done a full function pointer
@@ -880,18 +827,6 @@ void goto_instrument_parse_optionst::do_remove_const_function_pointers_only()
     true); // abort if we can't resolve via const pointers
 }
 
-/*******************************************************************\
-
-Function: goto_instrument_parse_optionst::do_partial_inlining
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void goto_instrument_parse_optionst::do_partial_inlining()
 {
   if(partial_inlining_done)
@@ -907,18 +842,6 @@ void goto_instrument_parse_optionst::do_partial_inlining()
   }
 }
 
-/*******************************************************************\
-
-Function: goto_instrument_parse_optionst::do_remove_returns
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void goto_instrument_parse_optionst::do_remove_returns()
 {
   if(remove_returns_done)
@@ -929,18 +852,6 @@ void goto_instrument_parse_optionst::do_remove_returns()
   status() << "Removing returns" << eom;
   remove_returns(symbol_table, goto_functions);
 }
-
-/*******************************************************************\
-
-Function: goto_instrument_parse_optionst::get_goto_program
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_instrument_parse_optionst::get_goto_program()
 {
@@ -953,18 +864,6 @@ void goto_instrument_parse_optionst::get_goto_program()
   config.set(cmdline);
   config.set_from_symbol_table(symbol_table);
 }
-
-/*******************************************************************\
-
-Function: goto_instrument_parse_optionst::instrument_goto_program
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_instrument_parse_optionst::instrument_goto_program()
 {
@@ -1528,18 +1427,7 @@ void goto_instrument_parse_optionst::instrument_goto_program()
   goto_functions.update();
 }
 
-/*******************************************************************\
-
-Function: goto_instrument_parse_optionst::help
-
-  Inputs:
-
- Outputs:
-
- Purpose: display command line help
-
-\*******************************************************************/
-
+/// display command line help
 void goto_instrument_parse_optionst::help()
 {
   std::cout <<

@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Constant propagation
-
-Author: Peter Schrammel
-
-\*******************************************************************/
+/// \file Constant propagation
 
 #ifndef CPROVER_ANALYSES_CONSTANT_PROPAGATOR_H
 #define CPROVER_ANALYSES_CONSTANT_PROPAGATOR_H

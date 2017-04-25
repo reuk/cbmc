@@ -1,27 +1,10 @@
-/*******************************************************************\
-
-Module:
-
-Author: CM Wintersteiger
-
-Date:
-
-\*******************************************************************/
-
 #include "get_base_name.h"
 
-/*******************************************************************\
-
-Function: get_base_name
-
-  Inputs: a string
-
- Outputs: a new string
-
- Purpose: cleans a filename from path and extension
-
-\*******************************************************************/
-
+/// cleans a filename from path and extension
+///
+/// parameters: a string
+///
+/// \returns a new string
 std::string get_base_name(const std::string &in, bool strip_suffix)
 {
   size_t r=std::string::npos;

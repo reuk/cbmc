@@ -1,42 +1,12 @@
-/*******************************************************************\
-
-Module: C++ Language Type Checking
-
-Author: Daniel Kroening, kroening@cs.cmu.edu
-
-\*******************************************************************/
+/// \file C++ Language Type Checking
 
 #include <ansi-c/c_types.h>
 
 #include "cpp_enum_type.h"
 
-/*******************************************************************\
-
-Function: cpp_enum_typet::cpp_enum_typet
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 cpp_enum_typet::cpp_enum_typet():typet(ID_c_enum)
 {
 }
-
-/*******************************************************************\
-
-Function: cpp_enum_typet::generate_anon_tag
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 irep_idt cpp_enum_typet::generate_anon_tag() const
 {

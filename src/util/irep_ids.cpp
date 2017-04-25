@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Internal Representation
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Internal Representation
 
 #include <cassert>
 
@@ -38,18 +32,6 @@ const char *irep_ids_table[]=
 #endif
 
 #include "irep_ids.def" // NOLINT(build/include)
-
-/*******************************************************************\
-
-Function: initialize_string_container
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void initialize_string_container()
 {

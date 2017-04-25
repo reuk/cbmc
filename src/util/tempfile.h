@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening
-
-\*******************************************************************/
-
 #ifndef CPROVER_UTIL_TEMPFILE_H
 #define CPROVER_UTIL_TEMPFILE_H
 

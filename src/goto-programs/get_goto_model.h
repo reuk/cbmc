@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Obtain a Goto Program
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Obtain a Goto Program
 
 #ifndef CPROVER_GOTO_PROGRAMS_GET_GOTO_MODEL_H
 #define CPROVER_GOTO_PROGRAMS_GET_GOTO_MODEL_H

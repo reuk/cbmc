@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Interpreter for GOTO Programs
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Interpreter for GOTO Programs
 
 #ifndef CPROVER_GOTO_PROGRAMS_INTERPRETER_CLASS_H
 #define CPROVER_GOTO_PROGRAMS_INTERPRETER_CLASS_H

@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <cstdlib>
 #include <cctype>
 #include <cassert>
@@ -16,18 +8,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "mp_arith.h"
 #include "arith_tools.h"
-
-/*******************************************************************\
-
-Function: >>
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 mp_integer operator>>(const mp_integer &a, const mp_integer &b)
 {
@@ -47,34 +27,10 @@ mp_integer operator>>(const mp_integer &a, const mp_integer &b)
   }
 }
 
-/*******************************************************************\
-
-Function: <<
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 mp_integer operator<<(const mp_integer &a, const mp_integer &b)
 {
   return a*power(2, b);
 }
-
-/*******************************************************************\
-
-Function: <<
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 std::ostream &operator<<(std::ostream &out, const mp_integer &n)
 {
@@ -82,19 +38,10 @@ std::ostream &operator<<(std::ostream &out, const mp_integer &n)
   return out;
 }
 
-/*******************************************************************\
-
-Function: string2integer
-
-  Inputs: string of '0'-'9' etc. most significant digit first
-          base of number representation
-
- Outputs: mp_integer
-
- Purpose:
-
-\*******************************************************************/
-
+/// parameters: string of '0'-'9' etc. most significant digit first base of
+///   number representation
+///
+/// \returns mp_integer
 const mp_integer string2integer(const std::string &n, unsigned base)
 {
   for(unsigned i=0; i<n.size(); i++)
@@ -104,18 +51,7 @@ const mp_integer string2integer(const std::string &n, unsigned base)
   return mp_integer(n.c_str(), base);
 }
 
-/*******************************************************************\
-
-Function: integer2binary
-
-  Inputs:
-
- Outputs: string of '0'/'1', most significant bit first
-
- Purpose:
-
-\*******************************************************************/
-
+/// \returns string of '0'/'1', most significant bit first
 const std::string integer2binary(const mp_integer &n, std::size_t width)
 {
   mp_integer a(n);
@@ -157,18 +93,6 @@ const std::string integer2binary(const mp_integer &n, std::size_t width)
   return result;
 }
 
-/*******************************************************************\
-
-Function: integer2string
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 const std::string integer2string(const mp_integer &n, unsigned base)
 {
   unsigned len = n.digits(base) + 2;
@@ -182,18 +106,11 @@ const std::string integer2string(const mp_integer &n, unsigned base)
   return result;
 }
 
-/*******************************************************************\
-
-Function: binary2integer
-
-  Inputs: string of '0'/'1', most significant bit first
-
- Outputs: mp_integer
-
- Purpose: convert binary string representation to mp_integer
-
-\*******************************************************************/
-
+/// convert binary string representation to mp_integer
+///
+/// parameters: string of '0'/'1', most significant bit first
+///
+/// \returns mp_integer
 const mp_integer binary2integer(const std::string &n, bool is_signed)
 {
   if(n.empty())
@@ -263,35 +180,11 @@ const mp_integer binary2integer(const std::string &n, bool is_signed)
   #endif
 }
 
-/*******************************************************************\
-
-Function: integer2ulong
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 mp_integer::ullong_t integer2ulong(const mp_integer &n)
 {
   assert(n.is_ulong());
   return n.to_ulong();
 }
-
-/*******************************************************************\
-
-Function: integer2size_t
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 std::size_t integer2size_t(const mp_integer &n)
 {
@@ -300,18 +193,6 @@ std::size_t integer2size_t(const mp_integer &n)
   assert(ull <= std::numeric_limits<std::size_t>::max());
   return (std::size_t)ull;
 }
-
-/*******************************************************************\
-
-Function: integer2unsigned
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 unsigned integer2unsigned(const mp_integer &n)
 {

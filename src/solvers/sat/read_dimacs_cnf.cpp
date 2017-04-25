@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Reading DIMACS CNF
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Reading DIMACS CNF
 
 #include <istream>
 #include <cstdlib> // for abs()
@@ -14,18 +8,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "read_dimacs_cnf.h"
 
 // #define VERBOSE
-
-/*******************************************************************\
-
-Function: cnft::read_dimacs_cnf
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void read_dimacs_cnf(std::istream &in, cnft &dest)
 {

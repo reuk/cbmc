@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Squolem Backend
-
-Author: CM Wintersteiger
-
-\*******************************************************************/
+/// \file Squolem Backend
 
 #ifndef CPROVER_SOLVERS_QBF_QBF_SQUOLEM_H
 #define CPROVER_SOLVERS_QBF_QBF_SQUOLEM_H

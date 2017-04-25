@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Value Set
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Value Set
 
 #ifndef CPROVER_ANALYSES_INVARIANT_SET_DOMAIN_H
 #define CPROVER_ANALYSES_INVARIANT_SET_DOMAIN_H

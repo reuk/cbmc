@@ -1,29 +1,14 @@
-/*******************************************************************\
-
-Module: Extract class identifier
-
-Author: Chris Smowton, chris.smowton@diffblue.com
-
-\*******************************************************************/
+/// \file Extract class identifier
 
 #include "class_identifier.h"
 
 #include <util/std_expr.h>
 #include <util/namespace.h>
 
-/*******************************************************************\
-
-Function: build_class_identifier
-
-  Inputs: Struct expression
-
- Outputs: Member expression giving the clsid field of the input,
-          or its parent, grandparent, etc.
-
- Purpose:
-
-\*******************************************************************/
-
+/// parameters: Struct expression
+///
+/// \returns Member expression giving the clsid field of the input, or its
+///   parent, grandparent, etc.
 static exprt build_class_identifier(
   const exprt &src,
   const namespacet &ns)
@@ -56,19 +41,10 @@ static exprt build_class_identifier(
   }
 }
 
-/*******************************************************************\
-
-Function: get_class_identifier_field
-
-  Inputs: Pointer expression of any pointer type, including void*,
-          and a recommended access type if the pointer is void-typed.
-
- Outputs: Member expression to access a class identifier, as above.
-
- Purpose:
-
-\*******************************************************************/
-
+/// parameters: Pointer expression of any pointer type, including void*, and a
+///   recommended access type if the pointer is void-typed.
+///
+/// \returns Member expression to access a class identifier, as above.
 exprt get_class_identifier_field(
   const exprt &this_expr_in,
   const symbol_typet &suggested_type,

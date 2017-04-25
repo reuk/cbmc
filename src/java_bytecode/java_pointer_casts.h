@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: JAVA Pointer Casts
-
-Author: DiffBlue
-
-\*******************************************************************/
+/// \file JAVA Pointer Casts
 
 #ifndef CPROVER_JAVA_BYTECODE_JAVA_POINTER_CASTS_H
 #define CPROVER_JAVA_BYTECODE_JAVA_POINTER_CASTS_H

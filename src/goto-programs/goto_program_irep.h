@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: goto_programt -> irep conversion
-
-Author: CM Wintersteiger
-
-Date: May 2007
-
-\*******************************************************************/
+/// \file goto_programt -> irep conversion
 
 #ifndef CPROVER_GOTO_PROGRAMS_GOTO_PROGRAM_IREP_H
 #define CPROVER_GOTO_PROGRAMS_GOTO_PROGRAM_IREP_H

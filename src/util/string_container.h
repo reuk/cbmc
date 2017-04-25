@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Container for C-Strings
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Container for C-Strings
 
 #ifndef CPROVER_UTIL_STRING_CONTAINER_H
 #define CPROVER_UTIL_STRING_CONTAINER_H

@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Value Set
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Value Set
 
 #ifndef CPROVER_POINTER_ANALYSIS_OBJECT_NUMBERING_H
 #define CPROVER_POINTER_ANALYSIS_OBJECT_NUMBERING_H

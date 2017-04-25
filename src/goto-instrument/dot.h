@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Dump Goto-Program as DOT Graph
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Dump Goto-Program as DOT Graph
 
 #ifndef CPROVER_GOTO_INSTRUMENT_DOT_H
 #define CPROVER_GOTO_INSTRUMENT_DOT_H

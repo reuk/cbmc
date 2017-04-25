@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: CM Wintersteiger
-
-\*******************************************************************/
-
 #ifndef CPROVER_UTIL_TEMPDIR_H
 #define CPROVER_UTIL_TEMPDIR_H
 

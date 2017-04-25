@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Convert goto programs to xml structures and back.
-
-Author: CM Wintersteiger
-
-Date: June 2006
-
-\*******************************************************************/
+/// \file Convert goto programs to xml structures and back.
 
 #include <sstream>
 #include <iostream>
@@ -15,19 +7,12 @@ Date: June 2006
 
 #include "xml_goto_program.h"
 
-/*******************************************************************\
-
-Function: convert
-
-  Inputs: goto program, namespace and an xml structure to fill
-
- Outputs: none
-
- Purpose: constructs the xml structure according to the goto program
-          and the namespace into the given xml object.
-
-\*******************************************************************/
-
+/// constructs the xml structure according to the goto program and the
+/// namespace into the given xml object.
+///
+/// parameters: goto program, namespace and an xml structure to fill
+///
+/// \returns none
 void convert(const goto_programt &goto_program,
              xmlt &xml)
 {
@@ -200,20 +185,13 @@ void convert(const goto_programt &goto_program,
   }
 }
 
-/*******************************************************************\
-
-Function: convert
-
-  Inputs: an xml structure, namespace, function symbol
-          and a goto program to fill
-
- Outputs: none
-
- Purpose: constructs the goto program according to the xml structure
-          and the namespace into the given goto program object.
-
-\*******************************************************************/
-
+/// constructs the goto program according to the xml structure and the
+/// namespace into the given goto program object.
+///
+/// parameters: an xml structure, namespace, function symbol and a goto program
+///   to fill
+///
+/// \returns none
 void convert(const xmlt &xml, goto_programt &goto_program)
 {
   goto_program.clear();
@@ -394,19 +372,12 @@ void convert(const xmlt &xml, goto_programt &goto_program)
   // std::cout << "TNI: " << goto_program.target_numbers.size() << std::endl;
 }
 
-/*******************************************************************\
-
-Function: find_instruction
-
-  Inputs: a target label string, the instructions list and an xml program
-
- Outputs: iterator to the found instruction or .end()
-
- Purpose: finds the index of the instruction labelled with the given
-          target label in the given xml-program
-
-\*******************************************************************/
-
+/// finds the index of the instruction labelled with the given target label in
+/// the given xml-program
+///
+/// parameters: a target label string, the instructions list and an xml program
+///
+/// \returns iterator to the found instruction or .end()
 goto_programt::targett
 find_instruction(
   const xmlt &xml,

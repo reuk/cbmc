@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Race Detection for Threaded Goto Programs
-
-Author: Daniel Kroening
-
-Date: February 2006
-
-\*******************************************************************/
+/// \file Race Detection for Threaded Goto Programs
 
 #ifndef CPROVER_GOTO_INSTRUMENT_RW_SET_H
 #define CPROVER_GOTO_INSTRUMENT_RW_SET_H

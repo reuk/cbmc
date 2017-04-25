@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Goto-Analyser Command Line Option Processing
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Goto-Analyser Command Line Option Processing
 
 #ifndef CPROVER_GOTO_ANALYZER_GOTO_ANALYZER_PARSE_OPTIONS_H
 #define CPROVER_GOTO_ANALYZER_GOTO_ANALYZER_PARSE_OPTIONS_H

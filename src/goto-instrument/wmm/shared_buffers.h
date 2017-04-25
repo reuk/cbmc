@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #ifndef CPROVER_GOTO_INSTRUMENT_WMM_SHARED_BUFFERS_H
 #define CPROVER_GOTO_INSTRUMENT_WMM_SHARED_BUFFERS_H
 

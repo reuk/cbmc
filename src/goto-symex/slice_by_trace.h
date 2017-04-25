@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Slicer for matching with trace files
-
-Author: Alex Groce (agroce@gmail.com)
-
-\*******************************************************************/
+/// \file Slicer for matching with trace files
 
 #ifndef CPROVER_GOTO_SYMEX_SLICE_BY_TRACE_H
 #define CPROVER_GOTO_SYMEX_SLICE_BY_TRACE_H

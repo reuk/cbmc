@@ -1,27 +1,7 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <util/std_types.h>
 #include <util/config.h>
 
 #include "c_types.h"
-
-/*******************************************************************\
-
-Function: index_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 typet index_type()
 {
@@ -29,36 +9,13 @@ typet index_type()
   return signed_size_type();
 }
 
-/*******************************************************************\
-
-Function: enum_constant_type
-
-  Inputs:
-
- Outputs:
-
- Purpose: return type of enum constants
-
-\*******************************************************************/
-
+/// return type of enum constants
 typet enum_constant_type()
 {
   // usually same as 'int',
   // but might be unsigned, or shorter than 'int'
   return signed_int_type();
 }
-
-/*******************************************************************\
-
-Function: signed_int_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 typet signed_int_type()
 {
@@ -67,36 +24,12 @@ typet signed_int_type()
   return result;
 }
 
-/*******************************************************************\
-
-Function: signed_short_int_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet signed_short_int_type()
 {
   typet result=signedbv_typet(config.ansi_c.short_int_width);
   result.set(ID_C_c_type, ID_signed_short_int);
   return result;
 }
-
-/*******************************************************************\
-
-Function: unsigned_int_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 typet unsigned_int_type()
 {
@@ -105,36 +38,12 @@ typet unsigned_int_type()
   return result;
 }
 
-/*******************************************************************\
-
-Function: unsigned_short_int_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet unsigned_short_int_type()
 {
   typet result=unsignedbv_typet(config.ansi_c.short_int_width);
   result.set(ID_C_c_type, ID_unsigned_short_int);
   return result;
 }
-
-/*******************************************************************\
-
-Function: size_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 typet size_type()
 {
@@ -152,35 +61,11 @@ typet size_type()
     assert(false); // aaah!
 }
 
-/*******************************************************************\
-
-Function: signed_size_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet signed_size_type()
 {
   // we presume this is the same as pointer difference
   return pointer_diff_type();
 }
-
-/*******************************************************************\
-
-Function: signed_long_int_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 typet signed_long_int_type()
 {
@@ -189,36 +74,12 @@ typet signed_long_int_type()
   return result;
 }
 
-/*******************************************************************\
-
-Function: signed_long_long_int_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet signed_long_long_int_type()
 {
   typet result=signedbv_typet(config.ansi_c.long_long_int_width);
   result.set(ID_C_c_type, ID_signed_long_long_int);
   return result;
 }
-
-/*******************************************************************\
-
-Function: unsigned_long_int_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 typet unsigned_long_int_type()
 {
@@ -227,18 +88,6 @@ typet unsigned_long_int_type()
   return result;
 }
 
-/*******************************************************************\
-
-Function: unsigned_long_long_int_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet unsigned_long_long_int_type()
 {
   typet result=unsignedbv_typet(config.ansi_c.long_long_int_width);
@@ -246,35 +95,11 @@ typet unsigned_long_long_int_type()
   return result;
 }
 
-/*******************************************************************\
-
-Function: c_bool_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet c_bool_type()
 {
   typet result=c_bool_typet(config.ansi_c.bool_width);
   return result;
 }
-
-/*******************************************************************\
-
-Function: char_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 typet char_type()
 {
@@ -295,18 +120,6 @@ typet char_type()
   return result;
 }
 
-/*******************************************************************\
-
-Function: unsigned_char_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet unsigned_char_type()
 {
   typet result=unsignedbv_typet(config.ansi_c.char_width);
@@ -316,18 +129,6 @@ typet unsigned_char_type()
   return result;
 }
 
-/*******************************************************************\
-
-Function: signed_char_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet signed_char_type()
 {
   typet result=signedbv_typet(config.ansi_c.char_width);
@@ -336,18 +137,6 @@ typet signed_char_type()
 
   return result;
 }
-
-/*******************************************************************\
-
-Function: wchar_t_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 typet wchar_t_type()
 {
@@ -363,18 +152,6 @@ typet wchar_t_type()
   return result;
 }
 
-/*******************************************************************\
-
-Function: char16_t_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet char16_t_type()
 {
   typet result;
@@ -389,18 +166,6 @@ typet char16_t_type()
   return result;
 }
 
-/*******************************************************************\
-
-Function: char32_t_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet char32_t_type()
 {
   typet result;
@@ -414,18 +179,6 @@ typet char32_t_type()
 
   return result;
 }
-
-/*******************************************************************\
-
-Function: float_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 typet float_type()
 {
@@ -446,18 +199,6 @@ typet float_type()
   return result;
 }
 
-/*******************************************************************\
-
-Function: double_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet double_type()
 {
   typet result;
@@ -476,18 +217,6 @@ typet double_type()
 
   return result;
 }
-
-/*******************************************************************\
-
-Function: long_double_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 typet long_double_type()
 {
@@ -527,18 +256,6 @@ typet long_double_type()
   return result;
 }
 
-/*******************************************************************\
-
-Function: gcc_float128_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet gcc_float128_type()
 {
   typet result;
@@ -561,18 +278,6 @@ typet gcc_float128_type()
   return result;
 }
 
-/*******************************************************************\
-
-Function: pointer_diff_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet pointer_diff_type()
 {
   // The pointer-diff type varies. This is signed int on some systems,
@@ -588,51 +293,15 @@ typet pointer_diff_type()
     assert(false); // aaah!
 }
 
-/*******************************************************************\
-
-Function: pointer_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet pointer_type(const typet &subtype)
 {
   return pointer_typet(subtype);
 }
 
-/*******************************************************************\
-
-Function: void_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet void_type()
 {
   return empty_typet();
 }
-
-/*******************************************************************\
-
-Function: gcc_unsigned_int128_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 typet gcc_unsigned_int128_type()
 {
@@ -641,36 +310,12 @@ typet gcc_unsigned_int128_type()
   return result;
 }
 
-/*******************************************************************\
-
-Function: gcc_signed_int128_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet gcc_signed_int128_type()
 {
   typet result=signedbv_typet(128);
   result.set(ID_C_c_type, ID_signed_int128);
   return result;
 }
-
-/*******************************************************************\
-
-Function: c_type_as_string
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 std::string c_type_as_string(const irep_idt &c_type)
 {

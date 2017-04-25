@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Static Analysis
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Static Analysis
 
 #ifndef CPROVER_ANALYSES_STATIC_ANALYSIS_H
 #define CPROVER_ANALYSES_STATIC_ANALYSIS_H

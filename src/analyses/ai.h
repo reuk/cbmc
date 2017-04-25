@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Abstract Interpretation
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Abstract Interpretation
 
 #ifndef CPROVER_ANALYSES_AI_H
 #define CPROVER_ANALYSES_AI_H

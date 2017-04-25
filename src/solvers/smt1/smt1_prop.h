@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #ifndef CPROVER_SOLVERS_SMT1_SMT1_PROP_H
 #define CPROVER_SOLVERS_SMT1_SMT1_PROP_H
 

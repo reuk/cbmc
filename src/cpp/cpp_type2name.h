@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: C++ Language Module
-
-Author: Daniel Kroening, kroening@cs.cmu.edu
-
-\*******************************************************************/
+/// \file C++ Language Module
 
 #ifndef CPROVER_CPP_CPP_TYPE2NAME_H
 #define CPROVER_CPP_CPP_TYPE2NAME_H

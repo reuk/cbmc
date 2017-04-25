@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <unordered_set>
 #include <sstream>
 
@@ -24,18 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "java_types.h"
 #include "java_utils.h"
 
-/*******************************************************************\
-
-Function: new_tmp_symbol
-
- Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 static symbolt &new_tmp_symbol(
   symbol_tablet &symbol_table,
   const source_locationt &loc,
@@ -51,18 +31,9 @@ static symbolt &new_tmp_symbol(
     symbol_table);
 }
 
-/*******************************************************************\
-
-Function: get_nondet_bool
-
- Inputs: Desired type (C_bool or plain bool)
-
- Outputs: nondet expr of that type
-
- Purpose:
-
-\*******************************************************************/
-
+/// parameters: Desired type (C_bool or plain bool)
+///
+/// \returns nondet expr of that type
 static exprt get_nondet_bool(const typet &type)
 {
   // We force this to 0 and 1 and won't consider
@@ -109,18 +80,6 @@ public:
     bool override=false,
     const typet &override_type=empty_typet());
 };
-
-/*******************************************************************\
-
-Function: java_object_factoryt::allocate_object
-
- Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 exprt java_object_factoryt::allocate_object(
   const exprt &target_expr,
@@ -190,28 +149,15 @@ exprt java_object_factoryt::allocate_object(
   }
 }
 
-/*******************************************************************\
-
-Function: java_object_factoryt::gen_nondet_init
-
- Inputs:
-  expr -
-  is_sub -
-  class_identifier -
-  loc -
-  create_dynamic_objects -
-  override - Ignore the LHS' real type. Used at the moment for
-             reference arrays, which are implemented as void*
-             arrays but should be init'd as their true type with
-             appropriate casts.
-  override_type - Type to use if ignoring the LHS' real type
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
+/// \param expr:
+/// \param is_sub:
+/// \param class_identifier:
+/// \param loc:
+/// \param create_dynamic_objects:
+/// \param override: Ignore the LHS' real type. Used at the moment for
+///   reference arrays, which are implemented as void* arrays but should be
+///   init'd as their true type with appropriate casts.
+/// \param override_type: Type to use if ignoring the LHS' real type
 void java_object_factoryt::gen_nondet_init(
   const exprt &expr,
   bool is_sub,
@@ -364,20 +310,8 @@ void java_object_factoryt::gen_nondet_init(
   }
 }
 
-/*******************************************************************\
-
-Function: java_object_factoryt::gen_nondet_array_init
-
- Inputs:
-
- Outputs:
-
- Purpose: create code to initialize a Java array with size
-          `max_nondet_array_length`, loop over elements and initialize
-          them
-
-\*******************************************************************/
-
+/// create code to initialize a Java array with size `max_nondet_array_length`,
+/// loop over elements and initialize them
 void java_object_factoryt::gen_nondet_array_init(
   const exprt &expr,
   const source_locationt &loc)
@@ -496,18 +430,6 @@ void java_object_factoryt::gen_nondet_array_init(
   init_code.move_to_operands(goto_head);
   init_code.move_to_operands(init_done_label);
 }
-
-/*******************************************************************\
-
-Function: object_factory
-
- Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 exprt object_factory(
   const typet &type,

@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Show Claims
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Show Claims
 
 #include <iostream>
 
@@ -18,18 +12,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "show_properties.h"
 #include "goto_functions.h"
 #include "goto_model.h"
-
-/*******************************************************************\
-
-Function: cbmc_parseoptionst::show_properties
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void show_properties(
   const namespacet &ns,
@@ -93,18 +75,6 @@ void show_properties(
 }
 
 
-/*******************************************************************\
-
-Function: cbmc_parseoptionst::show_properties_json
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void show_properties_json(
   json_arrayt &json_properties,
   const namespacet &ns,
@@ -137,18 +107,6 @@ void show_properties_json(
   }
 }
 
-/*******************************************************************\
-
-Function: show_properties_json
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void show_properties_json(
   const namespacet &ns,
   const goto_functionst &goto_functions)
@@ -168,18 +126,6 @@ void show_properties_json(
   std::cout << ",\n" << json_result;
 }
 
-/*******************************************************************\
-
-Function: show_properties
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void show_properties(
   const namespacet &ns,
   ui_message_handlert::uit ui,
@@ -192,18 +138,6 @@ void show_properties(
       if(!fct.second.is_inlined())
         show_properties(ns, fct.first, ui, fct.second.body);
 }
-
-/*******************************************************************\
-
-Function: show_properties
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void show_properties(
   const goto_modelt &goto_model,

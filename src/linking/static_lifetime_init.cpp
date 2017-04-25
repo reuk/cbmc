@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <cassert>
 #include <cstdlib>
 
@@ -22,18 +14,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "static_lifetime_init.h"
 #include "zero_initializer.h"
-
-/*******************************************************************\
-
-Function: static_lifetime_init
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool static_lifetime_init(
   symbol_tablet &symbol_table,

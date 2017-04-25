@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Alex Groce
-
-\*******************************************************************/
-
 #ifndef CPROVER_SOLVERS_SAT_PBS_DIMACS_CNF_H
 #define CPROVER_SOLVERS_SAT_PBS_DIMACS_CNF_H
 

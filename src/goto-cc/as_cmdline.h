@@ -1,12 +1,5 @@
-/*******************************************************************\
- 
-Module: A special command line object for GNU Assembler
- 
-Author: Michael Tautschnig
- 
-Date: July 2016
- 
-\*******************************************************************/
+/// \file  A special command line object for GNU Assembler  Author: Michael
+/// Tautschnig  Date: July 2016
 
 #ifndef CPROVER_GOTO_CC_AS_CMDLINE_H
 #define CPROVER_GOTO_CC_AS_CMDLINE_H

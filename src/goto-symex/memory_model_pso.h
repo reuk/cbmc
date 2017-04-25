@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Memory models for partial order concurrency
-
-Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
-
-\*******************************************************************/
+/// \file Memory models for partial order concurrency
 
 #ifndef CPROVER_GOTO_SYMEX_MEMORY_MODEL_PSO_H
 #define CPROVER_GOTO_SYMEX_MEMORY_MODEL_PSO_H

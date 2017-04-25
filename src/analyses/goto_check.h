@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Program Transformation
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Program Transformation
 
 #ifndef CPROVER_ANALYSES_GOTO_CHECK_H
 #define CPROVER_ANALYSES_GOTO_CHECK_H

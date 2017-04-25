@@ -1,26 +1,8 @@
-/*******************************************************************\
-
-Module: C++ Language Type Checking
-
-Author: Daniel Kroening, kroening@cs.cmu.edu
-
-\*******************************************************************/
+/// \file C++ Language Type Checking
 
 #include <ostream>
 
 #include "cpp_declaration.h"
-
-/*******************************************************************\
-
-Function: cpp_declarationt::output
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void cpp_declarationt::output(std::ostream &out) const
 {
@@ -37,18 +19,6 @@ void cpp_declarationt::output(std::ostream &out) const
     out << "\n";
   }
 }
-
-/*******************************************************************\
-
-Function: cpp_declarationt::name_anon_struct_union
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void cpp_declarationt::name_anon_struct_union(typet &dest)
 {

@@ -1,29 +1,9 @@
-/*******************************************************************\
-
-Module:
-
-Author: Alex Groce
-
-\*******************************************************************/
-
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <iostream>
 
 #include "pbs_dimacs_cnf.h"
-
-/*******************************************************************\
-
-Function: pbs_dimacs_cnft::write_dimacs_cnf_pb
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void pbs_dimacs_cnft::write_dimacs_pb(std::ostream &out)
 {
@@ -63,18 +43,6 @@ void pbs_dimacs_cnft::write_dimacs_pb(std::ostream &out)
 
   // std::cout << "exit: No Lit.=" << no_variables () << "\n";
 }
-
-/*******************************************************************\
-
-Function: pbs_dimacs_cnft::pbs_solve
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bool pbs_dimacs_cnft::pbs_solve()
 {
@@ -200,18 +168,6 @@ bool pbs_dimacs_cnft::pbs_solve()
   return satisfied;
 }
 
-/*******************************************************************\
-
-Function: pbs_dimacs_cnft::prop_solve
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 propt::resultt pbs_dimacs_cnft::prop_solve()
 {
   std::ofstream file("temp.cnf");
@@ -251,18 +207,6 @@ propt::resultt pbs_dimacs_cnft::prop_solve()
   else
     return P_UNSATISFIABLE;
 }
-
-/*******************************************************************\
-
-Function: pbs_dimacs_cnft::l_get
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 tvt pbs_dimacs_cnft::l_get(literalt a) const
 {

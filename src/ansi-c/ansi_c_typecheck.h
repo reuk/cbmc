@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: ANSI-C Language Type Checking
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file ANSI-C Language Type Checking
 
 #ifndef CPROVER_ANSI_C_ANSI_C_TYPECHECK_H
 #define CPROVER_ANSI_C_ANSI_C_TYPECHECK_H

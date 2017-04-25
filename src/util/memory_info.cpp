@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #ifdef __APPLE__
 #include <mach/task.h>
 #include <mach/mach_init.h>
@@ -24,18 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <ostream>
 
 #include "memory_info.h"
-
-/*******************************************************************\
-
-Function: memory_info
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void memory_info(std::ostream &out)
 {

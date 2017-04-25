@@ -1,27 +1,7 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <util/arith_tools.h>
 #include <util/std_types.h>
 
 #include "boolbv.h"
-
-/*******************************************************************\
-
-Function: boolbvt::convert_array_of
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 bvt boolbvt::convert_array_of(const array_of_exprt &expr)
 {

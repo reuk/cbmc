@@ -1,28 +1,13 @@
-/*******************************************************************\
-
-Module: Compile and link source and object files.
-
-Author: CM Wintersteiger
-
-Date: June 2006
-
-\*******************************************************************/
+/// \file Compile and link source and object files.
 
 #include "xml_irep.h"
 #include "xml_symbol.h"
 
-/*******************************************************************\
-
-Function: convert
-
-  Inputs: a symbol and an xml node
-
- Outputs: none
-
- Purpose: converts a symbol to an xml symbol node
-
-\*******************************************************************/
-
+/// converts a symbol to an xml symbol node
+///
+/// parameters: a symbol and an xml node
+///
+/// \returns none
 void convert(const symbolt &sym, xmlt &root)
 {
   xmlt &xmlsym = root.new_element("symbol");
@@ -68,18 +53,11 @@ void convert(const symbolt &sym, xmlt &root)
   xmlloc.name = "location"; // convert overwrote this
 }
 
-/*******************************************************************\
-
-Function: convert
-
-  Inputs: an xml node and a symbol
-
- Outputs: none
-
- Purpose: converts an xml symbol node to a symbol
-
-\*******************************************************************/
-
+/// converts an xml symbol node to a symbol
+///
+/// parameters: an xml node and a symbol
+///
+/// \returns none
 void convert(const xmlt &xmlsym, symbolt &symbol)
 {
   symbol.name=xmlsym.get_attribute("name");

@@ -1,12 +1,4 @@
-/*******************************************************************\
-
-Module: Detection for Uninitialized Local Variables
-
-Author: Daniel Kroening
-
-Date: January 2010
-
-\*******************************************************************/
+/// \file Detection for Uninitialized Local Variables
 
 #ifndef CPROVER_ANALYSES_UNINITIALIZED_DOMAIN_H
 #define CPROVER_ANALYSES_UNINITIALIZED_DOMAIN_H

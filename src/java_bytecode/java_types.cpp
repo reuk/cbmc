@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #include <cassert>
 #include <cctype>
 
@@ -15,153 +7,45 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "java_types.h"
 
-/*******************************************************************\
-
-Function: java_int_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet java_int_type()
 {
   return signedbv_typet(32);
 }
-
-/*******************************************************************\
-
-Function: java_void_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 typet java_void_type()
 {
   return void_typet();
 }
 
-/*******************************************************************\
-
-Function: java_long_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet java_long_type()
 {
   return signedbv_typet(64);
 }
-
-/*******************************************************************\
-
-Function: java_short_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 typet java_short_type()
 {
   return signedbv_typet(16);
 }
 
-/*******************************************************************\
-
-Function: java_byte_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet java_byte_type()
 {
   return signedbv_typet(8);
 }
-
-/*******************************************************************\
-
-Function: java_char_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 typet java_char_type()
 {
   return unsignedbv_typet(16);
 }
 
-/*******************************************************************\
-
-Function: java_float_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet java_float_type()
 {
   return ieee_float_spect::single_precision().to_type();
 }
 
-/*******************************************************************\
-
-Function: java_double_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 typet java_double_type()
 {
   return ieee_float_spect::double_precision().to_type();
 }
-
-/*******************************************************************\
-
-Function: java_boolean_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 typet java_boolean_type()
 {
@@ -171,34 +55,10 @@ typet java_boolean_type()
   return c_bool_typet(8);
 }
 
-/*******************************************************************\
-
-Function: java_reference_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 reference_typet java_reference_type(const typet &subtype)
 {
   return reference_typet(subtype);
 }
-
-/*******************************************************************\
-
-Function: java_array_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 pointer_typet java_array_type(const char subtype)
 {
@@ -229,34 +89,10 @@ pointer_typet java_array_type(const char subtype)
   return pointer_typet(symbol_type);
 }
 
-/*******************************************************************\
-
-Function: is_reference_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 bool is_reference_type(const char t)
 {
   return 'a' == t;
 }
-
-/*******************************************************************\
-
-Function: java_type_from_char
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 typet java_type_from_char(char t)
 {
@@ -276,19 +112,7 @@ typet java_type_from_char(char t)
   }
 }
 
-/*******************************************************************\
-
-Function: java_bytecode_promotion
-
-  Inputs:
-
- Outputs:
-
- Purpose: Java does not support byte/short return types.
-          These are always promoted.
-
-\*******************************************************************/
-
+/// Java does not support byte/short return types. These are always promoted.
 typet java_bytecode_promotion(const typet &type)
 {
   if(type==java_boolean_type() ||
@@ -300,19 +124,7 @@ typet java_bytecode_promotion(const typet &type)
   return type;
 }
 
-/*******************************************************************\
-
-Function: java_bytecode_promotion
-
-  Inputs:
-
- Outputs:
-
- Purpose: Java does not support byte/short return types.
-          These are always promoted.
-
-\*******************************************************************/
-
+/// Java does not support byte/short return types. These are always promoted.
 exprt java_bytecode_promotion(const exprt &expr)
 {
   typet new_type=java_bytecode_promotion(expr.type());
@@ -322,18 +134,6 @@ exprt java_bytecode_promotion(const exprt &expr)
   else
     return typecast_exprt(expr, new_type);
 }
-
-/*******************************************************************\
-
-Function: java_type_from_string
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 typet java_type_from_string(const std::string &src)
 {
@@ -435,18 +235,6 @@ typet java_type_from_string(const std::string &src)
   }
 }
 
-/*******************************************************************\
-
-Function: java_char_from_type
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 char java_char_from_type(const typet &type)
 {
   const irep_idt &id=type.id();
@@ -479,18 +267,6 @@ char java_char_from_type(const typet &type)
   return 'a';
 }
 
-/*******************************************************************\
-
-Function: java_classname
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 // java/lang/Object -> java.lang.Object
 static std::string slash_to_dot(const std::string &src)
 {
@@ -500,18 +276,6 @@ static std::string slash_to_dot(const std::string &src)
       *it='.';
   return result;
 }
-
-/*******************************************************************\
-
-Function: java_classname
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 symbol_typet java_classname(const std::string &id)
 {

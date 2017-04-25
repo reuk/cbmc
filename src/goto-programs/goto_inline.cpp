@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: Function Inlining
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file Function Inlining
 
 #include <cassert>
 
@@ -18,18 +12,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "goto_inline.h"
 #include "goto_inline_class.h"
 
-/*******************************************************************\
-
-Function: goto_inline
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void goto_inline(
   goto_modelt &goto_model,
   message_handlert &message_handler,
@@ -42,18 +24,6 @@ void goto_inline(
     message_handler,
     adjust_function);
 }
-
-/*******************************************************************\
-
-Function: goto_inline
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_inline(
   goto_functionst &goto_functions,
@@ -118,18 +88,6 @@ void goto_inline(
   }
 }
 
-/*******************************************************************\
-
-Function: goto_partial_inline
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void goto_partial_inline(
   goto_modelt &goto_model,
   message_handlert &message_handler,
@@ -144,18 +102,6 @@ void goto_partial_inline(
     smallfunc_limit,
     adjust_function);
 }
-
-/*******************************************************************\
-
-Function: goto_partial_inline
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_partial_inline(
   goto_functionst &goto_functions,
@@ -235,18 +181,6 @@ void goto_partial_inline(
   goto_inline.goto_inline(inline_map, false);
 }
 
-/*******************************************************************\
-
-Function: goto_function_inline
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
-
 void goto_function_inline(
   goto_modelt &goto_model,
   const irep_idt function,
@@ -260,18 +194,6 @@ void goto_function_inline(
     ns,
     message_handler);
 }
-
-/*******************************************************************\
-
-Function: goto_function_inline
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 void goto_function_inline(
   goto_functionst &goto_functions,
@@ -316,18 +238,6 @@ void goto_function_inline(
 
   goto_inline.goto_inline(function, goto_function, inline_map, true);
 }
-
-/*******************************************************************\
-
-Function: goto_function_inline_and_log
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 jsont goto_function_inline_and_log(
   goto_functionst &goto_functions,

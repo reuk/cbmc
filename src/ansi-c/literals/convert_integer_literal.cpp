@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: C++ Language Conversion
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file C++ Language Conversion
 
 #include <cassert>
 #include <cctype>
@@ -16,18 +10,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/string2int.h>
 
 #include "convert_integer_literal.h"
-
-/*******************************************************************\
-
-Function: convert_integer_literal
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 exprt convert_integer_literal(const std::string &src)
 {

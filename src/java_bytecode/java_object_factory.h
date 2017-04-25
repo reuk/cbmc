@@ -1,11 +1,3 @@
-/*******************************************************************\
-
-Module:
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
-
 #ifndef CPROVER_JAVA_BYTECODE_JAVA_OBJECT_FACTORY_H
 #define CPROVER_JAVA_BYTECODE_JAVA_OBJECT_FACTORY_H
 

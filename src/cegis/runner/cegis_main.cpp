@@ -1,10 +1,4 @@
-/*******************************************************************\
-
-Module: CEGIS Main Module
-
-Author: Daniel Kroening, kroening@kroening.com
-
-\*******************************************************************/
+/// \file CEGIS Main Module
 
 #include <util/unicode.h>
 
@@ -13,18 +7,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #endif
 
 #include "cegis_parse_options.h"
-
-/*******************************************************************\
-
-Function: main / wmain
-
-  Inputs:
-
- Outputs:
-
- Purpose:
-
-\*******************************************************************/
 
 #ifdef IREP_HASH_STATS
 extern unsigned long long irep_hash_cnt;
