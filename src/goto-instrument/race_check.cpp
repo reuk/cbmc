@@ -265,17 +265,17 @@ void race_check(
       i_it++;
 
       // now add assignments for what is written -- set
-      forall_rw_set_w_entries(e_it, rw_set)
+      for(const auto &e_it : rw_set.w_entries)
       {
-        if(!is_shared(ns, e_it->second.symbol_expr))
+        if(!is_shared(ns, e_it.second.symbol_expr))
           continue;
 
         goto_programt::targett t=goto_program.insert_before(i_it);
 
         t->type=ASSIGN;
         t->code=code_assignt(
-          w_guards.get_w_guard_expr(e_it->second),
-          e_it->second.guard);
+          w_guards.get_w_guard_expr(e_it.second),
+          e_it.second.guard);
 
         t->source_location=original_instruction.source_location;
         i_it=++t;
@@ -289,16 +289,16 @@ void race_check(
       }
 
       // now add assignments for what is written -- reset
-      forall_rw_set_w_entries(e_it, rw_set)
+      for(const auto &e_it : rw_set.w_entries)
       {
-        if(!is_shared(ns, e_it->second.symbol_expr))
+        if(!is_shared(ns, e_it.second.symbol_expr))
           continue;
 
         goto_programt::targett t=goto_program.insert_before(i_it);
 
         t->type=ASSIGN;
         t->code=code_assignt(
-          w_guards.get_w_guard_expr(e_it->second),
+          w_guards.get_w_guard_expr(e_it.second),
           false_exprt());
 
         t->source_location=original_instruction.source_location;
@@ -306,29 +306,29 @@ void race_check(
       }
 
       // now add assertions for what is read and written
-      forall_rw_set_r_entries(e_it, rw_set)
+      for(const auto &e_it : rw_set.r_entries)
       {
-        if(!is_shared(ns, e_it->second.symbol_expr))
+        if(!is_shared(ns, e_it.second.symbol_expr))
           continue;
 
         goto_programt::targett t=goto_program.insert_before(i_it);
 
-        t->make_assertion(w_guards.get_assertion(e_it->second));
+        t->make_assertion(w_guards.get_assertion(e_it.second));
         t->source_location=original_instruction.source_location;
-        t->source_location.set_comment(comment(e_it->second, false));
+        t->source_location.set_comment(comment(e_it.second, false));
         i_it=++t;
       }
 
-      forall_rw_set_w_entries(e_it, rw_set)
+      for(const auto &e_it : rw_set.w_entries)
       {
-        if(!is_shared(ns, e_it->second.symbol_expr))
+        if(!is_shared(ns, e_it.second.symbol_expr))
           continue;
 
         goto_programt::targett t=goto_program.insert_before(i_it);
 
-        t->make_assertion(w_guards.get_assertion(e_it->second));
+        t->make_assertion(w_guards.get_assertion(e_it.second));
         t->source_location=original_instruction.source_location;
-        t->source_location.set_comment(comment(e_it->second, true));
+        t->source_location.set_comment(comment(e_it.second, true));
         i_it=++t;
       }
 

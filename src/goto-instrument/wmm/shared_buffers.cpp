@@ -1176,15 +1176,15 @@ void shared_bufferst::affected_by_delay(
         , local_may
 #endif
         ); // NOLINT(whitespace/parens)
-        forall_rw_set_w_entries(w_it, rw_set)
-          forall_rw_set_r_entries(r_it, rw_set)
+        for(const auto &w_it : rw_set.w_entries)
+          for(const auto &r_it : rw_set.r_entries)
           {
-            message.debug() <<"debug: "<<id2string(w_it->second.object)
-              <<" reads from "<<id2string(r_it->second.object)
+            message.debug() <<"debug: "<<id2string(w_it.second.object)
+              <<" reads from "<<id2string(r_it.second.object)
               <<messaget::eom;
-            if(is_buffered_in_general(ns, r_it->second.symbol_expr, true))
+            if(is_buffered_in_general(ns, r_it.second.symbol_expr, true))
               // shouldn't it be true? false => overapprox
-              affected_by_delay_set.insert(w_it->second.object);
+              affected_by_delay_set.insert(w_it.second.object);
           }
     }
   }
@@ -1252,9 +1252,9 @@ void shared_bufferst::cfg_visitort::weak_memory(
 
         // add all the written values (which are not instrumentations)
         // in a set
-        forall_rw_set_w_entries(w_it, rw_set)
-          if(shared_buffers.is_buffered(ns, w_it->second.symbol_expr, false))
-            past_writes.insert(w_it->second.object);
+        for(const auto &w_it : rw_set.w_entries)
+          if(shared_buffers.is_buffered(ns, w_it.second.symbol_expr, false))
+            past_writes.insert(w_it.second.object);
 
         goto_programt::instructiont original_instruction;
         original_instruction.swap(instruction);
@@ -1268,39 +1268,39 @@ void shared_bufferst::cfg_visitort::weak_memory(
 
         // we first perform (non-deterministically) up to 2 writes for
         // stuff that is potentially read
-        forall_rw_set_r_entries(e_it, rw_set)
+        for(const auto &e_it : rw_set.r_entries)
         {
           // flush read -- do nothing in this implementation
           shared_buffers.flush_read(
-            goto_program, i_it, source_location, e_it->second.object);
+            goto_program, i_it, source_location, e_it.second.object);
 
-          if(shared_buffers.is_buffered(ns, e_it->second.symbol_expr, false))
+          if(shared_buffers.is_buffered(ns, e_it.second.symbol_expr, false))
             shared_buffers.nondet_flush(
-              goto_program, i_it, source_location, e_it->second.object,
+              goto_program, i_it, source_location, e_it.second.object,
               current_thread,
               (model==TSO || model==PSO || model==RMO));
         }
 
         // Now perform the write(s).
-        forall_rw_set_w_entries(e_it, rw_set)
+        for(const auto &e_it : rw_set.w_entries)
         {
           // if one of the previous read was to buffer, then delays the read
           if(model==RMO || model==Power)
           {
-            forall_rw_set_r_entries(r_it, rw_set)
-              if(shared_buffers.is_buffered(ns, r_it->second.symbol_expr, true))
+            for(const auto &r_it : rw_set.r_entries)
+              if(shared_buffers.is_buffered(ns, r_it.second.symbol_expr, true))
               {
                 shared_buffers.delay_read(
-                  goto_program, i_it, source_location, r_it->second.object,
-                  e_it->second.object);
+                  goto_program, i_it, source_location, r_it.second.object,
+                  e_it.second.object);
               }
           }
 
-          if(shared_buffers.is_buffered(ns, e_it->second.symbol_expr, true))
+          if(shared_buffers.is_buffered(ns, e_it.second.symbol_expr, true))
           {
             shared_buffers.write(
               goto_program, i_it, source_location,
-              e_it->second.object, original_instruction,
+              e_it.second.object, original_instruction,
               current_thread);
           }
           else
@@ -1308,24 +1308,24 @@ void shared_bufferst::cfg_visitort::weak_memory(
             // unbuffered
             if(model==RMO || model==Power)
             {
-              forall_rw_set_r_entries(r_it, rw_set)
+              for(const auto &r_it : rw_set.r_entries)
                 if(shared_buffers.affected_by_delay_set.find(
-                    r_it->second.object)!=
+                    r_it.second.object)!=
                    shared_buffers.affected_by_delay_set.end())
                 {
                   shared_buffers.message.debug() << "second: "
-                    << r_it->second.object << messaget::eom;
-                  const varst &vars=(shared_buffers)(r_it->second.object);
+                    << r_it.second.object << messaget::eom;
+                  const varst &vars=(shared_buffers)(r_it.second.object);
 
                   shared_buffers.message.debug() << "writer "
-                    <<e_it->second.object
-                    <<" reads "<<r_it->second.object<< messaget::eom;
+                    <<e_it.second.object
+                    <<" reads "<<r_it.second.object<< messaget::eom;
 
                   // TO FIX: how to deal with rhs including calls?
                   // if a read is delayed, use its alias instead of itself
                   // -- or not
                   symbol_exprt to_replace_expr=symbol_exprt(
-                    r_it->second.object, vars.type);
+                    r_it.second.object, vars.type);
                   symbol_exprt new_read_expr=symbol_exprt(
                     vars.read_delayed_var,
                   pointer_typet(vars.type));
@@ -1359,36 +1359,36 @@ void shared_bufferst::cfg_visitort::weak_memory(
 
                   shared_buffers.assignment(
                     goto_program, i_it, source_location,
-                    r_it->second.object, rhs);
+                    r_it.second.object, rhs);
                 }
             }
 
             // normal assignment
             shared_buffers.assignment(
               goto_program, i_it, source_location,
-              e_it->second.object, original_instruction.code.op1());
+              e_it.second.object, original_instruction.code.op1());
           }
         }
 
         // if last writes was flushed to make the lhs reads the buffer but
         // without affecting the memory, restore the previous memory value
         // (buffer flush delay)
-        forall_rw_set_r_entries(e_it, rw_set)
-          if(shared_buffers.is_buffered(ns, e_it->second.symbol_expr, false))
+        for(const auto &e_it : rw_set.r_entries)
+          if(shared_buffers.is_buffered(ns, e_it.second.symbol_expr, false))
           {
             shared_buffers.message.debug() << "flush restore: "
-              << e_it->second.object << messaget::eom;
-            const varst vars= (shared_buffers)(e_it->second.object);
+              << e_it.second.object << messaget::eom;
+            const varst vars= (shared_buffers)(e_it.second.object);
             const exprt delayed_expr=symbol_exprt(vars.flush_delayed,
               bool_typet());
             const symbol_exprt mem_value_expr=symbol_exprt(vars.mem_tmp,
               vars.type);
             const exprt cond_expr=if_exprt(delayed_expr, mem_value_expr,
-              e_it->second.symbol_expr);
+              e_it.second.symbol_expr);
 
             shared_buffers.assignment(
               goto_program, i_it, source_location,
-              e_it->second.object, cond_expr);
+              e_it.second.object, cond_expr);
             shared_buffers.assignment(
               goto_program, i_it, source_location,
               vars.flush_delayed, false_exprt());

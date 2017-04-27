@@ -262,21 +262,21 @@ void fence_volatilet::compute()
         , local_may
         #endif
         ); // NOLINT(whitespace/parens)
-        forall_rw_set_w_entries(w_it, rw_set)
+        for(const auto &w_it : rw_set.w_entries)
         {
-          if(has_prefix(id2string(w_it->second.object), CPROVER_PREFIX))
+          if(has_prefix(id2string(w_it.second.object), CPROVER_PREFIX))
             continue;
 
           try
           {
             message.debug() << "debug: "
-              << id2string(w_it->second.object) << messaget::eom;
-            const symbolt &var=ns.lookup(w_it->second.object);
+              << id2string(w_it.second.object) << messaget::eom;
+            const symbolt &var=ns.lookup(w_it.second.object);
             if(is_volatile(var.type))
             {
               message.debug() << "volatile: "
-                << id2string(w_it->second.object) << messaget::eom;
-              fenced_edges.writes.push_front(w_it->second.symbol_expr);
+                << id2string(w_it.second.object) << messaget::eom;
+              fenced_edges.writes.push_front(w_it.second.symbol_expr);
             }
           }
           catch(std::string s)
@@ -286,16 +286,16 @@ void fence_volatilet::compute()
             continue;
           }
         }
-        forall_rw_set_r_entries(r_it, rw_set)
+        for(const auto &r_it : rw_set.r_entries)
         {
-          if(has_prefix(id2string(r_it->second.object), CPROVER_PREFIX))
+          if(has_prefix(id2string(r_it.second.object), CPROVER_PREFIX))
             continue;
 
           try
           {
             message.debug() << "debug: "
-              << id2string(r_it->second.object) << messaget::eom;
-            const symbolt &var=ns.lookup(r_it->second.object);
+              << id2string(r_it.second.object) << messaget::eom;
+            const symbolt &var=ns.lookup(r_it.second.object);
             #if 0
             // NOLINTNEXTLINE(readability/braces)
             if(var.is_volatile && !var.is_thread_local)
@@ -303,8 +303,8 @@ void fence_volatilet::compute()
             if(is_volatile(var.type))
             {
               message.debug() << "volatile: "
-                << id2string(r_it->second.object) << messaget::eom;
-              fenced_edges.reads.push_front(r_it->second.symbol_expr);
+                << id2string(r_it.second.object) << messaget::eom;
+              fenced_edges.reads.push_front(r_it.second.symbol_expr);
             }
           }
           catch (std::string s)
@@ -350,17 +350,17 @@ void fence_all_sharedt::compute()
       , local_may
 #endif
       ); // NOLINT(whitespace/parens)
-      forall_rw_set_w_entries(w_it, rw_set)
+      for(const auto &w_it : rw_set.w_entries)
       {
-        if(has_prefix(id2string(w_it->second.object), CPROVER_PREFIX))
+        if(has_prefix(id2string(w_it.second.object), CPROVER_PREFIX))
           continue;
 
         try
         {
-          const symbolt &var=ns.lookup(w_it->second.object);
+          const symbolt &var=ns.lookup(w_it.second.object);
           message.debug() << "debug: "
-            << id2string(w_it->second.object) << " shared: " << var.is_shared()
-            << " loc: " << w_it->second.symbol_expr.source_location()
+            << id2string(w_it.second.object) << " shared: " << var.is_shared()
+            << " loc: " << w_it.second.symbol_expr.source_location()
             << messaget::eom;
           if(var.is_shared())
           {
@@ -368,24 +368,24 @@ void fence_all_sharedt::compute()
                a pointer. We want to report this pointer */
             std::map<const irep_idt, const irep_idt> &ref=
               rw_set.dereferenced_from;
-            if(ref.find(w_it->second.object)!=ref.end())
+            if(ref.find(w_it.second.object)!=ref.end())
             {
-              const irep_idt from=ref[w_it->second.object];
+              const irep_idt from=ref[w_it.second.object];
               const rw_set_baset::entryt &entry=
                 rw_set.set_reads.find(from)!=rw_set.set_reads.end() ?
                 rw_set.r_entries[from] :
                 rw_set.w_entries[from];
               message.debug() << "shared: (through "
-                << id2string(w_it->second.object) << ") " << entry.object
+                << id2string(w_it.second.object) << ") " << entry.object
                 << messaget::eom;
               fenced_edges.writes.push_front(entry.symbol_expr);
             }
             else
             {
               message.debug() << "shared: "
-                << id2string(w_it->second.object) << " -> "
-                << w_it->second.object << messaget::eom;
-              fenced_edges.writes.push_front(w_it->second.symbol_expr);
+                << id2string(w_it.second.object) << " -> "
+                << w_it.second.object << messaget::eom;
+              fenced_edges.writes.push_front(w_it.second.symbol_expr);
             }
           }
         }
@@ -396,43 +396,43 @@ void fence_all_sharedt::compute()
           continue;
         }
       }
-      forall_rw_set_r_entries(r_it, rw_set)
+      for(const auto &r_it : rw_set.r_entries)
       {
-        if(has_prefix(id2string(r_it->second.object), CPROVER_PREFIX))
+        if(has_prefix(id2string(r_it.second.object), CPROVER_PREFIX))
           continue;
 
         try
         {
-          const symbolt &var=ns.lookup(r_it->second.object);
+          const symbolt &var=ns.lookup(r_it.second.object);
           message.debug() << "debug: "
-            << id2string(r_it->second.object) << " shared: "
+            << id2string(r_it.second.object) << " shared: "
             << var.is_shared() << " loc: "
-            << r_it->second.symbol_expr.source_location() << messaget::eom;
+            << r_it.second.symbol_expr.source_location() << messaget::eom;
           if(var.is_shared())
           {
             /* this variable has perhaps been discovered after dereferencing
                a pointer. We want to report this pointer */
             std::map<const irep_idt, const irep_idt>&
               ref=rw_set.dereferenced_from;
-            if(ref.find(r_it->second.object)!=ref.end())
+            if(ref.find(r_it.second.object)!=ref.end())
             {
-              const irep_idt from=ref[r_it->second.object];
+              const irep_idt from=ref[r_it.second.object];
               const rw_set_baset::entryt &entry=
                 rw_set.set_reads.find(from)!=rw_set.set_reads.end() ?
                 rw_set.r_entries[from] :
                 rw_set.w_entries[from];
 
               message.debug() << "shared: (through "
-                << id2string(r_it->second.object) << ") " << entry.object
+                << id2string(r_it.second.object) << ") " << entry.object
                 << messaget::eom;
               fenced_edges.reads.push_front(entry.symbol_expr);
             }
             else
             {
               message.debug() << "shared: "
-                << id2string(r_it->second.object) << " -> "
-                << r_it->second.object << messaget::eom;
-              fenced_edges.reads.push_front(r_it->second.symbol_expr);
+                << id2string(r_it.second.object) << " -> "
+                << r_it.second.object << messaget::eom;
+              fenced_edges.reads.push_front(r_it.second.symbol_expr);
             }
           }
         }
@@ -512,43 +512,43 @@ void fence_all_shared_aegt::fence_all_shared_aeg_explore(
       , local_may
       #endif
     ); // NOLINT(whitespace/parens)
-    forall_rw_set_w_entries(w_it, rw_set)
+    for(const auto &w_it : rw_set.w_entries)
     {
-      if(has_prefix(id2string(w_it->second.object), CPROVER_PREFIX))
+      if(has_prefix(id2string(w_it.second.object), CPROVER_PREFIX))
         continue;
 
       try
       {
-        const symbolt &var=ns.lookup(w_it->second.object);
+        const symbolt &var=ns.lookup(w_it.second.object);
         message.debug() << "debug: "
-          << id2string(w_it->second.object) << " shared: "
+          << id2string(w_it.second.object) << " shared: "
           << var.is_shared() << " loc: "
-          << w_it->second.symbol_expr.source_location() << messaget::eom;
+          << w_it.second.symbol_expr.source_location() << messaget::eom;
         if(var.is_shared())
         {
           /* this variable has perhaps been discovered after dereferencing
              a pointer. We want to report this pointer */
           std::map<const irep_idt, const irep_idt>&
             ref=rw_set.dereferenced_from;
-          if(ref.find(w_it->second.object)!=ref.end())
+          if(ref.find(w_it.second.object)!=ref.end())
           {
-            const irep_idt from=ref[w_it->second.object];
+            const irep_idt from=ref[w_it.second.object];
             const rw_set_baset::entryt &entry=
                 rw_set.set_reads.find(from)!=rw_set.set_reads.end() ?
                 rw_set.r_entries[from] :
                 rw_set.w_entries[from];
 
             message.debug() << "shared: (through "
-              << id2string(w_it->second.object) << ") " << entry.object
+              << id2string(w_it.second.object) << ") " << entry.object
               << messaget::eom;
             fenced_edges.writes.push_front(entry.symbol_expr);
           }
           else
           {
             message.debug() << "shared: "
-              << id2string(w_it->second.object) << " -> "
-              << w_it->second.object << messaget::eom;
-            fenced_edges.writes.push_front(w_it->second.symbol_expr);
+              << id2string(w_it.second.object) << " -> "
+              << w_it.second.object << messaget::eom;
+            fenced_edges.writes.push_front(w_it.second.symbol_expr);
           }
         }
       }
@@ -559,43 +559,43 @@ void fence_all_shared_aegt::fence_all_shared_aeg_explore(
         continue;
       }
     }
-    forall_rw_set_r_entries(r_it, rw_set)
+    for(const auto &r_it : rw_set.r_entries)
     {
-      if(has_prefix(id2string(r_it->second.object), CPROVER_PREFIX))
+      if(has_prefix(id2string(r_it.second.object), CPROVER_PREFIX))
         continue;
 
       try
       {
-        const symbolt &var=ns.lookup(r_it->second.object);
+        const symbolt &var=ns.lookup(r_it.second.object);
         message.debug() << "debug: "
-          << id2string(r_it->second.object) << " shared: "
+          << id2string(r_it.second.object) << " shared: "
           <<var.is_shared() << " loc: "
-          << r_it->second.symbol_expr.source_location() << messaget::eom;
+          << r_it.second.symbol_expr.source_location() << messaget::eom;
         if(var.is_shared() && var.type.id()!=ID_code)
         {
           /* this variable has perhaps been discovered after dereferencing
              a pointer. We want to report this pointer */
           std::map<const irep_idt, const irep_idt>&
             ref=rw_set.dereferenced_from;
-          if(ref.find(r_it->second.object)!=ref.end())
+          if(ref.find(r_it.second.object)!=ref.end())
           {
-            const irep_idt from=ref[r_it->second.object];
+            const irep_idt from=ref[r_it.second.object];
             const rw_set_baset::entryt &entry=
               rw_set.set_reads.find(from)!=rw_set.set_reads.end() ?
               rw_set.r_entries[from] :
               rw_set.w_entries[from];
 
             message.debug() << "shared: (through "
-              << id2string(r_it->second.object) << ") " << entry.object
+              << id2string(r_it.second.object) << ") " << entry.object
               << messaget::eom;
             fenced_edges.reads.push_front(entry.symbol_expr);
           }
           else
           {
             message.debug() << "shared: "
-              << id2string(r_it->second.object) << " -> "
-              << r_it->second.object << messaget::eom;
-            fenced_edges.reads.push_front(r_it->second.symbol_expr);
+              << id2string(r_it.second.object) << " -> "
+              << r_it.second.object << messaget::eom;
+            fenced_edges.reads.push_front(r_it.second.symbol_expr);
           }
         }
       }
