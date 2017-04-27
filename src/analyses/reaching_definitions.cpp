@@ -371,9 +371,9 @@ void rd_range_domaint::transform_assign(
   goto_rw(to, rw_set);
   const bool is_must_alias=rw_set.get_w_set().size()==1;
 
-  forall_rw_range_set_w_objects(it, rw_set)
+  for(const auto &it : rw_set.get_w_set())
   {
-    const irep_idt &identifier=it->first;
+    const irep_idt &identifier=it.first;
     // ignore symex::invalid_object
     const symbolt *symbol_ptr;
     if(ns.lookup(identifier, symbol_ptr))

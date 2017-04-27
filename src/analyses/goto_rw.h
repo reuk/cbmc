@@ -19,14 +19,6 @@ Date: April 2010
 
 #include <goto-programs/goto_program.h>
 
-#define forall_rw_range_set_r_objects(it, rw_set) \
-  for(rw_range_sett::objectst::const_iterator it=(rw_set).get_r_set().begin(); \
-      it!=(rw_set).get_r_set().end(); ++it)
-
-#define forall_rw_range_set_w_objects(it, rw_set) \
-  for(rw_range_sett::objectst::const_iterator it=(rw_set).get_w_set().begin(); \
-      it!=(rw_set).get_w_set().end(); ++it)
-
 class rw_range_sett;
 class goto_functionst;
 
@@ -105,10 +97,10 @@ public:
     return w_range_set;
   }
 
-  const range_domaint &get_ranges(objectst::const_iterator it) const
+  const range_domaint &get_ranges(const objectst::value_type &it) const
   {
-    assert(dynamic_cast<range_domaint*>(it->second)!=0);
-    return *static_cast<range_domaint*>(it->second);
+    assert(dynamic_cast<range_domaint*>(it.second)!=nullptr);
+    return static_cast<const range_domaint&>(*it.second);
   }
 
   typedef enum { LHS_W, READ } get_modet;

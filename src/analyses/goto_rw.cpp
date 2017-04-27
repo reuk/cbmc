@@ -108,20 +108,20 @@ Function: rw_range_sett::output
 void rw_range_sett::output(std::ostream &out) const
 {
   out << "READ:" << std::endl;
-  forall_rw_range_set_r_objects(it, *this)
+  for(const auto &it : get_r_set())
   {
-    out << "  " << it->first;
-    it->second->output(ns, out);
+    out << "  " << it.first;
+    it.second->output(ns, out);
     out << std::endl;
   }
 
   out << std::endl;
 
   out << "WRITE:" << std::endl;
-  forall_rw_range_set_w_objects(it, *this)
+  for(const auto &it : get_w_set())
   {
-    out << "  " << it->first;
-    it->second->output(ns, out);
+    out << "  " << it.first;
+    it.second->output(ns, out);
     out << std::endl;
   }
 }
