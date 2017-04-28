@@ -28,6 +28,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "expr2java.h"
 
+#define MEMORY_LEAK_DEBUG  1
+#ifdef MEMORY_LEAK_DEBUG
+#include <regex>
+#include <iostream>
+#endif
+
 /*******************************************************************\
 
 Function: java_bytecode_languaget::get_language_options
@@ -522,6 +528,14 @@ bool java_bytecode_languaget::typecheck(
       continue;
 
     debug() << "Converting class " << c_it->first << eom;
+
+#ifdef MEMORY_LEAK_DEBUG
+    const std::regex reg(R"(.*MyIterator.*)");
+    if(std::regex_search(as_string(c_it->first), std::regex(R"(.*MyIterator.*)")))
+    {
+      std::cout << "Found: " << c_it->first << '\n' << std::flush;
+    }
+#endif
 
     if(java_bytecode_convert_class(
          c_it->second,

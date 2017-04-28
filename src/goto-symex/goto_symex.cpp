@@ -51,7 +51,7 @@ void goto_symext::replace_nondet(exprt &expr)
     exprt new_expr(ID_nondet_symbol, expr.type());
     new_expr.set(ID_identifier, "symex::nondet"+std::to_string(nondet_count++));
     new_expr.add_source_location()=expr.source_location();
-    expr.swap(new_expr);
+    expr=new_expr;
   }
   else
     Forall_operands(it, expr)
