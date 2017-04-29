@@ -79,6 +79,8 @@ public:
     typedef objmapt::const_iterator const_iterator;
     // NOLINTNEXTLINE(readability/identifiers)
     typedef objmapt::iterator iterator;
+    // NOLINTNEXTLINE(readability/identifiers)
+    typedef objmapt::value_type value_type;
 
     const_iterator find(unsigned k) { return objmap.find(k); }
     iterator begin(void) { return objmap.begin(); }
@@ -134,18 +136,18 @@ public:
     bool is_valid_at(unsigned inx, unsigned f, unsigned line) const;
   };
 
-  exprt to_expr(object_map_dt::const_iterator it) const;
+  exprt to_expr(const object_map_dt::value_type &it) const;
 
   typedef reference_counting<object_map_dt> object_mapt;
 
-  void set(object_mapt &dest, object_map_dt::const_iterator it) const
+  void set(object_mapt &dest, const object_map_dt::value_type &it) const
   {
-    dest.write()[it->first]=it->second;
+    dest.write()[it.first]=it.second;
   }
 
-  bool insert_to(object_mapt &dest, object_map_dt::const_iterator it) const
+  bool insert_to(object_mapt &dest, const object_map_dt::value_type &it) const
   {
-    return insert_to(dest, it->first, it->second);
+    return insert_to(dest, it.first, it.second);
   }
 
   bool insert_to(object_mapt &dest, const exprt &src) const
@@ -171,9 +173,9 @@ public:
     return insert_to(dest, object_numbering.number(expr), object);
   }
 
-  bool insert_from(object_mapt &dest, object_map_dt::const_iterator it) const
+  bool insert_from(object_mapt &dest, const object_map_dt::value_type &it) const
   {
-    return insert_from(dest, it->first, it->second);
+    return insert_from(dest, it.first, it.second);
   }
 
   bool insert_from(object_mapt &dest, const exprt &src) const
