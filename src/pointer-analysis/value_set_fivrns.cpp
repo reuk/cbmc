@@ -29,21 +29,11 @@ hash_numbering<irep_idt, irep_id_hash> value_set_fivrnst::function_numbering;
 
 static const char *alloc_adapter_prefix="alloc_adaptor::";
 
-#define forall_objects(it, map) \
-  for(object_map_dt::const_iterator (it) = (map).begin(); \
-  (it)!=(map).end(); \
-  (it)++)
-
 #define forall_valid_objects(it, map) \
   for(object_map_dt::const_iterator (it) = (map).begin(); \
   (it)!=(map).end(); \
   (it)++) \
     if((map).is_valid_at((it)->first, from_function, from_target_index))
-
-#define Forall_objects(it, map) \
-  for(object_map_dt::iterator (it) = (map).begin(); \
-  (it)!=(map).end(); \
-  (it)++)
 
 #define Forall_valid_objects(it, map) \
   for(object_map_dt::iterator (it) = (map).begin(); \
@@ -232,9 +222,9 @@ Function: value_set_fivrnst::to_expr
 
 \*******************************************************************/
 
-exprt value_set_fivrnst::to_expr(object_map_dt::const_iterator it) const
+exprt value_set_fivrnst::to_expr(const object_map_dt::value_type &it) const
 {
-  const exprt &object=object_numbering[it->first];
+  const exprt &object=object_numbering[it.first];
 
   if(object.id()==ID_invalid ||
      object.id()==ID_unknown)
@@ -244,8 +234,8 @@ exprt value_set_fivrnst::to_expr(object_map_dt::const_iterator it) const
 
   od.object()=object;
 
-  if(it->second.offset_is_set)
-    od.offset()=from_integer(it->second.offset, index_type());
+  if(it.second.offset_is_set)
+    od.offset()=from_integer(it.second.offset, index_type());
 
   od.type()=od.object().type();
 
@@ -270,7 +260,7 @@ bool value_set_fivrnst::make_union(
 {
   bool result=false;
 
-  forall_objects(it, src.read())
+  for(const auto &it : src.read())
   {
     if(insert_to(dest, it))
       result=true;
@@ -299,7 +289,7 @@ bool value_set_fivrnst::make_valid_union(
 
   forall_valid_objects(it, src.read())
   {
-    if(insert_to(dest, it))
+    if(insert_to(dest, *it))
       result=true;
   }
 
@@ -352,7 +342,7 @@ void value_set_fivrnst::get_value_set(
   object_mapt object_map;
   get_value_set(expr, object_map, ns);
 
-  forall_objects(it, object_map.read())
+  for(const auto &it : object_map.read())
     value_set.push_back(to_expr(it));
 
   #if 0
@@ -501,9 +491,9 @@ void value_set_fivrnst::get_value_set_rec(
 
     if(object_map.begin()!=object_map.end())
     {
-      forall_objects(it1, object_map)
+      for(const auto &it1 : object_map)
       {
-        const exprt &object=object_numbering[it1->first];
+        const exprt &object=object_numbering[it1.first];
         get_value_set_rec(object, dest, suffix,
                           original_type, ns);
       }
@@ -521,9 +511,9 @@ void value_set_fivrnst::get_value_set_rec(
 
     if(object_map.begin()!=object_map.end())
     {
-      forall_objects(it, object_map)
+      for(const auto &it : object_map)
       {
-        const exprt &object=object_numbering[it->first];
+        const exprt &object=object_numbering[it.first];
         get_value_set_rec(object, dest, suffix,
                           original_type, ns);
       }
@@ -577,9 +567,9 @@ void value_set_fivrnst::get_value_set_rec(
       get_value_set_rec(*ptr_operand, pointer_expr_set, "",
                         ptr_operand->type(), ns);
 
-      forall_objects(it, pointer_expr_set.read())
+      for(const auto &it : pointer_expr_set.read())
       {
-        objectt object=it->second;
+        objectt object=it.second;
 
         if(object.offset_is_zero() &&
            expr.operands().size()==2)
@@ -604,7 +594,7 @@ void value_set_fivrnst::get_value_set_rec(
         else
           object.offset_is_set=false;
 
-        insert_from(dest, it->first, object);
+        insert_from(dest, it.first, object);
       }
 
       return;
@@ -740,7 +730,7 @@ void value_set_fivrnst::get_reference_set(
   object_mapt object_map;
   get_reference_set(expr, object_map, ns);
 
-  forall_objects(it, object_map.read())
+  for(const auto &it : object_map.read())
     dest.insert(to_expr(it));
 }
 
@@ -811,9 +801,9 @@ void value_set_fivrnst::get_reference_set_rec(
 
     const object_map_dt &object_map=array_references.read();
 
-    forall_objects(a_it, object_map)
+    for(const auto &a_it : object_map)
     {
-      const exprt &object=object_numbering[a_it->first];
+      const exprt &object=object_numbering[a_it.first];
 
       if(object.id()==ID_unknown)
         insert_from(dest, exprt(ID_unknown, expr.type()));
@@ -828,7 +818,7 @@ void value_set_fivrnst::get_reference_set_rec(
         if(ns.follow(object.type())!=array_type)
           index_expr.make_typecast(array.type());
 
-        objectt o=a_it->second;
+        objectt o=a_it.second;
         mp_integer i;
 
         if(offset.is_zero())
@@ -860,9 +850,9 @@ void value_set_fivrnst::get_reference_set_rec(
 
     const object_map_dt &object_map=struct_references.read();
 
-    forall_objects(it, object_map)
+    for(const auto &it : object_map)
     {
-      const exprt &object=object_numbering[it->first];
+      const exprt &object=object_numbering[it.first];
       const typet &obj_type=ns.follow(object.type());
 
       if(object.id()==ID_unknown)
@@ -877,7 +867,7 @@ void value_set_fivrnst::get_reference_set_rec(
       }
       else
       {
-        objectt o=it->second;
+        objectt o=it.second;
 
         exprt member_expr(ID_member, expr.type());
         member_expr.copy_to_operands(object);
@@ -1105,9 +1095,9 @@ void value_set_fivrnst::do_free(
   // find out which *instances* interest us
   dynamic_object_id_sett to_mark;
 
-  forall_objects(it, object_map)
+  for(const auto &it : object_map)
   {
-    const exprt &object=object_numbering[it->first];
+    const exprt &object=object_numbering[it.first];
 
     if(object.id()==ID_dynamic_object)
     {
@@ -1243,9 +1233,9 @@ void value_set_fivrnst::assign_rec(
     object_mapt reference_set;
     get_reference_set(lhs, reference_set, ns);
 
-    forall_objects(it, reference_set.read())
+    for(const auto &it : reference_set.read())
     {
-      const exprt &object=object_numbering[it->first];
+      const exprt &object=object_numbering[it.first];
 
       if(object.id()!=ID_unknown)
         assign_rec(object, values_rhs, suffix, ns, add_to_sets);
