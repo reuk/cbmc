@@ -93,8 +93,8 @@ void cpp_convert_typet::read_rec(const typet &type)
 
   if(type.id()==ID_merged_type)
   {
-    forall_subtypes(it, type)
-      read_rec(*it);
+    for(const auto &it : type.subtypes())
+      read_rec(it);
   }
   else if(type.id()==ID_signed)
     signed_cnt++;

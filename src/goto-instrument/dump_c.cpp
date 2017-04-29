@@ -1175,8 +1175,8 @@ Purpose:
 
 void dump_ct::cleanup_type(typet &type)
 {
-  Forall_subtypes(it, type)
-    cleanup_type(*it);
+  for(auto &it : type.subtypes())
+    cleanup_type(it);
 
   if(type.id()==ID_code)
   {

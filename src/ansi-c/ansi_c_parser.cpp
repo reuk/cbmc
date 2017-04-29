@@ -223,8 +223,8 @@ ansi_c_id_classt ansi_c_parsert::get_class(const typet &type)
     return ANSI_C_TAG;
   else if(type.id()==ID_merged_type)
   {
-    forall_subtypes(it, type)
-      if(get_class(*it)==ANSI_C_TYPEDEF)
+    for(const auto &it : type.subtypes())
+      if(get_class(it)==ANSI_C_TYPEDEF)
         return ANSI_C_TYPEDEF;
   }
   else if(type.has_subtype())

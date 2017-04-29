@@ -217,8 +217,8 @@ void find_symbols(kindt kind, const typet &src, find_symbols_sett &dest)
     if(src.has_subtype())
       find_symbols(kind, src.subtype(), dest);
 
-    forall_subtypes(it, src)
-      find_symbols(kind, *it, dest);
+    for(const auto &it : src.subtypes())
+      find_symbols(kind, it, dest);
   }
 
   if(src.id()==ID_struct ||

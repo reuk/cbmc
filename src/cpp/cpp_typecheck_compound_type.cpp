@@ -38,8 +38,8 @@ bool cpp_typecheckt::has_const(const typet &type)
     return true;
   else if(type.id()==ID_merged_type)
   {
-    forall_subtypes(it, type)
-      if(has_const(*it))
+    for(const auto &it : type.subtypes())
+      if(has_const(it))
         return true;
 
     return false;
@@ -66,8 +66,8 @@ bool cpp_typecheckt::has_volatile(const typet &type)
     return true;
   else if(type.id()==ID_merged_type)
   {
-    forall_subtypes(it, type)
-      if(has_volatile(*it))
+    for(const auto &it : type.subtypes())
+      if(has_volatile(it))
         return true;
 
     return false;
