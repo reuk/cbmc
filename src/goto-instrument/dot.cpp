@@ -297,9 +297,9 @@ void dott::output(std::ostream &out)
 
   std::list<exprt> clusters;
 
-  forall_goto_functions(it, goto_functions)
-    if(it->second.body_available())
-      write_dot_subgraph(out, id2string(it->first), it->second.body);
+  for(const auto &it : goto_functions.function_map)
+    if(it.second.body_available())
+      write_dot_subgraph(out, id2string(it.first), it.second.body);
 
   do_dot_function_calls(out);
 

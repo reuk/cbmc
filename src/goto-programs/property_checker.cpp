@@ -66,11 +66,11 @@ Function: property_checkert::initialize_property_map
 void property_checkert::initialize_property_map(
   const goto_functionst &goto_functions)
 {
-  forall_goto_functions(it, goto_functions)
-    if(!it->second.is_inlined() ||
-       it->first==goto_functions.entry_point())
+  for(const auto &it : goto_functions.function_map)
+    if(!it.second.is_inlined() ||
+       it.first==goto_functions.entry_point())
     {
-      const goto_programt &goto_program=it->second.body;
+      const goto_programt &goto_program=it.second.body;
 
       forall_goto_program_instructions(i_it, goto_program)
       {

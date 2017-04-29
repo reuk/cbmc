@@ -29,8 +29,8 @@ public:
 
   explicit dirtyt(const goto_functionst &goto_functions)
   {
-    forall_goto_functions(it, goto_functions)
-      build(it->second);
+    for(const auto &it : goto_functions.function_map)
+      build(it.second);
   }
 
   void output(std::ostream &out) const;

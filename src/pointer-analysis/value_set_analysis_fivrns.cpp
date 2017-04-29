@@ -194,11 +194,11 @@ void value_set_analysis_fivrnst::add_vars(
   value_set_fivrnst &v=state.value_set;
   v.add_vars(globals);
 
-  forall_goto_functions(f_it, goto_functions)
+  for(const auto &f_it : goto_functions.function_map)
   {
     // get the locals
     std::set<irep_idt> locals;
-    get_local_identifiers(f_it->second, locals);
+    get_local_identifiers(f_it.second, locals);
 
     for(auto l : locals)
     {

@@ -401,8 +401,8 @@ Purpose: removes complex data type
 
 static void remove_complex(goto_functionst &goto_functions)
 {
-  Forall_goto_functions(it, goto_functions)
-    remove_complex(it->second);
+  for(auto &it : goto_functions.function_map)
+    remove_complex(it.second);
 }
 
 /*******************************************************************\

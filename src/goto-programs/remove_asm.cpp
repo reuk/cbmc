@@ -347,9 +347,9 @@ Purpose: removes assembler
 
 void remove_asmt::operator()()
 {
-  Forall_goto_functions(it, goto_functions)
+  for(auto &it : goto_functions.function_map)
   {
-    process_function(it->second);
+    process_function(it.second);
   }
 }
 

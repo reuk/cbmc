@@ -1036,9 +1036,9 @@ Function: string_refine_preprocesst::replace_string_calls
 \*******************************************************************/
 
 void string_refine_preprocesst::replace_string_calls(
-  goto_functionst::function_mapt::iterator f_it)
+  goto_functionst::function_mapt::value_type &f_it)
 {
-  goto_programt &goto_program=f_it->second.body;
+  goto_programt &goto_program=f_it.second.body;
 
   Forall_goto_program_instructions(target, goto_program)
   {
@@ -1438,6 +1438,6 @@ string_refine_preprocesst::string_refine_preprocesst(
     jls_ptr(symbol_typet("java::java.lang.String"))
 {
   initialize_string_function_table();
-  Forall_goto_functions(it, goto_functions)
+  for(auto &it : goto_functions.function_map)
     replace_string_calls(it);
 }

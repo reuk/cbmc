@@ -29,19 +29,19 @@ void branch(
   goto_functionst &goto_functions,
   const irep_idt &id)
 {
-  Forall_goto_functions(f_it, goto_functions)
+  for(auto &f_it : goto_functions.function_map)
   {
     // don't instrument our internal functions
-    if(has_prefix(id2string(f_it->first), CPROVER_PREFIX))
+    if(has_prefix(id2string(f_it.first), CPROVER_PREFIX))
       continue;
 
     // don't instrument the function to be called,
     // or otherwise this will be recursive
-    if(f_it->first==id)
+    if(f_it.first==id)
       continue;
 
     // patch in a call to `id' at the branch points
-    goto_programt &body=f_it->second.body;
+    goto_programt &body=f_it.second.body;
 
     Forall_goto_program_instructions(i_it, body)
     {
@@ -62,7 +62,7 @@ void branch(
         goto_programt::targett t1=body.insert_after(i_it);
         t1->make_function_call(
           function_to_call(symbol_table, id, "taken"));
-        t1->function=f_it->first;
+        t1->function=f_it.first;
 
         goto_programt::targett t2=body.insert_after(t1);
         t2->make_goto();
@@ -71,7 +71,7 @@ void branch(
         goto_programt::targett t3=body.insert_after(t2);
         t3->make_function_call(
           function_to_call(symbol_table, id, "not-taken"));
-        t3->function=f_it->first;
+        t3->function=f_it.first;
         i_it->targets.clear();
         i_it->targets.push_back(t3);
       }

@@ -131,14 +131,14 @@ void flow_insensitive_analysis_baset::output(
   const goto_functionst &goto_functions,
   std::ostream &out)
 {
-  forall_goto_functions(f_it, goto_functions)
+  for(const auto &f_it : goto_functions.function_map)
   {
     out << "////" << std::endl;
-    out << "//// Function: " << f_it->first << std::endl;
+    out << "//// Function: " << f_it.first << std::endl;
     out << "////" << std::endl;
     out << std::endl;
 
-    output(f_it->second.body, f_it->first, out);
+    output(f_it.second.body, f_it.first, out);
   }
 }
 
@@ -543,8 +543,8 @@ void flow_insensitive_analysis_baset::fixedpoint(
 {
   // do each function at least once
 
-  forall_goto_functions(it, goto_functions)
-    if(functions_done.find(it->first)==
+  for(const auto &it : goto_functions.function_map)
+    if(functions_done.find(it.first)==
        functions_done.end())
     {
       fixedpoint(it, goto_functions);
@@ -564,11 +564,11 @@ Function: flow_insensitive_analysis_baset::fixedpoint
 \*******************************************************************/
 
 bool flow_insensitive_analysis_baset::fixedpoint(
-  const goto_functionst::function_mapt::const_iterator it,
+  const goto_functionst::function_mapt::value_type &it,
   const goto_functionst &goto_functions)
 {
-  functions_done.insert(it->first);
-  return fixedpoint(it->second.body, goto_functions);
+  functions_done.insert(it.first);
+  return fixedpoint(it.second.body, goto_functions);
 }
 
 /*******************************************************************\

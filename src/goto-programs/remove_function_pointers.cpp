@@ -121,8 +121,8 @@ remove_function_pointerst::remove_function_pointerst(
   compute_address_taken_functions(goto_functions, address_taken);
 
   // build type map
-  forall_goto_functions(f_it, goto_functions)
-    type_map[f_it->first]=f_it->second.type;
+  for(const auto &f_it : goto_functions.function_map)
+    type_map[f_it.first]=f_it.second.type;
 }
 
 /*******************************************************************\

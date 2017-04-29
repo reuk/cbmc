@@ -820,11 +820,11 @@ void goto_inlinet::goto_inline(
 {
   assert(check_inline_map(inline_map));
 
-  Forall_goto_functions(f_it, goto_functions)
+  for(auto &f_it : goto_functions.function_map)
   {
-    const irep_idt identifier=f_it->first;
+    const irep_idt identifier=f_it.first;
     assert(!identifier.empty());
-    goto_functiont &goto_function=f_it->second;
+    goto_functiont &goto_function=f_it.second;
 
     if(!goto_function.body_available())
       continue;
@@ -1094,9 +1094,9 @@ Function: check_inline_map
 
 bool goto_inlinet::check_inline_map(const inline_mapt &inline_map) const
 {
-  forall_goto_functions(f_it, goto_functions)
+  for(const auto &f_it : goto_functions.function_map)
   {
-    if(!check_inline_map(f_it->first, inline_map))
+    if(!check_inline_map(f_it.first, inline_map))
       return false;
   }
 

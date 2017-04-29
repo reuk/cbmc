@@ -103,8 +103,8 @@ void compute_address_taken_functions(
   const goto_functionst &goto_functions,
   std::set<irep_idt> &address_taken)
 {
-  forall_goto_functions(it, goto_functions)
-    compute_address_taken_functions(it->second.body, address_taken);
+  for(const auto &it : goto_functions.function_map)
+    compute_address_taken_functions(it.second.body, address_taken);
 }
 
 /*******************************************************************\

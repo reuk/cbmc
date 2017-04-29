@@ -190,20 +190,20 @@ void unreachable_instructions(
 
   const namespacet ns(goto_model.symbol_table);
 
-  forall_goto_functions(f_it, goto_model.goto_functions)
+  for(const auto &f_it : goto_model.goto_functions.function_map)
   {
-    if(!f_it->second.body_available())
+    if(!f_it.second.body_available())
       continue;
 
-    const goto_programt &goto_program=f_it->second.body;
+    const goto_programt &goto_program=f_it.second.body;
     dead_mapt dead_map;
 
-    const symbolt &decl=ns.lookup(f_it->first);
+    const symbolt &decl=ns.lookup(f_it.first);
 
-    // f_it->first may be a link-time renamed version, use the
+    // f_it.first may be a link-time renamed version, use the
     // base_name instead; do not list inlined functions
     if(called.find(decl.base_name)!=called.end() ||
-       f_it->second.is_inlined())
+       f_it.second.is_inlined())
       unreachable_instructions(goto_program, dead_map);
     else
       all_unreachable(goto_program, dead_map);
@@ -277,23 +277,23 @@ static void list_functions(
 
   const namespacet ns(goto_model.symbol_table);
 
-  forall_goto_functions(f_it, goto_model.goto_functions)
+  for(const auto &f_it : goto_model.goto_functions.function_map)
   {
-    const symbolt &decl=ns.lookup(f_it->first);
+    const symbolt &decl=ns.lookup(f_it.first);
 
-    // f_it->first may be a link-time renamed version, use the
+    // f_it.first may be a link-time renamed version, use the
     // base_name instead; do not list inlined functions
     if(unreachable ==
        (called.find(decl.base_name)!=called.end() ||
-        f_it->second.is_inlined()))
+        f_it.second.is_inlined()))
       continue;
 
     source_locationt first_location=decl.location;
 
     source_locationt last_location;
-    if(f_it->second.body_available())
+    if(f_it.second.body_available())
     {
-      const goto_programt &goto_program=f_it->second.body;
+      const goto_programt &goto_program=f_it.second.body;
 
       goto_programt::const_targett end_function=
         goto_program.instructions.end();

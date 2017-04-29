@@ -181,6 +181,6 @@ void k_induction(
   bool base_case, bool step_case,
   unsigned k)
 {
-  Forall_goto_functions(it, goto_functions)
-    k_inductiont(it->second, base_case, step_case, k);
+  for(auto &it : goto_functions.function_map)
+    k_inductiont(it.second, base_case, step_case, k);
 }

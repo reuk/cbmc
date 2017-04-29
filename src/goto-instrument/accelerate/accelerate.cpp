@@ -651,10 +651,10 @@ void accelerate_functions(
   symbol_tablet &symbol_table,
   bool use_z3)
 {
-  Forall_goto_functions(it, functions)
+  for(auto &it : functions.function_map)
   {
-    std::cout << "Accelerating function " << it->first << std::endl;
-    acceleratet accelerate(it->second.body, functions, symbol_table, use_z3);
+    std::cout << "Accelerating function " << it.first << std::endl;
+    acceleratet accelerate(it.second.body, functions, symbol_table, use_z3);
 
     int num_accelerated=accelerate.accelerate_loops();
 

@@ -154,13 +154,13 @@ void weak_memory(
   message.status() << "--------" << messaget::eom;
 
   // all access to shared variables is pushed into assignments
-  Forall_goto_functions(f_it, goto_functions)
-    if(f_it->first!=CPROVER_PREFIX "initialize" &&
-      f_it->first!=goto_functionst::entry_point())
-      introduce_temporaries(value_sets, symbol_table, f_it->first,
-        f_it->second.body,
+  for(auto &f_it : goto_functions.function_map)
+    if(f_it.first!=CPROVER_PREFIX "initialize" &&
+      f_it.first!=goto_functionst::entry_point())
+      introduce_temporaries(value_sets, symbol_table, f_it.first,
+        f_it.second.body,
 #ifdef LOCAL_MAY
-        f_it->second,
+        f_it.second,
 #endif
         message);
 
@@ -269,8 +269,8 @@ void weak_memory(
   visitor.weak_memory(value_sets, goto_functions.entry_point(), model);
 
   /* removes potential skips */
-  Forall_goto_functions(f_it, goto_functions)
-    remove_skip(f_it->second.body);
+  for(auto &f_it : goto_functions.function_map)
+    remove_skip(f_it.second.body);
 
   // initialization code for buffers
   shared_buffers.add_initialization_code(goto_functions);

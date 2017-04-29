@@ -560,8 +560,8 @@ void remove_pointers(
   goto_program_dereferencet
     goto_program_dereference(ns, symbol_table, options, value_sets);
 
-  Forall_goto_functions(it, goto_functions)
-    goto_program_dereference.dereference_program(it->second.body);
+  for(auto &it : goto_functions.function_map)
+    goto_program_dereference.dereference_program(it.second.body);
 }
 
 /*******************************************************************\

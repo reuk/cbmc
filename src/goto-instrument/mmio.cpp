@@ -194,14 +194,14 @@ void mmio(
 
   // now instrument
 
-  Forall_goto_functions(f_it, goto_functions)
-    if(f_it->first!=CPROVER_PREFIX "initialize" &&
-       f_it->first!=goto_functionst::entry_point())
+  for(auto &f_it : goto_functions.function_map)
+    if(f_it.first!=CPROVER_PREFIX "initialize" &&
+       f_it.first!=goto_functionst::entry_point())
       mmio(value_sets, symbol_table,
 #ifdef LOCAL_MAY
-        f_it->second,
+        f_it.second,
 #endif
-        f_it->second.body);
+        f_it.second.body);
 
   goto_functions.update();
 }

@@ -164,7 +164,7 @@ protected:
     const goto_functionst &goto_functions);
 
   bool fixedpoint(
-    goto_functionst::function_mapt::const_iterator it,
+    const goto_functionst::function_mapt::value_type &it,
     const goto_functionst &goto_functions);
 
   void fixedpoint(

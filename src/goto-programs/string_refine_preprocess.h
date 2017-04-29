@@ -192,7 +192,7 @@ class string_refine_preprocesst:public messaget
   void make_to_char_array_function(
     goto_programt &goto_program, goto_programt::targett &);
 
-  void replace_string_calls(goto_functionst::function_mapt::iterator f_it);
+  void replace_string_calls(goto_functionst::function_mapt::value_type &f_it);
 };
 
 #endif

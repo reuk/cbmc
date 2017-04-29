@@ -21,9 +21,9 @@ void replace_async(
   const namespacet &ns,
   goto_functionst &goto_functions)
 {
-  Forall_goto_functions(f_it, goto_functions)
+  for(auto &f_it : goto_functions.function_map)
   {
-    goto_programt &program=f_it->second.body;
+    goto_programt &program=f_it.second.body;
 
     Forall_goto_program_instructions(i_it, program)
     {

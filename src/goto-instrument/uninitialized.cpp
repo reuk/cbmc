@@ -239,11 +239,11 @@ void add_uninitialized_locals_assertions(
   symbol_tablet &symbol_table,
   goto_functionst &goto_functions)
 {
-  Forall_goto_functions(f_it, goto_functions)
+  for(auto &f_it : goto_functions.function_map)
   {
     uninitializedt uninitialized(symbol_table);
 
-    uninitialized.add_assertions(f_it->second.body);
+    uninitialized.add_assertions(f_it.second.body);
   }
 }
 
@@ -266,17 +266,17 @@ void show_uninitialized(
 {
   const namespacet ns(symbol_table);
 
-  forall_goto_functions(f_it, goto_functions)
+  for(const auto &f_it : goto_functions.function_map)
   {
-    if(f_it->second.body_available())
+    if(f_it.second.body_available())
     {
       out << "////" << std::endl;
-      out << "//// Function: " << f_it->first << std::endl;
+      out << "//// Function: " << f_it.first << std::endl;
       out << "////" << std::endl;
       out << std::endl;
       uninitialized_analysist uninitialized_analysis;
-      uninitialized_analysis(f_it->second.body, ns);
-      uninitialized_analysis.output(ns, f_it->second.body, out);
+      uninitialized_analysis(f_it.second.body, ns);
+      uninitialized_analysis.output(ns, f_it.second.body, out);
     }
   }
 }

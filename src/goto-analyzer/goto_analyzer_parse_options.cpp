@@ -317,13 +317,13 @@ int goto_analyzer_parse_optionst::doit()
   {
     namespacet ns(goto_model.symbol_table);
 
-    forall_goto_functions(it, goto_model.goto_functions)
+    for(const auto &it : goto_model.goto_functions.function_map)
     {
       std::cout << ">>>>\n";
-      std::cout << ">>>> " << it->first << '\n';
+      std::cout << ">>>> " << it.first << '\n';
       std::cout << ">>>>\n";
-      local_may_aliast local_may_alias(it->second);
-      local_may_alias.output(std::cout, it->second, ns);
+      local_may_aliast local_may_alias(it.second);
+      local_may_alias.output(std::cout, it.second, ns);
       std::cout << '\n';
     }
 

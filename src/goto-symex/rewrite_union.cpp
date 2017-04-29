@@ -136,8 +136,8 @@ void rewrite_union(
   goto_functionst &goto_functions,
   const namespacet &ns)
 {
-  Forall_goto_functions(it, goto_functions)
-    rewrite_union(it->second, ns);
+  for(auto &it : goto_functions.function_map)
+    rewrite_union(it.second, ns);
 }
 
 /*******************************************************************\

@@ -450,8 +450,8 @@ Function: code_contractst::operator()
 
 void code_contractst::operator()()
 {
-  Forall_goto_functions(it, goto_functions)
-    code_contracts(it->second);
+  for(auto &it : goto_functions.function_map)
+    code_contracts(it.second);
 
   goto_functionst::function_mapt::iterator i_it=
     goto_functions.function_map.find(CPROVER_PREFIX "initialize");

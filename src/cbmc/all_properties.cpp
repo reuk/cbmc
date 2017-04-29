@@ -86,8 +86,8 @@ safety_checkert::resultt bmc_all_propertiest::operator()()
 
   // Collect _all_ goals in `goal_map'.
   // This maps property IDs to 'goalt'
-  forall_goto_functions(f_it, goto_functions)
-    forall_goto_program_instructions(i_it, f_it->second.body)
+  for(const auto &f_it : goto_functions.function_map)
+    forall_goto_program_instructions(i_it, f_it.second.body)
       if(i_it->is_assert())
         goal_map[i_it->source_location.get_property_id()]=goalt(*i_it);
 

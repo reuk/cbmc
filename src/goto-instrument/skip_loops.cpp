@@ -138,13 +138,13 @@ bool skip_loops(
   }
 
   loop_mapt::const_iterator it=loop_map.begin();
-  Forall_goto_functions(f_it, goto_functions)
+  for(auto &f_it : goto_functions.function_map)
   {
-    if(it==loop_map.end() || it->first<f_it->first)
+    if(it==loop_map.end() || it->first<f_it.first)
       break; // possible error handled below
-    else if(it->first==f_it->first)
+    else if(it->first==f_it.first)
     {
-      if(skip_loops(f_it->second.body, it->second, message))
+      if(skip_loops(f_it.second.body, it->second, message))
         return true;
       ++it;
     }

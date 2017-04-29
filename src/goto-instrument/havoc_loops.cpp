@@ -256,6 +256,6 @@ void havoc_loops(goto_functionst &goto_functions)
 {
   function_modifiest function_modifies(goto_functions);
 
-  Forall_goto_functions(it, goto_functions)
-    havoc_loopst(function_modifies, it->second);
+  for(auto &it : goto_functions.function_map)
+    havoc_loopst(function_modifies, it.second);
 }

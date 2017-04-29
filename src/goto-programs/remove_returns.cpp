@@ -31,14 +31,14 @@ protected:
   symbol_tablet &symbol_table;
 
   void replace_returns(
-    goto_functionst::function_mapt::iterator f_it);
+    goto_functionst::function_mapt::value_type &f_it);
 
   void do_function_calls(
     goto_functionst &goto_functions,
     goto_programt &goto_program);
 
   bool restore_returns(
-    goto_functionst::function_mapt::iterator f_it);
+    goto_functionst::function_mapt::value_type &f_it);
 
   void undo_function_calls(
     goto_functionst &goto_functions,
@@ -58,11 +58,11 @@ Purpose: turns 'return x' into an assignment to fkt#return_value
 \*******************************************************************/
 
 void remove_returnst::replace_returns(
-  goto_functionst::function_mapt::iterator f_it)
+  goto_functionst::function_mapt::value_type &f_it)
 {
-  typet return_type=f_it->second.type.return_type();
+  typet return_type=f_it.second.type.return_type();
 
-  const irep_idt function_id=f_it->first;
+  const irep_idt function_id=f_it.first;
 
   // returns something but void?
   bool has_return_value=return_type!=empty_typet();
@@ -77,8 +77,8 @@ void remove_returnst::replace_returns(
     symbolt &function_symbol=s_it->second;
 
     // make the return type 'void'
-    f_it->second.type.return_type()=empty_typet();
-    function_symbol.type=f_it->second.type;
+    f_it.second.type.return_type()=empty_typet();
+    function_symbol.type=f_it.second.type;
 
     // add return_value symbol to symbol_table
     auxiliary_symbolt new_symbol;
@@ -93,7 +93,7 @@ void remove_returnst::replace_returns(
     symbol_table.add(new_symbol);
   }
 
-  goto_programt &goto_program=f_it->second.body;
+  goto_programt &goto_program=f_it.second.body;
 
   if(goto_program.empty())
     return;
@@ -222,10 +222,10 @@ Purpose:
 
 void remove_returnst::operator()(goto_functionst &goto_functions)
 {
-  Forall_goto_functions(it, goto_functions)
+  for(auto &it : goto_functions.function_map)
   {
     replace_returns(it);
-    do_function_calls(goto_functions, it->second.body);
+    do_function_calls(goto_functions, it.second.body);
   }
 }
 
@@ -320,9 +320,9 @@ Purpose: turns 'return x' into an assignment to fkt#return_value
 \*******************************************************************/
 
 bool remove_returnst::restore_returns(
-  goto_functionst::function_mapt::iterator f_it)
+  goto_functionst::function_mapt::value_type &f_it)
 {
-  const irep_idt function_id=f_it->first;
+  const irep_idt function_id=f_it.first;
 
   // do we have X#return_value?
   std::string rv_name=id2string(function_id)+RETURN_VALUE_SUFFIX;
@@ -341,14 +341,14 @@ bool remove_returnst::restore_returns(
   symbolt &function_symbol=s_it->second;
 
   // restore the return type
-  f_it->second.type=original_return_type(symbol_table, function_id);
-  function_symbol.type=f_it->second.type;
+  f_it.second.type=original_return_type(symbol_table, function_id);
+  function_symbol.type=f_it.second.type;
 
   // remove the return_value symbol from the symbol_table
   irep_idt rv_name_id=rv_it->second.name;
   symbol_table.symbols.erase(rv_it);
 
-  goto_programt &goto_program=f_it->second.body;
+  goto_programt &goto_program=f_it.second.body;
 
   Forall_goto_program_instructions(i_it, goto_program)
   {
@@ -477,13 +477,13 @@ void remove_returnst::restore(goto_functionst &goto_functions)
 {
   // restore all types first
   bool unmodified=true;
-  Forall_goto_functions(it, goto_functions)
+  for(auto &it : goto_functions.function_map)
     unmodified=restore_returns(it) && unmodified;
 
   if(!unmodified)
   {
-    Forall_goto_functions(it, goto_functions)
-      undo_function_calls(goto_functions, it->second.body);
+    for(auto &it : goto_functions.function_map)
+      undo_function_calls(goto_functions, it.second.body);
   }
 }
 

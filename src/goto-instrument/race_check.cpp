@@ -391,14 +391,14 @@ void race_check(
 {
   w_guardst w_guards(symbol_table);
 
-  Forall_goto_functions(f_it, goto_functions)
-    if(f_it->first!=goto_functionst::entry_point() &&
-       f_it->first!=CPROVER_PREFIX "initialize")
+  for(auto &f_it : goto_functions.function_map)
+    if(f_it.first!=goto_functionst::entry_point() &&
+       f_it.first!=CPROVER_PREFIX "initialize")
       race_check(
         value_sets,
         symbol_table,
-        L_M_ARG(f_it->second)
-        f_it->second.body,
+        L_M_ARG(f_it.second)
+        f_it.second.body,
         w_guards);
 
   // get "main"

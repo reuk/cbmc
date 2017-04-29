@@ -47,7 +47,7 @@ class goto_program_coverage_recordt:public coverage_recordt
 public:
   goto_program_coverage_recordt(
     const namespacet &ns,
-    goto_functionst::function_mapt::const_iterator gf_it,
+    const goto_functionst::function_mapt::value_type &gf_it,
     const symex_coveraget::coveraget &coverage);
 
   const irep_idt &get_file() const
@@ -143,16 +143,16 @@ Function: goto_program_coverage_recordt::goto_program_coverage_recordt
 
 goto_program_coverage_recordt::goto_program_coverage_recordt(
   const namespacet &ns,
-  goto_functionst::function_mapt::const_iterator gf_it,
+  const goto_functionst::function_mapt::value_type &gf_it,
   const symex_coveraget::coveraget &coverage):
   coverage_recordt("method")
 {
-  assert(gf_it->second.body_available());
+  assert(gf_it.second.body_available());
 
   // identify the file name, inlined functions aren't properly
   // accounted for
   goto_programt::const_targett end_function=
-    --gf_it->second.body.instructions.end();
+    --gf_it.second.body.instructions.end();
   assert(end_function->is_end_function());
   file_name=end_function->source_location.get_file();
   assert(!file_name.empty());
@@ -160,7 +160,7 @@ goto_program_coverage_recordt::goto_program_coverage_recordt(
   // compute the maximum coverage of individual source-code lines
   coverage_lines_mapt coverage_lines_map;
   compute_coverage_lines(
-    gf_it->second.body,
+    gf_it.second.body,
     file_name,
     coverage,
     coverage_lines_map);
@@ -177,14 +177,14 @@ goto_program_coverage_recordt::goto_program_coverage_recordt(
   //     <line number="30" hits="1" branch="false"/>
   //   </lines>
   // </method>
-  xml.set_attribute("name", id2string(gf_it->first));
+  xml.set_attribute("name", id2string(gf_it.first));
 
   code_typet sig_type=
-    original_return_type(ns.get_symbol_table(), gf_it->first);
+    original_return_type(ns.get_symbol_table(), gf_it.first);
   if(sig_type.is_nil())
-    sig_type=gf_it->second.type;
+    sig_type=gf_it.second.type;
   xml.set_attribute("signature",
-                    from_type(ns, gf_it->first, sig_type));
+                    from_type(ns, gf_it.first, sig_type));
 
   xml.set_attribute("line-rate",
                     rate(lines_covered, lines_total));
@@ -340,11 +340,11 @@ void symex_coveraget::compute_overall_coverage(
   typedef std::map<irep_idt, coverage_recordt> file_recordst;
   file_recordst file_records;
 
-  forall_goto_functions(gf_it, goto_functions)
+  for(const auto gf_it : goto_functions.function_map)
   {
-    if(!gf_it->second.body_available() ||
-       gf_it->first==goto_functions.entry_point() ||
-       gf_it->first==CPROVER_PREFIX "initialize")
+    if(!gf_it.second.body_available() ||
+       gf_it.first==goto_functions.entry_point() ||
+       gf_it.first==CPROVER_PREFIX "initialize")
       continue;
 
     goto_program_coverage_recordt func_cov(ns, gf_it, coverage);

@@ -31,10 +31,10 @@ void list_undefined_functions(
   const namespacet &ns,
   std::ostream &os)
 {
-  forall_goto_functions(it, goto_functions)
-    if(!ns.lookup(it->first).is_macro &&
-       !it->second.body_available())
-      os << it->first << std::endl;
+  for(const auto &it : goto_functions.function_map)
+    if(!ns.lookup(it.first).is_macro &&
+       !it.second.body_available())
+      os << it.first << std::endl;
 }
 
 /*******************************************************************\
@@ -51,8 +51,8 @@ Function: undefined_function_abort_path
 
 void undefined_function_abort_path(goto_functionst &goto_functions)
 {
-  Forall_goto_functions(it, goto_functions)
-    Forall_goto_program_instructions(iit, it->second.body)
+  for(auto &it : goto_functions.function_map)
+    Forall_goto_program_instructions(iit, it.second.body)
     {
       goto_programt::instructiont &ins=*iit;
 

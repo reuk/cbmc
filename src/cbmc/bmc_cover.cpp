@@ -233,11 +233,11 @@ bool bmc_covert::operator()()
 
   // Collect _all_ goals in `goal_map'.
   // This maps property IDs to 'goalt'
-  forall_goto_functions(f_it, goto_functions)
+  for(const auto &f_it : goto_functions.function_map)
   {
     // Functions are already inlined.
-    if(f_it->second.is_inlined()) continue;
-    forall_goto_program_instructions(i_it, f_it->second.body)
+    if(f_it.second.is_inlined()) continue;
+    forall_goto_program_instructions(i_it, f_it.second.body)
     {
       if(i_it->is_assert())
         goal_map[id(i_it)]=

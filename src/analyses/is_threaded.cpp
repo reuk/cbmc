@@ -100,8 +100,8 @@ void is_threadedt::compute(const goto_functionst &goto_functions)
 
   is_threaded_analysis(goto_functions, ns);
 
-  forall_goto_functions(f_it, goto_functions)
-    forall_goto_program_instructions(i_it, f_it->second.body)
+  for(const auto &f_it : goto_functions.function_map)
+    forall_goto_program_instructions(i_it, f_it.second.body)
       if(is_threaded_analysis[i_it].is_threaded)
         is_threaded_set.insert(i_it);
 }

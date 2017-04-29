@@ -592,9 +592,9 @@ void escape_analysist::instrument(
   goto_functionst &goto_functions,
   const namespacet &ns)
 {
-  Forall_goto_functions(f_it, goto_functions)
+  for(auto &f_it : goto_functions.function_map)
   {
-    Forall_goto_program_instructions(i_it, f_it->second.body)
+    Forall_goto_program_instructions(i_it, f_it.second.body)
     {
       get_state(i_it);
 
@@ -609,7 +609,7 @@ void escape_analysist::instrument(
           std::set<irep_idt> cleanup_functions;
           operator[](i_it).check_lhs(code_assign.lhs(), cleanup_functions);
           insert_cleanup(
-            f_it->second,
+            f_it.second,
             i_it,
             code_assign.lhs(),
             cleanup_functions,
@@ -642,14 +642,14 @@ void escape_analysist::instrument(
           d.check_lhs(code_dead.symbol(), cleanup_functions2);
 
           insert_cleanup(
-            f_it->second,
+            f_it.second,
             i_it,
             code_dead.symbol(),
             cleanup_functions1,
             true,
             ns);
           insert_cleanup(
-            f_it->second,
+            f_it.second,
             i_it,
             code_dead.symbol(),
             cleanup_functions2,
@@ -676,7 +676,7 @@ void escape_analysist::instrument(
       }
     }
 
-    Forall_goto_program_instructions(i_it, f_it->second.body)
+    Forall_goto_program_instructions(i_it, f_it.second.body)
       get_state(i_it);
   }
 }

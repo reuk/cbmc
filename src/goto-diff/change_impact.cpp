@@ -591,9 +591,15 @@ void change_impactt::operator()()
 
   function_mapt old_funcs, new_funcs;
 
-  forall_goto_functions(it, old_goto_functions)
+  for(auto it=std::begin(old_goto_functions.function_map),
+        end=std::end(old_goto_functions.function_map);
+      it!=end;
+      ++it)
     old_funcs.insert(std::make_pair(it->first, it));
-  forall_goto_functions(it, new_goto_functions)
+  for(auto it=std::begin(new_goto_functions.function_map),
+        end=std::end(new_goto_functions.function_map);
+      it!=end;
+      ++it)
     new_funcs.insert(std::make_pair(it->first, it));
 
   function_mapt::const_iterator ito=old_funcs.begin();

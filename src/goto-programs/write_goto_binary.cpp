@@ -80,8 +80,8 @@ bool write_goto_binary_v3(
   // now write functions, but only those with body
 
   unsigned cnt=0;
-  forall_goto_functions(it, functions)
-    if(it->second.body_available())
+  for(const auto &it : functions.function_map)
+    if(it.second.body_available())
       cnt++;
 
   write_gb_word(out, cnt);

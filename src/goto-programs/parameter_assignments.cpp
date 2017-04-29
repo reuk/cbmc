@@ -112,8 +112,8 @@ Purpose:
 
 void parameter_assignmentst::operator()(goto_functionst &goto_functions)
 {
-  Forall_goto_functions(it, goto_functions)
-    do_function_calls(goto_functions, it->second.body);
+  for(auto &it : goto_functions.function_map)
+    do_function_calls(goto_functions, it.second.body);
 }
 
 /*******************************************************************\

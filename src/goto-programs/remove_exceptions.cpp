@@ -39,26 +39,26 @@ protected:
   symbol_tablet &symbol_table;
 
   void add_exceptional_returns(
-    const goto_functionst::function_mapt::iterator &);
+    goto_functionst::function_mapt::value_type &);
 
   void instrument_exception_handler(
-    const goto_functionst::function_mapt::iterator &,
+    goto_functionst::function_mapt::value_type &,
     const goto_programt::instructionst::iterator &);
 
   void instrument_throw(
-    const goto_functionst::function_mapt::iterator &,
+    goto_functionst::function_mapt::value_type &,
     const goto_programt::instructionst::iterator &,
     const stack_catcht &,
     std::vector<exprt> &);
 
   void instrument_function_call(
-    const goto_functionst::function_mapt::iterator &,
+    goto_functionst::function_mapt::value_type &,
     const goto_programt::instructionst::iterator &,
     const stack_catcht &,
     std::vector<exprt> &);
 
   void instrument_exceptions(
-    const goto_functionst::function_mapt::iterator &);
+    goto_functionst::function_mapt::value_type &);
 };
 
 /*******************************************************************\
@@ -75,10 +75,10 @@ Purpose: adds exceptional return variables for every function that
 \*******************************************************************/
 
 void remove_exceptionst::add_exceptional_returns(
-  const goto_functionst::function_mapt::iterator &func_it)
+  goto_functionst::function_mapt::value_type &func_it)
 {
-  const irep_idt &function_id=func_it->first;
-  goto_programt &goto_program=func_it->second.body;
+  const irep_idt &function_id=func_it.first;
+  goto_programt &goto_program=func_it.second.body;
 
   assert(symbol_table.has_symbol(function_id));
   const symbolt &function_symbol=symbol_table.lookup(function_id);
@@ -148,11 +148,11 @@ Purpose: at the beginning of each handler in function f
 \*******************************************************************/
 
 void remove_exceptionst::instrument_exception_handler(
-  const goto_functionst::function_mapt::iterator &func_it,
+  goto_functionst::function_mapt::value_type &func_it,
   const goto_programt::instructionst::iterator &instr_it)
 {
-  const irep_idt &function_id=func_it->first;
-  goto_programt &goto_program=func_it->second.body;
+  const irep_idt &function_id=func_it.first;
+  goto_programt &goto_program=func_it.second.body;
 
   assert(instr_it->type==CATCH && instr_it->code.has_operands());
 
@@ -237,15 +237,15 @@ Purpose: instruments each throw with conditional GOTOS to the
 \*******************************************************************/
 
 void remove_exceptionst::instrument_throw(
-  const goto_functionst::function_mapt::iterator &func_it,
+  goto_functionst::function_mapt::value_type &func_it,
   const goto_programt::instructionst::iterator &instr_it,
   const remove_exceptionst::stack_catcht &stack_catch,
   std::vector<exprt> &locals)
 {
   assert(instr_it->type==THROW);
 
-  goto_programt &goto_program=func_it->second.body;
-  const irep_idt &function_id=func_it->first;
+  goto_programt &goto_program=func_it.second.body;
+  const irep_idt &function_id=func_it.first;
 
   assert(instr_it->code.operands().size()==1);
 
@@ -329,15 +329,15 @@ Purpose: instruments each function call that may escape exceptions
 \*******************************************************************/
 
 void remove_exceptionst::instrument_function_call(
-  const goto_functionst::function_mapt::iterator &func_it,
+  goto_functionst::function_mapt::value_type &func_it,
   const goto_programt::instructionst::iterator &instr_it,
   const stack_catcht &stack_catch,
   std::vector<exprt> &locals)
 {
   assert(instr_it->type==FUNCTION_CALL);
 
-  goto_programt &goto_program=func_it->second.body;
-  const irep_idt &function_id=func_it->first;
+  goto_programt &goto_program=func_it.second.body;
+  const irep_idt &function_id=func_it.first;
 
   // save the address of the next instruction
   goto_programt::instructionst::iterator next_it=instr_it;
@@ -438,12 +438,12 @@ Purpose: instruments throws, function calls that may escape exceptions
 \*******************************************************************/
 
 void remove_exceptionst::instrument_exceptions(
-  const goto_functionst::function_mapt::iterator &func_it)
+  goto_functionst::function_mapt::value_type &func_it)
 {
   stack_catcht stack_catch; // stack of try-catch blocks
   std::vector<std::vector<exprt>> stack_locals; // stack of local vars
   std::vector<exprt> locals;
-  goto_programt &goto_program=func_it->second.body;
+  goto_programt &goto_program=func_it.second.body;
 
   if(goto_program.empty())
     return;
@@ -533,9 +533,9 @@ Purpose:
 
 void remove_exceptionst::operator()(goto_functionst &goto_functions)
 {
-  Forall_goto_functions(it, goto_functions)
+  for(auto &it : goto_functions.function_map)
     add_exceptional_returns(it);
-  Forall_goto_functions(it, goto_functions)
+  for(auto &it : goto_functions.function_map)
     instrument_exceptions(it);
 }
 

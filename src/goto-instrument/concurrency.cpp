@@ -278,15 +278,15 @@ void concurrency_instrumentationt::instrument(
   is_threadedt is_threaded(goto_functions);
 
   // this first collects all shared and thread-local variables
-  forall_goto_functions(f_it, goto_functions)
-    collect(f_it->second.body, is_threaded);
+  for(const auto &f_it : goto_functions.function_map)
+    collect(f_it.second.body, is_threaded);
 
   // add array symbols
   add_array_symbols();
 
   // now instrument
-  Forall_goto_functions(f_it, goto_functions)
-    instrument(f_it->second.body, is_threaded);
+  for(auto &f_it : goto_functions.function_map)
+    instrument(f_it.second.body, is_threaded);
 }
 
 /*******************************************************************\

@@ -47,11 +47,11 @@ void locst::build(const goto_functionst &goto_functions)
 
   target_mapt target_map;
 
-  forall_goto_functions(f_it, goto_functions)
+  for(const auto &f_it : goto_functions.function_map)
   {
-    const goto_functionst::goto_functiont &goto_function = f_it->second;
+    const goto_functionst::goto_functiont &goto_function = f_it.second;
 
-    function_entryt &function_entry=function_map[f_it->first];
+    function_entryt &function_entry=function_map[f_it.first];
     function_entry.type=goto_function.type;
 
     if(goto_function.body_available())
@@ -62,7 +62,7 @@ void locst::build(const goto_functionst &goto_functions)
       forall_goto_program_instructions(i_it, goto_function.body)
       {
         target_map[i_it]=end();
-        loc_vector.push_back(loct(i_it, f_it->first));
+        loc_vector.push_back(loct(i_it, f_it.first));
       }
     }
     else

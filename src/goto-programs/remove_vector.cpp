@@ -296,8 +296,8 @@ Purpose: removes vector data type
 
 static void remove_vector(goto_functionst &goto_functions)
 {
-  Forall_goto_functions(it, goto_functions)
-    remove_vector(it->second);
+  for(auto &it : goto_functions.function_map)
+    remove_vector(it.second);
 }
 
 /*******************************************************************\

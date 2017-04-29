@@ -176,9 +176,9 @@ void set_properties(
 
   property_set.insert(properties.begin(), properties.end());
 
-  Forall_goto_functions(it, goto_functions)
-    if(!it->second.is_inlined())
-      set_properties(it->second.body, property_set);
+  for(auto &it : goto_functions.function_map)
+    if(!it.second.is_inlined())
+      set_properties(it.second.body, property_set);
 
   if(!property_set.empty())
     throw "property "+id2string(*property_set.begin())+" not found";

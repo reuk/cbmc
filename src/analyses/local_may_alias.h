@@ -107,9 +107,9 @@ public:
   {
     goto_functions=&_goto_functions;
 
-    forall_goto_functions(f_it, _goto_functions)
-      forall_goto_program_instructions(i_it, f_it->second.body)
-        target_map[i_it]=f_it->first;
+    for(const auto &f_it : _goto_functions.function_map)
+      forall_goto_program_instructions(i_it, f_it.second.body)
+        target_map[i_it]=f_it.first;
   }
 
   local_may_aliast &operator()(const irep_idt &fkt)

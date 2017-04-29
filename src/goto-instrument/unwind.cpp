@@ -450,15 +450,15 @@ void goto_unwindt::operator()(
 {
   assert(k>=-1);
 
-  Forall_goto_functions(it, goto_functions)
+  for(auto &it : goto_functions.function_map)
   {
-    goto_functionst::goto_functiont &goto_function=it->second;
+    goto_functionst::goto_functiont &goto_function=it.second;
 
     if(!goto_function.body_available())
       continue;
 
 #ifdef DEBUG
-    std::cout << "Function: " << it->first << std::endl;
+    std::cout << "Function: " << it.first << std::endl;
 #endif
 
     goto_programt &goto_program=goto_function.body;

@@ -255,14 +255,14 @@ int goto_instrument_parse_optionst::doit()
 
       is_threadedt is_threaded(goto_functions);
 
-      forall_goto_functions(f_it, goto_functions)
+      for(const auto &f_it : goto_functions.function_map)
       {
         std::cout << "////" << std::endl;
-        std::cout << "//// Function: " << f_it->first << std::endl;
+        std::cout << "//// Function: " << f_it.first << std::endl;
         std::cout << "////" << std::endl;
         std::cout << std::endl;
 
-        const goto_programt &goto_program=f_it->second.body;
+        const goto_programt &goto_program=f_it.second.body;
 
         forall_goto_program_instructions(i_it, goto_program)
         {
@@ -320,13 +320,13 @@ int goto_instrument_parse_optionst::doit()
 
       namespacet ns(symbol_table);
 
-      forall_goto_functions(it, goto_functions)
+      for(const auto &it : goto_functions.function_map)
       {
-        local_bitvector_analysist local_bitvector_analysis(it->second);
+        local_bitvector_analysist local_bitvector_analysis(it.second);
         std::cout << ">>>>" << std::endl;
-        std::cout << ">>>> " << it->first << std::endl;
+        std::cout << ">>>> " << it.first << std::endl;
         std::cout << ">>>>" << std::endl;
-        local_bitvector_analysis.output(std::cout, it->second, ns);
+        local_bitvector_analysis.output(std::cout, it.second, ns);
         std::cout << std::endl;
       }
 
@@ -507,15 +507,15 @@ int goto_instrument_parse_optionst::doit()
       reaching_definitions_analysist rd_analysis(ns);
       rd_analysis(goto_functions, ns);
 
-      forall_goto_functions(f_it, goto_functions)
+      for(const auto &f_it : goto_functions.function_map)
       {
-        if(f_it->second.body_available())
+        if(f_it.second.body_available())
         {
           std::cout << "////" << std::endl;
-          std::cout << "//// Function: " << f_it->first << std::endl;
+          std::cout << "//// Function: " << f_it.first << std::endl;
           std::cout << "////" << std::endl;
           std::cout << std::endl;
-          rd_analysis.output(ns, f_it->second.body, std::cout);
+          rd_analysis.output(ns, f_it.second.body, std::cout);
         }
       }
 
@@ -530,15 +530,15 @@ int goto_instrument_parse_optionst::doit()
       dependence_grapht dependence_graph(ns);
       dependence_graph(goto_functions, ns);
 
-      forall_goto_functions(f_it, goto_functions)
+      for(const auto &f_it : goto_functions.function_map)
       {
-        if(f_it->second.body_available())
+        if(f_it.second.body_available())
         {
           std::cout << "////" << std::endl;
-          std::cout << "//// Function: " << f_it->first << std::endl;
+          std::cout << "//// Function: " << f_it.first << std::endl;
           std::cout << "////" << std::endl;
           std::cout << std::endl;
-          dependence_graph.output(ns, f_it->second.body, std::cout);
+          dependence_graph.output(ns, f_it.second.body, std::cout);
         }
       }
 

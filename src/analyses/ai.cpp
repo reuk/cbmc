@@ -33,16 +33,16 @@ void ai_baset::output(
   const goto_functionst &goto_functions,
   std::ostream &out) const
 {
-  forall_goto_functions(f_it, goto_functions)
+  for(const auto &f_it : goto_functions.function_map)
   {
-    if(f_it->second.body_available())
+    if(f_it.second.body_available())
     {
       out << "////\n";
-      out << "//// Function: " << f_it->first << "\n";
+      out << "//// Function: " << f_it.first << "\n";
       out << "////\n";
       out << "\n";
 
-      output(ns, f_it->second.body, f_it->first, out);
+      output(ns, f_it.second.body, f_it.first, out);
     }
   }
 }
@@ -97,16 +97,16 @@ jsont ai_baset::output_json(
 {
   json_objectt result;
 
-  forall_goto_functions(f_it, goto_functions)
+  for(const auto &f_it : goto_functions.function_map)
   {
-    if(f_it->second.body_available())
+    if(f_it.second.body_available())
     {
-      result[id2string(f_it->first)]=
-        output_json(ns, f_it->second.body, f_it->first);
+      result[id2string(f_it.first)]=
+        output_json(ns, f_it.second.body, f_it.first);
     }
     else
     {
-      result[id2string(f_it->first)]=json_arrayt();
+      result[id2string(f_it.first)]=json_arrayt();
     }
   }
 
@@ -170,17 +170,17 @@ xmlt ai_baset::output_xml(
 {
   xmlt program("program");
 
-  forall_goto_functions(f_it, goto_functions)
+  for(const auto &f_it : goto_functions.function_map)
   {
     xmlt function("function");
-    function.set_attribute("name", id2string(f_it->first));
+    function.set_attribute("name", id2string(f_it.first));
     function.set_attribute(
       "body_available",
-      f_it->second.body_available() ? "true" : "false");
+      f_it.second.body_available() ? "true" : "false");
 
-    if(f_it->second.body_available())
+    if(f_it.second.body_available())
     {
-      function.new_element(output_xml(ns, f_it->second.body, f_it->first));
+      function.new_element(output_xml(ns, f_it.second.body, f_it.first));
     }
 
     program.new_element(function);
@@ -323,8 +323,8 @@ Function: ai_baset::initialize
 
 void ai_baset::initialize(const goto_functionst &goto_functions)
 {
-  forall_goto_functions(it, goto_functions)
-    initialize(it->second);
+  for(const auto &it : goto_functions.function_map)
+    initialize(it.second);
 }
 
 /*******************************************************************\
@@ -688,15 +688,15 @@ void ai_baset::concurrent_fixedpoint(
                               goto_programt::const_targett> > thread_wlt;
   thread_wlt thread_wl;
 
-  forall_goto_functions(it, goto_functions)
-    forall_goto_program_instructions(t_it, it->second.body)
+  for(const auto &it : goto_functions.function_map)
+    forall_goto_program_instructions(t_it, it.second.body)
     {
       if(is_threaded(t_it))
       {
-        thread_wl.push_back(std::make_pair(&(it->second.body), t_it));
+        thread_wl.push_back(std::make_pair(&(it.second.body), t_it));
 
         goto_programt::const_targett l_end=
-          it->second.body.instructions.end();
+          it.second.body.instructions.end();
         --l_end;
 
         merge_shared(shared_state, l_end, sh_target, ns);

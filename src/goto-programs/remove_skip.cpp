@@ -188,6 +188,6 @@ Function: remove_skip
 
 void remove_skip(goto_functionst &goto_functions)
 {
-  Forall_goto_functions(f_it, goto_functions)
-    remove_skip(f_it->second.body);
+  for(auto &f_it : goto_functions.function_map)
+    remove_skip(f_it.second.body);
 }

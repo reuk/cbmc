@@ -311,13 +311,13 @@ bool taint_analysist::operator()(
 
       end.add_instruction(END_FUNCTION);
 
-      forall_goto_functions(f_it, goto_functions)
-        if(f_it->second.body_available() &&
-           f_it->first!=goto_functionst::entry_point())
+      for(const auto &f_it : goto_functions.function_map)
+        if(f_it.second.body_available() &&
+           f_it.first!=goto_functionst::entry_point())
         {
           goto_programt::targett t=calls.add_instruction();
           code_function_callt call;
-          call.function()=ns.lookup(f_it->first).symbol_expr();
+          call.function()=ns.lookup(f_it.first).symbol_expr();
           t->make_function_call(call);
           calls.add_instruction()->make_goto(end.instructions.begin());
           goto_programt::targett g=gotos.add_instruction();
@@ -347,19 +347,19 @@ bool taint_analysist::operator()(
       return false;
     }
 
-    forall_goto_functions(f_it, goto_functions)
+    for(const auto &f_it : goto_functions.function_map)
     {
-      if(!f_it->second.body.has_assertion())
+      if(!f_it.second.body.has_assertion())
         continue;
 
-      const symbolt &symbol=ns.lookup(f_it->first);
+      const symbolt &symbol=ns.lookup(f_it.first);
 
-      if(f_it->first=="__actual_thread_spawn")
+      if(f_it.first=="__actual_thread_spawn")
         continue;
 
       bool first=true;
 
-      forall_goto_program_instructions(i_it, f_it->second.body)
+      forall_goto_program_instructions(i_it, f_it.second.body)
       {
         if(!i_it->is_assert())
           continue;

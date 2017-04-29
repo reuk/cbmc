@@ -295,13 +295,13 @@ static bool link_functions(
   namespacet src_ns(src_symbol_table);
 
   // merge functions
-  Forall_goto_functions(src_it, src_functions)
+  for(auto &src_it : src_functions.function_map)
   {
     // the function might have been renamed
     rename_symbolt::expr_mapt::const_iterator e_it=
-      rename_symbol.expr_map.find(src_it->first);
+      rename_symbol.expr_map.find(src_it.first);
 
-    irep_idt final_id=src_it->first;
+    irep_idt final_id=src_it.first;
 
     if(e_it!=rename_symbol.expr_map.end())
       final_id=e_it->second;
@@ -312,20 +312,20 @@ static bool link_functions(
 
     if(dest_f_it==dest_functions.function_map.end()) // not there yet
     {
-      rename_symbols_in_function(src_it->second, rename_symbol);
+      rename_symbols_in_function(src_it.second, rename_symbol);
 
       goto_functionst::goto_functiont &in_dest_symbol_table=
         dest_functions.function_map[final_id];
 
-      in_dest_symbol_table.body.swap(src_it->second.body);
-      in_dest_symbol_table.type=src_it->second.type;
+      in_dest_symbol_table.body.swap(src_it.second.body);
+      in_dest_symbol_table.type=src_it.second.type;
     }
     else // collision!
     {
       goto_functionst::goto_functiont &in_dest_symbol_table=
         dest_functions.function_map[final_id];
 
-      goto_functionst::goto_functiont &src_func=src_it->second;
+      goto_functionst::goto_functiont &src_func=src_it.second;
 
       if(in_dest_symbol_table.body.instructions.empty() ||
          weak_symbols.find(final_id)!=weak_symbols.end())
@@ -337,7 +337,7 @@ static bool link_functions(
         in_dest_symbol_table.type=src_func.type;
       }
       else if(src_func.body.instructions.empty() ||
-              src_ns.lookup(src_it->first).is_weak)
+              src_ns.lookup(src_it.first).is_weak)
       {
         // just keep the old one in dest
       }
@@ -378,8 +378,8 @@ static bool link_functions(
     }
 
   if(!macro_application.expr_map.empty())
-    Forall_goto_functions(dest_it, dest_functions)
-      rename_symbols_in_function(dest_it->second, macro_application);
+    for(auto &dest_it : dest_functions.function_map)
+      rename_symbols_in_function(dest_it.second, macro_application);
 
   return false;
 }

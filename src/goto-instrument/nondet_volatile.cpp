@@ -180,8 +180,8 @@ void nondet_volatile(
   symbol_tablet &symbol_table,
   goto_functionst &goto_functions)
 {
-  Forall_goto_functions(f_it, goto_functions)
-    nondet_volatile(symbol_table, f_it->second.body);
+  for(auto &f_it : goto_functions.function_map)
+    nondet_volatile(symbol_table, f_it.second.body);
 
   goto_functions.update();
 }

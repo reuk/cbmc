@@ -104,25 +104,25 @@ void function_enter(
   goto_functionst &goto_functions,
   const irep_idt &id)
 {
-  Forall_goto_functions(f_it, goto_functions)
+  for(auto &f_it : goto_functions.function_map)
   {
     // don't instrument our internal functions
-    if(has_prefix(id2string(f_it->first), CPROVER_PREFIX))
+    if(has_prefix(id2string(f_it.first), CPROVER_PREFIX))
       continue;
 
     // don't instrument the function to be called,
     // or otherwise this will be recursive
-    if(f_it->first==id)
+    if(f_it.first==id)
       continue;
 
     // patch in a call to `id' at the entry point
-    goto_programt &body=f_it->second.body;
+    goto_programt &body=f_it.second.body;
 
     goto_programt::targett t=
       body.insert_before(body.instructions.begin());
     t->make_function_call(
-      function_to_call(symbol_table, id, f_it->first));
-    t->function=f_it->first;
+      function_to_call(symbol_table, id, f_it.first));
+    t->function=f_it.first;
   }
 }
 
@@ -143,19 +143,19 @@ void function_exit(
   goto_functionst &goto_functions,
   const irep_idt &id)
 {
-  Forall_goto_functions(f_it, goto_functions)
+  for(auto &f_it : goto_functions.function_map)
   {
     // don't instrument our internal functions
-    if(has_prefix(id2string(f_it->first), CPROVER_PREFIX))
+    if(has_prefix(id2string(f_it.first), CPROVER_PREFIX))
       continue;
 
     // don't instrument the function to be called,
     // or otherwise this will be recursive
-    if(f_it->first==id)
+    if(f_it.first==id)
       continue;
 
     // patch in a call to `id' at the exit points
-    goto_programt &body=f_it->second.body;
+    goto_programt &body=f_it.second.body;
 
     // make sure we have END_OF_FUNCTION
     if(body.instructions.empty() ||
@@ -167,9 +167,9 @@ void function_exit(
       if(i_it->is_return())
       {
         goto_programt::instructiont call;
-        call.function=f_it->first;
+        call.function=f_it.first;
         call.make_function_call(
-          function_to_call(symbol_table, id, f_it->first));
+          function_to_call(symbol_table, id, f_it.first));
         body.insert_before_swap(i_it, call);
 
         // move on
@@ -197,8 +197,8 @@ void function_exit(
     {
       goto_programt::instructiont call;
       call.make_function_call(
-        function_to_call(symbol_table, id, f_it->first));
-      call.function=f_it->first;
+        function_to_call(symbol_table, id, f_it.first));
+      call.function=f_it.first;
       body.insert_before_swap(last, call);
     }
   }

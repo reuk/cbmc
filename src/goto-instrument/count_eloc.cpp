@@ -38,9 +38,9 @@ static void collect_eloc(
   const goto_functionst &goto_functions,
   working_dirst &dest)
 {
-  forall_goto_functions(f_it, goto_functions)
+  for(const auto &f_it : goto_functions.function_map)
   {
-    forall_goto_program_instructions(it, f_it->second.body)
+    forall_goto_program_instructions(it, f_it.second.body)
     {
       filest &files=dest[it->source_location.get_working_directory()];
       const irep_idt &file=it->source_location.get_file();
@@ -158,11 +158,11 @@ void print_path_lengths(const goto_functionst &goto_functions)
             << " instructions\n";
 
   std::size_t n_loops=0, loop_ins=0;
-  forall_goto_functions(gf_it, goto_functions)
-    forall_goto_program_instructions(i_it, gf_it->second.body)
+  for(const auto &gf_it : goto_functions.function_map)
+    forall_goto_program_instructions(i_it, gf_it.second.body)
       // loops or recursion
       if(i_it->is_backwards_goto() ||
-         i_it==gf_it->second.body.instructions.begin())
+         i_it==gf_it.second.body.instructions.begin())
       {
         const cfgt::entryt &node=cfg.entry_map[i_it];
         cfgt::patht loop;

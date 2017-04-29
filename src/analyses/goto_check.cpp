@@ -1877,10 +1877,10 @@ void goto_check(
 {
   goto_checkt goto_check(ns, options);
 
-  Forall_goto_functions(it, goto_functions)
+  for(auto &it : goto_functions.function_map)
   {
-    irep_idt mode=ns.lookup(it->first).mode;
-    goto_check.goto_check(it->second, mode);
+    irep_idt mode=ns.lookup(it.first).mode;
+    goto_check.goto_check(it.second, mode);
   }
 }
 

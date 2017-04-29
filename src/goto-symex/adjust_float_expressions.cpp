@@ -238,8 +238,8 @@ void adjust_float_expressions(
   goto_functionst &goto_functions,
   const namespacet &ns)
 {
-  Forall_goto_functions(it, goto_functions)
-    adjust_float_expressions(it->second, ns);
+  for(auto &it : goto_functions.function_map)
+    adjust_float_expressions(it.second, ns);
 }
 
 /*******************************************************************\

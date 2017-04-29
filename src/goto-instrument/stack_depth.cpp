@@ -123,11 +123,11 @@ void stack_depth(
   const symbol_exprt sym=add_stack_depth_symbol(symbol_table);
   const exprt depth_expr(from_integer(depth, sym.type()));
 
-  Forall_goto_functions(f_it, goto_functions)
-    if(f_it->second.body_available() &&
-        f_it->first!=CPROVER_PREFIX "initialize" &&
-        f_it->first!=goto_functionst::entry_point())
-      stack_depth(f_it->second.body, sym, depth, depth_expr);
+  for(auto &f_it : goto_functions.function_map)
+    if(f_it.second.body_available() &&
+        f_it.first!=CPROVER_PREFIX "initialize" &&
+        f_it.first!=goto_functionst::entry_point())
+      stack_depth(f_it.second.body, sym, depth, depth_expr);
 
   // initialize depth to 0
   goto_functionst::function_mapt::iterator

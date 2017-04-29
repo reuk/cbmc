@@ -1643,15 +1643,15 @@ void instrument_cover_goals(
   bool function_only,
   bool ignore_trivial)
 {
-  Forall_goto_functions(f_it, goto_functions)
+  for(auto &f_it : goto_functions.function_map)
   {
-    if(f_it->first==goto_functions.entry_point() ||
-       f_it->first==(CPROVER_PREFIX "initialize"))
+    if(f_it.first==goto_functions.entry_point() ||
+       f_it.first==(CPROVER_PREFIX "initialize"))
       continue;
 
     instrument_cover_goals(
       symbol_table,
-      f_it->second.body,
+      f_it.second.body,
       criterion,
       goals,
       function_only,
@@ -1758,9 +1758,9 @@ bool instrument_cover_goals(
   if(!keep_assertions)
   {
     // turn assertions (from generic checks) into assumptions
-    Forall_goto_functions(f_it, goto_functions)
+    for(auto &f_it : goto_functions.function_map)
     {
-      goto_programt &body=f_it->second.body;
+      goto_programt &body=f_it.second.body;
       Forall_goto_program_instructions(i_it, body)
       {
         if(i_it->is_assert())

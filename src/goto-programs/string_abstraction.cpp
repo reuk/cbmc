@@ -206,11 +206,11 @@ Function: string_abstractiont::operator()
 
 void string_abstractiont::operator()(goto_functionst &dest)
 {
-  Forall_goto_functions(it, dest)
+  for(auto &it : dest.function_map)
   {
-    sym_suffix="#str$"+id2string(it->first);
-    add_str_arguments(it->first, it->second);
-    abstract(it->second.body);
+    sym_suffix="#str$"+id2string(it.first);
+    add_str_arguments(it.first, it.second);
+    abstract(it.second.body);
     current_args.clear();
   }
 

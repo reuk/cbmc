@@ -47,9 +47,9 @@ void remove_static_init_loopst::unwind_enum_static(
   optionst &options)
 {
   size_t unwind_max=0;
-  forall_goto_functions(f, goto_functions)
+  for(const auto &f : goto_functions.function_map)
   {
-    auto &p=f->second.body;
+    auto &p=f.second.body;
     for(const auto &ins : p.instructions)
     {
       // is this a loop?

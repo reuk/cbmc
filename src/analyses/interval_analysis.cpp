@@ -104,6 +104,6 @@ void interval_analysis(
 
   interval_analysis(goto_functions, ns);
 
-  Forall_goto_functions(f_it, goto_functions)
-    instrument_intervals(interval_analysis, f_it->second);
+  for(auto &f_it : goto_functions.function_map)
+    instrument_intervals(interval_analysis, f_it.second);
 }

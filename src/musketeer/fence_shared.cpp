@@ -249,13 +249,13 @@ void fence_volatilet::compute()
 {
   std::cout << "--------" << std::endl;
 
-  forall_goto_functions(f_it, goto_functions)
+  for(const auto &f_it : goto_functions.function_map)
   {
     #ifdef LOCAL_MAY
-    local_may_aliast local_may(f_it->second);
+    local_may_aliast local_may(f_it.second);
     #endif
 
-    forall_goto_program_instructions(i_it, f_it->second.body)
+    forall_goto_program_instructions(i_it, f_it.second.body)
     {
         rw_set_loct rw_set(ns, value_sets, i_it
         #ifdef LOCAL_MAY
@@ -334,13 +334,13 @@ void fence_all_sharedt::compute()
 {
   std::cout << "--------" << std::endl;
 
-  forall_goto_functions(f_it, goto_functions)
+  for(const auto &f_it : goto_functions.function_map)
   {
 #ifdef LOCAL_MAY
-    local_may_aliast local_may(f_it->second);
+    local_may_aliast local_may(f_it.second);
 #endif
 
-    forall_goto_program_instructions(i_it, f_it->second.body)
+    forall_goto_program_instructions(i_it, f_it.second.body)
     {
       if(i_it->is_function_call())
         continue;

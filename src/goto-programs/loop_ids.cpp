@@ -133,15 +133,15 @@ void show_loop_ids(
   {
     case ui_message_handlert::PLAIN:
     case ui_message_handlert::XML_UI:
-      forall_goto_functions(it, goto_functions)
-        show_loop_ids(ui, it->second.body);
+      for(const auto &it : goto_functions.function_map)
+        show_loop_ids(ui, it.second.body);
       break;
     case ui_message_handlert::JSON_UI:
       json_objectt json_result;
       json_arrayt &loops=json_result["loops"].make_array();
 
-      forall_goto_functions(it, goto_functions)
-        show_loop_ids_json(ui, it->second.body, loops);
+      for(const auto &it : goto_functions.function_map)
+        show_loop_ids_json(ui, it.second.body, loops);
 
       std::cout << ",\n" << json_result;
       break;

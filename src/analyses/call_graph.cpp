@@ -41,10 +41,10 @@ Function: call_grapht::call_grapht
 
 call_grapht::call_grapht(const goto_functionst &goto_functions)
 {
-  forall_goto_functions(f_it, goto_functions)
+  for(const auto &f_it : goto_functions.function_map)
   {
-    const goto_programt &body=f_it->second.body;
-    add(f_it->first, body);
+    const goto_programt &body=f_it.second.body;
+    add(f_it.first, body);
   }
 }
 

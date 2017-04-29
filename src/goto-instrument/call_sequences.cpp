@@ -137,8 +137,8 @@ void show_call_sequences(const goto_functionst &goto_functions)
 {
   // do per function
 
-  forall_goto_functions(f_it, goto_functions)
-    show_call_sequences(f_it->first, f_it->second.body);
+  for(const auto &f_it : goto_functions.function_map)
+    show_call_sequences(f_it.first, f_it.second.body);
 }
 
 /*******************************************************************\
@@ -436,6 +436,6 @@ void list_calls_and_arguments(
 {
   // do per function
 
-  forall_goto_functions(f_it, goto_functions)
-    list_calls_and_arguments(ns, f_it->first, f_it->second.body);
+  for(const auto &f_it : goto_functions.function_map)
+    list_calls_and_arguments(ns, f_it.first, f_it.second.body);
 }

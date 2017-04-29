@@ -112,17 +112,17 @@ void static_analyzert::plain_text_report()
 {
   unsigned pass=0, fail=0, unknown=0;
 
-  forall_goto_functions(f_it, goto_functions)
+  for(const auto &f_it : goto_functions.function_map)
   {
-    if(!f_it->second.body.has_assertion())
+    if(!f_it.second.body.has_assertion())
       continue;
 
-    if(f_it->first=="__actual_thread_spawn")
+    if(f_it.first=="__actual_thread_spawn")
       continue;
 
-    status() << "******** Function " << f_it->first << eom;
+    status() << "******** Function " << f_it.first << eom;
 
-    forall_goto_program_instructions(i_it, f_it->second.body)
+    forall_goto_program_instructions(i_it, f_it.second.body)
     {
       if(!i_it->is_assert())
         continue;
@@ -175,15 +175,15 @@ void static_analyzert::json_report(const std::string &file_name)
 {
   json_arrayt json_result;
 
-  forall_goto_functions(f_it, goto_functions)
+  for(const auto &f_it : goto_functions.function_map)
   {
-    if(!f_it->second.body.has_assertion())
+    if(!f_it.second.body.has_assertion())
       continue;
 
-    if(f_it->first=="__actual_thread_spawn")
+    if(f_it.first=="__actual_thread_spawn")
       continue;
 
-    forall_goto_program_instructions(i_it, f_it->second.body)
+    forall_goto_program_instructions(i_it, f_it.second.body)
     {
       if(!i_it->is_assert())
         continue;
@@ -234,15 +234,15 @@ void static_analyzert::xml_report(const std::string &file_name)
 {
   xmlt xml_result;
 
-  forall_goto_functions(f_it, goto_functions)
+  for(const auto &f_it : goto_functions.function_map)
   {
-    if(!f_it->second.body.has_assertion())
+    if(!f_it.second.body.has_assertion())
       continue;
 
-    if(f_it->first=="__actual_thread_spawn")
+    if(f_it.first=="__actual_thread_spawn")
       continue;
 
-    forall_goto_program_instructions(i_it, f_it->second.body)
+    forall_goto_program_instructions(i_it, f_it.second.body)
     {
       if(!i_it->is_assert())
         continue;

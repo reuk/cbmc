@@ -411,10 +411,10 @@ void full_slicert::operator()(
   // now replace those instructions that are not needed
   // by skips
 
-  Forall_goto_functions(f_it, goto_functions)
-    if(f_it->second.body_available())
+  for(auto &f_it : goto_functions.function_map)
+    if(f_it.second.body_available())
     {
-      Forall_goto_program_instructions(i_it, f_it->second.body)
+      Forall_goto_program_instructions(i_it, f_it.second.body)
       {
         const cfgt::entryt &e=cfg.entry_map[i_it];
         if(!i_it->is_end_function() && // always retained
