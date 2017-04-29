@@ -25,9 +25,9 @@ bool cpp_typecheckt::find_dtor(const symbolt &symbol) const
   const irept &components=
     symbol.type.find(ID_components);
 
-  forall_irep(cit, components.get_sub())
+  for(const auto &cit : components.get_sub())
   {
-    if(cit->get(ID_base_name)=="~"+id2string(symbol.base_name))
+    if(cit.get(ID_base_name)=="~"+id2string(symbol.base_name))
       return true;
   }
 

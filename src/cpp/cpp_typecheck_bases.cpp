@@ -32,10 +32,10 @@ void cpp_typecheckt::typecheck_compound_bases(struct_typet &type)
 
   irept::subt &bases_irep=type.add(ID_bases).get_sub();
 
-  Forall_irep(base_it, bases_irep)
+  for(auto &base_it : bases_irep)
   {
     const cpp_namet &name=
-      to_cpp_name(base_it->find(ID_name));
+      to_cpp_name(base_it.find(ID_name));
 
     exprt base_symbol_expr=
       resolve(
@@ -77,8 +77,8 @@ void cpp_typecheckt::typecheck_compound_bases(struct_typet &type)
       throw 0;
     }
 
-    bool virtual_base = base_it->get_bool(ID_virtual);
-    irep_idt class_access = base_it->get(ID_protection);
+    bool virtual_base = base_it.get_bool(ID_virtual);
+    irep_idt class_access = base_it.get(ID_protection);
 
     if(class_access==irep_idt())
       class_access = default_class_access;
@@ -89,7 +89,7 @@ void cpp_typecheckt::typecheck_compound_bases(struct_typet &type)
     if(virtual_base)
       base_symbol_expr.set(ID_virtual, true);
 
-    base_it->swap(base_symbol_expr);
+    base_it.swap(base_symbol_expr);
 
     // Add base scopes as parents to the current scope
     cpp_scopes.current_scope().add_secondary_scope(
@@ -165,9 +165,9 @@ void cpp_typecheckt::add_base_components(
     vbases.insert(from_name);
 
   // look at the the parents of the base type
-  forall_irep(it, from.find(ID_bases).get_sub())
+  for(const auto &it : from.find(ID_bases).get_sub())
   {
-    irep_idt sub_access=it->get(ID_access);
+    irep_idt sub_access=it.get(ID_access);
 
     if(access==ID_private)
       sub_access=ID_private;
@@ -175,9 +175,9 @@ void cpp_typecheckt::add_base_components(
       sub_access=ID_protected;
 
     const symbolt &symb=
-      lookup(it->find(ID_type).get(ID_identifier));
+      lookup(it.find(ID_type).get(ID_identifier));
 
-    bool is_virtual=it->get_bool(ID_virtual);
+    bool is_virtual=it.get_bool(ID_virtual);
 
     // recursive call
     add_base_components(

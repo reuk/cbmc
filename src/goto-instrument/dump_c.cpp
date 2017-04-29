@@ -411,10 +411,10 @@ void dump_ct::convert_compound(
 
   const irept &bases = type.find(ID_bases);
   std::stringstream base_decls;
-  forall_irep(parent_it, bases.get_sub())
+  assert(bases.get_sub().empty());
+  /*
+  for(const auto & _: bases.get_sub())
   {
-    assert(false);
-    /*
     assert(parent_it->id() == ID_base);
     assert(parent_it->get(ID_type) == ID_symbol);
 
@@ -427,8 +427,8 @@ void dump_ct::convert_compound(
 
     base_decls << id2string(renamed_base_id) +
       (parent_it+1==bases.get_sub().end()?"":", ");
-      */
   }
+  */
 
   /*
   // for the constructor

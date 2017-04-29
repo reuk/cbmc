@@ -232,10 +232,10 @@ void from_irep(bool &success, danger_verify_configt::counterexamplest &ces,
     const irept &result)
 {
   success=result.get_bool(RESULT);
-  forall_irep(it, result.get_sub()) {
+  for(const auto &it : result.get_sub()) {
   ces.push_back(danger_verify_configt::counterexamplet());
   danger_verify_configt::counterexamplet &ce=ces.back();
-  from_irep(ce, *it);
+  from_irep(ce, it);
 }
 }
 }

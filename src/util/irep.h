@@ -58,14 +58,6 @@ inline const std::string &name2string(const irep_namet &n)
   #endif
 }
 
-#define forall_irep(it, irep) \
-  for(irept::subt::const_iterator it=(irep).begin(); \
-      it!=(irep).end(); ++it)
-
-#define Forall_irep(it, irep) \
-  for(irept::subt::iterator it=(irep).begin(); \
-      it!=(irep).end(); ++it)
-
 #define forall_named_irep(it, irep) \
   for(irept::named_subt::const_iterator it=(irep).begin(); \
       it!=(irep).end(); ++it)

@@ -38,9 +38,9 @@ void template_mapt::apply(typet &type) const
   {
     irept::subt &components=type.add(ID_components).get_sub();
 
-    Forall_irep(it, components)
+    for(auto &it : components)
     {
-      typet &subtype=static_cast<typet &>(it->add(ID_type));
+      typet &subtype=static_cast<typet &>(it.add(ID_type));
       apply(subtype);
     }
   }
@@ -61,10 +61,10 @@ void template_mapt::apply(typet &type) const
 
     irept::subt &parameters=type.add(ID_parameters).get_sub();
 
-    Forall_irep(it, parameters)
+    for(auto &it : parameters)
     {
-      if(it->id()==ID_parameter)
-        apply(static_cast<typet &>(it->add(ID_type)));
+      if(it.id()==ID_parameter)
+        apply(static_cast<typet &>(it.add(ID_type)));
     }
   }
   else if(type.id()==ID_merged_type)

@@ -44,11 +44,11 @@ bool cpp_typecheckt::find_parent(
   const irep_idt &base_name,
   irep_idt &identifier)
 {
-  forall_irep(bit, symb.type.find(ID_bases).get_sub())
+  for(const auto &bit : symb.type.find(ID_bases).get_sub())
   {
-    if(lookup(bit->find(ID_type).get(ID_identifier)).base_name == base_name)
+    if(lookup(bit.find(ID_type).get(ID_identifier)).base_name == base_name)
     {
-      identifier=bit->find(ID_type).get(ID_identifier);
+      identifier=bit.find(ID_type).get(ID_identifier);
       return true;
     }
   }

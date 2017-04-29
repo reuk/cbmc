@@ -410,10 +410,10 @@ void c_typecheck_baset::typecheck_expr_main(exprt &expr)
       expr.add(ID_generic_associations).get_sub();
 
     // first typecheck all types
-    Forall_irep(it, generic_associations)
-      if(it->get(ID_type_arg)!=ID_default)
+    for(auto &it : generic_associations)
+      if(it.get(ID_type_arg)!=ID_default)
       {
-        typet &type=static_cast<typet &>(it->add(ID_type_arg));
+        typet &type=static_cast<typet &>(it.add(ID_type_arg));
         typecheck_type(type);
       }
 
@@ -423,13 +423,13 @@ void c_typecheck_baset::typecheck_expr_main(exprt &expr)
 
     const typet &op_type=follow(expr.op0().type());
 
-    forall_irep(it, generic_associations)
+    for(const auto &it : generic_associations)
     {
-      if(it->get(ID_type_arg)==ID_default)
-        default_match=static_cast<const exprt &>(it->find(ID_value));
+      if(it.get(ID_type_arg)==ID_default)
+        default_match=static_cast<const exprt &>(it.find(ID_value));
       else if(op_type==
-              follow(static_cast<const typet &>(it->find(ID_type_arg))))
-        assoc_match=static_cast<const exprt &>(it->find(ID_value));
+              follow(static_cast<const typet &>(it.find(ID_type_arg))))
+        assoc_match=static_cast<const exprt &>(it.find(ID_value));
     }
 
     if(assoc_match.is_nil())

@@ -47,10 +47,10 @@ irep_idt cpp_enum_typet::generate_anon_tag() const
 
   std::string result="#anonE";
 
-  forall_irep(it, b)
+  for(const auto &it : b)
   {
     result+='#';
-    result+=id2string(it->get(ID_name));
+    result+=id2string(it.get(ID_name));
   }
 
   return result;

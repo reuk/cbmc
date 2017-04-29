@@ -408,10 +408,10 @@ static void adjust_KnR_parameters(
 
       // we just do a linear search over the parameters
       // this could be improved with a hash map
-      Forall_irep(a_it, parameters.get_sub())
+      for(auto &a_it : parameters.get_sub())
       {
         ansi_c_declarationt &p_decl=
-          to_ansi_c_declaration(static_cast<exprt &>(*a_it));
+          to_ansi_c_declaration(static_cast<exprt &>(a_it));
 
         if(p_decl.declarator().get_base_name()==base_name)
         {

@@ -309,12 +309,12 @@ std::string expr2cppt::convert_rec(
 
     const irept::subt &arguments=src.find(ID_arguments).get_sub();
 
-    forall_irep(it, arguments)
+    for(const auto &it : arguments)
     {
-      if(it!=arguments.begin())
+      if(&it!=&arguments.front())
         dest+=", ";
 
-      const exprt &argument=(const exprt &)*it;
+      const exprt &argument=static_cast<const exprt &>(it);
 
       if(argument.id()==ID_symbol)
       {

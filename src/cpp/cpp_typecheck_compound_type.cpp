@@ -1350,9 +1350,9 @@ void cpp_typecheckt::move_member_initializers(
     to_code(value).make_block();
 
     exprt::operandst::iterator o_it=value.operands().begin();
-    forall_irep(it, initializers.get_sub())
+    for(const auto &it : initializers.get_sub())
     {
-      o_it=value.operands().insert(o_it, static_cast<const exprt &>(*it));
+      o_it=value.operands().insert(o_it, static_cast<const exprt &>(it));
       o_it++;
     }
   }
@@ -1782,9 +1782,9 @@ bool cpp_typecheckt::check_component_access(
   const irept::subt &friends=
     struct_union_type.find("#friends").get_sub();
 
-  forall_irep(f_it, friends)
+  for(const auto &f_it : friends)
   {
-    const irept &friend_symb=*f_it;
+    const irept &friend_symb=f_it;
 
     const cpp_scopet &friend_scope =
       cpp_scopes.get_scope(friend_symb.get(ID_identifier));
@@ -1824,13 +1824,13 @@ void cpp_typecheckt::get_bases(
 {
   const irept::subt &bases=type.find(ID_bases).get_sub();
 
-  forall_irep(it, bases)
+  for(const auto &it : bases)
   {
-    assert(it->id()==ID_base);
-    assert(it->get(ID_type)==ID_symbol);
+    assert(it.id()==ID_base);
+    assert(it.get(ID_type)==ID_symbol);
 
     const struct_typet &base=
-      to_struct_type(lookup(it->find(ID_type).get(ID_identifier)).type);
+      to_struct_type(lookup(it.find(ID_type).get(ID_identifier)).type);
 
     set_bases.insert(base.get(ID_name));
     get_bases(base, set_bases);
@@ -1858,15 +1858,15 @@ void cpp_typecheckt::get_virtual_bases(
 
   const irept::subt &bases=type.find(ID_bases).get_sub();
 
-  forall_irep(it, bases)
+  for(const auto &it : bases)
   {
-    assert(it->id()==ID_base);
-    assert(it->get(ID_type)==ID_symbol);
+    assert(it.id()==ID_base);
+    assert(it.get(ID_type)==ID_symbol);
 
     const struct_typet &base=
-      to_struct_type(lookup(it->find(ID_type).get(ID_identifier)).type);
+      to_struct_type(lookup(it.find(ID_type).get(ID_identifier)).type);
 
-    if(it->get_bool(ID_virtual))
+    if(it.get_bool(ID_virtual))
       vbases.push_back(base.get(ID_name));
 
     get_virtual_bases(base, vbases);

@@ -97,9 +97,9 @@ void cpp_typecheckt::convert_anonymous_union(
   symbolt union_symbol=symbol_table.symbols[follow(symbol.type).get(ID_name)];
   const irept::subt &components=union_symbol.type.add(ID_components).get_sub();
 
-  forall_irep(it, components)
+  for(const auto &it : components)
   {
-    if(it->find(ID_type).id()==ID_code)
+    if(it.find(ID_type).id()==ID_code)
     {
       error().source_location=union_symbol.type.source_location();
       error() << "anonymous union `" << union_symbol.base_name
@@ -107,7 +107,7 @@ void cpp_typecheckt::convert_anonymous_union(
       throw 0;
     }
 
-    const irep_idt &base_name=it->get(ID_base_name);
+    const irep_idt &base_name=it.get(ID_base_name);
 
     if(cpp_scopes.current_scope().contains(base_name))
     {
@@ -119,7 +119,7 @@ void cpp_typecheckt::convert_anonymous_union(
 
     cpp_idt &id=cpp_scopes.current_scope().insert(base_name);
     id.id_class = cpp_idt::SYMBOL;
-    id.identifier=it->get(ID_name);
+    id.identifier=it.get(ID_name);
     id.class_identifier=union_symbol.name;
     id.is_member=true;
   }

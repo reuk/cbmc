@@ -149,15 +149,15 @@ void goto_convertt::finish_gotos(goto_programt &dest)
 
       i.make_goto();
 
-      forall_irep(it, destinations.get_sub())
+      for(const auto &it : destinations.get_sub())
       {
         labelst::const_iterator l_it=
-          targets.labels.find(it->id_string());
+          targets.labels.find(it.id_string());
 
         if(l_it==targets.labels.end())
         {
           error().source_location=i.code.find_source_location();
-          error() << "goto label `" << it->id() << "' not found" << eom;
+          error() << "goto label `" << it.id() << "' not found" << eom;
           throw 0;
         }
 

@@ -201,9 +201,9 @@ void cpp_typecheckt::zero_initializer(
 
   if(final_type.id()==ID_struct)
   {
-    forall_irep(cit, final_type.find(ID_components).get_sub())
+    for(const auto &cit : final_type.find(ID_components).get_sub())
     {
-      const exprt &component=static_cast<const exprt &>(*cit);
+      const exprt &component=static_cast<const exprt &>(cit);
 
       if(component.type().id()==ID_code)
         continue;
@@ -254,9 +254,9 @@ void cpp_typecheckt::zero_initializer(
 
     exprt comp=nil_exprt();
 
-    forall_irep(it, final_type.find(ID_components).get_sub())
+    for(const auto &it : final_type.find(ID_components).get_sub())
     {
-      const exprt &component=static_cast<const exprt &>(*it);
+      const exprt &component=static_cast<const exprt &>(it);
 
       assert(component.type().is_not_nil());
 

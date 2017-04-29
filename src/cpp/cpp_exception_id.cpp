@@ -56,9 +56,9 @@ void cpp_exception_list_rec(
     // now do any bases, recursively
     const irept::subt &bases=src.find(ID_bases).get_sub();
 
-    forall_irep(it, bases)
+    for(const auto &it : bases)
     {
-      const typet &type=static_cast<const typet &>(it->find(ID_type));
+      const typet &type=static_cast<const typet &>(it.find(ID_type));
       cpp_exception_list_rec(type, ns, suffix, dest);
     }
   }

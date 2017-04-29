@@ -110,14 +110,14 @@ std::string cpp_namet::to_string() const
 {
   std::string str;
 
-  forall_irep(it, get_sub())
+  for(const auto &it : get_sub())
   {
-    if(it->id()=="::")
-      str += it->id_string();
-    else if(it->id()==ID_template_args)
+    if(it.id()=="::")
+      str += it.id_string();
+    else if(it.id()==ID_template_args)
       str += "<...>";
     else
-      str+=it->get_string(ID_identifier);
+      str+=it.get_string(ID_identifier);
   }
 
   return str;

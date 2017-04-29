@@ -32,10 +32,10 @@ void irep_serializationt::write_irep(
 {
   write_string_ref(out, irep.id());
 
-  forall_irep(it, irep.get_sub())
+  for(const auto &it : irep.get_sub())
   {
     out.put('S');
-    reference_convert(*it, out);
+    reference_convert(it, out);
   }
 
   forall_named_irep(it, irep.get_named_sub())

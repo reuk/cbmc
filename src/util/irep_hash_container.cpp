@@ -66,8 +66,8 @@ void irep_hash_container_baset::pack(
   packed.push_back(irep_id_hash()(irep.id()));
 
   packed.push_back(sub.size());
-  forall_irep(it, sub)
-    packed.push_back(number(*it));
+  for(const auto &it : sub)
+    packed.push_back(number(it));
 
   packed.push_back(named_sub.size());
   forall_named_irep(it, named_sub)

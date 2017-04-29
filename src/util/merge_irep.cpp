@@ -28,8 +28,8 @@ std::size_t to_be_merged_irept::hash() const
   const irept::subt &sub=get_sub();
   const irept::named_subt &named_sub=get_named_sub();
 
-  forall_irep(it, sub)
-    result=hash_combine(result, static_cast<const merged_irept &>(*it).hash());
+  for(const auto &it : sub)
+    result=hash_combine(result, static_cast<const merged_irept &>(it).hash());
 
   forall_named_irep(it, named_sub)
   {
@@ -124,8 +124,8 @@ const merged_irept &merged_irepst::merged(const irept &irep)
   irept::subt &dest_sub=new_irep.get_sub();
   dest_sub.reserve(src_sub.size());
 
-  forall_irep(it, src_sub)
-    dest_sub.push_back(merged(*it)); // recursive call
+  for(const auto &it : src_sub)
+    dest_sub.push_back(merged(it)); // recursive call
 
   const irept::named_subt &src_named_sub=irep.get_named_sub();
   irept::named_subt &dest_named_sub=new_irep.get_named_sub();
@@ -193,8 +193,8 @@ const irept &merge_irept::merged(const irept &irep)
   irept::subt &dest_sub=new_irep.get_sub();
   dest_sub.reserve(src_sub.size());
 
-  forall_irep(it, src_sub)
-    dest_sub.push_back(merged(*it)); // recursive call
+  for(const auto &it : src_sub)
+    dest_sub.push_back(merged(it)); // recursive call
 
   const irept::named_subt &src_named_sub=irep.get_named_sub();
   irept::named_subt &dest_named_sub=new_irep.get_named_sub();
@@ -265,8 +265,8 @@ const irept &merge_full_irept::merged(const irept &irep)
   irept::subt &dest_sub=new_irep.get_sub();
   dest_sub.reserve(src_sub.size());
 
-  forall_irep(it, src_sub)
-    dest_sub.push_back(merged(*it)); // recursive call
+  for(const auto &it : src_sub)
+    dest_sub.push_back(merged(it)); // recursive call
 
   const irept::named_subt &src_named_sub=irep.get_named_sub();
   irept::named_subt &dest_named_sub=new_irep.get_named_sub();

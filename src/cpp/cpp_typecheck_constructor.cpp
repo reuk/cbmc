@@ -298,13 +298,13 @@ void cpp_typecheckt::default_cpctor(
 
   // First, we need to call the parent copy constructors
   const irept &bases=symbol.type.find(ID_bases);
-  forall_irep(parent_it, bases.get_sub())
+  for(const auto &parent_it : bases.get_sub())
   {
-    assert(parent_it->id()==ID_base);
-    assert(parent_it->get(ID_type)==ID_symbol);
+    assert(parent_it.id()==ID_base);
+    assert(parent_it.get(ID_type)==ID_symbol);
 
     const symbolt &parsymb=
-      lookup(parent_it->find(ID_type).get(ID_identifier));
+      lookup(parent_it.find(ID_type).get(ID_identifier));
 
     if(cpp_is_pod(parsymb.type))
       copy_parent(source_location, parsymb.base_name, param_identifier, block);
@@ -520,13 +520,13 @@ void cpp_typecheckt::default_assignop_value(
   // First, we copy the parents
   const irept &bases=symbol.type.find(ID_bases);
 
-  forall_irep(parent_it, bases.get_sub())
+  for(const auto &parent_it : bases.get_sub())
   {
-    assert(parent_it->id()==ID_base);
-    assert(parent_it->get(ID_type)==ID_symbol);
+    assert(parent_it.id()==ID_base);
+    assert(parent_it.get(ID_type)==ID_symbol);
 
     const symbolt &symb=
-      lookup(parent_it->find(ID_type).get(ID_identifier));
+      lookup(parent_it.find(ID_type).get(ID_identifier));
 
     copy_parent(source_location, symb.base_name, arg_name, block);
   }
@@ -534,21 +534,21 @@ void cpp_typecheckt::default_assignop_value(
   // Then, we copy the members
   const irept &components=symbol.type.find(ID_components);
 
-  forall_irep(mem_it, components.get_sub())
+  for(const auto &mem_it : components.get_sub())
   {
-    if(mem_it->get_bool(ID_from_base) ||
-       mem_it->get_bool(ID_is_type) ||
-       mem_it->get_bool(ID_is_static) ||
-       mem_it->get_bool("is_vtptr") ||
-       mem_it->get(ID_type)==ID_code)
+    if(mem_it.get_bool(ID_from_base) ||
+       mem_it.get_bool(ID_is_type) ||
+       mem_it.get_bool(ID_is_static) ||
+       mem_it.get_bool("is_vtptr") ||
+       mem_it.get(ID_type)==ID_code)
       continue;
 
-    irep_idt mem_name=mem_it->get(ID_base_name);
+    irep_idt mem_name=mem_it.get(ID_base_name);
 
-    if(mem_it->get(ID_type)==ID_array)
+    if(mem_it.get(ID_type)==ID_array)
     {
       const exprt &size_expr=
-        to_array_type((typet&)mem_it->find(ID_type)).size();
+        to_array_type((typet&)mem_it.find(ID_type)).size();
 
       if(size_expr.id()==ID_infinity)
       {
@@ -605,9 +605,9 @@ void cpp_typecheckt::check_member_initializers(
 {
   assert(initializers.id()==ID_member_initializers);
 
-  forall_irep(init_it, initializers.get_sub())
+  for(const auto &init_it : initializers.get_sub())
   {
-    const irept &initializer=*init_it;
+    const irept &initializer=init_it;
     assert(initializer.is_not_nil());
 
     assert(initializer.get(ID_member)==ID_cpp_name);
@@ -625,12 +625,12 @@ void cpp_typecheckt::check_member_initializers(
 
       // check for a direct parent
       bool ok=false;
-      forall_irep(parent_it, bases.get_sub())
+      for(const auto &parent_it : bases.get_sub())
       {
-        assert(parent_it->get(ID_type)==ID_symbol);
+        assert(parent_it.get(ID_type)==ID_symbol);
 
         if(member_type.get(ID_identifier)
-          ==parent_it->find(ID_type).get(ID_identifier))
+          ==parent_it.find(ID_type).get(ID_identifier))
         {
           ok=true;
           break;
@@ -679,10 +679,10 @@ void cpp_typecheckt::check_member_initializers(
           break;
 
         // check for a direct parent
-        forall_irep(parent_it, bases.get_sub())
+        for(const auto &parent_it : bases.get_sub())
         {
-          assert(parent_it->get(ID_type)==ID_symbol);
-          if(symb.name==parent_it->find(ID_type).get(ID_identifier))
+          assert(parent_it.get(ID_type)==ID_symbol);
+          if(symb.name==parent_it.find(ID_type).get(ID_identifier))
           {
             ok=true;
             break;
@@ -702,12 +702,12 @@ void cpp_typecheckt::check_member_initializers(
         typecheck_type(member_type);
 
         // check for a direct parent
-        forall_irep(parent_it, bases.get_sub())
+        for(const auto &parent_it : bases.get_sub())
         {
-          assert(parent_it->get(ID_type)==ID_symbol);
+          assert(parent_it.get(ID_type)==ID_symbol);
 
           if(member_type.get(ID_identifier)==
-             parent_it->find(ID_type).get(ID_identifier))
+             parent_it.find(ID_type).get(ID_identifier))
           {
             ok=true;
             break;
@@ -802,13 +802,13 @@ void cpp_typecheckt::full_member_initialization(
     const irept &bases=struct_union_type.find(ID_bases);
 
     // Subsequenlty, we need to call the non-POD parent constructors
-    forall_irep(parent_it, bases.get_sub())
+    for(const auto &parent_it : bases.get_sub())
     {
-      assert(parent_it->id()==ID_base);
-      assert(parent_it->get(ID_type)==ID_symbol);
+      assert(parent_it.id()==ID_base);
+      assert(parent_it.get(ID_type)==ID_symbol);
 
       const symbolt &ctorsymb=
-        lookup(parent_it->find(ID_type).get(ID_identifier));
+        lookup(parent_it.find(ID_type).get(ID_identifier));
 
       if(cpp_is_pod(ctorsymb.type))
         continue;
@@ -819,9 +819,9 @@ void cpp_typecheckt::full_member_initialization(
       // explicitly calls the parent constructor.
       bool found=false;
 
-      forall_irep(m_it, initializers.get_sub())
+      for(const auto &m_it : initializers.get_sub())
       {
-        irept initializer=*m_it;
+        irept initializer=m_it;
 
         assert(initializer.get(ID_member)==ID_cpp_name);
 
@@ -861,7 +861,7 @@ void cpp_typecheckt::full_member_initialization(
         if(member_type.id()!=ID_symbol)
           break;
 
-        if(parent_it->find(ID_type).get(ID_identifier)==
+        if(parent_it.find(ID_type).get(ID_identifier)==
            member_type.get(ID_identifier))
         {
           final_initializers.move_to_sub(initializer);
@@ -884,7 +884,7 @@ void cpp_typecheckt::full_member_initialization(
         final_initializers.move_to_sub(mem_init);
       }
 
-      if(parent_it->get_bool(ID_virtual))
+      if(parent_it.get_bool(ID_virtual))
       {
         codet cond(ID_ifthenelse);
 
@@ -955,9 +955,9 @@ void cpp_typecheckt::full_member_initialization(
     // Check if the initialization list of the constructor
     // explicitly initializes the data member
     bool found=false;
-    Forall_irep(m_it, initializers.get_sub())
+    for(auto &m_it : initializers.get_sub())
     {
-      irept &initializer=*m_it;
+      irept &initializer=m_it;
 
       if(initializer.get(ID_member)!=ID_cpp_name)
         continue;

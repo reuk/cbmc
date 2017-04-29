@@ -662,11 +662,11 @@ irep_idt cpp_declarator_convertert::get_pretty_name()
 
     std::string result=scope->prefix+id2string(base_name)+"(";
 
-    forall_irep(it, parameters)
+    for(const auto &it : parameters)
     {
-      const typet &parameter_type=((exprt &)*it).type();
+      const typet &parameter_type=((exprt &)it).type();
 
-      if(it!=parameters.begin())
+      if(&it!=&parameters.front())
         result+=", ";
 
       result+=cpp_typecheck.to_string(parameter_type);

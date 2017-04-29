@@ -95,14 +95,14 @@ static void irep2name(const irept &irep, std::string &result)
       result+=tmp;
     }
 
-  forall_irep(it, irep.get_sub())
+  for(const auto &it : irep.get_sub())
   {
     if(first)
       first=false;
     else
       result+=',';
     std::string tmp;
-    irep2name(*it, tmp);
+    irep2name(it, tmp);
     result+=tmp;
   }
 

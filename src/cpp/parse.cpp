@@ -2073,8 +2073,8 @@ bool Parser::rOtherDeclaration(
     assert(!type_name.get_sub().empty());
 
     bool is_destructor=false;
-    forall_irep(it, type_name.get_sub())
-      if(it->id()=="~")
+    for(const auto &it : type_name.get_sub())
+      if(it.id()=="~")
       {
         is_destructor=true;
         break;

@@ -206,9 +206,9 @@ void cpp_convert_typet::read_template(const typet &type)
 
   irept &arguments=t.add(ID_arguments);
 
-  Forall_irep(it, arguments.get_sub())
+  for(auto &it : arguments.get_sub())
   {
-    exprt &decl=static_cast<exprt &>(*it);
+    exprt &decl=static_cast<exprt &>(it);
 
     // may be type or expression
     bool is_type=decl.get_bool(ID_is_type);
@@ -264,9 +264,9 @@ void cpp_convert_typet::read_function_type(const typet &type)
     parameters.get_sub().erase(--parameters.get_sub().end());
   }
 
-  Forall_irep(it, parameters.get_sub())
+  for(auto &it : parameters.get_sub())
   {
-    exprt &parameter_expr=static_cast<exprt &>(*it);
+    exprt &parameter_expr=static_cast<exprt &>(it);
 
     if(parameter_expr.id()==ID_cpp_declaration)
     {
