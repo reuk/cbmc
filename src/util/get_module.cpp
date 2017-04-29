@@ -103,9 +103,9 @@ const symbolt &get_module(
   symbolptr_listt symbolptr_list, main_symbolptr_list;
   messaget message(message_handler);
 
-  forall_symbols(it, symbol_table.symbols)
+  for(const auto &it : symbol_table.symbols)
   {
-    const symbolt &s=it->second;
+    const symbolt &s=it.second;
 
     if(s.type.id()!=ID_module)
       continue;

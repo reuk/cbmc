@@ -63,8 +63,8 @@ bool static_lifetime_init(
   // sort alphabetically for reproducible results
   std::set<std::string> symbols;
 
-  forall_symbols(it, symbol_table.symbols)
-    symbols.insert(id2string(it->first));
+  for(const auto &it : symbol_table.symbols)
+    symbols.insert(id2string(it.first));
 
   for(const std::string &id : symbols)
   {

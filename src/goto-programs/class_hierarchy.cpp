@@ -29,12 +29,12 @@ Function: class_hierarchyt::operator()
 
 void class_hierarchyt::operator()(const symbol_tablet &symbol_table)
 {
-  forall_symbols(it, symbol_table.symbols)
+  for(const auto &it : symbol_table.symbols)
   {
-    if(it->second.is_type && it->second.type.id()==ID_struct)
+    if(it.second.is_type && it.second.type.id()==ID_struct)
     {
       const struct_typet &struct_type=
-        to_struct_type(it->second.type);
+        to_struct_type(it.second.type);
 
       const irept::subt &bases=
         struct_type.find(ID_bases).get_sub();
@@ -45,8 +45,8 @@ void class_hierarchyt::operator()(const symbol_tablet &symbol_table)
         if(parent.empty())
           continue;
 
-        class_map[parent].children.push_back(it->first);
-        class_map[it->first].parents.push_back(parent);
+        class_map[parent].children.push_back(it.first);
+        class_map[it.first].parents.push_back(parent);
       }
     }
   }

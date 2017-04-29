@@ -359,8 +359,8 @@ Purpose: removes complex data type
 
 void remove_complex(symbol_tablet &symbol_table)
 {
-  Forall_symbols(it, symbol_table.symbols)
-    remove_complex(it->second);
+  for(auto &it : symbol_table.symbols)
+    remove_complex(it.second);
 }
 
 /*******************************************************************\

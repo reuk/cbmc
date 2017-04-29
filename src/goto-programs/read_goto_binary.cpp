@@ -357,10 +357,10 @@ static bool link_functions(
   // apply macros
   rename_symbolt macro_application;
 
-  forall_symbols(it, dest_symbol_table.symbols)
-    if(it->second.is_macro)
+  for(const auto &it : dest_symbol_table.symbols)
+    if(it.second.is_macro)
     {
-      const symbolt &symbol=it->second;
+      const symbolt &symbol=it.second;
 
       assert(symbol.value.id()==ID_symbol);
       const irep_idt &id=to_symbol_expr(symbol.value).get_identifier();
@@ -416,9 +416,9 @@ bool read_object_and_link(
 
   typedef std::unordered_set<irep_idt, irep_id_hash> id_sett;
   id_sett weak_symbols;
-  forall_symbols(it, symbol_table.symbols)
-    if(it->second.is_weak)
-      weak_symbols.insert(it->first);
+  for(const auto &it : symbol_table.symbols)
+    if(it.second.is_weak)
+      weak_symbols.insert(it.first);
 
   linkingt linking(symbol_table,
                    temp_model.symbol_table,

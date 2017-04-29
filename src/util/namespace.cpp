@@ -34,11 +34,11 @@ unsigned get_max(
 {
   unsigned max_nr=0;
 
-  forall_symbols(it, symbols)
-    if(has_prefix(id2string(it->first), prefix))
+  for(const auto &it : symbols)
+    if(has_prefix(id2string(it.first), prefix))
       max_nr=
         std::max(unsafe_string2unsigned(
-                  id2string(it->first).substr(prefix.size())),
+                  id2string(it.first).substr(prefix.size())),
                  max_nr);
 
   return max_nr;

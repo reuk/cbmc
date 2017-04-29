@@ -128,23 +128,23 @@ bool model_argc_argv(
   // locate the body of the newly built initialize function as well
   // as any additional declarations we might need; the body will then
   // be converted and appended to the existing initialize function
-  forall_symbols(it, tmp_symbol_table.symbols)
+  for(const auto &it : tmp_symbol_table.symbols)
   {
     // add __CPROVER_assume if necessary (it might exist already)
-    if(it->first==CPROVER_PREFIX "assume")
-      symbol_table.add(it->second);
-    else if(it->first==CPROVER_PREFIX "initialize")
+    if(it.first==CPROVER_PREFIX "assume")
+      symbol_table.add(it.second);
+    else if(it.first==CPROVER_PREFIX "initialize")
     {
-      value=it->second.value;
+      value=it.second.value;
 
       replace_symbolt replace;
       replace.insert("ARGC", ns.lookup("argc'").symbol_expr());
       replace.insert("ARGV", ns.lookup("argv'").symbol_expr());
       replace(value);
     }
-    else if(has_prefix(id2string(it->first),
+    else if(has_prefix(id2string(it.first),
                        CPROVER_PREFIX "initialize::") &&
-            symbol_table.add(it->second))
+            symbol_table.add(it.second))
       assert(false);
   }
 

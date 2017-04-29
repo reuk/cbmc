@@ -259,10 +259,10 @@ void invariant_propagationt::get_globals(
   object_listt &dest)
 {
   // static ones
-  forall_symbols(it, ns.get_symbol_table().symbols)
-    if(it->second.is_lvalue &&
-       it->second.is_static_lifetime)
-      get_objects(it->second, dest);
+  for(const auto &it : ns.get_symbol_table().symbols)
+    if(it.second.is_lvalue &&
+       it.second.is_static_lifetime)
+      get_objects(it.second, dest);
 }
 
 /*******************************************************************\

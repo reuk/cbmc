@@ -855,8 +855,8 @@ void compilet::convert_symbols(goto_functionst &dest)
     typedef std::set<irep_idt> symbols_sett;
     symbols_sett symbols;
 
-    Forall_symbols(it, symbol_table.symbols)
-      symbols.insert(it->first);
+    for(auto &it : symbol_table.symbols)
+      symbols.insert(it.first);
 
     // the symbol table itertors aren't stable
     for(symbols_sett::const_iterator

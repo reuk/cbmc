@@ -52,8 +52,8 @@ void show_symbol_table_plain(
   // we want to sort alphabetically
   std::set<std::string> symbols;
 
-  forall_symbols(it, goto_model.symbol_table.symbols)
-    symbols.insert(id2string(it->first));
+  for(const auto &it : goto_model.symbol_table.symbols)
+    symbols.insert(id2string(it.first));
 
   const namespacet ns(goto_model.symbol_table);
 

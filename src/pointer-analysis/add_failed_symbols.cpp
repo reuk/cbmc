@@ -90,8 +90,8 @@ void add_failed_symbols(symbol_tablet &symbol_table)
   typedef std::list< ::symbolt *> symbol_listt;
   symbol_listt symbol_list;
 
-  Forall_symbols(it, symbol_table.symbols)
-    symbol_list.push_back(&(it->second));
+  for(auto &it : symbol_table.symbols)
+    symbol_list.push_back(&(it.second));
 
   for(symbol_listt::const_iterator
       it=symbol_list.begin();

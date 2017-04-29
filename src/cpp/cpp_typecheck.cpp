@@ -322,9 +322,9 @@ void cpp_typecheckt::do_not_typechecked()
   {
     cont = false;
 
-    Forall_symbols(s_it, symbol_table.symbols)
+    for(auto &s_it : symbol_table.symbols)
     {
-      symbolt &symbol=s_it->second;
+      symbolt &symbol=s_it.second;
 
       if(symbol.value.id()=="cpp_not_typechecked" &&
          symbol.value.get_bool("is_used"))
@@ -355,9 +355,9 @@ void cpp_typecheckt::do_not_typechecked()
   }
   while(cont);
 
-  Forall_symbols(s_it, symbol_table.symbols)
+  for(auto &s_it : symbol_table.symbols)
   {
-    symbolt &symbol=s_it->second;
+    symbolt &symbol=s_it.second;
     if(symbol.value.id()=="cpp_not_typechecked")
       symbol.value.make_nil();
   }

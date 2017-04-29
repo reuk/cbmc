@@ -65,9 +65,9 @@ void dump_ct::operator()(std::ostream &os)
   // add copies of struct types when ID_C_transparent_union is only
   // annotated to parameter
   symbol_tablet symbols_transparent;
-  Forall_symbols(it, copied_symbol_table.symbols)
+  for(auto &it : copied_symbol_table.symbols)
   {
-    symbolt &symbol=it->second;
+    symbolt &symbol=it.second;
 
     if(symbol.type.id()!=ID_code)
       continue;
@@ -99,8 +99,8 @@ void dump_ct::operator()(std::ostream &os)
       }
     }
   }
-  forall_symbols(it, symbols_transparent.symbols)
-    copied_symbol_table.add(it->second);
+  for(const auto &it : symbols_transparent.symbols)
+    copied_symbol_table.add(it.second);
 
   typedef std::unordered_map<irep_idt, unsigned, irep_id_hash> unique_tagst;
   unique_tagst unique_tags;
@@ -108,9 +108,9 @@ void dump_ct::operator()(std::ostream &os)
   // add tags to anonymous union/struct/enum,
   // and prepare lexicographic order
   std::set<std::string> symbols_sorted;
-  Forall_symbols(it, copied_symbol_table.symbols)
+  for(auto &it : copied_symbol_table.symbols)
   {
-    symbolt &symbol=it->second;
+    symbolt &symbol=it.second;
     bool tag_added=false;
 
     if((symbol.type.id()==ID_union || symbol.type.id()==ID_struct) &&
@@ -128,7 +128,7 @@ void dump_ct::operator()(std::ostream &os)
       tag_added=true;
     }
 
-    const std::string name_str=id2string(it->first);
+    const std::string name_str=id2string(it.first);
     if(symbol.is_type &&
        (symbol.type.id()==ID_union ||
         symbol.type.id()==ID_struct ||

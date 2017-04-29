@@ -28,10 +28,10 @@ void print_struct_alignment_problems(
   const symbol_tablet &symbol_table,
   std::ostream &out)
 {
-  forall_symbols(it, symbol_table.symbols)
-    if(it->second.is_type && it->second.type.id()==ID_struct)
+  for(const auto &it : symbol_table.symbols)
+    if(it.second.is_type && it.second.type.id()==ID_struct)
     {
-      const struct_typet &str=to_struct_type(it->second.type);
+      const struct_typet &str=to_struct_type(it.second.type);
       const struct_typet::componentst &components=str.components();
 
       bool first_time_seen_in_struct=true;
@@ -82,7 +82,7 @@ void print_struct_alignment_problems(
                   << "WARNING: "
                   << "declaration of structure "
                   << str.find_type(ID_tag).pretty()
-                  << " at " << it->second.location << std::endl;
+                  << " at " << it.second.location << std::endl;
             }
 
             out << "members " << it_mem->get_pretty_name() << " and "
@@ -92,12 +92,12 @@ void print_struct_alignment_problems(
         }
       }
     }
-    else if(it->second.type.id()==ID_array)
+    else if(it.second.type.id()==ID_array)
     {
       // is this structure likely to introduce dataraces?
       #if 0
       const namespacet ns(symbol_table);
-      const array_typet array=to_array_type(it->second.type);
+      const array_typet array=to_array_type(it.second.type);
       const mp_integer size=
         pointer_offset_size(array.subtype(), ns);
 
@@ -105,7 +105,7 @@ void print_struct_alignment_problems(
       {
         out << std::endl << "WARNING: "
             << "declaration of an array at "
-            << it->second.location << std::endl
+            << it.second.location << std::endl
             << "might be concurrently accessed" << std::endl;
       }
       #endif

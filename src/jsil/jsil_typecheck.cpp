@@ -1338,8 +1338,8 @@ void jsil_typecheckt::typecheck()
 
   std::vector<irep_idt> identifiers;
   identifiers.reserve(symbol_table.symbols.size());
-  forall_symbols(s_it, symbol_table.symbols)
-    identifiers.push_back(s_it->first);
+  for(const auto &s_it : symbol_table.symbols)
+    identifiers.push_back(s_it.first);
 
   // We first check all type symbols,
   // recursively doing base classes first.

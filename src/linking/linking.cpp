@@ -1347,20 +1347,20 @@ void linkingt::do_type_dependencies(id_sett &needs_to_be_renamed)
 
   used_byt used_by;
 
-  forall_symbols(s_it, src_symbol_table.symbols)
+  for(const auto &s_it : src_symbol_table.symbols)
   {
-    if(s_it->second.is_type)
+    if(s_it.second.is_type)
     {
       // find type and array-size symbols
       find_symbols_sett symbols_used;
-      find_type_and_expr_symbols(s_it->second.type, symbols_used);
+      find_type_and_expr_symbols(s_it.second.type, symbols_used);
 
       for(find_symbols_sett::const_iterator
           it=symbols_used.begin();
           it!=symbols_used.end();
           it++)
       {
-        used_by[*it].insert(s_it->first);
+        used_by[*it].insert(s_it.first);
       }
     }
   }
@@ -1454,36 +1454,36 @@ Function: linkingt::copy_symbols
 void linkingt::copy_symbols()
 {
   // First apply the renaming
-  Forall_symbols(s_it, src_symbol_table.symbols)
+  for(auto &s_it : src_symbol_table.symbols)
   {
     // apply the renaming
-    rename_symbol(s_it->second.type);
-    rename_symbol(s_it->second.value);
+    rename_symbol(s_it.second.type);
+    rename_symbol(s_it.second.value);
   }
 
   // Move over all the non-colliding ones
   id_sett collisions;
 
-  Forall_symbols(s_it, src_symbol_table.symbols)
+  for(const auto &s_it : src_symbol_table.symbols)
   {
     // renamed?
-    if(s_it->first!=s_it->second.name)
+    if(s_it.first!=s_it.second.name)
     {
       // new
-      main_symbol_table.add(s_it->second);
+      main_symbol_table.add(s_it.second);
     }
     else
     {
       symbol_tablet::symbolst::iterator
-        m_it=main_symbol_table.symbols.find(s_it->first);
+        m_it=main_symbol_table.symbols.find(s_it.first);
 
       if(m_it==main_symbol_table.symbols.end())
       {
         // new
-        main_symbol_table.add(s_it->second);
+        main_symbol_table.add(s_it.second);
       }
       else
-        collisions.insert(s_it->first);
+        collisions.insert(s_it.first);
     }
   }
 
@@ -1525,18 +1525,18 @@ void linkingt::typecheck()
 
   id_sett needs_to_be_renamed;
 
-  forall_symbols(s_it, src_symbol_table.symbols)
+  for(const auto &s_it : src_symbol_table.symbols)
   {
     symbol_tablet::symbolst::const_iterator
-      m_it=main_symbol_table.symbols.find(s_it->first);
+      m_it=main_symbol_table.symbols.find(s_it.first);
 
     if(m_it!=main_symbol_table.symbols.end() && // duplicate
-       needs_renaming(m_it->second, s_it->second))
+       needs_renaming(m_it->second, s_it.second))
     {
-      needs_to_be_renamed.insert(s_it->first);
+      needs_to_be_renamed.insert(s_it.first);
       #ifdef DEBUG
       debug() << "LINKING: needs to be renamed: "
-              << s_it->first << eom;
+              << s_it.first << eom;
       #endif
     }
   }

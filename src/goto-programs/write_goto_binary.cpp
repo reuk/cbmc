@@ -36,12 +36,12 @@ bool write_goto_binary_v3(
 
   write_gb_word(out, lsymbol_table.symbols.size());
 
-  forall_symbols(it, lsymbol_table.symbols)
+  for(const auto &it : lsymbol_table.symbols)
   {
     // Since version 2, symbols are not converted to ireps,
     // instead they are saved in a custom binary format
 
-    const symbolt &sym = it->second;
+    const symbolt &sym = it.second;
 
     irepconverter.reference_convert(sym.type, out);
     irepconverter.reference_convert(sym.value, out);

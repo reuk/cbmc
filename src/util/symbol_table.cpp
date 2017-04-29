@@ -155,8 +155,8 @@ void symbol_tablet::show(std::ostream &out) const
 {
   out << "\n" << "Symbols:" << "\n";
 
-  forall_symbols(it, symbols)
-    out << it->second;
+  for(const auto &it : symbols)
+    out << it.second;
 }
 
 /*******************************************************************\

@@ -262,8 +262,8 @@ void language_uit::show_symbol_table_plain(
   // we want to sort alphabetically
   std::set<std::string> symbols;
 
-  forall_symbols(it, symbol_table.symbols)
-    symbols.insert(id2string(it->first));
+  for(const auto &it : symbol_table.symbols)
+    symbols.insert(id2string(it.first));
 
   const namespacet ns(symbol_table);
 

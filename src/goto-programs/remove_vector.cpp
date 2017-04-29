@@ -255,8 +255,8 @@ Purpose: removes vector data type
 
 static void remove_vector(symbol_tablet &symbol_table)
 {
-  Forall_symbols(it, symbol_table.symbols)
-    remove_vector(it->second);
+  for(auto &it : symbol_table.symbols)
+    remove_vector(it.second);
 }
 
 /*******************************************************************\

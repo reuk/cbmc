@@ -24,14 +24,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "symbol.h"
 
-#define forall_symbols(it, expr) \
-  for(symbol_tablet::symbolst::const_iterator it=(expr).begin(); \
-      it!=(expr).end(); ++it)
-
-#define Forall_symbols(it, expr) \
-  for(symbol_tablet::symbolst::iterator it=(expr).begin(); \
-      it!=(expr).end(); ++it)
-
 typedef std::multimap<irep_idt, irep_idt> symbol_base_mapt;
 typedef std::multimap<irep_idt, irep_idt> symbol_module_mapt;
 
