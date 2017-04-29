@@ -1693,12 +1693,12 @@ bool simplify_exprt::simplify_inequality_not_constant(exprt &expr)
 
     // compare possible values
 
-    forall_value_list(it0, values0)
-      forall_value_list(it1, values1)
+    for(const auto &it0 : values0)
+      for(const auto &it1 : values1)
       {
         bool tmp;
-        const mp_integer &int_value0=*it0;
-        const mp_integer &int_value1=*it1;
+        const mp_integer &int_value0=it0;
+        const mp_integer &int_value1=it1;
 
         if(expr.id()==ID_ge)
           tmp=(int_value0>=int_value1);

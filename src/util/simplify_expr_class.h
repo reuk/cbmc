@@ -29,10 +29,6 @@ class member_exprt;
 class namespacet;
 class tvt;
 
-#define forall_value_list(it, value_list) \
-  for(simplify_exprt::value_listt::const_iterator it=(value_list).begin(); \
-      it!=(value_list).end(); ++it)
-
 class simplify_exprt
 {
 public:
