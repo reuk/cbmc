@@ -72,18 +72,18 @@ public:
     static const object_map_dt blank;
   };
 
-  exprt to_expr(object_map_dt::const_iterator it) const;
+  exprt to_expr(const object_map_dt::value_type &it) const;
 
   typedef reference_counting<object_map_dt> object_mapt;
 
-  void set(object_mapt &dest, object_map_dt::const_iterator it) const
+  void set(object_mapt &dest, const object_map_dt::value_type &it) const
   {
-    dest.write()[it->first]=it->second;
+    dest.write()[it.first]=it.second;
   }
 
-  bool insert(object_mapt &dest, object_map_dt::const_iterator it) const
+  bool insert(object_mapt &dest, const object_map_dt::value_type &it) const
   {
-    return insert(dest, it->first, it->second);
+    return insert(dest, it.first, it.second);
   }
 
   bool insert(object_mapt &dest, const exprt &src) const
