@@ -112,8 +112,8 @@ literalt prop_minimizet::constraint()
   else
   {
     or_exprt or_expr;
-    forall_literals(it, or_clause)
-      or_expr.copy_to_operands(literal_exprt(*it));
+    for(const auto &it : or_clause)
+      or_expr.copy_to_operands(literal_exprt(it));
 
     return prop_conv.convert(or_expr);
   }

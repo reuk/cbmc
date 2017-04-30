@@ -151,11 +151,11 @@ const bvt &boolbvt::convert_bv(const exprt &expr)
   cache_result.first->second=convert_bitvector(expr);
 
   // check
-  forall_literals(it, cache_result.first->second)
+  for(const auto &it : cache_result.first->second)
   {
-    if(freeze_all && !it->is_constant())
-      prop.set_frozen(*it);
-    if(it->var_no()==literalt::unused_var_no())
+    if(freeze_all && !it.is_constant())
+      prop.set_frozen(it);
+    if(it.var_no()==literalt::unused_var_no())
     {
       error() << "unused_var_no: " << expr.pretty() << eom;
       assert(false);
@@ -480,9 +480,9 @@ bvt boolbvt::convert_symbol(const exprt &expr)
   {
     map.get_literals(identifier, type, width, bv);
 
-    forall_literals(it, bv)
-      if(it->var_no()>=prop.no_variables() &&
-        !it->is_constant())
+    for(const auto &it : bv)
+      if(it.var_no()>=prop.no_variables() &&
+        !it.is_constant())
       {
         error() << identifier << eom;
         assert(false);
@@ -819,8 +819,8 @@ void boolbvt::make_free_bv_expr(const typet &type, exprt &dest)
   bv.resize(width);
 
   // make result free variables
-  Forall_literals(it, bv)
-    *it=prop.new_variable();
+  for(auto &it : bv)
+    it=prop.new_variable();
 
   make_bv_expr(type, bv, dest);
 }

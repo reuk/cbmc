@@ -44,8 +44,8 @@ bvt boolbvt::convert_array(const exprt &expr)
       if(tmp.size()!=op_width)
         throw "convert_array: unexpected operand width";
 
-      forall_literals(it2, tmp)
-        bv.push_back(*it2);
+      for(const auto &it2 : tmp)
+        bv.push_back(it2);
     }
 
     return bv;

@@ -53,8 +53,8 @@ protected:
 
   static bool is_all(const bvt &bv, literalt l)
   {
-    forall_literals(it, bv)
-      if(*it!=l)
+    for(const auto &it : bv)
+      if(it!=l)
         return false;
     return true;
   }

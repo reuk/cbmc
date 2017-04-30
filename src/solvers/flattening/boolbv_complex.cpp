@@ -45,8 +45,8 @@ bvt boolbvt::convert_complex(const exprt &expr)
         if(tmp.size()!=op_width)
           throw "convert_complex: unexpected operand width";
 
-        forall_literals(it2, tmp)
-          bv.push_back(*it2);
+        for(const auto &it2 : tmp)
+          bv.push_back(it2);
       }
     }
 

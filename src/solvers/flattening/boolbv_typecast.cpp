@@ -91,8 +91,8 @@ bool boolbvt::type_conversion(
   {
     if(src_type==dest_type.subtype())
     {
-      forall_literals(it, src)
-      dest.push_back(*it);
+      for(const auto &it : src)
+      dest.push_back(it);
 
       // pad with zeros
       for(std::size_t i=src.size(); i<dest_width; i++)
@@ -227,8 +227,8 @@ bool boolbvt::type_conversion(
 
           assert(src_width==1);
 
-          Forall_literals(it, dest)
-            *it=prop.land(*it, src[0]);
+          for(auto &it : dest)
+            it=prop.land(it, src[0]);
 
           return false;
         }

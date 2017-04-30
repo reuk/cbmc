@@ -139,10 +139,10 @@ void boolbv_mapt::get_literals(
   assert(literals.size()==width);
   assert(map_entry.literal_map.size()==width);
 
-  Forall_literals(it, literals)
+  for(auto it=literals.begin(), end=literals.end(); it!=end; ++it)
   {
     literalt &l=*it;
-    const std::size_t bit=it-literals.begin();
+    const auto bit=std::distance(literals.begin(), it);
 
     assert(bit<map_entry.literal_map.size());
     map_bitt &mb=map_entry.literal_map[bit];
@@ -184,10 +184,10 @@ void boolbv_mapt::set_literals(
 {
   map_entryt &map_entry=get_map_entry(identifier, type);
 
-  forall_literals(it, literals)
+  for(auto it=literals.begin(), end=literals.end(); it!=end; ++it)
   {
     const literalt &literal=*it;
-    const std::size_t bit=it-literals.begin();
+    const auto bit=std::distance(literals.begin(), it);
 
     assert(literal.is_constant() ||
            literal.var_no()<prop.no_variables());

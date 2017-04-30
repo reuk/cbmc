@@ -148,10 +148,10 @@ void smt2_convt::write_footer(std::ostream &out)
   {
     out << "; assumptions\n";
 
-    forall_literals(it, assumptions)
+    for(const auto &it : assumptions)
     {
       out << "(assert ";
-      convert_literal(*it);
+      convert_literal(it);
       out << ")" << "\n";
     }
   }

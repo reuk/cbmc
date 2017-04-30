@@ -40,9 +40,9 @@ void convert(const bvt &bv, Minisat::vec<Minisat::Lit> &dest)
 {
   dest.capacity(bv.size());
 
-  forall_literals(it, bv)
-    if(!it->is_false())
-      dest.push(Minisat::mkLit(it->var_no(), it->sign()));
+  for(const auto &it : bv)
+    if(!it.is_false())
+      dest.push(Minisat::mkLit(it.var_no(), it.sign()));
 }
 
 /*******************************************************************\
@@ -175,12 +175,12 @@ void satcheck_minisat2_baset<T>::lcnf(const bvt &bv)
 {
   add_variables();
 
-  forall_literals(it, bv)
+  for(const auto &it : bv)
   {
-    if(it->is_true())
+    if(it.is_true())
       return;
-    else if(!it->is_false())
-      assert(it->var_no()<(unsigned)solver->nVars());
+    else if(!it.is_false())
+      assert(it.var_no()<(unsigned)solver->nVars());
   }
 
   Minisat::vec<Minisat::Lit> c;
@@ -232,8 +232,8 @@ propt::resultt satcheck_minisat2_baset<T>::prop_solve()
       // if assumptions contains false, we need this to be UNSAT
       bool has_false=false;
 
-      forall_literals(it, assumptions)
-        if(it->is_false())
+      for(const auto &it : assumptions)
+        if(it.is_false())
           has_false=true;
 
       if(has_false)
@@ -383,8 +383,8 @@ void satcheck_minisat2_baset<T>::set_assumptions(const bvt &bv)
 {
   assumptions=bv;
 
-  forall_literals(it, assumptions)
-    if(it->is_true())
+  for(const auto &it : assumptions)
+    if(it.is_true())
     {
       assumptions.clear();
       break;

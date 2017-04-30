@@ -152,9 +152,9 @@ void bv_refinementt::freeze_lazy_constraints()
         it!=symbols.end(); ++it)
     {
       bvt bv=convert_bv(l_it->lazy);
-      forall_literals(b_it, bv)
-        if(!b_it->is_constant())
-          prop.set_frozen(*b_it);
+      for(const auto &b_it : bv)
+        if(!b_it.is_constant())
+          prop.set_frozen(b_it);
     }
   }
 }
