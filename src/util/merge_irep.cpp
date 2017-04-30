@@ -31,12 +31,12 @@ std::size_t to_be_merged_irept::hash() const
   for(const auto &it : sub)
     result=hash_combine(result, static_cast<const merged_irept &>(it).hash());
 
-  forall_named_irep(it, named_sub)
+  for(const auto &it : named_sub)
   {
-    result=hash_combine(result, hash_string(it->first));
+    result=hash_combine(result, hash_string(it.first));
     result=
       hash_combine(
-        result, static_cast<const merged_irept &>(it->second).hash());
+        result, static_cast<const merged_irept &>(it.second).hash());
   }
 
   result=hash_finalize(result, named_sub.size()+sub.size());
@@ -130,12 +130,12 @@ const merged_irept &merged_irepst::merged(const irept &irep)
   const irept::named_subt &src_named_sub=irep.get_named_sub();
   irept::named_subt &dest_named_sub=new_irep.get_named_sub();
 
-  forall_named_irep(it, src_named_sub)
+  for(const auto &it : src_named_sub)
     #ifdef SUB_IS_LIST
     dest_named_sub.push_back(
-      std::make_pair(it->first, merged(it->second))); // recursive call
+      std::make_pair(it.first, merged(it.second))); // recursive call
     #else
-    dest_named_sub[it->first]=merged(it->second); // recursive call
+    dest_named_sub[it.first]=merged(it.second); // recursive call
     #endif
 
   std::pair<to_be_merged_irep_storet::const_iterator, bool> result=
@@ -199,23 +199,23 @@ const irept &merge_irept::merged(const irept &irep)
   const irept::named_subt &src_named_sub=irep.get_named_sub();
   irept::named_subt &dest_named_sub=new_irep.get_named_sub();
 
-  forall_named_irep(it, src_named_sub)
+  for(const auto &it : src_named_sub)
     #ifdef SUB_IS_LIST
     dest_named_sub.push_back(
-      std::make_pair(it->first, merged(it->second))); // recursive call
+      std::make_pair(it.first, merged(it.second))); // recursive call
     #else
-    dest_named_sub[it->first]=merged(it->second); // recursive call
+    dest_named_sub[it.first]=merged(it.second); // recursive call
     #endif
 
   const irept::named_subt &src_comments=irep.get_comments();
   irept::named_subt &dest_comments=new_irep.get_comments();
 
-  forall_named_irep(it, src_comments)
+  for(const auto &it : src_comments)
     #ifdef SUB_IS_LIST
     dest_comments.push_back(
-      std::make_pair(it->first, merged(it->second))); // recursive call
+      std::make_pair(it.first, merged(it.second))); // recursive call
     #else
-    dest_comments[it->first]=merged(it->second); // recursive call
+    dest_comments[it.first]=merged(it.second); // recursive call
     #endif
 
   return *irep_store.insert(new_irep).first;
@@ -271,23 +271,23 @@ const irept &merge_full_irept::merged(const irept &irep)
   const irept::named_subt &src_named_sub=irep.get_named_sub();
   irept::named_subt &dest_named_sub=new_irep.get_named_sub();
 
-  forall_named_irep(it, src_named_sub)
+  for(const auto &it : src_named_sub)
     #ifdef SUB_IS_LIST
     dest_named_sub.push_back(
-      std::make_pair(it->first, merged(it->second))); // recursive call
+      std::make_pair(it.first, merged(it.second))); // recursive call
     #else
-    dest_named_sub[it->first]=merged(it->second); // recursive call
+    dest_named_sub[it.first]=merged(it.second); // recursive call
     #endif
 
   const irept::named_subt &src_comments=irep.get_comments();
   irept::named_subt &dest_comments=new_irep.get_comments();
 
-  forall_named_irep(it, src_comments)
+  for(const auto &it : src_comments)
     #ifdef SUB_IS_LIST
     dest_comments.push_back(
-      std::make_pair(it->first, merged(it->second))); // recursive call
+      std::make_pair(it.first, merged(it.second))); // recursive call
     #else
-    dest_comments[it->first]=merged(it->second); // recursive call
+    dest_comments[it.first]=merged(it.second); // recursive call
     #endif
 
   return *irep_store.insert(new_irep).first;

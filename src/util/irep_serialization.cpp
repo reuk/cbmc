@@ -38,18 +38,18 @@ void irep_serializationt::write_irep(
     reference_convert(it, out);
   }
 
-  forall_named_irep(it, irep.get_named_sub())
+  for(const auto &it : irep.get_named_sub())
   {
     out.put('N');
-    write_string_ref(out, it->first);
-    reference_convert(it->second, out);
+    write_string_ref(out, it.first);
+    reference_convert(it.second, out);
   }
 
-  forall_named_irep(it, irep.get_comments())
+  for(const auto &it : irep.get_comments())
   {
     out.put('C');
-    write_string_ref(out, it->first);
-    reference_convert(it->second, out);
+    write_string_ref(out, it.first);
+    reference_convert(it.second, out);
   }
 
   out.put(0); // terminator

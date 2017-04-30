@@ -40,18 +40,18 @@ void convert(
     convert(it, x_sub);
   }
 
-  forall_named_irep(it, irep.get_named_sub())
+  for(const auto &it : irep.get_named_sub())
   {
     xmlt &x_nsub=xml.new_element("named_sub");
-    x_nsub.set_attribute("name", name2string(it->first));
-    convert(it->second, x_nsub);
+    x_nsub.set_attribute("name", name2string(it.first));
+    convert(it.second, x_nsub);
   }
 
-  forall_named_irep(it, irep.get_comments())
+  for(const auto &it : irep.get_comments())
   {
     xmlt &x_com = xml.new_element("comment");
-    x_com.set_attribute("name", name2string(it->first));
-    convert(it->second, x_com);
+    x_com.set_attribute("name", name2string(it.first));
+    convert(it.second, x_com);
   }
 }
 

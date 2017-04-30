@@ -64,34 +64,34 @@ static void irep2name(const irept &irep, std::string &result)
   result+='(';
   bool first=true;
 
-  forall_named_irep(it, irep.get_named_sub())
+  for(const auto &it : irep.get_named_sub())
   {
     if(first)
       first=false;
     else
       result+=',';
 
-    result+=do_prefix(name2string(it->first));
+    result+=do_prefix(name2string(it.first));
 
     result+='=';
     std::string tmp;
-    irep2name(it->second, tmp);
+    irep2name(it.second, tmp);
     result+=tmp;
   }
 
-  forall_named_irep(it, irep.get_comments())
-    if(it->first==ID_C_constant ||
-       it->first==ID_C_volatile ||
-       it->first==ID_C_restricted)
+  for(const auto &it : irep.get_comments())
+    if(it.first==ID_C_constant ||
+       it.first==ID_C_volatile ||
+       it.first==ID_C_restricted)
     {
       if(first)
         first=false;
       else
         result+=',';
-      result+=do_prefix(name2string(it->first));
+      result+=do_prefix(name2string(it.first));
       result+='=';
       std::string tmp;
-      irep2name(it->second, tmp);
+      irep2name(it.second, tmp);
       result+=tmp;
     }
 

@@ -222,9 +222,9 @@ void to_irep(irept &result, const bool success,
 
 void from_irep(danger_verify_configt::counterexamplet &ce, const irept &result)
 {
-  forall_named_irep(it, result.get_named_sub()) {
-  const exprt &expr=static_cast<const exprt &>(it->second);
-  ce.insert(std::make_pair(it->first, expr));
+  for(const auto &it : result.get_named_sub()) {
+  const exprt &expr=static_cast<const exprt &>(it.second);
+  ce.insert(std::make_pair(it.first, expr));
 }
 }
 

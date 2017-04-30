@@ -70,19 +70,19 @@ void irep_hash_container_baset::pack(
     packed.push_back(number(it));
 
   packed.push_back(named_sub.size());
-  forall_named_irep(it, named_sub)
+  for(const auto &it : named_sub)
   {
-    packed.push_back(irep_id_hash()(it->first)); // id
-    packed.push_back(number(it->second)); // sub-irep
+    packed.push_back(irep_id_hash()(it.first)); // id
+    packed.push_back(number(it.second)); // sub-irep
   }
 
   if(full)
   {
     packed.push_back(comments.size());
-    forall_named_irep(it, comments)
+    for(const auto &it : comments)
     {
-      packed.push_back(irep_id_hash()(it->first)); // id
-      packed.push_back(number(it->second)); // sub-irep
+      packed.push_back(irep_id_hash()(it.first)); // id
+      packed.push_back(number(it.second)); // sub-irep
     }
   }
 }

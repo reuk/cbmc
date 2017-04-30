@@ -863,10 +863,10 @@ std::size_t irept::hash() const
 
   for(const auto &it : sub) result=hash_combine(result, it.hash());
 
-  forall_named_irep(it, named_sub)
+  for(const auto &it : named_sub)
   {
-    result=hash_combine(result, hash_string(it->first));
-    result=hash_combine(result, it->second.hash());
+    result=hash_combine(result, hash_string(it.first));
+    result=hash_combine(result, it.second.hash());
   }
 
   result=hash_finalize(result, named_sub.size()+sub.size());
@@ -902,16 +902,16 @@ std::size_t irept::full_hash() const
 
   for(const auto &it : sub) result=hash_combine(result, it.full_hash());
 
-  forall_named_irep(it, named_sub)
+  for(const auto &it : named_sub)
   {
-    result=hash_combine(result, hash_string(it->first));
-    result=hash_combine(result, it->second.full_hash());
+    result=hash_combine(result, hash_string(it.first));
+    result=hash_combine(result, it.second.full_hash());
   }
 
-  forall_named_irep(it, comments)
+  for(const auto &it : comments)
   {
-    result=hash_combine(result, hash_string(it->first));
-    result=hash_combine(result, it->second.full_hash());
+    result=hash_combine(result, hash_string(it.first));
+    result=hash_combine(result, it.second.full_hash());
   }
 
   result=hash_finalize(
@@ -964,28 +964,28 @@ std::string irept::pretty(unsigned indent, unsigned max_indent) const
     indent+=2;
   }
 
-  forall_named_irep(it, get_named_sub())
+  for(const auto &it : get_named_sub())
   {
     result+="\n";
     indent_str(result, indent);
 
     result+="* ";
-    result+=id2string(it->first);
+    result+=id2string(it.first);
     result+=": ";
 
-    result+=it->second.pretty(indent+2, max_indent);
+    result+=it.second.pretty(indent+2, max_indent);
   }
 
-  forall_named_irep(it, get_comments())
+  for(const auto &it : get_comments())
   {
     result+="\n";
     indent_str(result, indent);
 
     result+="* ";
-    result+=id2string(it->first);
+    result+=id2string(it.first);
     result+=": ";
 
-    result+=it->second.pretty(indent+2, max_indent);
+    result+=it.second.pretty(indent+2, max_indent);
   }
 
   unsigned count=0;
