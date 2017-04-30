@@ -110,15 +110,15 @@ void cpp_typecheckt::show_instantiation_stack(std::ostream &out)
     const symbolt &symbol=lookup(s_it->identifier);
     out << "instantiating `" << symbol.pretty_name << "' with <";
 
-    forall_expr(a_it, s_it->full_template_args.arguments())
+    for(const auto &a_it : s_it->full_template_args.arguments())
     {
-      if(a_it!=s_it->full_template_args.arguments().begin())
+      if(&a_it!=&s_it->full_template_args.arguments().front())
         out << ", ";
 
-      if(a_it->id()==ID_type)
-        out << to_string(a_it->type());
+      if(a_it.id()==ID_type)
+        out << to_string(a_it.type());
       else
-        out << to_string(*a_it);
+        out << to_string(a_it);
     }
 
     out << "> at " << s_it->source_location << std::endl;

@@ -842,7 +842,7 @@ static bool find_block_position_rec(
   exprt::operandst &operands=root.operands();
   exprt::operandst::iterator first_found=operands.end();
 
-  Forall_expr(it, operands)
+  for(auto it=operands.begin(), end=operands.end(); it!=end; ++it)
   {
     bool found=false;
 
@@ -1112,25 +1112,25 @@ void dump_ct::cleanup_expr(exprt &expr)
       if(parameters.size()==arguments.size())
       {
         code_typet::parameterst::const_iterator it=parameters.begin();
-        Forall_expr(it2, arguments)
+        for(auto &it2 : arguments)
         {
           const typet &type=ns.follow(it->type());
           if(type.id()==ID_union &&
              type.get_bool(ID_C_transparent_union))
           {
-            if(it2->id()==ID_typecast &&
-               base_type_eq(it2->type(), type, ns))
-              *it2=to_typecast_expr(*it2).op();
+            if(it2.id()==ID_typecast &&
+               base_type_eq(it2.type(), type, ns))
+              it2=to_typecast_expr(it2).op();
 
             // add a typecast for NULL or 0
-            if(it2->id()==ID_constant &&
-               (it2->is_zero() || to_constant_expr(*it2).get_value()==ID_NULL))
+            if(it2.id()==ID_constant &&
+               (it2.is_zero() || to_constant_expr(it2).get_value()==ID_NULL))
             {
               const typet &comp_type=
                 to_union_type(type).components().front().type();
 
               if(comp_type.id()==ID_pointer)
-                *it2=typecast_exprt(*it2, comp_type);
+                it2=typecast_exprt(it2, comp_type);
             }
           }
 

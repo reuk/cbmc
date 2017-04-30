@@ -348,9 +348,9 @@ void remove_function_pointerst::remove_function_pointer(
      call_type.parameters().empty())
   {
     call_type.remove_ellipsis();
-    forall_expr(it, code.arguments())
+    for(const auto &it : code.arguments())
       call_type.parameters().push_back(
-        code_typet::parametert(it->type()));
+        code_typet::parametert(it.type()));
   }
 
   assert(function.id()==ID_dereference);

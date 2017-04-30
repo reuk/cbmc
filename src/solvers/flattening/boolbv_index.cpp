@@ -104,9 +104,9 @@ bvt boolbvt::convert_index(const index_exprt &expr)
     else if(array.id()==ID_constant || array.id()==ID_array)
     {
       bool found_exception = false;
-      forall_expr(it, array.operands())
+      for(const auto &it : array.operands())
       {
-        if(*it != array.op0())
+        if(it != array.op0())
         {
           found_exception = true;
           break;

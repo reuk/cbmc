@@ -1512,11 +1512,11 @@ exprt goto_convertt::case_guard(
   exprt dest=exprt(ID_or, bool_typet());
   dest.reserve_operands(case_op.size());
 
-  forall_expr(it, case_op)
+  for(const auto &it : case_op)
   {
     equal_exprt eq_expr;
     eq_expr.lhs()=value;
-    eq_expr.rhs()=*it;
+    eq_expr.rhs()=it;
     dest.move_to_operands(eq_expr);
   }
 
@@ -2569,9 +2569,9 @@ void goto_convertt::generate_conditional_branch(
     std::list<exprt> op;
     collect_operands(guard, guard.id(), op);
 
-    forall_expr_list(it, op)
+    for(const auto &it : op)
       generate_conditional_branch(
-        boolean_negate(*it), target_false, source_location, dest);
+        boolean_negate(it), target_false, source_location, dest);
 
     goto_programt::targett t_true=dest.add_instruction();
     t_true->make_goto(target_true);
@@ -2592,9 +2592,9 @@ void goto_convertt::generate_conditional_branch(
     std::list<exprt> op;
     collect_operands(guard, guard.id(), op);
 
-    forall_expr_list(it, op)
+    for(const auto &it : op)
       generate_conditional_branch(
-        *it, target_true, source_location, dest);
+        it, target_true, source_location, dest);
 
     goto_programt::targett t_false=dest.add_instruction();
     t_false->make_goto(target_false);

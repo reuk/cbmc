@@ -329,8 +329,8 @@ std::list<exprt> expressions_read(
     {
       const code_function_callt &function_call=
         to_code_function_call(instruction.code);
-      forall_expr(it, function_call.arguments())
-        dest.push_back(*it);
+      for(const auto &it : function_call.arguments())
+        dest.push_back(it);
       if(function_call.lhs().is_not_nil())
         parse_lhs_read(function_call.lhs(), dest);
     }
@@ -447,8 +447,8 @@ std::list<exprt> objects_read(
 
   std::list<exprt> dest;
 
-  forall_expr_list(it, expressions)
-    objects_read(*it, dest);
+  for(const auto &it : expressions)
+    objects_read(it, dest);
 
   return dest;
 }
@@ -498,8 +498,8 @@ std::list<exprt> objects_written(
 
   std::list<exprt> dest;
 
-  forall_expr_list(it, expressions)
-    objects_written(*it, dest);
+  for(const auto &it : expressions)
+    objects_written(it, dest);
 
   return dest;
 }

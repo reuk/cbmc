@@ -1040,9 +1040,9 @@ void cvc_convt::convert_expr(const exprt &expr)
       convert_expr(op[0]);
     else
     {
-      forall_expr(it, op)
+      for(const auto &it : op)
       {
-        if(it!=op.begin())
+        if(&it!=&op.front())
         {
           if(expr.id()==ID_or)
             out << " OR ";
@@ -1059,7 +1059,7 @@ void cvc_convt::convert_expr(const exprt &expr)
         }
 
         out << "(";
-        convert_expr(*it);
+        convert_expr(it);
         out << ")";
       }
     }

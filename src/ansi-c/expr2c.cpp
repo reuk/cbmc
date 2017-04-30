@@ -2994,12 +2994,12 @@ std::string expr2ct::convert_function_application(
 
   dest+='(';
 
-  forall_expr(it, src.arguments())
+  for(const auto &it : src.arguments())
   {
     unsigned p;
-    std::string arg_str=convert(*it, p);
+    std::string arg_str=convert(it, p);
 
-    if(it!=src.arguments().begin())
+    if(&it!=&src.arguments().front())
       dest+=", ";
     // TODO: ggf. Klammern je nach p
     dest+=arg_str;
@@ -3036,12 +3036,12 @@ std::string expr2ct::convert_side_effect_expr_function_call(
 
   dest+='(';
 
-  forall_expr(it, src.arguments())
+  for(const auto &it : src.arguments())
   {
     unsigned p;
-    std::string arg_str=convert(*it, p);
+    std::string arg_str=convert(it, p);
 
-    if(it!=src.arguments().begin())
+    if(&it!=&src.arguments().front())
       dest+=", ";
     // TODO: ggf. Klammern je nach p
     dest+=arg_str;
@@ -4012,12 +4012,12 @@ std::string expr2ct::convert_code_function_call(
 
   const exprt::operandst &arguments=src.arguments();
 
-  forall_expr(it, arguments)
+  for(const auto &it : arguments)
   {
     unsigned p;
-    std::string arg_str=convert(*it, p);
+    std::string arg_str=convert(it, p);
 
-    if(it!=arguments.begin())
+    if(&it!=&arguments.front())
       dest+=", ";
     // TODO: ggf. Klammern je nach p
     dest+=arg_str;

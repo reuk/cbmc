@@ -28,10 +28,9 @@ bool sort_operands(exprt::operandst &operands)
 {
   bool do_sort=false;
 
-  forall_expr(it, operands)
+  for(auto it=operands.cbegin(), end=operands.cend(); it!=end; ++it)
   {
-    exprt::operandst::const_iterator next_it=it;
-    next_it++;
+    const auto next_it=std::next(it);
 
     if(next_it!=operands.end() && *next_it < *it)
     {

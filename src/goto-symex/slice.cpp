@@ -68,8 +68,8 @@ void symex_slicet::slice(
   const expr_listt &exprs)
 {
   // collect dependencies
-  forall_expr_list(expr_it, exprs)
-    get_symbols(*expr_it);
+  for(const auto &expr_it : exprs)
+    get_symbols(expr_it);
 
   slice(equation);
 }

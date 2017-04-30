@@ -173,8 +173,8 @@ void bmct::do_conversion()
   {
     status() << "converting constraints" << eom;
 
-    forall_expr_list(it, bmc_constraints)
-      prop_conv.set_to_true(*it);
+    for(const auto &it : bmc_constraints)
+      prop_conv.set_to_true(it);
   }
 }
 

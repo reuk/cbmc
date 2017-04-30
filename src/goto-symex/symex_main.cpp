@@ -350,8 +350,8 @@ void goto_symext::symex_step(
 
       clean_expr(deref_code.function(), state, false);
 
-      Forall_expr(it, deref_code.arguments())
-        clean_expr(*it, state, false);
+      for(auto &it : deref_code.arguments())
+        clean_expr(it, state, false);
 
       symex_function_call(goto_functions, state, deref_code);
     }

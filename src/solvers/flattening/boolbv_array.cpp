@@ -37,9 +37,9 @@ bvt boolbvt::convert_array(const exprt &expr)
     bvt bv;
     bv.reserve(width);
 
-    forall_expr(it, operands)
+    for(const auto &it : operands)
     {
-      const bvt &tmp=convert_bv(*it);
+      const bvt &tmp=convert_bv(it);
 
       if(tmp.size()!=op_width)
         throw "convert_array: unexpected operand width";

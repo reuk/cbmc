@@ -826,10 +826,10 @@ void smt1_convt::convert_expr(const exprt &expr, bool bool_as_bv)
     from_bool_begin(type, bool_as_bv);
 
     out << "(" << expr.id();
-    forall_expr(it, operands)
+    for(const auto &it : operands)
     {
       out << " ";
-      convert_expr(*it, false);
+      convert_expr(it, false);
     }
     out << ")";
 
@@ -1482,19 +1482,19 @@ void smt1_convt::convert_expr(const exprt &expr, bool bool_as_bv)
 
     assert(!operands.empty());
 
-    forall_expr(it, operands)
+    for(const auto &it : operands)
       out << "(store ";
 
     out << it->second;
 
     std::size_t i=0;
-    forall_expr(it, operands)
+    for(const auto &it : operands)
     {
       exprt index=from_integer(i, unsignedbv_typet(array_index_bits));
       out << " ";
       convert_expr(index, true);
       out << " ";
-      convert_expr(*it, true);
+      convert_expr(it, true);
       out << ")";
       i++;
     }

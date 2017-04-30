@@ -13,22 +13,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "type.h"
 
-#define forall_expr(it, expr) \
-  for(exprt::operandst::const_iterator it=(expr).begin(); \
-      it!=(expr).end(); ++it)
-
-#define Forall_expr(it, expr) \
-  for(exprt::operandst::iterator it=(expr).begin(); \
-      it!=(expr).end(); ++it)
-
-#define forall_expr_list(it, expr) \
-  for(expr_listt::const_iterator it=(expr).begin(); \
-      it!=(expr).end(); ++it)
-
-#define Forall_expr_list(it, expr) \
-  for(expr_listt::iterator it=(expr).begin(); \
-      it!=(expr).end(); ++it)
-
 /*! \brief Base class for all expressions
 */
 class exprt:public irept

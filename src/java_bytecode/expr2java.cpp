@@ -80,15 +80,15 @@ std::string expr2javat::convert_code_function_call(
 
   bool first=true;
 
-  forall_expr(it, arguments)
+  for(const auto &it : arguments)
   {
-    if(has_this && it==arguments.begin())
+    if(has_this && &it==&arguments.front())
     {
     }
     else
     {
       unsigned p;
-      std::string arg_str=convert(*it, p);
+      std::string arg_str=convert(it, p);
 
       if(first)
         first=false;

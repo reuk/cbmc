@@ -406,10 +406,9 @@ bool simplify_exprt::simplify_plus(exprt &expr)
   if(ns.follow(expr.type()).id()==ID_floatbv)
   {
     // we only merge neighboring constants!
-    Forall_expr(it, operands)
+    for(auto it=operands.begin(), end=operands.end(); it!=end; ++it)
     {
-      exprt::operandst::iterator next=it;
-      next++;
+      const auto next=std::next(it);
 
       if(next!=operands.end())
       {
@@ -482,30 +481,30 @@ bool simplify_exprt::simplify_plus(exprt &expr)
 
     // search for a and -a
     // first gather all the a's with -a
-    typedef std::unordered_map<exprt, exprt::operandst::iterator, irep_hash>
+    typedef std::unordered_map<exprt, exprt::operandst::value_type *, irep_hash>
       expr_mapt;
     expr_mapt expr_map;
 
-    Forall_expr(it, operands)
-      if(it->id()==ID_unary_minus &&
-         it->operands().size()==1)
-        expr_map.insert(std::make_pair(it->op0(), it));
+    for(auto &it : operands)
+      if(it.id()==ID_unary_minus &&
+         it.operands().size()==1)
+        expr_map.insert(std::make_pair(it.op0(), &it));
 
     // now search for a
-    Forall_expr(it, operands)
+    for(auto &it : operands)
     {
       if(expr_map.empty())
         break;
-      else if(it->id()==ID_unary_minus)
+      else if(it.id()==ID_unary_minus)
         continue;
 
-      expr_mapt::iterator itm=expr_map.find(*it);
+      expr_mapt::iterator itm=expr_map.find(it);
 
       if(itm!=expr_map.end())
       {
         *(itm->second)=from_integer(0, expr.type());
-        *it=from_integer(0, expr.type());
-        assert(it->is_not_nil());
+        it=from_integer(0, expr.type());
+        assert(it.is_not_nil());
         expr_map.erase(itm);
         result=false;
       }

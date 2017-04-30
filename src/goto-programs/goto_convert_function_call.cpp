@@ -78,8 +78,8 @@ void goto_convertt::do_function_call(
     new_arguments.clear();
   }
 
-  Forall_expr(it, new_arguments)
-    clean_expr(*it, dest);
+  for(auto &it : new_arguments)
+    clean_expr(it, dest);
 
   // split on the function
 

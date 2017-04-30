@@ -553,10 +553,10 @@ void goto_inlinet::insert_function_nobody(
 
   // evaluate function arguments -- they might have
   // pointer dereferencing or the like
-  forall_expr(it, arguments)
+  for(const auto &it : arguments)
   {
     goto_programt::targett t=tmp.add_instruction();
-    t->make_other(code_expressiont(*it));
+    t->make_other(code_expressiont(it));
     t->source_location=target->source_location;
     t->function=target->function;
   }

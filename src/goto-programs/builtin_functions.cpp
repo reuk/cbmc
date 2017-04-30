@@ -1613,9 +1613,9 @@ void goto_convertt::do_function_call_symbol(
     t->source_location=function.source_location();
     t->code.set(ID_statement, ID_fence);
 
-    forall_expr(it, arguments)
+    for(const auto &it : arguments)
     {
-      const irep_idt kind=get_string_constant(*it);
+      const irep_idt kind=get_string_constant(it);
       t->code.set(kind, true);
     }
   }

@@ -52,10 +52,12 @@ void uninitialized_domaint::transform(
       std::list<exprt> read=expressions_read(*from);
       std::list<exprt> written=expressions_written(*from);
 
-      forall_expr_list(it, written) assign(*it);
+      for(auto &it : written)
+        assign(it);
 
       // we only care about the *first* uninitalized use
-      forall_expr_list(it, read) assign(*it);
+      for(const auto &it : read)
+        assign(it);
     }
   }
 }
