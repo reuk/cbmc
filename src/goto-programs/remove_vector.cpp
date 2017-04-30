@@ -44,8 +44,8 @@ static bool have_to_remove_vector(const exprt &expr)
   if(have_to_remove_vector(expr.type()))
     return true;
 
-  forall_operands(it, expr)
-    if(have_to_remove_vector(*it))
+  for(const auto &it : expr.operands())
+    if(have_to_remove_vector(it))
       return true;
 
   return false;
@@ -106,8 +106,8 @@ static void remove_vector(exprt &expr)
   if(!have_to_remove_vector(expr))
     return;
 
-  Forall_operands(it, expr)
-    remove_vector(*it);
+  for(auto &it : expr.operands())
+    remove_vector(it);
 
   if(expr.type().id()==ID_vector)
   {

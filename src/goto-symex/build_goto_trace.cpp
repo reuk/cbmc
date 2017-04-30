@@ -161,8 +161,8 @@ void set_internal_dynamic_object(
   }
   else
   {
-    forall_operands(it, expr)
-      set_internal_dynamic_object(*it, goto_trace_step, ns);
+    for(const auto &it : expr.operands())
+      set_internal_dynamic_object(it, goto_trace_step, ns);
   }
 }
 

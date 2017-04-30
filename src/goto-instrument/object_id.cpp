@@ -73,8 +73,8 @@ void get_objects_rec(
   else
   {
     if(mode==LHS_R || mode==READ)
-      forall_operands(it, expr)
-        get_objects_rec(READ, *it, dest, "");
+      for(const auto &it : expr.operands())
+        get_objects_rec(READ, it, dest, "");
   }
 }
 

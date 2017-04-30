@@ -77,8 +77,8 @@ static bool have_to_adjust_float_expressions(
       return true;
   }
 
-  forall_operands(it, expr)
-    if(have_to_adjust_float_expressions(*it, ns))
+  for(const auto &it : expr.operands())
+    if(have_to_adjust_float_expressions(it, ns))
       return true;
 
   return false;
@@ -104,8 +104,8 @@ void adjust_float_expressions(
   if(!have_to_adjust_float_expressions(expr, ns))
     return;
 
-  Forall_operands(it, expr)
-    adjust_float_expressions(*it, ns);
+  for(auto &it : expr.operands())
+    adjust_float_expressions(it, ns);
 
   const typet &type=ns.follow(expr.type());
 

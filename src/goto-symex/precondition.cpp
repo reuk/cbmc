@@ -201,6 +201,6 @@ void preconditiont::compute_rec(exprt &dest)
     s.get_original_name(dest);
   }
   else
-    Forall_operands(it, dest)
-      compute_rec(*it);
+    for(auto &it : dest.operands())
+      compute_rec(it);
 }

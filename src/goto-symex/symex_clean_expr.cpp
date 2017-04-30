@@ -68,8 +68,8 @@ void goto_symext::process_array_expr_rec(
     expr.swap(tmp);
   }
   else
-    Forall_operands(it, expr)
-      process_array_expr_rec(*it, it->type());
+    for(auto &it : expr.operands())
+      process_array_expr_rec(it, it.type());
 
   if(!base_type_eq(expr.type(), type, ns))
   {
@@ -139,8 +139,8 @@ void goto_symext::process_array_expr(exprt &expr)
     expr.swap(tmp);
   }
   else
-    Forall_operands(it, expr)
-      process_array_expr(*it);
+    for(auto &it : expr.operands())
+      process_array_expr(it);
 }
 
 /*******************************************************************\
@@ -176,8 +176,8 @@ void goto_symext::replace_array_equal(exprt &expr)
     }
   }
 
-  Forall_operands(it, expr)
-    replace_array_equal(*it);
+  for(auto &it : expr.operands())
+    replace_array_equal(it);
 }
 
 /*******************************************************************\

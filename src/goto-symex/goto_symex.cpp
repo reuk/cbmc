@@ -54,6 +54,6 @@ void goto_symext::replace_nondet(exprt &expr)
     expr.swap(new_expr);
   }
   else
-    Forall_operands(it, expr)
-      replace_nondet(*it);
+    for(auto &it : expr.operands())
+      replace_nondet(it);
 }

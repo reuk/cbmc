@@ -166,8 +166,8 @@ void postconditiont::weaken(exprt &dest)
   if(dest.id()==ID_and &&
      dest.type()==bool_typet()) // this distributes over "and"
   {
-    Forall_operands(it, dest)
-      weaken(*it);
+    for(auto &it : dest.operands())
+      weaken(it);
 
     return;
   }
@@ -270,8 +270,8 @@ bool postconditiont::is_used(
     return symbols.find(identifier)!=symbols.end();
   }
   else
-    forall_operands(it, expr)
-      if(is_used(*it, identifier))
+    for(const auto &it : expr.operands())
+      if(is_used(it, identifier))
         return true;
 
   return false;

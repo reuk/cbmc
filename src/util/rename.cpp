@@ -86,8 +86,8 @@ bool rename(exprt &expr, const irep_idt &old_name,
       // TODO
     }
     else
-      Forall_operands(it, expr)
-        if(!rename(*it, old_name, new_name))
+      for(auto &it : expr.operands())
+        if(!rename(it, old_name, new_name))
           result=false;
   }
 

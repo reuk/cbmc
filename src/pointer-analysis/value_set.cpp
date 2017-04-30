@@ -396,8 +396,8 @@ bool value_sett::eval_pointer_offset(
   }
   else
   {
-    Forall_operands(it, expr)
-      mod=eval_pointer_offset(*it, ns) || mod;
+    for(auto &it : expr.operands())
+      mod=eval_pointer_offset(it, ns) || mod;
   }
 
   return mod;
@@ -729,10 +729,10 @@ void value_sett::get_value_set_rec(
     else
     {
       // we get the points-to for all operands, even integers
-      forall_operands(it, expr)
+      for(const auto &it : expr.operands())
       {
         get_value_set_rec(
-          *it, pointer_expr_set, "", it->type(), ns);
+          it, pointer_expr_set, "", it.type(), ns);
       }
     }
 
@@ -763,10 +763,10 @@ void value_sett::get_value_set_rec(
     object_mapt pointer_expr_set;
 
     // we get the points-to for all operands, even integers
-    forall_operands(it, expr)
+    for(const auto &it : expr.operands())
     {
       get_value_set_rec(
-        *it, pointer_expr_set, "", it->type(), ns);
+        it, pointer_expr_set, "", it.type(), ns);
     }
 
     for(object_map_dt::const_iterator
@@ -822,8 +822,8 @@ void value_sett::get_value_set_rec(
   else if(expr.id()==ID_struct)
   {
     // a struct constructor, which may contain addresses
-    forall_operands(it, expr)
-      get_value_set_rec(*it, dest, suffix, original_type, ns);
+    for(const auto &it : expr.operands())
+      get_value_set_rec(it, dest, suffix, original_type, ns);
   }
   else if(expr.id()==ID_with)
   {
@@ -879,8 +879,8 @@ void value_sett::get_value_set_rec(
   else if(expr.id()==ID_array)
   {
     // an array constructur, possibly containing addresses
-    forall_operands(it, expr)
-      get_value_set_rec(*it, dest, suffix, original_type, ns);
+    for(const auto &it : expr.operands())
+      get_value_set_rec(it, dest, suffix, original_type, ns);
   }
   else if(expr.id()==ID_array_of)
   {
@@ -1329,9 +1329,9 @@ void value_sett::assign(
       else if(rhs.id()==ID_array ||
               rhs.id()==ID_constant)
       {
-        forall_operands(o_it, rhs)
+        for(const auto &o_it : rhs.operands())
         {
-          assign(lhs_index, *o_it, ns, is_simplified, add_to_sets);
+          assign(lhs_index, o_it, ns, is_simplified, add_to_sets);
           add_to_sets=true;
         }
       }
@@ -1702,8 +1702,8 @@ void value_sett::apply_code(
 
   if(statement==ID_block)
   {
-    forall_operands(it, code)
-      apply_code(to_code(*it), ns);
+    for(const auto &it : code.operands())
+      apply_code(to_code(it), ns);
   }
   else if(statement==ID_function_call)
   {
@@ -1844,8 +1844,8 @@ void value_sett::guard(
 {
   if(expr.id()==ID_and)
   {
-    forall_operands(it, expr)
-      guard(*it, ns);
+    for(const auto &it : expr.operands())
+      guard(it, ns);
   }
   else if(expr.id()==ID_equal)
   {

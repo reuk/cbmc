@@ -400,10 +400,10 @@ bool simplify_exprt::simplify_typecast(exprt &expr)
         {
           result.type()=expr.type();
 
-          Forall_operands(it, result)
+          for(auto &it : result.operands())
           {
-            it->make_typecast(expr.type());
-            simplify_typecast(*it); // recursive call
+            it.make_typecast(expr.type());
+            simplify_typecast(it); // recursive call
           }
 
           simplify_node(result); // possibly recursive call
@@ -970,8 +970,8 @@ bool simplify_exprt::simplify_if_recursive(
 
   bool result = true;
 
-  Forall_operands(it, expr)
-    result = simplify_if_recursive(*it, cond, truth) && result;
+  for(auto &it : expr.operands())
+    result = simplify_if_recursive(it, cond, truth) && result;
 
   return result;
 }
@@ -992,9 +992,9 @@ bool simplify_exprt::simplify_if_conj(
   exprt &expr,
   const exprt &cond)
 {
-  forall_operands(it, cond)
+  for(const auto &it : cond.operands())
   {
-    if(expr==*it)
+    if(expr==it)
     {
       expr=true_exprt();
       return false;
@@ -1003,8 +1003,8 @@ bool simplify_exprt::simplify_if_conj(
 
   bool result=true;
 
-  Forall_operands(it, expr)
-    result=simplify_if_conj(*it, cond) && result;
+  for(auto &it : expr.operands())
+    result=simplify_if_conj(it, cond) && result;
 
   return result;
 }
@@ -1025,9 +1025,9 @@ bool simplify_exprt::simplify_if_disj(
   exprt &expr,
   const exprt &cond)
 {
-  forall_operands(it, cond)
+  for(const auto &it : cond.operands())
   {
-    if(expr==*it)
+    if(expr==it)
     {
       expr=false_exprt();
       return false;
@@ -1036,8 +1036,8 @@ bool simplify_exprt::simplify_if_disj(
 
   bool result=true;
 
-  Forall_operands(it, expr)
-    result=simplify_if_disj(*it, cond) && result;
+  for(auto &it : expr.operands())
+    result=simplify_if_disj(it, cond) && result;
 
   return result;
 }
@@ -1337,11 +1337,11 @@ bool simplify_exprt::simplify_if(if_exprt &expr)
 
     exprt::operandst::const_iterator f_it=
       falsevalue_copy.operands().begin();
-    Forall_operands(it, expr)
+    for(auto &it : expr.operands())
     {
-      if_exprt if_expr(cond_copy, *it, *f_it);
-      it->swap(if_expr);
-      simplify_if(to_if_expr(*it));
+      if_exprt if_expr(cond_copy, it, *f_it);
+      it.swap(if_expr);
+      simplify_if(to_if_expr(it));
       ++f_it;
     }
 
@@ -1581,10 +1581,10 @@ bool simplify_exprt::simplify_object(exprt &expr)
     if(expr.type().id()==ID_pointer)
     {
       // kill integers from sum
-      Forall_operands(it, expr)
-        if(ns.follow(it->type()).id()==ID_pointer)
+      for(auto &it : expr.operands())
+        if(ns.follow(it.type()).id()==ID_pointer)
         {
-          exprt tmp=*it;
+          exprt tmp=it;
           expr.swap(tmp);
           simplify_object(expr);
           return false;
@@ -1838,9 +1838,9 @@ std::string simplify_exprt::expr2bits(
   else if(expr.id()==ID_struct)
   {
     std::string result;
-    forall_operands(it, expr)
+    for(const auto &it : expr.operands())
     {
-      std::string tmp=expr2bits(*it, little_endian);
+      std::string tmp=expr2bits(it, little_endian);
       if(tmp.empty())
         return tmp; // failed
       result+=tmp;
@@ -1850,9 +1850,9 @@ std::string simplify_exprt::expr2bits(
   else if(expr.id()==ID_array)
   {
     std::string result;
-    forall_operands(it, expr)
+    for(const auto &it : expr.operands())
     {
-      std::string tmp=expr2bits(*it, little_endian);
+      std::string tmp=expr2bits(it, little_endian);
       if(tmp.empty())
         return tmp; // failed
       result+=tmp;
@@ -2368,7 +2368,7 @@ bool simplify_exprt::simplify_byte_update(byte_update_exprt &expr)
     exprt result=root;
 
     mp_integer m_offset_bits=0, val_offset=0;
-    Forall_operands(it, result)
+    for(auto &it : result.operands())
     {
       if(offset_int*8+val_size<=m_offset_bits)
         break;
@@ -2387,13 +2387,13 @@ bool simplify_exprt::simplify_byte_update(byte_update_exprt &expr)
           array_typet(unsignedbv_typet(8),
                       from_integer(bytes_req, offset.type())));
 
-        *it=byte_update_exprt(
+        it=byte_update_exprt(
           expr.id(),
-          *it,
+          it,
           from_integer(offset_int+val_offset-m_offset_bits/8, offset.type()),
           new_val);
 
-        simplify_rec(*it);
+        simplify_rec(it);
 
         val_offset+=bytes_req;
       }
@@ -2437,8 +2437,8 @@ bool simplify_exprt::simplify_node_preorder(exprt &expr)
   {
     if(expr.has_operands())
     {
-      Forall_operands(it, expr)
-        if(!simplify_rec(*it)) // recursive call
+      for(auto &it : expr.operands())
+        if(!simplify_rec(it)) // recursive call
           result=false;
     }
   }

@@ -235,8 +235,8 @@ void _rw_set_loct::read_write_rec(
   }
   else
   {
-    forall_operands(it, expr)
-      read_write_rec(*it, r, w, suffix, guard);
+    for(const auto &it : expr.operands())
+      read_write_rec(it, r, w, suffix, guard);
   }
 }
 

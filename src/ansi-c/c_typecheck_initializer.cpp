@@ -103,8 +103,8 @@ exprt c_typecheck_baset::do_initializer_rec(
     // adjust char type
     tmp.type().subtype()=full_type.subtype();
 
-    Forall_operands(it, tmp)
-      it->type()=full_type.subtype();
+    for(auto &it : tmp.operands())
+      it.type()=full_type.subtype();
 
     if(full_type.id()==ID_array &&
        to_array_type(full_type).is_complete())
@@ -727,9 +727,9 @@ designatort c_typecheck_baset::make_designator(
   typet type=src_type;
   designatort designator;
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
-    const exprt &d_op=*it;
+    const exprt &d_op=it;
     designatort::entryt entry;
     entry.type=type;
     const typet &full_type=follow(entry.type);
@@ -947,10 +947,10 @@ exprt c_typecheck_baset::do_initializer_list(
 
   designator_enter(type, current_designator);
 
-  forall_operands(it, value)
+  for(const auto &it : value.operands())
   {
     do_designated_initializer(
-      result, current_designator, *it, force_constant);
+      result, current_designator, it, force_constant);
 
     // increase designator -- might go up
     increment_designator(current_designator);

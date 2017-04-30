@@ -211,10 +211,10 @@ bool prop_conv_solvert::get_bool(const exprt &expr, tvt &value) const
     {
       value=tvt(expr.id()==ID_and);
 
-      forall_operands(it, expr)
+      for(const auto &it : expr.operands())
       {
         tvt tmp;
-        if(get_bool(*it, tmp))
+        if(get_bool(it, tmp))
           return true;
 
         if(expr.id()==ID_and)
@@ -367,8 +367,8 @@ literalt prop_conv_solvert::convert_bool(const exprt &expr)
     op_bv.resize(op.size());
 
     unsigned i=0;
-    forall_operands(it, expr)
-      op_bv[i++]=convert(*it);
+    for(const auto &it : expr.operands())
+      op_bv[i++]=convert(it);
 
     // add constraints
 
@@ -521,8 +521,8 @@ void prop_conv_solvert::set_to(const exprt &expr, bool value)
 
   bool boolean=true;
 
-  forall_operands(it, expr)
-    if(it->type().id()!=ID_bool)
+  for(const auto &it : expr.operands())
+    if(it.type().id()!=ID_bool)
     {
       boolean=false;
       break;
@@ -546,8 +546,8 @@ void prop_conv_solvert::set_to(const exprt &expr, bool value)
 
         if(expr.id()==ID_and)
         {
-          forall_operands(it, expr)
-            set_to_true(*it);
+          for(const auto &it : expr.operands())
+            set_to_true(it);
 
           return;
         }
@@ -561,8 +561,8 @@ void prop_conv_solvert::set_to(const exprt &expr, bool value)
             bvt bv;
             bv.reserve(expr.operands().size());
 
-            forall_operands(it, expr)
-              bv.push_back(convert(*it));
+            for(const auto &it : expr.operands())
+              bv.push_back(convert(it));
 
             prop.lcnf(bv);
             return;
@@ -596,8 +596,8 @@ void prop_conv_solvert::set_to(const exprt &expr, bool value)
         }
         else if(expr.id()==ID_or) // !(a || b)  ==  (!a && !b)
         {
-          forall_operands(it, expr)
-            set_to_false(*it);
+          for(const auto &it : expr.operands())
+            set_to_false(it);
           return;
         }
       }
@@ -710,10 +710,10 @@ exprt prop_conv_solvert::get(const exprt &expr) const
 
   exprt tmp=expr;
 
-  Forall_operands(it, tmp)
+  for(auto &it : tmp.operands())
   {
-    exprt tmp_op=get(*it);
-    it->swap(tmp_op);
+    exprt tmp_op=get(it);
+    it.swap(tmp_op);
   }
 
   return tmp;

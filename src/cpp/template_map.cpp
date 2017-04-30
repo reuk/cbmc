@@ -102,8 +102,8 @@ void template_mapt::apply(exprt &expr) const
     }
   }
 
-  Forall_operands(it, expr)
-    apply(*it);
+  for(auto &it : expr.operands())
+    apply(it);
 }
 
 /*******************************************************************\

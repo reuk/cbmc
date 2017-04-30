@@ -50,8 +50,8 @@ std::string as_vcd_binary(
   {
     std::string result;
 
-    forall_operands(it, expr)
-      result+=as_vcd_binary(*it, ns);
+    for(const auto &it : expr.operands())
+      result+=as_vcd_binary(it, ns);
 
     return result;
   }
@@ -59,8 +59,8 @@ std::string as_vcd_binary(
   {
     std::string result;
 
-    forall_operands(it, expr)
-      result+=as_vcd_binary(*it, ns);
+    for(const auto &it : expr.operands())
+      result+=as_vcd_binary(it, ns);
 
     return result;
   }

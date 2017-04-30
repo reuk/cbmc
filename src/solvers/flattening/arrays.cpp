@@ -127,7 +127,8 @@ void arrayst::collect_indices(const exprt &expr)
 {
   if(expr.id()!=ID_index)
   {
-    forall_operands(op, expr) collect_indices(*op);
+    for(const auto &op : expr.operands())
+      collect_indices(op);
   }
   else
   {

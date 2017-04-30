@@ -1016,8 +1016,8 @@ Purpose:
 
 void dump_ct::cleanup_expr(exprt &expr)
 {
-  Forall_operands(it, expr)
-    cleanup_expr(*it);
+  for(auto &it : expr.operands())
+    cleanup_expr(it);
 
   cleanup_type(expr.type());
 

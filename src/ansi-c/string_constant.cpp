@@ -145,10 +145,10 @@ bool string_constantt::from_array_expr(const array_exprt &src)
 
   std::string value;
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
     mp_integer int_value=0;
-    if(to_integer(*it, int_value))
+    if(to_integer(it, int_value))
       return true;
     unsigned unsigned_value=integer2unsigned(int_value);
     value+=static_cast<char>(unsigned_value);

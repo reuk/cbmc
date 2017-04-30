@@ -91,9 +91,9 @@ void overflow_instrumentert::overflow_expr(
   const exprt &expr,
   expr_sett &cases)
 {
-  forall_operands(it, expr)
+  for(const auto &it : expr.operands())
   {
-    overflow_expr(*it, cases);
+    overflow_expr(it, cases);
   }
 
   const typet &type=ns.follow(expr.type());

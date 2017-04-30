@@ -29,9 +29,9 @@ static bool insert_at_label(
   const irep_idt &label,
   code_blockt &dest)
 {
-  Forall_operands(it, dest)
+  for(auto &it : dest.operands())
   {
-    codet &c=to_code(*it);
+    codet &c=to_code(it);
 
     if(c.get_statement()!=ID_label)
       continue;

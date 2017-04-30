@@ -72,8 +72,8 @@ bool remove_instanceoft::contains_instanceof(
 {
   if(expr.id()==ID_java_instanceof)
     return true;
-  forall_operands(it, expr)
-    if(contains_instanceof(*it))
+  for(const auto &it : expr.operands())
+    if(contains_instanceof(it))
       return true;
   return false;
 }
@@ -159,8 +159,8 @@ void remove_instanceoft::lower_instanceof(
   }
   else
   {
-    Forall_operands(it, expr)
-      lower_instanceof(*it, goto_program, this_inst, inst_switch);
+    for(auto &it : expr.operands())
+      lower_instanceof(it, goto_program, this_inst, inst_switch);
   }
 }
 

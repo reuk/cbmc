@@ -168,8 +168,8 @@ bool sort_and_join(exprt &expr)
 
   // check operand types
 
-  forall_operands(it, expr)
-    if(!sort_and_join(saj_entry, it->type().id()))
+  for(const auto &it : expr.operands())
+    if(!sort_and_join(saj_entry, it.type().id()))
       return true;
 
   // join expressions
@@ -177,19 +177,19 @@ bool sort_and_join(exprt &expr)
   exprt::operandst new_ops;
   new_ops.reserve(expr.operands().size());
 
-  forall_operands(it, expr)
+  for(const auto &it : expr.operands())
   {
-    if(it->id()==expr.id())
+    if(it.id()==expr.id())
     {
-      new_ops.reserve(new_ops.capacity()+it->operands().size()-1);
+      new_ops.reserve(new_ops.capacity()+it.operands().size()-1);
 
-      forall_operands(it2, *it)
-        new_ops.push_back(*it2);
+      for(const auto &it2 : it.operands())
+        new_ops.push_back(it2);
 
       result=false;
     }
     else
-      new_ops.push_back(*it);
+      new_ops.push_back(it);
   }
 
   // sort it

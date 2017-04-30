@@ -50,25 +50,25 @@ bvt boolbvt::convert_cond(const exprt &expr)
     Forall_literals(it, bv)
       *it=prop.new_variable();
 
-    forall_operands(it, expr)
+    for(const auto &it : expr.operands())
     {
       if(condition)
       {
-        cond_literal=convert(*it);
+        cond_literal=convert(it);
         cond_literal=prop.land(!previous_cond, cond_literal);
 
         previous_cond=prop.lor(previous_cond, cond_literal);
       }
       else
       {
-        const bvt &op=convert_bv(*it);
+        const bvt &op=convert_bv(it);
 
         if(bv.size()!=op.size())
         {
           std::cerr << "result size: " << bv.size()
                     << std::endl
                     << "operand: " << op.size() << std::endl
-                    << it->pretty()
+                    << it.pretty()
                     << std::endl;
 
           throw "size of value operand does not match";

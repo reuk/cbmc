@@ -157,9 +157,9 @@ void cone_of_influencet::gather_rvalues(const exprt &expr, expr_sett &rvals)
   }
   else
   {
-    forall_operands(it, expr)
+    for(const auto &it : expr.operands())
     {
-      gather_rvalues(*it, rvals);
+      gather_rvalues(it, rvals);
     }
   }
 }

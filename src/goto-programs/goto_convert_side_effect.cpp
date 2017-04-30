@@ -31,8 +31,8 @@ Function: goto_convertt::has_function_call
 
 bool goto_convertt::has_function_call(const exprt &expr)
 {
-  forall_operands(it, expr)
-    if(has_function_call(*it))
+  for(const auto &it : expr.operands())
+    if(has_function_call(it))
       return true;
 
   if(expr.id()==ID_side_effect &&
@@ -485,8 +485,8 @@ void goto_convertt::replace_new_object(
   if(dest.id()=="new_object")
     dest=object;
   else
-    Forall_operands(it, dest)
-      replace_new_object(object, *it);
+    for(auto &it : dest.operands())
+      replace_new_object(object, it);
 }
 
 /*******************************************************************\

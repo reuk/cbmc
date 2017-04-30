@@ -131,10 +131,10 @@ void constant_propagator_domaint::assign_rec(
   {
 	exprt new_expr;
 	mp_integer idx=0;
-    forall_operands(it, rhs)
+    for(const auto &it : rhs.operands())
 	{
-  	  new_expr=concatenate_array_id(lhs, idx, it->type());
-  	  assign(values, to_symbol_expr(new_expr), *it, ns);
+  	  new_expr=concatenate_array_id(lhs, idx, it.type());
+  	  assign(values, to_symbol_expr(new_expr), it, ns);
   	  idx = idx +1;
 	}
   }
@@ -283,8 +283,8 @@ bool constant_propagator_domaint::two_way_propagate_rec(
     {
       change = false;
 
-      forall_operands(it, expr)
-        if(two_way_propagate_rec(*it, ns))
+      for(const auto &it : expr.operands())
+        if(two_way_propagate_rec(it, ns))
           change = true;
     }
     while(change);
@@ -388,8 +388,8 @@ bool constant_propagator_domaint::valuest::is_constant(const exprt &expr) const
   if(expr.id()==ID_address_of)
     return is_constant_address_of(to_address_of_expr(expr).object());
 
-  forall_operands(it, expr)
-    if(!is_constant(*it))
+  for(const auto &it : expr.operands())
+    if(!is_constant(it))
       return false;
 
   return true;
@@ -658,11 +658,11 @@ void constant_propagator_ait::replace_array_symbol(exprt &expr)
 	expr = concatenate_array_id(expr.op0(),
 			  expr.op1(), expr.type());
 
-  Forall_operands(it, expr)
+  for(auto &it : expr.operands())
   {
-	if (it->id()==ID_equal)
-	  replace_array_symbol(it->op0());
-	else if (it->id()==ID_index)
+	if (it.id()==ID_equal)
+	  replace_array_symbol(it.op0());
+	else if (it.id()==ID_index)
 	  replace_array_symbol(expr.op0());
   }
 
@@ -750,6 +750,6 @@ void constant_propagator_ait::replace_types_rec(
 {
   replace_const(expr.type());
 
-  Forall_operands(it, expr)
-    replace_types_rec(replace_const, *it);
+  for(auto &it : expr.operands())
+    replace_types_rec(replace_const, it);
 }

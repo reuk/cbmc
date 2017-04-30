@@ -728,9 +728,9 @@ const source_locationt &exprt::find_source_location() const
   if(l.is_not_nil())
     return l;
 
-  forall_operands(it, (*this))
+  for(const auto &it : (*this).operands())
   {
-    const source_locationt &l=it->find_source_location();
+    const source_locationt &l=it.find_source_location();
     if(l.is_not_nil())
       return l;
   }
@@ -763,8 +763,8 @@ void exprt::visit(expr_visitort &visitor)
 
     visitor(expr);
 
-    Forall_operands(it, expr)
-      stack.push(&(*it));
+    for(auto &it : expr.operands())
+      stack.push(&it);
   }
 }
 
@@ -793,7 +793,7 @@ void exprt::visit(const_expr_visitort &visitor) const
 
     visitor(expr);
 
-    forall_operands(it, expr)
-      stack.push(&(*it));
+    for(const auto &it : expr.operands())
+      stack.push(&it);
   }
 }

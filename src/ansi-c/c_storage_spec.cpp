@@ -52,8 +52,8 @@ void c_storage_spect::read(const typet &type)
   {
     const exprt &as_expr=
       static_cast<const exprt &>(static_cast<const irept &>(type));
-    forall_operands(it, as_expr)
-      if(it->id()==ID_thread)
+    for(const auto &it : as_expr.operands())
+      if(it.id()==ID_thread)
         is_thread_local=true;
   }
   else if(type.id()==ID_alias &&

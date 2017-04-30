@@ -63,8 +63,8 @@ bool replace_symbol_extt::replace(exprt &dest) const
     }
   }
 
-  Forall_operands(it, dest)
-    if(!replace(*it))
+  for(auto &it : dest.operands())
+    if(!replace(it))
       result=false;
 
   const irept &c_sizeof_type=dest.find(ID_C_c_sizeof_type);

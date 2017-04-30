@@ -364,8 +364,8 @@ static void gather_virtual_callsites(
      to_code_function_call(c).function().id()==ID_virtual_function)
     result.push_back(&to_code_function_call(c));
   else
-    forall_operands(it, e)
-      gather_virtual_callsites(*it, result);
+    for(const auto &it : e.operands())
+      gather_virtual_callsites(it, result);
 }
 
 /*******************************************************************\
@@ -401,8 +401,8 @@ static void gather_needed_globals(
     }
   }
   else
-    forall_operands(opit, e)
-      gather_needed_globals(*opit, symbol_table, needed);
+    for(const auto &opit : e.operands())
+      gather_needed_globals(opit, symbol_table, needed);
 }
 
 /*******************************************************************\

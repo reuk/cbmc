@@ -448,31 +448,31 @@ bool simplify_exprt::simplify_plus(exprt &expr)
 
     // count the constants
     size_t count=0;
-    forall_operands(it, expr)
-      if(is_number(it->type()) && it->is_constant())
+    for(const auto &it : expr.operands())
+      if(is_number(it.type()) && it.is_constant())
         count++;
 
     // merge constants?
     if(count>=2)
     {
-      exprt::operandst::iterator const_sum;
+      exprt::operandst::value_type *const_sum=nullptr;
       bool const_sum_set=false;
 
-      Forall_operands(it, expr)
+      for(auto &it : expr.operands())
       {
-        if(is_number(it->type()) && it->is_constant())
+        if(is_number(it.type()) && it.is_constant())
         {
           if(!const_sum_set)
           {
-            const_sum=it;
+            const_sum=&it;
             const_sum_set=true;
           }
           else
           {
-            if(!const_sum->sum(*it))
+            if(!const_sum->sum(it))
             {
-              *it=from_integer(0, it->type());
-              assert(it->is_not_nil());
+              it=from_integer(0, it.type());
+              assert(it.is_not_nil());
               result=false;
             }
           }
@@ -638,14 +638,14 @@ bool simplify_exprt::simplify_bitwise(exprt &expr)
   {
     bool all_bool=true;
 
-    forall_operands(it, expr)
+    for(const auto &it : expr.operands())
     {
-      if(it->id()==ID_typecast &&
-         it->operands().size()==1 &&
-         ns.follow(it->op0().type()).id()==ID_bool)
+      if(it.id()==ID_typecast &&
+         it.operands().size()==1 &&
+         ns.follow(it.op0().type()).id()==ID_bool)
       {
       }
-      else if(it->is_zero() || it->is_one())
+      else if(it.is_zero() || it.is_one())
       {
       }
       else
@@ -666,18 +666,18 @@ bool simplify_exprt::simplify_bitwise(exprt &expr)
       else
         assert(false);
 
-      Forall_operands(it, new_expr)
+      for(auto &it : new_expr.operands())
       {
-        if(it->id()==ID_typecast)
+        if(it.id()==ID_typecast)
         {
           exprt tmp;
-          tmp=it->op0();
-          it->swap(tmp);
+          tmp=it.op0();
+          it.swap(tmp);
         }
-        else if(it->is_zero())
-          *it=false_exprt();
-        else if(it->is_one())
-          *it=true_exprt();
+        else if(it.is_zero())
+          it=false_exprt();
+        else if(it.is_one())
+          it=true_exprt();
       }
 
       new_expr.type()=bool_typet();
@@ -863,9 +863,9 @@ bool simplify_exprt::simplify_concatenation(exprt &expr)
   if(is_bitvector_type(expr.type()))
   {
     // first, turn bool into bvec[1]
-    Forall_operands(it, expr)
+    for(auto &it : expr.operands())
     {
-      exprt &op=*it;
+      exprt &op=it;
       if(op.is_true() || op.is_false())
       {
         bool value=op.is_true();
@@ -1577,8 +1577,8 @@ bool simplify_exprt::eliminate_common_addends(
   {
     bool result=true;
 
-    Forall_operands(it, op0)
-      if(!eliminate_common_addends(*it, op1))
+    for(auto &it : op0.operands())
+      if(!eliminate_common_addends(it, op1))
         result=false;
 
     return result;
@@ -1587,8 +1587,8 @@ bool simplify_exprt::eliminate_common_addends(
   {
     bool result=true;
 
-    Forall_operands(it, op1)
-      if(!eliminate_common_addends(op0, *it))
+    for(auto &it : op1.operands())
+      if(!eliminate_common_addends(op0, it))
         result=false;
 
     return result;
@@ -1856,16 +1856,16 @@ bool simplify_exprt::simplify_inequality_constant(exprt &expr)
       mp_integer constant=0;
       bool changed=false;
 
-      Forall_operands(it, expr.op0())
+      for(auto &it : expr.op0().operands())
       {
-        if(it->is_constant())
+        if(it.is_constant())
         {
           mp_integer i;
-          if(!to_integer(*it, i))
+          if(!to_integer(it, i))
           {
             constant+=i;
-            *it=from_integer(0, it->type());
-            assert(it->is_not_nil());
+            it=from_integer(0, it.type());
+            assert(it.is_not_nil());
             changed=true;
           }
         }

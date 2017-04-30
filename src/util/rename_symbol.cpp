@@ -100,8 +100,8 @@ bool rename_symbolt::rename(exprt &dest) const
     }
   }
 
-  Forall_operands(it, dest)
-    if(!rename(*it))
+  for(auto &it : dest.operands())
+    if(!rename(it))
       result=false;
 
   const irept &c_sizeof_type=dest.find(ID_C_c_sizeof_type);
@@ -146,8 +146,8 @@ bool rename_symbolt::have_to_rename(const exprt &dest) const
   if(dest.id()==ID_symbol)
     return expr_map.find(dest.get(ID_identifier))!=expr_map.end();
 
-  forall_operands(it, dest)
-    if(have_to_rename(*it))
+  for(const auto &it : dest.operands())
+    if(have_to_rename(it))
       return true;
 
   const irept &c_sizeof_type=dest.find(ID_C_c_sizeof_type);

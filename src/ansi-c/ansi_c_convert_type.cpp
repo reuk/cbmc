@@ -209,18 +209,18 @@ void ansi_c_convert_typet::read_rec(const typet &type)
     const exprt &as_expr=
       static_cast<const exprt &>(static_cast<const irept &>(type));
 
-    forall_operands(it, as_expr)
+    for(const auto &it : as_expr.operands())
     {
       // these are symbols
-      const irep_idt &id=it->get(ID_identifier);
+      const irep_idt &id=it.get(ID_identifier);
 
       if(id==ID_thread)
         c_storage_spec.is_thread_local=true;
       else if(id=="align")
       {
-        assert(it->operands().size()==1);
+        assert(it.operands().size()==1);
         aligned=true;
-        alignment=it->op0();
+        alignment=it.op0();
       }
     }
   }

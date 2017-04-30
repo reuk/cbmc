@@ -99,9 +99,9 @@ goto_programt::targett scratch_programt::assume(const exprt &guard)
 
 static void fix_types(exprt &expr)
 {
-  Forall_operands(it, expr)
+  for(auto &it : expr.operands())
   {
-    fix_types(*it);
+    fix_types(it);
   }
 
   if(expr.id()==ID_equal ||

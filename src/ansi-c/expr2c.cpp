@@ -1123,8 +1123,8 @@ std::string expr2ct::convert_update(
 
   const exprt &designator=src.op1();
 
-  forall_operands(it, designator)
-    dest+=convert(*it);
+  for(const auto &it : designator.operands())
+    dest+=convert(it);
 
   dest+=", ";
 
@@ -1162,10 +1162,10 @@ std::string expr2ct::convert_cond(
 
   std::string dest="cond {\n";
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
     unsigned p;
-    std::string op=convert(*it, p);
+    std::string op=convert(it, p);
 
     if(condition)
       dest+="  ";
@@ -1209,7 +1209,7 @@ std::string expr2ct::convert_binary(
   std::string dest;
   bool first=true;
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
     if(first)
       first=false;
@@ -1222,7 +1222,7 @@ std::string expr2ct::convert_binary(
     }
 
     unsigned p;
-    std::string op=convert(*it, p);
+    std::string op=convert(it, p);
 
     // In pointer arithmetic, x+(y-z) is unfortunately
     // not the same as (x+y)-z, even though + and -
@@ -1234,7 +1234,7 @@ std::string expr2ct::convert_binary(
     bool use_parentheses=
       precedence>p ||
       (precedence==p && full_parentheses) ||
-      (precedence==p && src.id()!=it->id());
+      (precedence==p && src.id()!=it.id());
 
     if(use_parentheses)
       dest+='(';
@@ -1479,12 +1479,12 @@ std::string expr2ct::convert_function(
   std::string dest=name;
   dest+='(';
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
     unsigned p;
-    std::string op=convert(*it, p);
+    std::string op=convert(it, p);
 
-    if(it!=src.operands().begin())
+    if(&it!=&src.operands().front())
       dest+=", ";
 
     dest+=op;
@@ -1578,12 +1578,12 @@ std::string expr2ct::convert_complex(
   std::string dest=name;
   dest+='(';
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
     unsigned p;
-    std::string op=convert(*it, p);
+    std::string op=convert(it, p);
 
-    if(it!=src.operands().begin())
+    if(&it!=&src.operands().front())
       dest+=", ";
 
     dest+=op;
@@ -2667,7 +2667,7 @@ std::string expr2ct::convert_vector(
   bool newline=false;
   size_t last_size=0;
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
     if(first)
       first=false;
@@ -2681,7 +2681,7 @@ std::string expr2ct::convert_vector(
         dest+=' ';
     }
 
-    std::string tmp=convert(*it);
+    std::string tmp=convert(it);
 
     if(last_size+40<dest.size())
     {
@@ -2757,8 +2757,8 @@ std::string expr2ct::convert_array(
 
   bool all_constant=true;
 
-  forall_operands(it, src)
-    if(!it->is_constant())
+  for(const auto &it : src.operands())
+    if(!it.is_constant())
       all_constant=false;
 
   if(src.get_bool(ID_C_string_constant) &&
@@ -2776,15 +2776,15 @@ std::string expr2ct::convert_array(
 
     bool last_was_hex=false;
 
-    forall_operands(it, src)
+    for(const auto &it : src.operands())
     {
       // these have a trailing zero
-      if(it==--src.operands().end())
+      if(&it==&src.operands().back())
         break;
 
-      assert(it->is_constant());
+      assert(it.is_constant());
       mp_integer i;
-      to_integer(*it, i);
+      to_integer(it, i);
       unsigned int ch=integer2unsigned(i);
 
       if(last_was_hex)
@@ -2828,14 +2828,14 @@ std::string expr2ct::convert_array(
 
   dest="{ ";
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
     std::string tmp;
 
-    if(it->is_not_nil())
-      tmp=convert(*it);
+    if(it.is_not_nil())
+      tmp=convert(it);
 
-    if((it+1)!=src.operands().end())
+    if(&it!=&src.operands().back())
     {
       tmp+=", ";
       if(tmp.size()>40)
@@ -2871,7 +2871,9 @@ std::string expr2ct::convert_array_list(
   if((src.operands().size()%2)!=0)
     return convert_norep(src, precedence);
 
-  forall_operands(it, src)
+  for(auto it=src.operands().cbegin(), end=src.operands().cend();
+      it!=end;
+      ++it)
   {
     std::string tmp1=convert(*it);
 
@@ -2916,11 +2918,11 @@ std::string expr2ct::convert_initializer_list(
   if(src.id()!=ID_compound_literal)
     dest+="{ ";
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
-    std::string tmp=convert(*it);
+    std::string tmp=convert(it);
 
-    if((it+1)!=src.operands().end())
+    if(&it!=&src.operands().back())
     {
       tmp+=", ";
       if(tmp.size()>40)
@@ -3078,10 +3080,10 @@ std::string expr2ct::convert_overflow(
     dest+=convert(src.op0().type());
   }
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
     unsigned p;
-    std::string arg_str=convert(*it, p);
+    std::string arg_str=convert(it, p);
 
     dest+=", ";
     // TODO: ggf. Klammern je nach p
@@ -3143,44 +3145,44 @@ std::string expr2ct::convert_code_asm(
 
         // outputs
         dest+=" : ";
-        forall_operands(it, src.op1())
+        for(const auto &it : src.op1().operands())
         {
-          if(it->operands().size()==2)
+          if(it.operands().size()==2)
           {
-            if(it!=src.op1().operands().begin())
+            if(&it!=&src.op1().operands().front())
               dest+=", ";
-            dest+=convert(it->op0());
+            dest+=convert(it.op0());
             dest+="(";
-            dest+=convert(it->op1());
+            dest+=convert(it.op1());
             dest+=")";
           }
         }
 
         // inputs
         dest+=" : ";
-        forall_operands(it, src.op2())
+        for(const auto &it : src.op2().operands())
         {
-          if(it->operands().size()==2)
+          if(it.operands().size()==2)
           {
-            if(it!=src.op2().operands().begin())
+            if(&it!=&src.op2().operands().front())
               dest+=", ";
-            dest+=convert(it->op0());
+            dest+=convert(it.op0());
             dest+="(";
-            dest+=convert(it->op1());
+            dest+=convert(it.op1());
             dest+=")";
           }
         }
 
         // clobbered registers
         dest+=" : ";
-        forall_operands(it, src.op3())
+        for(const auto &it : src.op3().operands())
         {
-          if(it!=src.op3().operands().begin())
+          if(&it!=&src.op3().operands().front())
             dest+=", ";
-          if(it->id()==ID_gcc_asm_clobbered_register)
-            dest+=convert(it->op0());
+          if(it.id()==ID_gcc_asm_clobbered_register)
+            dest+=convert(it.op0());
           else
-            dest+=convert(*it);
+            dest+=convert(it);
         }
       }
       dest+=");";
@@ -3439,11 +3441,11 @@ std::string expr2ct::convert_code_switch(
   dest+=indent_str(indent);
   dest+='{';
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
-    if(it==src.operands().begin())
+    if(&it==&src.operands().front())
       continue;
-    const exprt &op=*it;
+    const exprt &op=it;
 
     if(op.get(ID_statement)!=ID_block)
     {
@@ -3452,8 +3454,8 @@ std::string expr2ct::convert_code_switch(
     }
     else
     {
-      forall_operands(it2, op)
-        dest+=convert_code(to_code(*it2), indent+2);
+      for(const auto &it2 : op.operands())
+        dest+=convert_code(to_code(it2), indent+2);
     }
   }
 
@@ -3634,12 +3636,12 @@ std::string expr2ct::convert_code_block(
   std::string dest=indent_str(indent);
   dest+="{\n";
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
-    if(it->get(ID_statement)==ID_label)
-      dest+=convert_code(to_code(*it), indent);
+    if(it.get(ID_statement)==ID_label)
+      dest+=convert_code(to_code(it), indent);
     else
-      dest+=convert_code(to_code(*it), indent+2);
+      dest+=convert_code(to_code(it), indent+2);
 
     dest+="\n";
   }
@@ -3669,9 +3671,9 @@ std::string expr2ct::convert_code_decl_block(
   assert(indent>=0);
   std::string dest;
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
-    dest+=convert_code(to_code(*it), indent);
+    dest+=convert_code(to_code(it), indent);
     dest+="\n";
   }
 
@@ -4044,12 +4046,12 @@ std::string expr2ct::convert_code_printf(
 {
   std::string dest=indent_str(indent)+"printf(";
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
     unsigned p;
-    std::string arg_str=convert(*it, p);
+    std::string arg_str=convert(it, p);
 
-    if(it!=src.operands().begin())
+    if(&it!=&src.operands().front())
       dest+=", ";
     // TODO: ggf. Klammern je nach p
     dest+=arg_str;
@@ -4120,12 +4122,12 @@ std::string expr2ct::convert_code_input(
 {
   std::string dest=indent_str(indent)+"INPUT(";
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
     unsigned p;
-    std::string arg_str=convert(*it, p);
+    std::string arg_str=convert(it, p);
 
-    if(it!=src.operands().begin())
+    if(&it!=&src.operands().front())
       dest+=", ";
     // TODO: ggf. Klammern je nach p
     dest+=arg_str;
@@ -4154,12 +4156,12 @@ std::string expr2ct::convert_code_output(
 {
   std::string dest=indent_str(indent)+"OUTPUT(";
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
     unsigned p;
-    std::string arg_str=convert(*it, p);
+    std::string arg_str=convert(it, p);
 
-    if(it!=src.operands().begin())
+    if(&it!=&src.operands().front())
       dest+=", ";
     dest+=arg_str;
   }
@@ -4187,12 +4189,12 @@ std::string expr2ct::convert_code_array_set(
 {
   std::string dest=indent_str(indent)+"ARRAY_SET(";
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
     unsigned p;
-    std::string arg_str=convert(*it, p);
+    std::string arg_str=convert(it, p);
 
-    if(it!=src.operands().begin())
+    if(&it!=&src.operands().front())
       dest+=", ";
     // TODO: ggf. Klammern je nach p
     dest+=arg_str;
@@ -4221,12 +4223,12 @@ std::string expr2ct::convert_code_array_copy(
 {
   std::string dest=indent_str(indent)+"ARRAY_COPY(";
 
-  forall_operands(it, src)
+  for(const auto &it : src.operands())
   {
     unsigned p;
-    std::string arg_str=convert(*it, p);
+    std::string arg_str=convert(it, p);
 
-    if(it!=src.operands().begin())
+    if(&it!=&src.operands().front())
       dest+=", ";
     // TODO: ggf. Klammern je nach p
     dest+=arg_str;

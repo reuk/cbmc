@@ -2361,17 +2361,17 @@ void smt1_convt::convert_plus(const plus_exprt &expr)
       typet integer_type=signedbv_typet(boolbv_width(expr.type()));
       exprt integer_sum(ID_plus, integer_type);
 
-      forall_operands(it, expr)
+      for(const auto &it : expr.operands())
       {
-        if(it->type().id()==ID_pointer)
-          p=*it;
+        if(it.type().id()==ID_pointer)
+          p=it;
         else
-          integer_sum.copy_to_operands(*it);
+          integer_sum.copy_to_operands(it);
       }
 
-      Forall_operands(it, integer_sum)
-        if(it->type()!=integer_type)
-          it->make_typecast(integer_type);
+      for(auto &it : integer_sum.operands())
+        if(it.type()!=integer_type)
+          it.make_typecast(integer_type);
 
       plus_exprt pointer_arithmetic(p, integer_sum, expr.type());
       convert_plus(pointer_arithmetic); // recursive call
@@ -3172,8 +3172,8 @@ void smt1_convt::set_to(const exprt &expr, bool value)
 {
   if(expr.id()==ID_and && value)
   {
-    forall_operands(it, expr)
-      set_to(*it, true);
+    for(const auto &it : expr.operands())
+      set_to(it, true);
     return;
   }
 
@@ -3238,8 +3238,8 @@ void smt1_convt::find_symbols(const exprt &expr)
     quantified_symbols.erase(ident);
   }
   else
-    forall_operands(it, expr)
-      find_symbols(*it);
+    for(const auto &it : expr.operands())
+      find_symbols(it);
 
   if(expr.id()==ID_symbol ||
      expr.id()==ID_nondet_symbol)

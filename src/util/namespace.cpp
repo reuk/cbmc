@@ -211,8 +211,8 @@ void namespace_baset::follow_macros(exprt &expr) const
     return;
   }
 
-  Forall_operands(it, expr)
-    follow_macros(*it);
+  for(auto &it : expr.operands())
+    follow_macros(it);
 }
 
 /*******************************************************************\

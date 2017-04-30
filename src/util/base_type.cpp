@@ -118,8 +118,8 @@ void base_type(exprt &expr, const namespacet &ns)
 {
   base_type(expr.type(), ns);
 
-  Forall_operands(it, expr)
-    base_type(*it, ns);
+  for(auto &it : expr.operands())
+    base_type(it, ns);
 }
 
 /*******************************************************************\

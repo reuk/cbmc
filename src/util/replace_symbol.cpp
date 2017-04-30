@@ -101,8 +101,8 @@ bool replace_symbolt::replace(exprt &dest) const
     }
   }
 
-  Forall_operands(it, dest)
-    if(!replace(*it))
+  for(auto &it : dest.operands())
+    if(!replace(it))
       result=false;
 
   const irept &c_sizeof_type=dest.find(ID_C_c_sizeof_type);
@@ -144,8 +144,8 @@ bool replace_symbolt::have_to_replace(const exprt &dest) const
   if(dest.id()==ID_symbol)
     return expr_map.find(dest.get(ID_identifier))!=expr_map.end();
 
-  forall_operands(it, dest)
-    if(have_to_replace(*it))
+  for(const auto &it : dest.operands())
+    if(have_to_replace(it))
       return true;
 
   const irept &c_sizeof_type=dest.find(ID_C_c_sizeof_type);

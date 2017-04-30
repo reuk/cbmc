@@ -54,8 +54,8 @@ void dirtyt::find_dirty(const exprt &expr)
     return;
   }
 
-  forall_operands(it, expr)
-    find_dirty(*it);
+  for(const auto &it : expr.operands())
+    find_dirty(it);
 }
 
 /*******************************************************************\

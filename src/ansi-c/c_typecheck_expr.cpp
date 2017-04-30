@@ -309,12 +309,12 @@ void c_typecheck_baset::typecheck_expr_main(exprt &expr)
   {
     exprt &designator=static_cast<exprt &>(expr.add(ID_designator));
 
-    Forall_operands(it, designator)
+    for(auto &it : designator.operands())
     {
-      if(it->id()==ID_index)
+      if(it.id()==ID_index)
       {
-        assert(it->operands().size()==1);
-        typecheck_expr(it->op0()); // still needs typechecking
+        assert(it.operands().size()==1);
+        typecheck_expr(it.op0()); // still needs typechecking
       }
     }
   }
@@ -607,12 +607,12 @@ void c_typecheck_baset::typecheck_expr_builtin_offsetof(exprt &expr)
 
   exprt result=from_integer(0, size_type());
 
-  forall_operands(m_it, member)
+  for(const auto &m_it : member.operands())
   {
     if(type.id()==ID_symbol)
       type=follow(type);
 
-    if(m_it->id()==ID_member)
+    if(m_it.id()==ID_member)
     {
       if(type.id()!=ID_union && type.id()!=ID_struct)
       {
@@ -623,7 +623,7 @@ void c_typecheck_baset::typecheck_expr_builtin_offsetof(exprt &expr)
       }
 
       bool found=false;
-      irep_idt component_name=m_it->get(ID_component_name);
+      irep_idt component_name=m_it.get(ID_component_name);
 
       while(!found)
       {
@@ -716,9 +716,9 @@ void c_typecheck_baset::typecheck_expr_builtin_offsetof(exprt &expr)
         }
       }
     }
-    else if(m_it->id()==ID_index)
+    else if(m_it.id()==ID_index)
     {
-      assert(m_it->operands().size()==1);
+      assert(m_it.operands().size()==1);
 
       if(type.id()!=ID_array)
       {
@@ -727,7 +727,7 @@ void c_typecheck_baset::typecheck_expr_builtin_offsetof(exprt &expr)
         throw 0;
       }
 
-      exprt index=m_it->op0();
+      exprt index=m_it.op0();
 
       // still need to typecheck index
       typecheck_expr(index);
@@ -828,8 +828,8 @@ void c_typecheck_baset::typecheck_expr_operands(exprt &expr)
   }
   else
   {
-    Forall_operands(it, expr)
-      typecheck_expr(*it);
+    for(auto &it : expr.operands())
+      typecheck_expr(it);
   }
 }
 

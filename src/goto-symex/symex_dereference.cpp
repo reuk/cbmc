@@ -377,8 +377,8 @@ void goto_symext::dereference_rec(
   }
   else
   {
-    Forall_operands(it, expr)
-      dereference_rec(*it, state, guard, write);
+    for(auto &it : expr.operands())
+      dereference_rec(it, state, guard, write);
   }
 }
 

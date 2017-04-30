@@ -153,20 +153,20 @@ bool simplify_exprt::simplify_boolean(exprt &expr)
 
       std::unordered_set<exprt, irep_hash> expr_set;
 
-      forall_operands(it, expr)
-        if(it->id()==ID_not &&
-           it->operands().size()==1 &&
-           it->type().id()==ID_bool)
-          expr_set.insert(it->op0());
+      for(const auto &it : expr.operands())
+        if(it.id()==ID_not &&
+           it.operands().size()==1 &&
+           it.type().id()==ID_bool)
+          expr_set.insert(it.op0());
 
       // now search for a
 
       if(!expr_set.empty())
       {
-        forall_operands(it, expr)
+        for(const auto &it : expr.operands())
         {
-          if(it->id()!=ID_not &&
-             expr_set.find(*it)!=expr_set.end())
+          if(it.id()!=ID_not &&
+             expr_set.find(it)!=expr_set.end())
           {
             expr.make_bool(expr.id()==ID_or);
             return false;
@@ -249,10 +249,10 @@ bool simplify_exprt::simplify_not(exprt &expr)
     tmp.swap(op);
     expr.swap(tmp);
 
-    Forall_operands(it, expr)
+    for(auto &it : expr.operands())
     {
-      it->make_not();
-      simplify_node(*it);
+      it.make_not();
+      simplify_node(it);
     }
 
     expr.id(expr.id()==ID_and?ID_or:ID_and);

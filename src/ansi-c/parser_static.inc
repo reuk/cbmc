@@ -392,11 +392,11 @@ static void adjust_KnR_parameters(
 {
   // the below is probably better done in the type checker
 
-  Forall_operands(d_it, declarations)
+  for(auto &d_it : declarations.operands())
   {
-    assert(d_it->id()==ID_declaration);
+    assert(d_it.id()==ID_declaration);
     ansi_c_declarationt &declaration=
-      to_ansi_c_declaration(static_cast<exprt &>(*d_it));
+      to_ansi_c_declaration(static_cast<exprt &>(d_it));
 
     // Go over declarators
     ansi_c_declarationt::declaratorst &declarators=

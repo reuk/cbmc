@@ -646,11 +646,11 @@ void value_set_fit::get_value_set_rec(
       // find the pointer operand
       const exprt *ptr_operand=NULL;
 
-      forall_operands(it, expr)
-        if(it->type().id()==ID_pointer)
+      for(const auto &it : expr.operands())
+        if(it.type().id()==ID_pointer)
         {
           if(ptr_operand==NULL)
-            ptr_operand=&(*it);
+            ptr_operand=&it;
           else
             throw "more than one pointer operand in pointer arithmetic";
         }
@@ -753,8 +753,8 @@ void value_set_fit::get_value_set_rec(
           expr.id()==ID_array)
   {
     // an array constructur, possibly containing addresses
-    forall_operands(it, expr)
-      get_value_set_rec(*it, dest, suffix, original_type, ns, recursion_set);
+    for(const auto &it : expr.operands())
+      get_value_set_rec(it, dest, suffix, original_type, ns, recursion_set);
   }
   else if(expr.id()==ID_dynamic_object)
   {
@@ -1244,9 +1244,9 @@ void value_set_fit::assign(
       else if(rhs.id()==ID_array ||
               rhs.id()==ID_constant)
       {
-        forall_operands(o_it, rhs)
+        for(const auto &o_it : rhs.operands())
         {
-          assign(lhs_index, *o_it, ns);
+          assign(lhs_index, o_it, ns);
         }
       }
       else if(rhs.id()==ID_with)
@@ -1636,8 +1636,8 @@ void value_set_fit::apply_code(
 
   if(statement==ID_block)
   {
-    forall_operands(it, code)
-      apply_code(*it, ns);
+    for(const auto &it : code.operands())
+      apply_code(it, ns);
   }
   else if(statement==ID_function_call)
   {

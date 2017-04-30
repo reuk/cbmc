@@ -423,8 +423,8 @@ void objects_read(
   }
   else
   {
-    forall_operands(it, src)
-      objects_read(*it, dest);
+    for(const auto &it : src.operands())
+      objects_read(it, dest);
   }
 }
 

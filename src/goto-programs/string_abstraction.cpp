@@ -805,8 +805,8 @@ bool string_abstractiont::has_string_macros(const exprt &expr)
      expr.id()=="buffer_size")
     return true;
 
-  forall_operands(it, expr)
-    if(has_string_macros(*it))
+  for(const auto &it : expr.operands())
+    if(has_string_macros(it))
       return true;
 
   return false;
@@ -848,8 +848,8 @@ void string_abstractiont::replace_string_macros(
     expr.swap(tmp);
   }
   else
-    Forall_operands(it, expr)
-      replace_string_macros(*it, lhs, source_location);
+    for(auto &it : expr.operands())
+      replace_string_macros(it, lhs, source_location);
 }
 
 /*******************************************************************\

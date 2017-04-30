@@ -506,11 +506,11 @@ bool simplify_exprt::simplify_inequality_pointer_object(exprt &expr)
   assert(expr.operands().size()==2);
   assert(expr.id()==ID_equal || expr.id()==ID_notequal);
 
-  forall_operands(it, expr)
+  for(const auto &it : expr.operands())
   {
-    assert(it->id()==ID_pointer_object);
-    assert(it->operands().size()==1);
-    const exprt &op=it->op0();
+    assert(it.id()==ID_pointer_object);
+    assert(it.operands().size()==1);
+    const exprt &op=it.op0();
 
     if(op.id()==ID_address_of)
     {

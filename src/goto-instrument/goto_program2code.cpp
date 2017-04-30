@@ -526,13 +526,13 @@ void goto_program2codet::convert_assign_rec(
       to_array_type(ns.follow(assign.rhs().type()));
 
     unsigned i=0;
-    forall_operands(it, assign.rhs())
+    for(const auto &it : assign.rhs().operands())
     {
       index_exprt index(
           assign.lhs(),
           from_integer(i++, signedbv_typet(config.ansi_c.pointer_width)),
           type.subtype());
-      convert_assign_rec(code_assignt(index, *it), dest);
+      convert_assign_rec(code_assignt(index, it), dest);
     }
   }
   else
@@ -1810,8 +1810,8 @@ void goto_program2codet::cleanup_code(
       cleanup_expr(code.op1(), false);
     }
     else
-      Forall_operands(it, code)
-        cleanup_expr(*it, true);
+      for(auto &it : code.operands())
+        cleanup_expr(it, true);
 
     if(code.op0().type().id()==ID_array)
       cleanup_expr(to_array_type(code.op0().type()).size(), true);
@@ -1951,8 +1951,8 @@ void goto_program2codet::cleanup_code_block(
     else if(to_code(*it).get_statement()==ID_block)
     {
       bool has_decl=false;
-      forall_operands(it2, *it)
-        if(it2->id()==ID_code && to_code(*it2).get_statement()==ID_decl)
+      for(const auto &it2 : it->operands())
+        if(it2.id()==ID_code && to_code(it2).get_statement()==ID_decl)
         {
           has_decl=true;
           break;
@@ -2047,8 +2047,8 @@ static bool has_labels(const codet &code)
   if(code.get_statement()==ID_label)
     return true;
 
-  forall_operands(it, code)
-    if(it->id()==ID_code && has_labels(to_code(*it)))
+  for(const auto &it : code.operands())
+    if(it.id()==ID_code && has_labels(to_code(it)))
       return true;
 
   return false;
@@ -2217,20 +2217,20 @@ void goto_program2codet::cleanup_expr(exprt &expr, bool no_typecast)
   if(no_typecast &&
      (expr.id()==ID_address_of || expr.id()==ID_member))
   {
-    Forall_operands(it, expr)
-      cleanup_expr(*it, false);
+    for(auto &it : expr.operands())
+      cleanup_expr(it, false);
   }
   else if(!no_typecast &&
           (expr.id()==ID_union || expr.id()==ID_struct ||
            expr.id()==ID_array || expr.id()==ID_vector))
   {
-    Forall_operands(it, expr)
-      cleanup_expr(*it, true);
+    for(auto &it : expr.operands())
+      cleanup_expr(it, true);
   }
   else
   {
-    Forall_operands(it, expr)
-      cleanup_expr(*it, no_typecast);
+    for(auto &it : expr.operands())
+      cleanup_expr(it, no_typecast);
   }
 
   // work around transparent union argument

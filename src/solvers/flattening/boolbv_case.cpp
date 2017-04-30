@@ -49,9 +49,9 @@ bvt boolbvt::convert_case(const exprt &expr)
   literalt previous_compare=const_literal(false);
   literalt compare_literal=const_literal(false);
 
-  forall_operands(it, expr)
+  for(const auto &it : expr.operands())
   {
-    bvt op=convert_bv(*it);
+    bvt op=convert_bv(it);
 
     switch(what)
     {
@@ -66,7 +66,7 @@ bvt boolbvt::convert_case(const exprt &expr)
         std::cerr << "compare operand: " << compare_bv.size()
                   << std::endl
                   << "operand: " << op.size() << std::endl
-                  << it->pretty()
+                  << it.pretty()
                   << std::endl;
 
         throw "size of compare operand does not match";
@@ -86,7 +86,7 @@ bvt boolbvt::convert_case(const exprt &expr)
         std::cerr << "result size: " << bv.size()
                   << std::endl
                   << "operand: " << op.size() << std::endl
-                  << it->pretty()
+                  << it.pretty()
                   << std::endl;
 
         throw "size of value operand does not match";

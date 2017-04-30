@@ -443,14 +443,14 @@ void interval_domaint::assume_rec(
   else if(cond.id()==ID_and)
   {
     if(!negation)
-      forall_operands(it, cond)
-        assume_rec(*it, false);
+      for(const auto &it : cond.operands())
+        assume_rec(it, false);
   }
   else if(cond.id()==ID_or)
   {
     if(negation)
-      forall_operands(it, cond)
-        assume_rec(*it, true);
+      for(const auto &it : cond.operands())
+        assume_rec(it, true);
   }
 }
 

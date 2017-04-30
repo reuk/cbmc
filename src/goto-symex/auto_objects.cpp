@@ -141,6 +141,6 @@ void goto_symext::trigger_auto_object(
   }
 
   // recursive call
-  forall_operands(it, expr)
-    trigger_auto_object(*it, state);
+  for(const auto &it : expr.operands())
+    trigger_auto_object(it, state);
 }

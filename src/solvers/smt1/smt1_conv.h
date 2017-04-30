@@ -148,8 +148,8 @@ protected:
     exprt tmp=ce_value(identifier.type, index, value, false);
     if(tmp.id()=="array-list" && identifier.value.id()=="array-list")
     {
-      forall_operands(it, tmp)
-        identifier.value.copy_to_operands(*it);
+      for(const auto &it : tmp.operands())
+        identifier.value.copy_to_operands(it);
     }
     else
       identifier.value=tmp;

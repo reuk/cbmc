@@ -30,16 +30,16 @@ void qdimacs_coret::simplify_extractbits(exprt &expr) const
     typedef std::map<exprt, std::set<exprt> > used_bits_mapt;
     used_bits_mapt used_bits_map;
 
-    forall_operands(it, expr)
+    for(const auto &it : expr.operands())
     {
-      if(it->id()==ID_extractbit && it->op1().is_constant())
+      if(it.id()==ID_extractbit && it.op1().is_constant())
       {
-        used_bits_map[it->op0()].insert(it->op1());
+        used_bits_map[it.op0()].insert(it.op1());
       }
-      else if(it->id()==ID_not &&
-              it->op0().id()==ID_extractbit && it->op0().op1().is_constant())
+      else if(it.id()==ID_not &&
+              it.op0().id()==ID_extractbit && it.op0().op1().is_constant())
       {
-        used_bits_map[it->op0().op0()].insert(it->op0().op1());
+        used_bits_map[it.op0().op0()].insert(it.op0().op1());
       }
     }
 

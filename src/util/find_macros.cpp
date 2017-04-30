@@ -56,8 +56,8 @@ void find_macros(
     }
     else
     {
-      forall_operands(it, e)
-        stack.push(&(*it));
+      for(const auto &it : e.operands())
+        stack.push(&it);
     }
   }
 }

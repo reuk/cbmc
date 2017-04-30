@@ -172,29 +172,29 @@ void mm2cppt::instruction2cpp(const codet &code, unsigned indent)
 
   if(statement==ID_block)
   {
-    forall_operands(it, code)
+    for(const auto &it : code.operands())
     {
-      instruction2cpp(to_code(*it), indent+2);
+      instruction2cpp(to_code(it), indent+2);
     }
   }
   else if(statement==ID_let)
   {
     assert(code.operands().size()==1);
     const exprt &binding_list=code.op0();
-    forall_operands(it, binding_list)
+    for(const auto &it : binding_list.operands())
     {
-      if(it->id()=="valbinding")
+      if(it.id()=="valbinding")
       {
-        assert(it->operands().size()==2);
-        if(it->op0().id()==ID_symbol)
+        assert(it.operands().size()==2);
+        if(it.op0().id()==ID_symbol)
         {
-          irep_idt identifier=it->op0().get(ID_identifier);
-          let_values[identifier]=it->op1();
+          irep_idt identifier=it.op0().get(ID_identifier);
+          let_values[identifier]=it.op1();
         }
         else
           throw "cannot do tuple valbinding";
       }
-      else if(it->id()=="funbinding")
+      else if(it.id()=="funbinding")
       {
         throw "cannot do funbinding";
       }

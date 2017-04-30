@@ -118,8 +118,8 @@ bool goto_convertt::needs_cleaning(const exprt &expr)
   if(expr.id()==ID_forall || expr.id()==ID_exists)
     return false;
 
-  forall_operands(it, expr)
-    if(needs_cleaning(*it))
+  for(const auto &it : expr.operands())
+    if(needs_cleaning(it))
       return true;
 
   return false;
@@ -330,23 +330,23 @@ void goto_convertt::clean_expr(
     {
       exprt result;
 
-      Forall_operands(it, expr)
+      for(auto &it : expr.operands())
       {
-        bool last=(it==--expr.operands().end());
+        bool last=(&it==&expr.operands().back());
 
         // special treatment for last one
         if(last)
         {
-          result.swap(*it);
+          result.swap(it);
           clean_expr(result, dest, true);
         }
         else
         {
-          clean_expr(*it, dest, false);
+          clean_expr(it, dest, false);
 
           // remember these for later checks
-          if(it->is_not_nil())
-            convert(code_expressiont(*it), dest);
+          if(it.is_not_nil())
+            convert(code_expressiont(it), dest);
         }
       }
 
@@ -354,13 +354,13 @@ void goto_convertt::clean_expr(
     }
     else // result not used
     {
-      Forall_operands(it, expr)
+      for(auto &it : expr.operands())
       {
-        clean_expr(*it, dest, false);
+        clean_expr(it, dest, false);
 
         // remember as expression statement for later checks
-        if(it->is_not_nil())
-          convert(code_expressiont(*it), dest);
+        if(it.is_not_nil())
+          convert(code_expressiont(it), dest);
       }
 
       expr=nil_exprt();
@@ -466,8 +466,8 @@ void goto_convertt::clean_expr(
 
   // TODO: evaluation order
 
-  Forall_operands(it, expr)
-    clean_expr(*it, dest);
+  for(auto &it : expr.operands())
+    clean_expr(it, dest);
 
   if(expr.id()==ID_side_effect)
   {
@@ -529,20 +529,20 @@ void goto_convertt::clean_expr_address_of(
 
     exprt result;
 
-    Forall_operands(it, expr)
+    for(auto &it : expr.operands())
     {
-      bool last=(it==--expr.operands().end());
+      bool last=(&it==&expr.operands().back());
 
       // special treatment for last one
       if(last)
-        result.swap(*it);
+        result.swap(it);
       else
       {
-        clean_expr(*it, dest, false);
+        clean_expr(it, dest, false);
 
         // get any side-effects
-        if(it->is_not_nil())
-          convert(code_expressiont(*it), dest);
+        if(it.is_not_nil())
+          convert(code_expressiont(it), dest);
       }
     }
 
@@ -552,8 +552,8 @@ void goto_convertt::clean_expr_address_of(
     clean_expr_address_of(expr, dest);
   }
   else
-    Forall_operands(it, expr)
-      clean_expr_address_of(*it, dest);
+    for(auto &it : expr.operands())
+      clean_expr_address_of(it, dest);
 }
 
 /*******************************************************************\

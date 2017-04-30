@@ -628,8 +628,8 @@ void invariant_sett::strengthen_rec(const exprt &expr)
   }
   else if(expr.id()==ID_and)
   {
-    forall_operands(it, expr)
-      strengthen_rec(*it);
+    for(const auto &it : expr.operands())
+      strengthen_rec(it);
   }
   else if(expr.id()==ID_le ||
           expr.id()==ID_lt)
@@ -643,10 +643,10 @@ void invariant_sett::strengthen_rec(const exprt &expr)
     {
       const exprt &bitand_op=expr.op1();
 
-      forall_operands(it, bitand_op)
+      for(const auto &it : bitand_op.operands())
       {
         exprt tmp(expr);
-        tmp.op1()=*it;
+        tmp.op1()=it;
         strengthen_rec(tmp);
       }
 
@@ -729,10 +729,10 @@ void invariant_sett::strengthen_rec(const exprt &expr)
     {
       const exprt &bitand_op=expr.op1();
 
-      forall_operands(it, bitand_op)
+      for(const auto &it : bitand_op.operands())
       {
         exprt tmp(expr);
-        tmp.op1()=*it;
+        tmp.op1()=it;
         tmp.id(ID_le);
         strengthen_rec(tmp);
       }
@@ -850,16 +850,16 @@ tvt invariant_sett::implies_rec(const exprt &expr) const
   }
   else if(expr.id()==ID_and)
   {
-    forall_operands(it, expr)
-      if(implies_rec(*it)!=tvt(true))
+    for(const auto &it : expr.operands())
+      if(implies_rec(it)!=tvt(true))
         return tvt::unknown();
 
     return tvt(true);
   }
   else if(expr.id()==ID_or)
   {
-    forall_operands(it, expr)
-      if(implies_rec(*it)==tvt(true))
+    for(const auto &it : expr.operands())
+      if(implies_rec(it)==tvt(true))
         return tvt(true);
   }
   else if(expr.id()==ID_le ||
@@ -990,16 +990,16 @@ void invariant_sett::nnf(exprt &expr, bool negate)
     if(negate)
       expr.id(ID_or);
 
-    Forall_operands(it, expr)
-      nnf(*it, negate);
+    for(auto &it : expr.operands())
+      nnf(it, negate);
   }
   else if(expr.id()==ID_or)
   {
     if(negate)
       expr.id(ID_and);
 
-    Forall_operands(it, expr)
-      nnf(*it, negate);
+    for(auto &it : expr.operands())
+      nnf(it, negate);
   }
   else if(expr.id()==ID_typecast)
   {
@@ -1093,8 +1093,8 @@ void invariant_sett::simplify(
   if(expr.id()==ID_address_of)
     return;
 
-  Forall_operands(it, expr)
-    simplify(*it);
+  for(auto &it : expr.operands())
+    simplify(it);
 
   if(expr.id()==ID_symbol ||
      expr.id()==ID_member)
@@ -1460,8 +1460,8 @@ void invariant_sett::apply_code(const codet &code)
 
   if(statement==ID_block)
   {
-    forall_operands(it, code)
-      apply_code(to_code(*it));
+    for(const auto &it : code.operands())
+      apply_code(to_code(it));
   }
   else if(statement==ID_assign ||
           statement==ID_init)

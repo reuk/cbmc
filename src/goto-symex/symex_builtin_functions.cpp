@@ -48,9 +48,9 @@ inline static typet c_sizeof_type_rec(const exprt &expr)
   }
   else if(expr.id()==ID_mult)
   {
-    forall_operands(it, expr)
+    for(const auto &it : expr.operands())
     {
-      typet t=c_sizeof_type_rec(*it);
+      typet t=c_sizeof_type_rec(it);
       if(t.is_not_nil())
         return t;
     }

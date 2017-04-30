@@ -49,8 +49,8 @@ void graphml_witnesst::remove_l0_l1(exprt &expr)
     return;
   }
 
-  Forall_operands(it, expr)
-    remove_l0_l1(*it);
+  for(auto &it : expr.operands())
+    remove_l0_l1(it);
 }
 
 /*******************************************************************\
@@ -77,7 +77,7 @@ std::string graphml_witnesst::convert_assign_rec(
       to_array_type(ns.follow(assign.rhs().type()));
 
     unsigned i=0;
-    forall_operands(it, assign.rhs())
+    for(const auto &it : assign.rhs().operands())
     {
       index_exprt index(
         assign.lhs(),
@@ -85,7 +85,7 @@ std::string graphml_witnesst::convert_assign_rec(
         type.subtype());
       if(!result.empty())
         result+=' ';
-      result+=convert_assign_rec(identifier, code_assignt(index, *it));
+      result+=convert_assign_rec(identifier, code_assignt(index, it));
     }
   }
   else if(assign.rhs().id()==ID_struct ||

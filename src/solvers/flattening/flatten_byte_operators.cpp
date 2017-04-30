@@ -480,8 +480,8 @@ bool has_byte_operator(const exprt &src)
      src.id()==ID_byte_extract_big_endian)
     return true;
 
-  forall_operands(it, src)
-    if(has_byte_operator(*it))
+  for(const auto &it : src.operands())
+    if(has_byte_operator(it))
       return true;
 
   return false;
@@ -506,10 +506,10 @@ exprt flatten_byte_operators(
   exprt tmp=src;
 
   // destroys any sharing, should use hash table
-  Forall_operands(it, tmp)
+  for(auto &it : tmp.operands())
   {
-    exprt tmp=flatten_byte_operators(*it, ns);
-    it->swap(tmp);
+    exprt tmp=flatten_byte_operators(it, ns);
+    it.swap(tmp);
   }
 
   if(src.id()==ID_byte_update_little_endian ||

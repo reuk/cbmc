@@ -716,8 +716,8 @@ bool custom_bitvector_domaint::has_get_must_or_may(const exprt &src)
      src.id()=="get_may")
     return true;
 
-  forall_operands(it, src)
-    if(has_get_must_or_may(*it))
+  for(const auto &it : src.operands())
+    if(has_get_must_or_may(it))
       return true;
 
   return false;
@@ -790,8 +790,8 @@ exprt custom_bitvector_domaint::eval(
   else
   {
     exprt tmp=src;
-    Forall_operands(it, tmp)
-      *it=eval(*it, custom_bitvector_analysis);
+    for(auto &it : tmp.operands())
+      it=eval(it, custom_bitvector_analysis);
 
     return tmp;
   }

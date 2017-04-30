@@ -120,9 +120,9 @@ procedure_decl: TOK_PROCEDURE proc_ident '(' parameters_opt ')'
               {
                 symbol_exprt proc(to_symbol_expr(stack($2)));
                 code_typet ct;
-                forall_operands(it, stack($4))
+                for(const auto &it : stack($4).operands())
                 {
-                  symbol_exprt s(to_symbol_expr(*it));
+                  symbol_exprt s(to_symbol_expr(it));
                   code_typet::parametert p;
                   p.set_identifier(s.get_identifier());
                   ct.parameters().push_back(p);

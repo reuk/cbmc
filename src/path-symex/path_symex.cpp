@@ -55,22 +55,22 @@ bool path_symext::propagate(const exprt &src)
     return true;
   else if(src.id()==ID_plus)
   {
-    forall_operands(it, src)
-      if(!propagate(*it))
+    for(const auto &it : src.operands())
+      if(!propagate(it))
         return false;
     return true;
   }
   else if(src.id()==ID_array)
   {
-    forall_operands(it, src)
-      if(!propagate(*it))
+    for(const auto &it : src.operands())
+      if(!propagate(it))
         return false;
     return true;
   }
   else if(src.id()==ID_vector)
   {
-    forall_operands(it, src)
-      if(!propagate(*it))
+    for(const auto &it : src.operands())
+      if(!propagate(it))
         return false;
     return true;
   }
@@ -174,9 +174,9 @@ inline static typet c_sizeof_type_rec(const exprt &expr)
   }
   else if(expr.id()==ID_mult)
   {
-    forall_operands(it, expr)
+    for(auto &it : expr.operands())
     {
-      typet t=c_sizeof_type_rec(*it);
+      typet t=c_sizeof_type_rec(it);
       if(t.is_not_nil())
         return t;
     }

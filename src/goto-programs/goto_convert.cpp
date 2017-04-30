@@ -699,8 +699,8 @@ void goto_convertt::convert(
     copy(code, DEAD, dest);
   else if(statement==ID_decl_block)
   {
-    forall_operands(it, code)
-      convert(to_code(*it), dest);
+    for(const auto &it : code.operands())
+      convert(to_code(it), dest);
   }
   else
     copy(code, OTHER, dest);
@@ -736,9 +736,9 @@ void goto_convertt::convert_block(
   std::size_t old_stack_size=targets.destructor_stack.size();
 
   // now convert block
-  forall_operands(it, code)
+  for(const auto &it : code.operands())
   {
-    const codet &b_code=to_code(*it);
+    const codet &b_code=to_code(it);
     convert(b_code, dest);
   }
 
@@ -943,8 +943,8 @@ void goto_convertt::convert_assign(
       throw 0;
     }
 
-    Forall_operands(it, rhs)
-      clean_expr(*it, dest);
+    for(auto &it : rhs.operands())
+      clean_expr(it, dest);
 
     do_function_call(lhs, rhs.op0(), rhs.op1().operands(), dest);
   }
@@ -952,24 +952,24 @@ void goto_convertt::convert_assign(
           (rhs.get(ID_statement)==ID_cpp_new ||
            rhs.get(ID_statement)==ID_cpp_new_array))
   {
-    Forall_operands(it, rhs)
-      clean_expr(*it, dest);
+    for(auto &it : rhs.operands())
+      clean_expr(it, dest);
 
     do_cpp_new(lhs, to_side_effect_expr(rhs), dest);
   }
   else if(rhs.id()==ID_side_effect &&
           rhs.get(ID_statement)==ID_java_new)
   {
-    Forall_operands(it, rhs)
-      clean_expr(*it, dest);
+    for(auto &it : rhs.operands())
+      clean_expr(it, dest);
 
     do_java_new(lhs, to_side_effect_expr(rhs), dest);
   }
   else if(rhs.id()==ID_side_effect &&
           rhs.get(ID_statement)==ID_java_new_array)
   {
-    Forall_operands(it, rhs)
-      clean_expr(*it, dest);
+    for(auto &it : rhs.operands())
+      clean_expr(it, dest);
 
     do_java_new_array(lhs, to_side_effect_expr(rhs), dest);
   }
@@ -977,8 +977,8 @@ void goto_convertt::convert_assign(
           rhs.get(ID_statement)==ID_malloc)
   {
     // just preserve
-    Forall_operands(it, rhs)
-      clean_expr(*it, dest);
+    for(auto &it : rhs.operands())
+      clean_expr(it, dest);
 
     code_assignt new_assign(code);
     new_assign.lhs()=lhs;
@@ -1592,9 +1592,9 @@ void goto_convertt::convert_switch(
 
   goto_programt tmp;
 
-  forall_operands(it, code)
-    if(it!=code.operands().begin())
-      convert(to_code(*it), tmp);
+  for(const auto &it : code.operands())
+    if(&it!=&code.operands().front())
+      convert(to_code(it), tmp);
 
   goto_programt tmp_cases;
 
@@ -1891,8 +1891,8 @@ void goto_convertt::convert_specc_event(
 {
   if(op.id()==ID_or || op.id()==ID_and)
   {
-    forall_operands(it, op)
-      convert_specc_event(*it, events);
+    for(const auto &it : op.operands())
+      convert_specc_event(it, events);
   }
   else if(op.id()==ID_specc_event)
   {
@@ -2292,8 +2292,8 @@ void goto_convertt::collect_operands(
   else
   {
     // left-to-right is important
-    forall_operands(it, expr)
-      collect_operands(*it, id, dest);
+    for(const auto &it : expr.operands())
+      collect_operands(it, id, dest);
   }
 }
 
@@ -2481,8 +2481,8 @@ Function: goto_convertt::generate_conditional_branch
 
 static bool has_and_or(const exprt &expr)
 {
-  forall_operands(it, expr)
-    if(has_and_or(*it))
+  for(const auto &it : expr.operands())
+    if(has_and_or(it))
       return true;
 
   if(expr.id()==ID_and || expr.id()==ID_or)
@@ -2651,11 +2651,11 @@ bool goto_convertt::get_string_constant(
     else if(index_op.id()==ID_array)
     {
       std::string result;
-      forall_operands(it, index_op)
-        if(it->is_constant())
+      for(const auto &it : index_op.operands())
+        if(it.is_constant())
         {
           unsigned long i=integer2ulong(
-            binary2integer(id2string(to_constant_expr(*it).get_value()), true));
+            binary2integer(id2string(to_constant_expr(it).get_value()), true));
 
           if(i!=0) // to skip terminating 0
             result+=static_cast<char>(i);

@@ -229,7 +229,7 @@ void cvc_convt::convert_constant_expr(const exprt &expr)
     assert(!expr.operands().empty());
 
     unsigned i=0;
-    forall_operands(it, expr)
+    for(const auto &it : expr.operands())
     {
       if(i==0)
         out << "\n  IF ";
@@ -237,7 +237,7 @@ void cvc_convt::convert_constant_expr(const exprt &expr)
         out << "\n  ELSIF ";
 
       out << "i=" << array_index(i) << " THEN ";
-      convert_array_value(*it);
+      convert_array_value(it);
       i++;
     }
 
@@ -276,10 +276,10 @@ void cvc_convt::convert_plus_expr(const exprt &expr)
     {
       out << "BVPLUS(" << expr.type().get(ID_width);
 
-      forall_operands(it, expr)
+      for(const auto &it : expr.operands())
       {
         out << ", ";
-        convert_expr(*it);
+        convert_expr(it);
       }
 
       out << ")";
@@ -1099,9 +1099,9 @@ void cvc_convt::convert_expr(const exprt &expr)
   {
     out << "(";
 
-    forall_operands(it, expr)
+    for(const auto &it : expr.operands())
     {
-      if(it!=expr.operands().begin())
+      if(&it!=&expr.operands().front())
       {
         if(expr.id()==ID_concatenation)
           out << " @ ";
@@ -1111,7 +1111,7 @@ void cvc_convt::convert_expr(const exprt &expr)
           out << " | ";
       }
 
-      convert_as_bv(*it);
+      convert_as_bv(it);
     }
 
     out << ")";
@@ -1195,9 +1195,9 @@ void cvc_convt::convert_expr(const exprt &expr)
 
     if(expr.operands().size()>=2)
     {
-      forall_operands(it, expr)
+      for(const auto &it : expr.operands())
       {
-        if(it!=expr.operands().begin())
+        if(&it!=&expr.operands().front())
         {
           if(expr.id()==ID_and)
             out << " AND ";
@@ -1208,7 +1208,7 @@ void cvc_convt::convert_expr(const exprt &expr)
         }
 
         out << "(";
-        convert_expr(*it);
+        convert_expr(it);
         out << ")";
       }
     }
@@ -1462,8 +1462,8 @@ void cvc_convt::set_to(const exprt &expr, bool value)
 {
   if(value && expr.id()==ID_and)
   {
-    forall_operands(it, expr)
-      set_to(*it, true);
+    for(const auto &it : expr.operands())
+      set_to(it, true);
     return;
   }
 
@@ -1535,8 +1535,8 @@ void cvc_convt::find_symbols(const exprt &expr)
 {
   find_symbols(expr.type());
 
-  forall_operands(it, expr)
-    find_symbols(*it);
+  for(const auto &it : expr.operands())
+    find_symbols(it);
 
   if(expr.id()==ID_symbol)
   {

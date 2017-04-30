@@ -1399,8 +1399,8 @@ void goto_checkt::check_rec(
     }
     else
     {
-      forall_operands(it, expr)
-        check_rec(*it, guard, true, mode);
+      for(const auto &it : expr.operands())
+        check_rec(it, guard, true, mode);
     }
     return;
   }
@@ -1490,8 +1490,8 @@ void goto_checkt::check_rec(
     return;
   }
 
-  forall_operands(it, expr)
-    check_rec(*it, guard, false, mode);
+  for(const auto &it : expr.operands())
+    check_rec(it, guard, false, mode);
 
   if(expr.id()==ID_index)
   {
@@ -1639,8 +1639,8 @@ void goto_checkt::goto_check(
       }
       else if(statement==ID_printf)
       {
-        forall_operands(it, i.code)
-          check(*it, mode);
+        for(const auto &it : i.code.operands())
+          check(it, mode);
       }
     }
     else if(i.is_assign())
@@ -1687,8 +1687,8 @@ void goto_checkt::goto_check(
         }
       }
 
-      forall_operands(it, code_function_call)
-        check(*it, mode);
+      for(const auto &it : code_function_call.operands())
+        check(it, mode);
 
       // the call might invalidate any assertion
       assertions.clear();

@@ -57,8 +57,8 @@ Function: nondet_volatile_rhs
 
 void nondet_volatile_rhs(const symbol_tablet &symbol_table, exprt &expr)
 {
-  Forall_operands(it, expr)
-    nondet_volatile_rhs(symbol_table, *it);
+  for(auto &it : expr.operands())
+    nondet_volatile_rhs(symbol_table, it);
 
   if(expr.id()==ID_symbol ||
      expr.id()==ID_dereference)

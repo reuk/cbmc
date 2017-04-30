@@ -73,22 +73,22 @@ void remove_asmt::gcc_asm_function_call(
   const pointer_typet void_pointer=pointer_typet(void_typet());
 
   // outputs
-  forall_operands(it, code.op1())
+  for(const auto &it : code.op1().operands())
   {
-    if(it->operands().size()==2)
+    if(it.operands().size()==2)
     {
       function_call.arguments().push_back(
-        typecast_exprt(address_of_exprt(it->op1()), void_pointer));
+        typecast_exprt(address_of_exprt(it.op1()), void_pointer));
     }
   }
 
   // inputs
-  forall_operands(it, code.op2())
+  for(const auto &it : code.op2().operands())
   {
-    if(it->operands().size()==2)
+    if(it.operands().size()==2)
     {
       function_call.arguments().push_back(
-        typecast_exprt(address_of_exprt(it->op1()), void_pointer));
+        typecast_exprt(address_of_exprt(it.op1()), void_pointer));
     }
   }
 

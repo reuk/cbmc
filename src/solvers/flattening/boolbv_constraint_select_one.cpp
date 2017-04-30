@@ -44,9 +44,9 @@ bvt boolbvt::convert_constraint_select_one(const exprt &expr)
     b.reserve(expr.operands().size());
 
     // add constraints
-    forall_operands(it, expr)
+    for(const auto &it : expr.operands())
     {
-      bvt it_bv=convert_bv(*it);
+      bvt it_bv=convert_bv(it);
 
       if(it_bv.size()!=bv.size())
         throw "constraint_select_one expects matching width";
@@ -59,9 +59,9 @@ bvt boolbvt::convert_constraint_select_one(const exprt &expr)
   else
   {
     std::size_t op_nr=0;
-    forall_operands(it, expr)
+    for(const auto &it : expr.operands())
     {
-      const bvt &op_bv=convert_bv(*it);
+      const bvt &op_bv=convert_bv(it);
 
       if(op_nr==0)
         bv=op_bv;

@@ -868,8 +868,8 @@ static void gather_symbol_live_ranges(
   }
   else
   {
-    forall_operands(it, e)
-      gather_symbol_live_ranges(pc, *it, result);
+    for(const auto &it : e.operands())
+      gather_symbol_live_ranges(pc, it, result);
   }
 }
 
@@ -2574,8 +2574,8 @@ codet java_bytecode_convert_methodt::convert_instructions(
               more_code.operands().end());
           }
           else
-            forall_operands(o_it, more_code)
-              c.copy_to_operands(*o_it);
+            for(const auto &o_it : more_code.operands())
+              c.copy_to_operands(o_it);
         }
       }
 

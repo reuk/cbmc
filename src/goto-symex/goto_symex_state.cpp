@@ -171,8 +171,8 @@ bool goto_symex_statet::constant_propagation(const exprt &expr) const
   }
   else if(expr.id()==ID_plus)
   {
-    forall_operands(it, expr)
-      if(!constant_propagation(*it))
+    for(const auto &it : expr.operands())
+      if(!constant_propagation(it))
         return false;
 
     return true;
@@ -180,16 +180,16 @@ bool goto_symex_statet::constant_propagation(const exprt &expr) const
   else if(expr.id()==ID_mult)
   {
     // propagate stuff with sizeof in it
-    forall_operands(it, expr)
-      if(it->find(ID_C_c_sizeof_type).is_not_nil())
+    for(const auto &it : expr.operands())
+      if(it.find(ID_C_c_sizeof_type).is_not_nil())
         return true;
 
     return true;
   }
   else if(expr.id()==ID_array)
   {
-    forall_operands(it, expr)
-      if(!constant_propagation(*it))
+    for(const auto &it : expr.operands())
+      if(!constant_propagation(it))
         return false;
 
     return true;
@@ -212,16 +212,16 @@ bool goto_symex_statet::constant_propagation(const exprt &expr) const
   }
   else if(expr.id()==ID_struct)
   {
-    forall_operands(it, expr)
-      if(!constant_propagation(*it))
+    for(const auto &it : expr.operands())
+      if(!constant_propagation(it))
         return false;
 
     return true;
   }
   else if(expr.id()==ID_union)
   {
-    forall_operands(it, expr)
-      if(!constant_propagation(*it))
+    for(const auto &it : expr.operands())
+      if(!constant_propagation(it))
         return false;
 
     return true;
@@ -230,8 +230,8 @@ bool goto_symex_statet::constant_propagation(const exprt &expr) const
   else if(expr.id()==ID_byte_update_big_endian ||
           expr.id()==ID_byte_update_little_endian)
   {
-    forall_operands(it, expr)
-      if(!constant_propagation(*it))
+    for(const auto &it : expr.operands())
+      if(!constant_propagation(it))
         return false;
 
     return true;
@@ -331,8 +331,8 @@ static bool check_renaming_l1(const exprt &expr)
   }
   else
   {
-    forall_operands(it, expr)
-      if(check_renaming_l1(*it))
+    for(const auto &it : expr.operands())
+      if(check_renaming_l1(it))
         return true;
   }
 
@@ -362,8 +362,8 @@ static bool check_renaming(const exprt &expr)
   }
   else
   {
-    forall_operands(it, expr)
-      if(check_renaming(*it))
+    for(const auto &it : expr.operands())
+      if(check_renaming(it))
         return true;
   }
 
@@ -489,8 +489,8 @@ void goto_symex_statet::propagationt::operator()(exprt &expr)
   else
   {
     // do this recursively
-    Forall_operands(it, expr)
-      operator()(*it);
+    for(auto &it : expr.operands())
+      operator()(it);
   }
 }
 
@@ -627,8 +627,8 @@ void goto_symex_statet::rename(
     rename(expr.type(), irep_idt(), ns, level);
 
     // do this recursively
-    Forall_operands(it, expr)
-      rename(*it, ns, level);
+    for(auto &it : expr.operands())
+      rename(it, ns, level);
 
     // some fixes
     if(expr.id()==ID_with)
@@ -929,8 +929,8 @@ void goto_symex_statet::rename_address(
 
       // do this recursively; we assume here
       // that all the operands are addresses
-      Forall_operands(it, expr)
-        rename_address(*it, ns, level);
+      for(auto &it : expr.operands())
+        rename_address(it, ns, level);
     }
   }
 }
@@ -1038,8 +1038,8 @@ void goto_symex_statet::get_original_name(exprt &expr) const
      expr.get_bool(ID_C_SSA_symbol))
     expr=to_ssa_expr(expr).get_original_expr();
   else
-    Forall_operands(it, expr)
-      get_original_name(*it);
+    for(auto &it : expr.operands())
+      get_original_name(it);
 }
 
 /*******************************************************************\
@@ -1102,8 +1102,8 @@ void goto_symex_statet::get_l1_name(exprt &expr) const
      expr.get_bool(ID_C_SSA_symbol))
     to_ssa_expr(expr).remove_level_2();
   else
-    Forall_operands(it, expr)
-      get_l1_name(*it);
+    for(auto &it : expr.operands())
+      get_l1_name(it);
 }
 
 /*******************************************************************\

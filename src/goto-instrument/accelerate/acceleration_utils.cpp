@@ -55,9 +55,9 @@ void acceleration_utilst::gather_rvalues(
   }
   else
   {
-    forall_operands(it, expr)
+    for(const auto &it : expr.operands())
     {
-      gather_rvalues(*it, rvalues);
+      gather_rvalues(it, rvalues);
     }
   }
 }
@@ -319,18 +319,18 @@ void acceleration_utilst::abstract_arrays(
   }
   else
   {
-    Forall_operands(it, expr)
+    for(auto &it : expr.operands())
     {
-      abstract_arrays(*it, abstractions);
+      abstract_arrays(it, abstractions);
     }
   }
 }
 
 void acceleration_utilst::push_nondet(exprt &expr)
 {
-  Forall_operands(it, expr)
+  for(auto &it : expr.operands())
   {
-    push_nondet(*it);
+    push_nondet(it);
   }
 
   if(expr.id()==ID_not &&
@@ -1232,9 +1232,9 @@ void acceleration_utilst::gather_array_accesses(
     arrays.insert(e.op0());
   }
 
-  forall_operands(it, e)
+  for(const auto &it : e.operands())
   {
-    gather_array_accesses(*it, arrays);
+    gather_array_accesses(it, arrays);
   }
 }
 

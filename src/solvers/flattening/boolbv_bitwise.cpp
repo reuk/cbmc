@@ -49,14 +49,14 @@ bvt boolbvt::convert_bitwise(const exprt &expr)
     bvt bv;
     bv.resize(width);
 
-    forall_operands(it, expr)
+    for(const auto &it : expr.operands())
     {
-      const bvt &op=convert_bv(*it);
+      const bvt &op=convert_bv(it);
 
       if(op.size()!=width)
         throw "convert_bitwise: unexpected operand width";
 
-      if(it==expr.operands().begin())
+      if(&it==&expr.operands().front())
         bv=op;
       else
       {

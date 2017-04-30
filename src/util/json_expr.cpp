@@ -359,11 +359,11 @@ json_objectt json(
 
     unsigned index=0;
 
-    forall_operands(it, expr)
+    for(const auto &it : expr.operands())
     {
       json_objectt &e=elements.push_back().make_object();
       e["index"]=json_numbert(std::to_string(index));
-      e["value"]=json(*it, ns);
+      e["value"]=json(it, ns);
       index++;
     }
   }

@@ -87,8 +87,8 @@ static bool have_to_remove_complex(const exprt &expr)
   if(have_to_remove_complex(expr.type()))
      return true;
 
-  forall_operands(it, expr)
-    if(have_to_remove_complex(*it))
+  for(const auto &it : expr.operands())
+    if(have_to_remove_complex(it))
       return true;
 
   return false;
@@ -168,8 +168,8 @@ static void remove_complex(exprt &expr)
     }
   }
 
-  Forall_operands(it, expr)
-    remove_complex(*it);
+  for(auto &it : expr.operands())
+    remove_complex(it);
 
   if(expr.type().id()==ID_complex)
   {

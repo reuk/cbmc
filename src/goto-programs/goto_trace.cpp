@@ -178,13 +178,13 @@ std::string trace_value_binary(
   {
     std::string result;
 
-    forall_operands(it, expr)
+    for(const auto &it : expr.operands())
     {
       if(result=="")
         result="{ ";
       else
         result+=", ";
-      result+=trace_value_binary(*it, ns);
+      result+=trace_value_binary(it, ns);
     }
 
     return result+" }";
@@ -193,11 +193,11 @@ std::string trace_value_binary(
   {
     std::string result="{ ";
 
-    forall_operands(it, expr)
+    for(const auto &it : expr.operands())
     {
-      if(it!=expr.operands().begin())
+      if(&it!=&expr.operands().front())
         result+=", ";
-      result+=trace_value_binary(*it, ns);
+      result+=trace_value_binary(it, ns);
     }
 
     return result+" }";

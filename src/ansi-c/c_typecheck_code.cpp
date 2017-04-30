@@ -186,8 +186,8 @@ void c_typecheck_baset::typecheck_asm(codet &code)
     for(unsigned i=1; i<code.operands().size(); i++)
     {
       exprt &list=code.operands()[i];
-      Forall_operands(it, list)
-        typecheck_expr(*it);
+      for(auto &it : list.operands())
+        typecheck_expr(it);
     }
   }
   else if(flavor==ID_msc)
@@ -239,20 +239,20 @@ Function: c_typecheck_baset::typecheck_block
 
 void c_typecheck_baset::typecheck_block(codet &code)
 {
-  Forall_operands(it, code)
-    typecheck_code(to_code(*it));
+  for(auto &it : code.operands())
+    typecheck_code(to_code(it));
 
   // do decl-blocks
 
   exprt new_ops;
   new_ops.operands().reserve(code.operands().size());
 
-  Forall_operands(it1, code)
+  for(auto &it1 : code.operands())
   {
-    if(it1->is_nil())
+    if(it1.is_nil())
       continue;
 
-    codet &code_op=to_code(*it1);
+    codet &code_op=to_code(it1);
 
     if(code_op.get_statement()==ID_label)
     {

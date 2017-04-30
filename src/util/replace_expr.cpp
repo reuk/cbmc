@@ -30,8 +30,8 @@ bool replace_expr(const exprt &what, const exprt &by, exprt &dest)
 
   bool result=true;
 
-  Forall_operands(it, dest)
-    result=replace_expr(what, by, *it) && result;
+  for(auto &it : dest.operands())
+    result=replace_expr(what, by, it) && result;
 
   return result;
 }
@@ -62,8 +62,8 @@ bool replace_expr(const replace_mapt &what, exprt &dest)
 
   bool result=true;
 
-  Forall_operands(it, dest)
-    result=replace_expr(what, *it) && result;
+  for(auto &it : dest.operands())
+    result=replace_expr(what, it) && result;
 
   return result;
 }

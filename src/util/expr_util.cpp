@@ -29,8 +29,8 @@ Function: make_next_state
 
 void make_next_state(exprt &expr)
 {
-  Forall_operands(it, expr)
-    make_next_state(*it);
+  for(auto &it : expr.operands())
+    make_next_state(it);
 
   if(expr.id()==ID_symbol)
     expr.id(ID_next_symbol);
@@ -204,8 +204,8 @@ bool has_subexpr(const exprt &src, const irep_idt &id)
   if(src.id()==id)
     return true;
 
-  forall_operands(it, src)
-    if(has_subexpr(*it, id))
+  for(const auto &it : src.operands())
+    if(has_subexpr(it, id))
       return true;
 
   return false;

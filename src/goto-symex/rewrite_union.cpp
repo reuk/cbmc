@@ -44,8 +44,8 @@ static bool have_to_rewrite_union(
   else if(expr.id()==ID_union)
     return true;
 
-  forall_operands(it, expr)
-    if(have_to_rewrite_union(*it, ns))
+  for(const auto &it : expr.operands())
+    if(have_to_rewrite_union(it, ns))
       return true;
 
   return false;
@@ -71,8 +71,8 @@ void rewrite_union(
   if(!have_to_rewrite_union(expr, ns))
     return;
 
-  Forall_operands(it, expr)
-    rewrite_union(*it, ns);
+  for(auto &it : expr.operands())
+    rewrite_union(it, ns);
 
   if(expr.id()==ID_member)
   {

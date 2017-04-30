@@ -1554,8 +1554,8 @@ void string_refinementt::initial_index_set(const string_constraintt &axiom)
       }
     }
     else
-      forall_operands(it, cur)
-        to_process.push_back(*it);
+      for(const auto &it : cur.operands())
+        to_process.push_back(it);
   }
 }
 
@@ -1588,8 +1588,8 @@ void string_refinementt::update_index_set(const exprt &formula)
     }
     else
     {
-      forall_operands(it, cur)
-        to_process.push_back(*it);
+      for(const auto &it : cur.operands())
+        to_process.push_back(it);
     }
   }
 }

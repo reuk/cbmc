@@ -28,8 +28,8 @@ Function: has_nondet
 
 bool has_nondet(const exprt &dest)
 {
-  forall_operands(it, dest)
-    if(has_nondet(*it))
+  for(const auto &it : dest.operands())
+    if(has_nondet(it))
       return true;
 
   if(dest.id()==ID_side_effect)
@@ -67,8 +67,8 @@ void approximate_nondet_rec(exprt &dest, unsigned &count)
     return;
   }
 
-  Forall_operands(it, dest)
-    approximate_nondet_rec(*it, count);
+  for(auto &it : dest.operands())
+    approximate_nondet_rec(it, count);
 }
 
 /*******************************************************************\
@@ -175,8 +175,8 @@ void substitute_rec(
   const namespacet &ns)
 {
   if(dest.id()!=ID_address_of)
-    Forall_operands(it, dest)
-      substitute_rec(*it, what, by, ns);
+    for(auto &it : dest.operands())
+      substitute_rec(it, what, by, ns);
 
   // possibly substitute?
   if(dest.id()==ID_member ||

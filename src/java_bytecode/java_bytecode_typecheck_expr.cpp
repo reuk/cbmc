@@ -40,8 +40,8 @@ void java_bytecode_typecheckt::typecheck_expr(exprt &expr)
     expr=make_clean_pointer_cast(expr, expr.type(), ns);
 
   // do operands recursively
-  Forall_operands(it, expr)
-    typecheck_expr(*it);
+  for(auto &it : expr.operands())
+    typecheck_expr(it);
 
   if(expr.id()==ID_symbol)
     typecheck_expr_symbol(to_symbol_expr(expr));
