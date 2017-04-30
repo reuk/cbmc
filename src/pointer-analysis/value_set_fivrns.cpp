@@ -29,18 +29,6 @@ hash_numbering<irep_idt, irep_id_hash> value_set_fivrnst::function_numbering;
 
 static const char *alloc_adapter_prefix="alloc_adaptor::";
 
-#define forall_valid_objects(it, map) \
-  for(object_map_dt::const_iterator (it) = (map).begin(); \
-  (it)!=(map).end(); \
-  (it)++) \
-    if((map).is_valid_at((it)->first, from_function, from_target_index))
-
-#define Forall_valid_objects(it, map) \
-  for(object_map_dt::iterator (it) = (map).begin(); \
-      (it)!=(map).end(); \
-      (it)++) \
-    if((map).is_valid_at((it)->first, from_function, from_target_index)) /* NOLINT(*) */
-
 /*******************************************************************\
 
 Function: value_set_fivrnst::output
@@ -111,101 +99,106 @@ void value_set_fivrnst::output_entry(
 
   std::size_t width=0;
 
-  forall_valid_objects(o_it, object_map.read())
-  {
-    const exprt &o=object_numbering[o_it->first];
-
-    std::string result="<"; // +std::to_string(o_it->first) + ",";
-
-    if(o.id()==ID_invalid)
+  for(const auto &o_it : object_map.read())
+  for(auto o_it=object_map.read().begin(), end=object_map.read().end();
+      o_it!=end;
+      ++o_it)
+    if(object_map.read().is_valid_at(
+         o_it->first, from_function, from_target_index))
     {
-      result+='#';
-      result+=", *, "; // offset unknown
-      if(o.type().id()==ID_unknown)
-        result+='*';
-      else if(o.type().id()==ID_invalid)
+      const exprt &o=object_numbering[o_it->first];
+
+      std::string result="<"; // +std::to_string(o_it->first) + ",";
+
+      if(o.id()==ID_invalid)
+      {
         result+='#';
-      else
-        result+=from_type(ns, identifier, o.type());
-      result+='>';
-    }
-    else if(o.id()==ID_unknown)
-    {
-      result+='*';
-      result+=", *, "; // offset unknown
-      if(o.type().id()==ID_unknown)
+        result+=", *, "; // offset unknown
+        if(o.type().id()==ID_unknown)
+          result+='*';
+        else if(o.type().id()==ID_invalid)
+          result+='#';
+        else
+          result+=from_type(ns, identifier, o.type());
+        result+='>';
+      }
+      else if(o.id()==ID_unknown)
+      {
         result+='*';
-      else if(o.type().id()==ID_invalid)
-        result+='#';
-      else
-        result+=from_type(ns, identifier, o.type());
-      result+='>';
-    }
-    else
-    {
-      result+=from_expr(ns, identifier, o)+", ";
-
-      if(o_it->second.offset_is_set)
-        result+=integer2string(o_it->second.offset)+"";
-      else
-        result+='*';
-
-      result+=", ";
-
-      if(o.type().id()==ID_unknown)
-        result+='*';
+        result+=", *, "; // offset unknown
+        if(o.type().id()==ID_unknown)
+          result+='*';
+        else if(o.type().id()==ID_invalid)
+          result+='#';
+        else
+          result+=from_type(ns, identifier, o.type());
+        result+='>';
+      }
       else
       {
-        result+=from_type(ns, identifier, o.type());
+        result+=from_expr(ns, identifier, o)+", ";
+
+        if(o_it->second.offset_is_set)
+          result+=integer2string(o_it->second.offset)+"";
+        else
+          result+='*';
+
+        result+=", ";
+
+        if(o.type().id()==ID_unknown)
+          result+='*';
+        else
+        {
+          result+=from_type(ns, identifier, o.type());
+        }
+
+
+        result+='>';
       }
 
+      out << result << '\n';
 
-      result+='>';
-    }
+      #if 0
+      object_map_dt::validity_rangest::const_iterator vr =
+        object_map.read().validity_ranges.find(o_it->first);
 
-    out << result << '\n';
-
-    #if 0
-    object_map_dt::validity_rangest::const_iterator vr =
-      object_map.read().validity_ranges.find(o_it->first);
-
-    if(vr != object_map.read().validity_ranges.end())
-    {
-      if(vr->second.empty())
-        std::cout << "        Empty validity record" << std::endl;
-      else
+      if(vr != object_map.read().validity_ranges.end())
       {
-        for(object_map_dt::vrange_listt::const_iterator vit =
-               vr->second.begin();
-             vit!=vr->second.end();
-             vit++)
+        if(vr->second.empty())
+          std::cout << "        Empty validity record" << std::endl;
+        else
         {
-          out << "        valid at " << function_numbering[vit->function] <<
-            " [" << vit->from << "," << vit->to << "]";
-          if(from_function==vit->function &&
-              from_target_index>=vit->from &&
-              from_target_index<=vit->to)
-            out << " (*)";
-          out << std::endl;
+          for(object_map_dt::vrange_listt::const_iterator vit =
+                 vr->second.begin();
+               vit!=vr->second.end();
+               vit++)
+          {
+            out << "        valid at " << function_numbering[vit->function] <<
+              " [" << vit->from << "," << vit->to << "]";
+            if(from_function==vit->function &&
+                from_target_index>=vit->from &&
+                from_target_index<=vit->to)
+              out << " (*)";
+            out << std::endl;
+          }
         }
       }
-    }
-    else
-    {
-      out << "        No validity information" << std::endl;
-    }
-    #endif
+      else
+      {
+        out << "        No validity information" << std::endl;
+      }
+      #endif
 
-    width+=result.size();
+      width+=result.size();
 
-    object_map_dt::const_iterator next(o_it);
-    next++;
+      object_map_dt::const_iterator next(o_it);
+      next++;
 
-    if(next!=object_map.read().end())
-    {
-      out << "\n      ";
+      if(next!=object_map.read().end())
+      {
+        out << "\n      ";
+      }
     }
-  }
 
   out << " } \n";
 }
@@ -287,11 +280,13 @@ bool value_set_fivrnst::make_valid_union(
 {
   bool result=false;
 
-  forall_valid_objects(it, src.read())
-  {
-    if(insert_to(dest, *it))
-      result=true;
-  }
+  for(const auto &it : src.read())
+    if(src.read().is_valid_at(
+         it.first, from_function, from_target_index))
+    {
+      if(insert_to(dest, it))
+        result=true;
+    }
 
   return result;
 }
@@ -312,14 +307,16 @@ void value_set_fivrnst::copy_objects(
   object_mapt &dest,
   const object_mapt &src) const
 {
-  forall_valid_objects(it, src.read())
-  {
-    dest.write()[it->first] = it->second;
-    dest.write().validity_ranges[it->first].push_back(
-      object_map_dt::validity_ranget(from_function,
-                                     from_target_index,
-                                     from_target_index));
-  }
+  for(const auto &it : src.read())
+    if(src.read().is_valid_at(
+         it.first, from_function, from_target_index))
+    {
+      dest.write()[it.first] = it.second;
+      dest.write().validity_ranges[it.first].push_back(
+        object_map_dt::validity_ranget(from_function,
+                                       from_target_index,
+                                       from_target_index));
+    }
 }
 
 /*******************************************************************\
@@ -1122,30 +1119,32 @@ void value_set_fivrnst::do_free(
 
     bool changed=false;
 
-    forall_valid_objects(o_it, old_object_map)
-    {
-      const exprt &object=object_numbering[o_it->first];
-
-      if(object.id()==ID_dynamic_object)
+    for(const auto &o_it : old_object_map)
+      if(old_object_map.is_valid_at(
+           o_it.first, from_function, from_target_index))
       {
-        const dynamic_object_exprt &dynamic_object=
-          to_dynamic_object_expr(object);
+        const exprt &object=object_numbering[o_it.first];
 
-        if(to_mark.count(dynamic_object.get_instance())==0)
-          set(new_object_map, o_it);
-        else
+        if(object.id()==ID_dynamic_object)
         {
-          // adjust
-          objectt o=o_it->second;
-          exprt tmp(object);
-          to_dynamic_object_expr(tmp).valid()=exprt(ID_unknown);
-          insert_to(new_object_map, tmp, o);
-          changed=true;
+          const dynamic_object_exprt &dynamic_object=
+            to_dynamic_object_expr(object);
+
+          if(to_mark.count(dynamic_object.get_instance())==0)
+            set(new_object_map, o_it);
+          else
+          {
+            // adjust
+            objectt o=o_it.second;
+            exprt tmp(object);
+            to_dynamic_object_expr(tmp).valid()=exprt(ID_unknown);
+            insert_to(new_object_map, tmp, o);
+            changed=true;
+          }
         }
+        else
+          set(new_object_map, o_it);
       }
-      else
-        set(new_object_map, o_it);
-    }
 
     if(changed)
     {
@@ -1788,10 +1787,12 @@ bool value_set_fivrnst::handover(void)
     if(t_it==temporary_values.end())
     {
 //      std::cout << "OLD VALUES FOR: " << ident << std::endl;
-      Forall_valid_objects(o_it, state_map.write())
+      for(auto &o_it : state_map.write())
+        if(state_map.write().is_valid_at(
+             o_it.first, from_function, from_target_index))
       {
 //        std::cout << "STILL VALID: " << to_expr(o_it) << std::endl;
-        if(state_map.write().set_valid_at(o_it->first,
+        if(state_map.write().set_valid_at(o_it.first,
                                           to_function, to_target_index))
           changed = true;
       }

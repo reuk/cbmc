@@ -140,9 +140,9 @@ public:
 
   typedef reference_counting<object_map_dt> object_mapt;
 
-  void set(object_mapt &dest, object_map_dt::const_iterator it) const
+  void set(object_mapt &dest, const object_map_dt::value_type &it) const
   {
-    dest.write()[it->first]=it->second;
+    dest.write()[it.first]=it.second;
   }
 
   bool insert_to(object_mapt &dest, const object_map_dt::value_type &it) const
