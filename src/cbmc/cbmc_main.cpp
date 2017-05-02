@@ -34,6 +34,8 @@ Function: main / wmain
 
 \*******************************************************************/
 
+#include <iostream>
+
 #ifdef IREP_HASH_STATS
 extern unsigned long long irep_hash_cnt;
 extern unsigned long long irep_cmp_cnt;
@@ -48,15 +50,32 @@ int wmain(int argc, const wchar_t **argv_wide)
 int main(int argc, const char **argv)
 {
 #endif
-  cbmc_parse_optionst parse_options(argc, argv);
+  std::cout << "Running with irep instrumentation\n";
 
-  int res=parse_options.main();
+  const auto res = [&]
+  {
+    cbmc_parse_optionst parse_options(argc, argv);
 
-  #ifdef IREP_HASH_STATS
-  std::cout << "IREP_HASH_CNT=" << irep_hash_cnt << std::endl;
-  std::cout << "IREP_CMP_CNT=" << irep_cmp_cnt << std::endl;
-  std::cout << "IREP_CMP_NE_CNT=" << irep_cmp_ne_cnt << std::endl;
-  #endif
+    int res=parse_options.main();
+
+    #ifdef IREP_HASH_STATS
+    std::cout << "IREP_HASH_CNT=" << irep_hash_cnt << std::endl;
+    std::cout << "IREP_CMP_CNT=" << irep_cmp_cnt << std::endl;
+    std::cout << "IREP_CMP_NE_CNT=" << irep_cmp_ne_cnt << std::endl;
+    #endif
+
+    return res;
+  }();
+
+  if(!get_irep_ptrs().empty())
+  {
+    std::cout << "We leaked one or more ireps\n";
+  }
+
+  for(const auto &i : get_irep_ptrs())
+  {
+    std::cout << "leaked object at " << i << ":\n" << i->pretty() << "\n\n";
+  }
 
   return res;
 }

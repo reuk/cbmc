@@ -2627,6 +2627,11 @@ bool simplify_exprt::simplify_rec(exprt &expr)
 
   // We work on a copy to prevent unnecessary destruction of sharing.
   exprt tmp=expr;
+
+  if(tmp.id_string()=="struct") {
+    ;
+  }
+
   bool result=true;
 
   result=simplify_node_preorder(tmp);

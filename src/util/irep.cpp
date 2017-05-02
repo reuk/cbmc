@@ -28,6 +28,45 @@ irept nil_rep_storage;
 irept::dt irept::empty_d;
 #endif
 
+std::unordered_set<irept *> &get_irep_ptrs()
+{
+  static std::unordered_set<irept *> irep_ptrs;
+  return irep_ptrs;
+}
+
+irept::irept()
+{
+  get_irep_ptrs().insert(this);
+}
+
+irept::irept(const irept &rhs)
+  : data(rhs.data)
+{
+  get_irep_ptrs().insert(this);
+}
+
+irept &irept::operator=(const irept &rhs)
+{
+  return *this = irept(rhs);
+}
+
+irept::irept(irept &&rhs)
+  : data(std::move(rhs.data))
+{
+  get_irep_ptrs().insert(this);
+}
+
+irept &irept::operator=(irept &&rhs)
+{
+  swap(rhs);
+  return *this;
+}
+
+irept::~irept()
+{
+  get_irep_ptrs().erase(this);
+}
+
 /*******************************************************************\
 
 Function: named_subt_lower_bound

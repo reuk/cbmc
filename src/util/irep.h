@@ -180,9 +180,14 @@ public:
   }
 
   #else
-  irept()
-  {
-  }
+
+  irept();
+  irept(const irept &);
+  irept &operator=(const irept &);
+  irept(irept &&);
+  irept &operator=(irept &&);
+  ~irept();
+
   #endif
 
   const irep_idt &id() const
@@ -387,5 +392,8 @@ struct irep_full_eq
     return i1.full_eq(i2);
   }
 };
+
+#include <unordered_set>
+std::unordered_set<irept *> &get_irep_ptrs();
 
 #endif // CPROVER_UTIL_IREP_H
