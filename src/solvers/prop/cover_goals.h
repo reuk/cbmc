@@ -23,11 +23,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-class cover_goalst:public messaget
+class cover_goalst : public messaget
 {
 public:
-  explicit cover_goalst(prop_convt &_prop_conv):
-    prop_conv(_prop_conv)
+  explicit cover_goalst(prop_convt &_prop_conv) : prop_conv(_prop_conv)
   {
   }
 
@@ -41,9 +40,15 @@ public:
   struct goalt
   {
     literalt condition;
-    enum class statust { UNKNOWN, COVERED, UNCOVERED, ERROR } status;
+    enum class statust
+    {
+      UNKNOWN,
+      COVERED,
+      UNCOVERED,
+      ERROR
+    } status;
 
-    goalt():status(statust::UNKNOWN)
+    goalt() : status(statust::UNKNOWN)
     {
     }
   };
@@ -73,7 +78,7 @@ public:
   void add(const literalt condition)
   {
     goals.push_back(goalt());
-    goals.back().condition=condition;
+    goals.back().condition= condition;
   }
 
   // register an observer if you want to be told
@@ -82,8 +87,12 @@ public:
   class observert
   {
   public:
-    virtual void goal_covered(const goalt &) { }
-    virtual void satisfying_assignment() { }
+    virtual void goal_covered(const goalt &)
+    {
+    }
+    virtual void satisfying_assignment()
+    {
+    }
   };
 
   void register_observer(observert &o)

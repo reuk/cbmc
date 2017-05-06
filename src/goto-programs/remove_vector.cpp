@@ -28,16 +28,16 @@ static bool have_to_remove_vector(const typet &type);
 
 static bool have_to_remove_vector(const exprt &expr)
 {
-  if(expr.type().id()==ID_vector)
+  if(expr.type().id() == ID_vector)
   {
-    if(expr.id()==ID_plus || expr.id()==ID_minus ||
-       expr.id()==ID_mult || expr.id()==ID_div ||
-       expr.id()==ID_mod  || expr.id()==ID_bitxor ||
-       expr.id()==ID_bitand || expr.id()==ID_bitor)
+    if(
+      expr.id() == ID_plus || expr.id() == ID_minus || expr.id() == ID_mult ||
+      expr.id() == ID_div || expr.id() == ID_mod || expr.id() == ID_bitxor ||
+      expr.id() == ID_bitand || expr.id() == ID_bitor)
       return true;
-    else if(expr.id()==ID_unary_minus || expr.id()==ID_bitnot)
+    else if(expr.id() == ID_unary_minus || expr.id() == ID_bitnot)
       return true;
-    else if(expr.id()==ID_vector)
+    else if(expr.id() == ID_vector)
       return true;
   }
 
@@ -65,23 +65,21 @@ Purpose:
 
 static bool have_to_remove_vector(const typet &type)
 {
-  if(type.id()==ID_struct || type.id()==ID_union)
+  if(type.id() == ID_struct || type.id() == ID_union)
   {
-    const struct_union_typet &struct_union_type=
-      to_struct_union_type(type);
+    const struct_union_typet &struct_union_type= to_struct_union_type(type);
 
-    for(struct_union_typet::componentst::const_iterator
-        it=struct_union_type.components().begin();
-        it!=struct_union_type.components().end();
+    for(struct_union_typet::componentst::const_iterator it=
+          struct_union_type.components().begin();
+        it != struct_union_type.components().end();
         it++)
       if(have_to_remove_vector(it->type()))
         return true;
   }
-  else if(type.id()==ID_pointer ||
-          type.id()==ID_complex ||
-          type.id()==ID_array)
+  else if(
+    type.id() == ID_pointer || type.id() == ID_complex || type.id() == ID_array)
     return have_to_remove_vector(type.subtype());
-  else if(type.id()==ID_vector)
+  else if(type.id() == ID_vector)
     return true;
 
   return false;
@@ -109,63 +107,64 @@ static void remove_vector(exprt &expr)
   Forall_operands(it, expr)
     remove_vector(*it);
 
-  if(expr.type().id()==ID_vector)
+  if(expr.type().id() == ID_vector)
   {
-    if(expr.id()==ID_plus || expr.id()==ID_minus ||
-       expr.id()==ID_mult || expr.id()==ID_div ||
-       expr.id()==ID_mod  || expr.id()==ID_bitxor ||
-       expr.id()==ID_bitand || expr.id()==ID_bitor)
+    if(
+      expr.id() == ID_plus || expr.id() == ID_minus || expr.id() == ID_mult ||
+      expr.id() == ID_div || expr.id() == ID_mod || expr.id() == ID_bitxor ||
+      expr.id() == ID_bitand || expr.id() == ID_bitor)
     {
       remove_vector(expr.type());
-      array_typet array_type=to_array_type(expr.type());
+      array_typet array_type= to_array_type(expr.type());
 
       mp_integer dimension;
       to_integer(array_type.size(), dimension);
 
-      assert(expr.operands().size()==2);
-      const typet subtype=array_type.subtype();
+      assert(expr.operands().size() == 2);
+      const typet subtype= array_type.subtype();
       // do component-wise:
       // x+y -> vector(x[0]+y[0],x[1]+y[1],...)
       array_exprt array_expr(array_type);
       array_expr.operands().resize(integer2size_t(dimension));
 
-      for(unsigned i=0; i<array_expr.operands().size(); i++)
+      for(unsigned i= 0; i < array_expr.operands().size(); i++)
       {
-        exprt index=from_integer(i, array_type.size().type());
+        exprt index= from_integer(i, array_type.size().type());
 
-        array_expr.operands()[i]=
-          binary_exprt(index_exprt(expr.op0(), index, subtype), expr.id(),
-                       index_exprt(expr.op1(), index, subtype));
+        array_expr.operands()[i]= binary_exprt(
+          index_exprt(expr.op0(), index, subtype),
+          expr.id(),
+          index_exprt(expr.op1(), index, subtype));
       }
 
-      expr=array_expr;
+      expr= array_expr;
     }
-    else if(expr.id()==ID_unary_minus || expr.id()==ID_bitnot)
+    else if(expr.id() == ID_unary_minus || expr.id() == ID_bitnot)
     {
       remove_vector(expr.type());
-      array_typet array_type=to_array_type(expr.type());
+      array_typet array_type= to_array_type(expr.type());
 
       mp_integer dimension;
       to_integer(array_type.size(), dimension);
 
-      assert(expr.operands().size()==1);
-      const typet subtype=array_type.subtype();
+      assert(expr.operands().size() == 1);
+      const typet subtype= array_type.subtype();
       // do component-wise:
       // -x -> vector(-x[0],-x[1],...)
       array_exprt array_expr(array_type);
       array_expr.operands().resize(integer2size_t(dimension));
 
-      for(unsigned i=0; i<array_expr.operands().size(); i++)
+      for(unsigned i= 0; i < array_expr.operands().size(); i++)
       {
-        exprt index=from_integer(i, array_type.size().type());
+        exprt index= from_integer(i, array_type.size().type());
 
         array_expr.operands()[i]=
           unary_exprt(expr.id(), index_exprt(expr.op0(), index, subtype));
       }
 
-      expr=array_expr;
+      expr= array_expr;
     }
-    else if(expr.id()==ID_vector)
+    else if(expr.id() == ID_vector)
     {
       expr.id(ID_array);
     }
@@ -191,35 +190,33 @@ static void remove_vector(typet &type)
   if(!have_to_remove_vector(type))
     return;
 
-  if(type.id()==ID_struct || type.id()==ID_union)
+  if(type.id() == ID_struct || type.id() == ID_union)
   {
-    struct_union_typet &struct_union_type=
-      to_struct_union_type(type);
+    struct_union_typet &struct_union_type= to_struct_union_type(type);
 
-    for(struct_union_typet::componentst::iterator
-        it=struct_union_type.components().begin();
-        it!=struct_union_type.components().end();
+    for(struct_union_typet::componentst::iterator it=
+          struct_union_type.components().begin();
+        it != struct_union_type.components().end();
         it++)
     {
       remove_vector(it->type());
     }
   }
-  else if(type.id()==ID_pointer ||
-          type.id()==ID_complex ||
-          type.id()==ID_array)
+  else if(
+    type.id() == ID_pointer || type.id() == ID_complex || type.id() == ID_array)
   {
     remove_vector(type.subtype());
   }
-  else if(type.id()==ID_vector)
+  else if(type.id() == ID_vector)
   {
-    vector_typet &vector_type=to_vector_type(type);
+    vector_typet &vector_type= to_vector_type(type);
 
     remove_vector(type.subtype());
 
     // Replace by an array with appropriate number of members.
     array_typet array_type(vector_type.subtype(), vector_type.size());
-    array_type.add_source_location()=type.source_location();
-    type=array_type;
+    array_type.add_source_location()= type.source_location();
+    type= array_type;
   }
 }
 
@@ -312,9 +309,7 @@ Purpose: removes vector data type
 
 \*******************************************************************/
 
-void remove_vector(
-  symbol_tablet &symbol_table,
-  goto_functionst &goto_functions)
+void remove_vector(symbol_tablet &symbol_table, goto_functionst &goto_functions)
 {
   remove_vector(symbol_table);
   remove_vector(goto_functions);

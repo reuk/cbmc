@@ -23,11 +23,11 @@ public:
     const goto_functionst &_goto_functions,
     const bool use_system_headers,
     const namespacet &_ns,
-    language_factoryt factory):
-    goto_functions(_goto_functions),
-    copied_symbol_table(_ns.get_symbol_table()),
-    ns(copied_symbol_table),
-    language(factory())
+    language_factoryt factory)
+    : goto_functions(_goto_functions),
+      copied_symbol_table(_ns.get_symbol_table()),
+      ns(copied_symbol_table),
+      language(factory())
   {
     if(use_system_headers)
       init_system_library_map();
@@ -68,54 +68,49 @@ protected:
 
   static std::string indent(const unsigned n)
   {
-    return std::string(2*n, ' ');
+    return std::string(2 * n, ' ');
   }
 
-  std::string make_decl(
-      const irep_idt &identifier,
-      const typet &type)
+  std::string make_decl(const irep_idt &identifier, const typet &type)
   {
     symbol_exprt sym(identifier, type);
     code_declt d(sym);
 
-    std::string d_str=expr_to_string(d);
+    std::string d_str= expr_to_string(d);
     assert(!d_str.empty());
-    assert(*d_str.rbegin()==';');
+    assert(*d_str.rbegin() == ';');
 
-    return d_str.substr(0, d_str.size()-1);
+    return d_str.substr(0, d_str.size() - 1);
   }
 
-  void convert_compound_declaration(
-      const symbolt &symbol,
-      std::ostream &os_body);
+  void
+  convert_compound_declaration(const symbolt &symbol, std::ostream &os_body);
   void convert_compound(
-      const typet &type,
-      const typet &unresolved,
-      bool recursive,
-      std::ostream &os);
-  void convert_compound(
-      const struct_union_typet &type,
-      const typet &unresolved,
-      bool recursive,
-      std::ostream &os);
-  void convert_compound_enum(
     const typet &type,
+    const typet &unresolved,
+    bool recursive,
     std::ostream &os);
+  void convert_compound(
+    const struct_union_typet &type,
+    const typet &unresolved,
+    bool recursive,
+    std::ostream &os);
+  void convert_compound_enum(const typet &type, std::ostream &os);
 
   typedef std::unordered_map<irep_idt, code_declt, irep_id_hash>
-          local_static_declst;
+    local_static_declst;
 
   void convert_global_variable(
-      const symbolt &symbol,
-      std::ostream &os,
-      local_static_declst &local_static_decls);
+    const symbolt &symbol,
+    std::ostream &os,
+    local_static_declst &local_static_decls);
 
   void convert_function_declaration(
-      const symbolt &symbol,
-      const bool skip_main,
-      std::ostream &os_decl,
-      std::ostream &os_body,
-      local_static_declst &local_static_decls);
+    const symbolt &symbol,
+    const bool skip_main,
+    std::ostream &os_decl,
+    std::ostream &os_body,
+    local_static_declst &local_static_decls);
 
   void insert_local_static_decls(
     code_blockt &b,

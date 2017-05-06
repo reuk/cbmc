@@ -25,25 +25,25 @@ Function: bv_cbmct::convert_waitfor
 
 bvt bv_cbmct::convert_waitfor(const exprt &expr)
 {
-  if(expr.operands().size()!=4)
+  if(expr.operands().size() != 4)
   {
-    error().source_location=expr.find_source_location();
+    error().source_location= expr.find_source_location();
     error() << "waitfor expected to have four operands" << eom;
     throw 0;
   }
 
   exprt new_cycle;
-  const exprt &old_cycle=expr.op0();
-  const exprt &cycle_var=expr.op1();
-  const exprt &bound=expr.op2();
-  const exprt &predicate=expr.op3();
+  const exprt &old_cycle= expr.op0();
+  const exprt &cycle_var= expr.op1();
+  const exprt &bound= expr.op2();
+  const exprt &predicate= expr.op3();
 
   make_free_bv_expr(expr.type(), new_cycle);
 
   mp_integer bound_value;
   if(to_integer(bound, bound_value))
   {
-    error().source_location=expr.find_source_location();
+    error().source_location= expr.find_source_location();
     error() << "waitfor bound must be a constant" << eom;
     throw 0;
   }
@@ -59,7 +59,7 @@ bvt bv_cbmct::convert_waitfor(const exprt &expr)
   {
     // constraint: new_cycle<=bound+1
 
-    exprt one=from_integer(1, bound.type());
+    exprt one= from_integer(1, bound.type());
 
     exprt bound_plus1(ID_plus, bound.type());
     bound_plus1.reserve_operands(2);
@@ -71,16 +71,16 @@ bvt bv_cbmct::convert_waitfor(const exprt &expr)
     set_to_true(rel_expr);
   }
 
-  for(mp_integer i=0; i<=bound_value; i=i+1)
+  for(mp_integer i= 0; i <= bound_value; i= i + 1)
   {
     // replace cycle_var by old_cycle+i;
 
     exprt old_cycle_plus_i(ID_plus, old_cycle.type());
     old_cycle_plus_i.operands().resize(2);
-    old_cycle_plus_i.op0()=old_cycle;
-    old_cycle_plus_i.op1()=from_integer(i, old_cycle.type());
+    old_cycle_plus_i.op0()= old_cycle;
+    old_cycle_plus_i.op1()= from_integer(i, old_cycle.type());
 
-    exprt tmp_predicate=predicate;
+    exprt tmp_predicate= predicate;
     replace_expr(cycle_var, old_cycle_plus_i, tmp_predicate);
 
     // CONSTRAINT:
@@ -93,13 +93,13 @@ bvt bv_cbmct::convert_waitfor(const exprt &expr)
     {
       exprt cycle_le_bound(ID_le, bool_typet());
       cycle_le_bound.operands().resize(2);
-      cycle_le_bound.op0()=old_cycle_plus_i;
-      cycle_le_bound.op1()=bound;
+      cycle_le_bound.op0()= old_cycle_plus_i;
+      cycle_le_bound.op1()= bound;
 
       exprt cycle_lt_new_cycle(ID_lt, bool_typet());
       cycle_lt_new_cycle.operands().resize(2);
-      cycle_lt_new_cycle.op0()=old_cycle_plus_i;
-      cycle_lt_new_cycle.op1()=new_cycle;
+      cycle_lt_new_cycle.op0()= old_cycle_plus_i;
+      cycle_lt_new_cycle.op1()= new_cycle;
 
       exprt and_expr(ID_and, bool_typet());
       and_expr.operands().resize(2);
@@ -118,13 +118,13 @@ bvt bv_cbmct::convert_waitfor(const exprt &expr)
     {
       exprt cycle_le_bound(ID_le, bool_typet());
       cycle_le_bound.operands().resize(2);
-      cycle_le_bound.op0()=old_cycle_plus_i;
-      cycle_le_bound.op1()=bound;
+      cycle_le_bound.op0()= old_cycle_plus_i;
+      cycle_le_bound.op1()= bound;
 
       exprt cycle_eq_new_cycle(ID_equal, bool_typet());
       cycle_eq_new_cycle.operands().resize(2);
-      cycle_eq_new_cycle.op0()=old_cycle_plus_i;
-      cycle_eq_new_cycle.op1()=new_cycle;
+      cycle_eq_new_cycle.op0()= old_cycle_plus_i;
+      cycle_eq_new_cycle.op1()= new_cycle;
 
       exprt and_expr(ID_and, bool_typet());
       and_expr.operands().resize(2);
@@ -158,15 +158,15 @@ Function: bv_cbmct::convert_waitfor_symbol
 
 bvt bv_cbmct::convert_waitfor_symbol(const exprt &expr)
 {
-  if(expr.operands().size()!=1)
+  if(expr.operands().size() != 1)
   {
-    error().source_location=expr.find_source_location();
+    error().source_location= expr.find_source_location();
     error() << "waitfor_symbol expected to have one operand" << eom;
     throw 0;
   }
 
   exprt result;
-  const exprt &bound=expr.op0();
+  const exprt &bound= expr.op0();
 
   make_free_bv_expr(expr.type(), result);
 
@@ -193,10 +193,10 @@ Function: bv_cbmct::convert_bitvector
 
 bvt bv_cbmct::convert_bitvector(const exprt &expr)
 {
-  if(expr.id()=="waitfor")
+  if(expr.id() == "waitfor")
     return convert_waitfor(expr);
 
-  if(expr.id()=="waitfor_symbol")
+  if(expr.id() == "waitfor_symbol")
     return convert_waitfor_symbol(expr);
 
   return bv_pointerst::convert_bitvector(expr);

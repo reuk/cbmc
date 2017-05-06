@@ -18,12 +18,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 namespace Glucose // NOLINT(readability/namespace)
 {
-class Solver; // NOLINT(readability/identifiers)
+class Solver;     // NOLINT(readability/identifiers)
 class SimpSolver; // NOLINT(readability/identifiers)
 }
 
-template<typename T>
-class satcheck_glucose_baset:public cnf_solvert
+template <typename T>
+class satcheck_glucose_baset : public cnf_solvert
 {
 public:
   explicit satcheck_glucose_baset(T *);
@@ -42,8 +42,14 @@ public:
   void set_polarity(literalt a, bool value);
 
   virtual bool is_in_conflict(literalt a) const;
-  virtual bool has_set_assumptions() const { return true; }
-  virtual bool has_is_in_conflict() const { return true; }
+  virtual bool has_set_assumptions() const
+  {
+    return true;
+  }
+  virtual bool has_is_in_conflict() const
+  {
+    return true;
+  }
 
 protected:
   T *solver;
@@ -52,16 +58,16 @@ protected:
   bvt assumptions;
 };
 
-class satcheck_glucose_no_simplifiert:
-  public satcheck_glucose_baset<Glucose::Solver>
+class satcheck_glucose_no_simplifiert
+  : public satcheck_glucose_baset<Glucose::Solver>
 {
 public:
   satcheck_glucose_no_simplifiert();
   virtual const std::string solver_text();
 };
 
-class satcheck_glucose_simplifiert:
-  public satcheck_glucose_baset<Glucose::SimpSolver>
+class satcheck_glucose_simplifiert
+  : public satcheck_glucose_baset<Glucose::SimpSolver>
 {
 public:
   satcheck_glucose_simplifiert();

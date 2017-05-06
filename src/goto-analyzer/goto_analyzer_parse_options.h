@@ -23,30 +23,27 @@ class bmct;
 class goto_functionst;
 class optionst;
 
-#define GOTO_ANALYSER_OPTIONS \
-  "(function):" \
-  "D:I:(std89)(std99)(std11)" \
-  "(classpath):(cp):(main-class):" \
-  "(16)(32)(64)(LP64)(ILP64)(LLP64)(ILP32)(LP32)" \
-  "(little-endian)(big-endian)" \
-  OPT_SHOW_GOTO_FUNCTIONS \
-  OPT_GOTO_CHECK \
-  "(show-loops)" \
-  "(show-symbol-table)(show-parse-tree)" \
-  "(show-properties)(show-reachable-properties)(property):" \
-  "(verbosity):(version)" \
-  "(gcc)(arch):" \
-  "(taint):(show-taint)" \
-  "(show-local-may-alias)" \
-  "(json):(xml):" \
-  "(unreachable-instructions)(unreachable-functions)" \
-  "(reachable-functions)" \
-  "(intervals)(show-intervals)" \
+#define GOTO_ANALYSER_OPTIONS                                                  \
+  "(function):"                                                                \
+  "D:I:(std89)(std99)(std11)"                                                  \
+  "(classpath):(cp):(main-class):"                                             \
+  "(16)(32)(64)(LP64)(ILP64)(LLP64)(ILP32)(LP32)"                              \
+  "(little-endian)(big-endian)" OPT_SHOW_GOTO_FUNCTIONS OPT_GOTO_CHECK         \
+  "(show-loops)"                                                               \
+  "(show-symbol-table)(show-parse-tree)"                                       \
+  "(show-properties)(show-reachable-properties)(property):"                    \
+  "(verbosity):(version)"                                                      \
+  "(gcc)(arch):"                                                               \
+  "(taint):(show-taint)"                                                       \
+  "(show-local-may-alias)"                                                     \
+  "(json):(xml):"                                                              \
+  "(unreachable-instructions)(unreachable-functions)"                          \
+  "(reachable-functions)"                                                      \
+  "(intervals)(show-intervals)"                                                \
   "(non-null)(show-non-null)"
 
-class goto_analyzer_parse_optionst:
-  public parse_options_baset,
-  public language_uit
+class goto_analyzer_parse_optionst : public parse_options_baset,
+                                     public language_uit
 {
 public:
   virtual int doit() override;

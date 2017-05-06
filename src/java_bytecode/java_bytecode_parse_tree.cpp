@@ -29,8 +29,7 @@ Function: java_bytecode_parse_treet::swap
 
 \*******************************************************************/
 
-void java_bytecode_parse_treet::classt::swap(
-  classt &other)
+void java_bytecode_parse_treet::classt::swap(classt &other)
 {
   other.name.swap(name);
   other.extends.swap(extends);
@@ -60,8 +59,8 @@ void java_bytecode_parse_treet::output(std::ostream &out) const
   parsed_class.output(out);
 
   out << "Class references:\n";
-  for(class_refst::const_iterator it=class_refs.begin();
-      it!=class_refs.end();
+  for(class_refst::const_iterator it= class_refs.begin();
+      it != class_refs.end();
       it++)
     out << "  " << *it << '\n';
 }
@@ -91,20 +90,14 @@ void java_bytecode_parse_treet::classt::output(std::ostream &out) const
     out << " extends " << extends;
   out << " {" << '\n';
 
-  for(fieldst::const_iterator
-      it=fields.begin();
-      it!=fields.end();
-      it++)
+  for(fieldst::const_iterator it= fields.begin(); it != fields.end(); it++)
   {
     it->output(out);
   }
 
   out << '\n';
 
-  for(methodst::const_iterator
-      it=methods.begin();
-      it!=methods.end();
-      it++)
+  for(methodst::const_iterator it= methods.begin(); it != methods.end(); it++)
   {
     it->output(out);
   }
@@ -136,11 +129,11 @@ void java_bytecode_parse_treet::annotationt::output(std::ostream &out) const
   {
     out << '(';
 
-    bool first=true;
+    bool first= true;
     for(const auto &element_value_pair : element_value_pairs)
     {
       if(first)
-        first=false;
+        first= false;
       else
         out << ", ";
       element_value_pair.output(out);
@@ -228,22 +221,23 @@ void java_bytecode_parse_treet::methodt::output(std::ostream &out) const
 
   for(const auto &i : instructions)
   {
-    if(i.source_location.get_line()!=irep_idt())
+    if(i.source_location.get_line() != irep_idt())
       out << "    // " << i.source_location << '\n';
 
     out << "    " << i.address << ": ";
     out << i.statement;
 
-    for(std::vector<exprt>::const_iterator
-        a_it=i.args.begin(); a_it!=i.args.end(); a_it++)
+    for(std::vector<exprt>::const_iterator a_it= i.args.begin();
+        a_it != i.args.end();
+        a_it++)
     {
-      if(a_it!=i.args.begin())
+      if(a_it != i.args.begin())
         out << ',';
-      #if 0
+#if 0
       out << ' ' << from_expr(*a_it);
-      #else
+#else
       out << ' ' << expr2java(*a_it, ns);
-      #endif
+#endif
     }
 
     out << '\n';
@@ -256,8 +250,7 @@ void java_bytecode_parse_treet::methodt::output(std::ostream &out) const
   out << "  Locals:\n";
   for(const auto &v : local_variable_table)
   {
-    out << "    " << v.index << ": " << v.name << ' '
-        << v.signature << '\n';
+    out << "    " << v.index << ": " << v.name << ' ' << v.signature << '\n';
   }
 
   out << '\n';

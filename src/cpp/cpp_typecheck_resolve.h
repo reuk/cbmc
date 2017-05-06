@@ -16,8 +16,7 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 class cpp_typecheck_resolvet
 {
 public:
-  cpp_typecheck_resolvet(
-    class cpp_typecheckt &_cpp_typecheck);
+  cpp_typecheck_resolvet(class cpp_typecheckt &_cpp_typecheck);
 
   typedef enum { VAR, TYPE, BOTH } wantt;
 
@@ -25,7 +24,7 @@ public:
     const cpp_namet &cpp_name,
     const wantt want,
     const cpp_typecheck_fargst &fargs,
-    bool fail_with_exception=true);
+    bool fail_with_exception= true);
 
   // Returns the scope as a side-effect as 'current_scope'.
   // Should really return explicitly.
@@ -49,8 +48,7 @@ protected:
     const cpp_typecheck_fargst &fargs,
     resolve_identifierst &identifiers);
 
-  exprt convert_template_parameter(
-    const cpp_idt &id);
+  exprt convert_template_parameter(const cpp_idt &id);
 
   exprt convert_identifier(
     const cpp_idt &id,
@@ -65,17 +63,14 @@ protected:
     resolve_identifierst &identifiers,
     const cpp_typecheck_fargst &fargs);
 
-  void filter(
-    resolve_identifierst &identifiers,
-    const wantt want);
+  void filter(resolve_identifierst &identifiers, const wantt want);
 
   symbol_typet disambiguate_template_classes(
     const irep_idt &base_name,
     const cpp_scopest::id_sett &id_set,
     const cpp_template_args_non_tct &template_args);
 
-  void make_constructors(
-    resolve_identifierst &identifiers);
+  void make_constructors(resolve_identifierst &identifiers);
 
   void apply_template_args(
     resolve_identifierst &identifiers,
@@ -91,11 +86,9 @@ protected:
     resolve_identifierst &identifiers,
     const cpp_typecheck_fargst &fargs);
 
-  void remove_templates(
-    resolve_identifierst &identifiers);
+  void remove_templates(resolve_identifierst &identifiers);
 
-  void remove_duplicates(
-    resolve_identifierst &identifiers);
+  void remove_duplicates(resolve_identifierst &identifiers);
 
   exprt guess_function_template_args(
     const exprt &expr,
@@ -140,17 +133,17 @@ protected:
     matcht(
       cpp_template_args_tct _s_args,
       cpp_template_args_tct _f_args,
-      irep_idt _id):
-      cost(_s_args.arguments().size()),
-      specialization_args(_s_args),
-      full_args(_f_args),
-      id(_id)
+      irep_idt _id)
+      : cost(_s_args.arguments().size()),
+        specialization_args(_s_args),
+        full_args(_f_args),
+        id(_id)
     {
     }
 
     bool operator<(const matcht &other) const
     {
-      return cost<other.cost;
+      return cost < other.cost;
     }
   };
 };

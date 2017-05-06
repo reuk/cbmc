@@ -8,7 +8,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <iostream>
 
-#if defined (_WIN32)
+#if defined(_WIN32)
 #define EX_OK 0
 #define EX_USAGE 1
 #else
@@ -32,10 +32,12 @@ Function: parse_options_baset::parse_options_baset
 \*******************************************************************/
 
 parse_options_baset::parse_options_baset(
-  const std::string &_optstring, int argc, const char **argv)
+  const std::string &_optstring,
+  int argc,
+  const char **argv)
 {
-  std::string optstring=std::string("?h(help)")+_optstring;
-  parse_result=cmdline.parse(argc, argv, optstring.c_str());
+  std::string optstring= std::string("?h(help)") + _optstring;
+  parse_result= cmdline.parse(argc, argv, optstring.c_str());
 }
 
 /*******************************************************************\

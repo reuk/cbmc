@@ -30,7 +30,7 @@ public:
   // but including the function parameters.
   bool is_local(const irep_idt &identifier) const
   {
-    return locals_map.find(identifier)!=locals_map.end();
+    return locals_map.find(identifier) != locals_map.end();
   }
 
   typedef std::map<irep_idt, symbol_exprt> locals_mapt;
@@ -40,8 +40,7 @@ protected:
   void build(const goto_functiont &goto_function);
 };
 
-inline std::ostream &operator<<(
-  std::ostream &out, const localst &locals)
+inline std::ostream &operator<<(std::ostream &out, const localst &locals)
 {
   locals.output(out);
   return out;

@@ -6,12 +6,8 @@ Author:
 
 \*******************************************************************/
 
-#if defined(__linux__) || \
-    defined(__FreeBSD_kernel__) || \
-    defined(__GNU__) || \
-    defined(__unix__) || \
-    defined(__CYGWIN__) || \
-    defined(__MACH__)
+#if defined(__linux__) || defined(__FreeBSD_kernel__) || defined(__GNU__) ||   \
+  defined(__unix__) || defined(__CYGWIN__) || defined(__MACH__)
 #include <unistd.h>
 #endif
 
@@ -73,33 +69,32 @@ bool read_goto_binary(
   goto_functionst &goto_functions,
   message_handlert &message_handler)
 {
-  #ifdef _MSC_VER
+#ifdef _MSC_VER
   std::ifstream in(widen(filename), std::ios::binary);
-  #else
+#else
   std::ifstream in(filename, std::ios::binary);
-  #endif
+#endif
 
   if(!in)
   {
     messaget message(message_handler);
-    message.error() << "Failed to open `" << filename << "'"
-                    << messaget::eom;
+    message.error() << "Failed to open `" << filename << "'" << messaget::eom;
     return true;
   }
 
   char hdr[4];
-  hdr[0]=in.get();
-  hdr[1]=in.get();
-  hdr[2]=in.get();
-  hdr[3]=in.get();
+  hdr[0]= in.get();
+  hdr[1]= in.get();
+  hdr[2]= in.get();
+  hdr[3]= in.get();
   in.seekg(0);
 
-  if(hdr[0]==0x7f && hdr[1]=='G' && hdr[2]=='B' && hdr[3]=='F')
+  if(hdr[0] == 0x7f && hdr[1] == 'G' && hdr[2] == 'B' && hdr[3] == 'F')
   {
     return read_bin_goto_object(
       in, filename, symbol_table, goto_functions, message_handler);
   }
-  else if(hdr[0]==0x7f && hdr[1]=='E' && hdr[2]=='L' && hdr[3]=='F')
+  else if(hdr[0] == 0x7f && hdr[1] == 'E' && hdr[2] == 'L' && hdr[3] == 'F')
   {
     // ELF binary.
     // This _may_ have a goto-cc section.
@@ -107,8 +102,8 @@ bool read_goto_binary(
     {
       elf_readert elf_reader(in);
 
-      for(unsigned i=0; i<elf_reader.number_of_sections; i++)
-        if(elf_reader.section_name(i)=="goto-cc")
+      for(unsigned i= 0; i < elf_reader.number_of_sections; i++)
+        if(elf_reader.section_name(i) == "goto-cc")
         {
           in.seekg(elf_reader.section_offset(i));
           return read_bin_goto_object(
@@ -116,8 +111,8 @@ bool read_goto_binary(
         }
 
       // section not found
-      messaget(message_handler).error() <<
-        "failed to find goto-cc section in ELF binary" << messaget::eom;
+      messaget(message_handler).error()
+        << "failed to find goto-cc section in ELF binary" << messaget::eom;
     }
 
     catch(const char *s)
@@ -136,14 +131,14 @@ bool read_goto_binary(
 
       if(osx_fat_reader.has_gb())
       {
-        tempname=get_temporary_file("tmp.goto-binary", ".gb");
+        tempname= get_temporary_file("tmp.goto-binary", ".gb");
         osx_fat_reader.extract_gb(filename, tempname);
 
         std::ifstream temp_in(tempname, std::ios::binary);
         if(!temp_in)
-          messaget(message_handler).error() << "failed to read temp binary"
-                                            << messaget::eom;
-        const bool read_err=read_bin_goto_object(
+          messaget(message_handler).error()
+            << "failed to read temp binary" << messaget::eom;
+        const bool read_err= read_bin_goto_object(
           temp_in, filename, symbol_table, goto_functions, message_handler);
         temp_in.close();
 
@@ -152,8 +147,8 @@ bool read_goto_binary(
       }
 
       // architecture not found
-      messaget(message_handler).error() <<
-        "failed to find goto binary in Mach-O file" << messaget::eom;
+      messaget(message_handler).error()
+        << "failed to find goto binary in Mach-O file" << messaget::eom;
     }
 
     catch(const char *s)
@@ -165,8 +160,7 @@ bool read_goto_binary(
   }
   else
   {
-    messaget(message_handler).error() <<
-      "not a goto binary" << messaget::eom;
+    messaget(message_handler).error() << "not a goto binary" << messaget::eom;
   }
 
   return true;
@@ -186,11 +180,11 @@ Function: is_goto_binary
 
 bool is_goto_binary(const std::string &filename)
 {
-  #ifdef _MSC_VER
+#ifdef _MSC_VER
   std::ifstream in(widen(filename), std::ios::binary);
-  #else
+#else
   std::ifstream in(filename, std::ios::binary);
-  #endif
+#endif
 
   if(!in)
     return false;
@@ -200,16 +194,16 @@ bool is_goto_binary(const std::string &filename)
   // 2. ELF binaries, marked with 0x7f ELF
 
   char hdr[4];
-  hdr[0]=in.get();
-  hdr[1]=in.get();
-  hdr[2]=in.get();
-  hdr[3]=in.get();
+  hdr[0]= in.get();
+  hdr[1]= in.get();
+  hdr[2]= in.get();
+  hdr[3]= in.get();
 
-  if(hdr[0]==0x7f && hdr[1]=='G' && hdr[2]=='B' && hdr[3]=='F')
+  if(hdr[0] == 0x7f && hdr[1] == 'G' && hdr[2] == 'B' && hdr[3] == 'F')
   {
     return true; // yes, this is a goto binary
   }
-  else if(hdr[0]==0x7f && hdr[1]=='E' && hdr[2]=='L' && hdr[3]=='F')
+  else if(hdr[0] == 0x7f && hdr[1] == 'E' && hdr[2] == 'L' && hdr[3] == 'F')
   {
     // this _may_ have a goto-cc section
     try
@@ -261,7 +255,7 @@ static void rename_symbols_in_function(
   goto_functionst::goto_functiont &function,
   const rename_symbolt &rename_symbol)
 {
-  goto_programt &program=function.body;
+  goto_programt &program= function.body;
   rename_symbol(function.type);
 
   Forall_goto_program_instructions(iit, program)
@@ -301,16 +295,16 @@ static bool link_functions(
     rename_symbolt::expr_mapt::const_iterator e_it=
       rename_symbol.expr_map.find(src_it->first);
 
-    irep_idt final_id=src_it->first;
+    irep_idt final_id= src_it->first;
 
-    if(e_it!=rename_symbol.expr_map.end())
-      final_id=e_it->second;
+    if(e_it != rename_symbol.expr_map.end())
+      final_id= e_it->second;
 
     // already there?
     goto_functionst::function_mapt::iterator dest_f_it=
       dest_functions.function_map.find(final_id);
 
-    if(dest_f_it==dest_functions.function_map.end()) // not there yet
+    if(dest_f_it == dest_functions.function_map.end()) // not there yet
     {
       rename_symbols_in_function(src_it->second, rename_symbol);
 
@@ -318,26 +312,28 @@ static bool link_functions(
         dest_functions.function_map[final_id];
 
       in_dest_symbol_table.body.swap(src_it->second.body);
-      in_dest_symbol_table.type=src_it->second.type;
+      in_dest_symbol_table.type= src_it->second.type;
     }
     else // collision!
     {
       goto_functionst::goto_functiont &in_dest_symbol_table=
         dest_functions.function_map[final_id];
 
-      goto_functionst::goto_functiont &src_func=src_it->second;
+      goto_functionst::goto_functiont &src_func= src_it->second;
 
-      if(in_dest_symbol_table.body.instructions.empty() ||
-         weak_symbols.find(final_id)!=weak_symbols.end())
+      if(
+        in_dest_symbol_table.body.instructions.empty() ||
+        weak_symbols.find(final_id) != weak_symbols.end())
       {
         // the one with body wins!
         rename_symbols_in_function(src_func, rename_symbol);
 
         in_dest_symbol_table.body.swap(src_func.body);
-        in_dest_symbol_table.type=src_func.type;
+        in_dest_symbol_table.type= src_func.type;
       }
-      else if(src_func.body.instructions.empty() ||
-              src_ns.lookup(src_it->first).is_weak)
+      else if(
+        src_func.body.instructions.empty() ||
+        src_ns.lookup(src_it->first).is_weak)
       {
         // just keep the old one in dest
       }
@@ -360,19 +356,19 @@ static bool link_functions(
   forall_symbols(it, dest_symbol_table.symbols)
     if(it->second.is_macro)
     {
-      const symbolt &symbol=it->second;
+      const symbolt &symbol= it->second;
 
-      assert(symbol.value.id()==ID_symbol);
-      const irep_idt &id=to_symbol_expr(symbol.value).get_identifier();
+      assert(symbol.value.id() == ID_symbol);
+      const irep_idt &id= to_symbol_expr(symbol.value).get_identifier();
 
-      #if 0
+#if 0
       if(!base_type_eq(symbol.type, ns.lookup(id).type, ns))
       {
         std::cerr << symbol << std::endl;
         std::cerr << ns.lookup(id) << std::endl;
       }
       assert(base_type_eq(symbol.type, ns.lookup(id).type, ns));
-      #endif
+#endif
 
       macro_application.insert_expr(symbol.name, id);
     }
@@ -402,16 +398,13 @@ bool read_object_and_link(
   goto_functionst &functions,
   message_handlert &message_handler)
 {
-  messaget(message_handler).statistics() << "Reading: "
-                                         << file_name << messaget::eom;
+  messaget(message_handler).statistics()
+    << "Reading: " << file_name << messaget::eom;
 
   // we read into a temporary model
   goto_modelt temp_model;
 
-  if(read_goto_binary(
-      file_name,
-      temp_model,
-      message_handler))
+  if(read_goto_binary(file_name, temp_model, message_handler))
     return true;
 
   typedef std::unordered_set<irep_idt, irep_id_hash> id_sett;
@@ -420,16 +413,18 @@ bool read_object_and_link(
     if(it->second.is_weak)
       weak_symbols.insert(it->first);
 
-  linkingt linking(symbol_table,
-                   temp_model.symbol_table,
-                   message_handler);
+  linkingt linking(symbol_table, temp_model.symbol_table, message_handler);
 
   if(linking.typecheck_main())
     return true;
 
-  if(link_functions(symbol_table, functions,
-                    temp_model.symbol_table, temp_model.goto_functions,
-                    linking.rename_symbol, weak_symbols))
+  if(link_functions(
+       symbol_table,
+       functions,
+       temp_model.symbol_table,
+       temp_model.goto_functions,
+       linking.rename_symbol,
+       weak_symbols))
     return true;
 
   return false;

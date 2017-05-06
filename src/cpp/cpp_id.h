@@ -26,36 +26,42 @@ class cpp_idt
 public:
   cpp_idt();
 
-  typedef enum
-  {
-    UNKNOWN, SYMBOL, TYPEDEF, CLASS, ENUM, TEMPLATE,
-    TEMPLATE_PARAMETER, NAMESPACE, BLOCK_SCOPE,
-    TEMPLATE_SCOPE, ROOT_SCOPE
+  typedef enum {
+    UNKNOWN,
+    SYMBOL,
+    TYPEDEF,
+    CLASS,
+    ENUM,
+    TEMPLATE,
+    TEMPLATE_PARAMETER,
+    NAMESPACE,
+    BLOCK_SCOPE,
+    TEMPLATE_SCOPE,
+    ROOT_SCOPE
   } id_classt;
 
-  bool is_member, is_method, is_static_member,
-       is_scope, is_constructor;
+  bool is_member, is_method, is_static_member, is_scope, is_constructor;
 
   id_classt id_class;
 
   bool is_class() const
   {
-    return id_class==CLASS;
+    return id_class == CLASS;
   }
 
   bool is_enum() const
   {
-    return id_class==ENUM;
+    return id_class == ENUM;
   }
 
   bool is_namespace() const
   {
-    return id_class==NAMESPACE;
+    return id_class == NAMESPACE;
   }
 
   bool is_typedef() const
   {
-    return id_class==TYPEDEF;
+    return id_class == TYPEDEF;
   }
 
   irep_idt identifier, base_name;
@@ -70,23 +76,23 @@ public:
 
   cpp_idt &get_parent() const
   {
-    assert(parent!=NULL);
+    assert(parent != NULL);
     return *parent;
   }
 
   void set_parent(cpp_idt &_parent)
   {
     assert(_parent.is_scope);
-    parent=&_parent;
+    parent= &_parent;
   }
 
   void clear()
   {
-    *this=cpp_idt();
+    *this= cpp_idt();
   }
 
-  void print(std::ostream &out, unsigned indent=0) const;
-  void print_fields(std::ostream &out, unsigned indent=0) const;
+  void print(std::ostream &out, unsigned indent= 0) const;
+  void print_fields(std::ostream &out, unsigned indent= 0) const;
 
 protected:
   typedef std::multimap<irep_idt, cpp_idt> cpp_id_mapt;

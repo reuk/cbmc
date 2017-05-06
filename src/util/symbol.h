@@ -58,17 +58,17 @@ public:
 
   const irep_idt &display_name() const
   {
-    return pretty_name.empty()?name:pretty_name;
+    return pretty_name.empty() ? name : pretty_name;
   }
 
   // global use
-  bool is_type, is_macro, is_exported,
-       is_input, is_output, is_state_var, is_property;
+  bool is_type, is_macro, is_exported, is_input, is_output, is_state_var,
+    is_property;
 
   // ANSI-C
   bool is_static_lifetime, is_thread_local;
-  bool is_lvalue, is_file_local, is_extern, is_volatile,
-       is_parameter, is_auxiliary, is_weak;
+  bool is_lvalue, is_file_local, is_extern, is_volatile, is_parameter,
+    is_auxiliary, is_weak;
 
   symbolt()
   {
@@ -81,13 +81,12 @@ public:
     value.make_nil();
     location.make_nil();
 
-    name=module=base_name=mode=pretty_name=irep_idt();
+    name= module= base_name= mode= pretty_name= irep_idt();
 
-    is_type=is_macro=is_exported=
-    is_input=is_output=is_state_var=is_property=
-    is_static_lifetime=is_thread_local=
-    is_lvalue=is_file_local=is_extern=is_volatile=
-    is_parameter=is_auxiliary=is_weak=false;
+    is_type= is_macro= is_exported= is_input= is_output= is_state_var=
+      is_property= is_static_lifetime= is_thread_local= is_lvalue=
+        is_file_local= is_extern= is_volatile= is_parameter= is_auxiliary=
+          is_weak= false;
   }
 
   void swap(symbolt &b);
@@ -117,13 +116,13 @@ std::ostream &operator<<(std::ostream &out, const symbolt &symbol);
 
     This is a symbol generated as part of type checking.
 */
-class type_symbolt:public symbolt
+class type_symbolt : public symbolt
 {
 public:
   explicit type_symbolt(const typet &_type)
   {
-    type=_type;
-    is_type=true;
+    type= _type;
+    is_type= true;
   }
 };
 
@@ -133,16 +132,16 @@ public:
     This is a symbol generated as part of translation to or
     modification of the intermediate representation.
 */
-class auxiliary_symbolt:public symbolt
+class auxiliary_symbolt : public symbolt
 {
 public:
   auxiliary_symbolt()
   {
-    is_lvalue=true;
-    is_state_var=true;
-    is_thread_local=true;
-    is_file_local=true;
-    is_auxiliary=true;
+    is_lvalue= true;
+    is_state_var= true;
+    is_thread_local= true;
+    is_file_local= true;
+    is_auxiliary= true;
   }
 };
 
@@ -151,16 +150,16 @@ public:
 
     This is a symbol generated as part of type checking.
 */
-class parameter_symbolt:public symbolt
+class parameter_symbolt : public symbolt
 {
 public:
   parameter_symbolt()
   {
-    is_lvalue=true;
-    is_state_var=true;
-    is_thread_local=true;
-    is_file_local=true;
-    is_parameter=true;
+    is_lvalue= true;
+    is_state_var= true;
+    is_thread_local= true;
+    is_file_local= true;
+    is_parameter= true;
   }
 };
 

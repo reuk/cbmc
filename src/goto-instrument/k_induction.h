@@ -13,7 +13,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 void k_induction(
   goto_functionst &goto_functions,
-  bool base_case, bool step_case,
+  bool base_case,
+  bool step_case,
   unsigned k);
 
 #endif // CPROVER_GOTO_INSTRUMENT_K_INDUCTION_H

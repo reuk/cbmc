@@ -69,13 +69,12 @@ public:
   void copy_from(const goto_function_templatet<bodyT> &other)
   {
     body.copy_from(other.body);
-    type=other.type;
-    parameter_identifiers=other.parameter_identifiers;
+    type= other.type;
+    parameter_identifiers= other.parameter_identifiers;
   }
 
-  goto_function_templatet(const goto_function_templatet<bodyT> &src):
-    type(src.type),
-    parameter_identifiers(src.parameter_identifiers)
+  goto_function_templatet(const goto_function_templatet<bodyT> &src)
+    : type(src.type), parameter_identifiers(src.parameter_identifiers)
   {
     body.copy_from(src.body);
   }
@@ -104,9 +103,7 @@ public:
     function_map.clear();
   }
 
-  void output(
-    const namespacet &ns,
-    std::ostream &out) const;
+  void output(const namespacet &ns, std::ostream &out) const;
 
   void compute_location_numbers();
   void compute_loop_numbers();
@@ -162,7 +159,7 @@ void goto_functions_templatet<bodyT>::output(
     {
       out << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n";
 
-      const symbolt &symbol=ns.lookup(fun.first);
+      const symbolt &symbol= ns.lookup(fun.first);
       out << symbol.display_name() << " /* " << symbol.name << " */\n";
       fun.second.body.output(ns, symbol.name, out);
 
@@ -186,11 +183,10 @@ Function: goto_functions_templatet::compute_location_numbers
 template <class bodyT>
 void goto_functions_templatet<bodyT>::compute_location_numbers()
 {
-  unsigned nr=0;
+  unsigned nr= 0;
 
-  for(typename function_mapt::iterator
-      it=function_map.begin();
-      it!=function_map.end();
+  for(typename function_mapt::iterator it= function_map.begin();
+      it != function_map.end();
       it++)
     it->second.body.compute_location_numbers(nr);
 }
@@ -210,9 +206,8 @@ Function: goto_functions_templatet::compute_incoming_edges
 template <class bodyT>
 void goto_functions_templatet<bodyT>::compute_incoming_edges()
 {
-  for(typename function_mapt::iterator
-      it=function_map.begin();
-      it!=function_map.end();
+  for(typename function_mapt::iterator it= function_map.begin();
+      it != function_map.end();
       it++)
     it->second.body.compute_incoming_edges();
 }
@@ -232,9 +227,8 @@ Function: goto_functions_templatet::compute_target_numbers
 template <class bodyT>
 void goto_functions_templatet<bodyT>::compute_target_numbers()
 {
-  for(typename function_mapt::iterator
-      it=function_map.begin();
-      it!=function_map.end();
+  for(typename function_mapt::iterator it= function_map.begin();
+      it != function_map.end();
       it++)
     it->second.body.compute_target_numbers();
 }
@@ -254,9 +248,8 @@ Function: goto_functions_templatet::compute_loop_numbers
 template <class bodyT>
 void goto_functions_templatet<bodyT>::compute_loop_numbers()
 {
-  for(typename function_mapt::iterator
-      it=function_map.begin();
-      it!=function_map.end();
+  for(typename function_mapt::iterator it= function_map.begin();
+      it != function_map.end();
       it++)
     it->second.body.compute_loop_numbers();
 }

@@ -47,9 +47,9 @@ Function: dirtyt::find_dirty
 
 void dirtyt::find_dirty(const exprt &expr)
 {
-  if(expr.id()==ID_address_of)
+  if(expr.id() == ID_address_of)
   {
-    const address_of_exprt &address_of_expr=to_address_of_expr(expr);
+    const address_of_exprt &address_of_expr= to_address_of_expr(expr);
     find_dirty_address_of(address_of_expr.object());
     return;
   }
@@ -72,27 +72,26 @@ Function: dirtyt::find_dirty_address_of
 
 void dirtyt::find_dirty_address_of(const exprt &expr)
 {
-  if(expr.id()==ID_symbol)
+  if(expr.id() == ID_symbol)
   {
-    const irep_idt &identifier=
-      to_symbol_expr(expr).get_identifier();
+    const irep_idt &identifier= to_symbol_expr(expr).get_identifier();
 
     dirty.insert(identifier);
   }
-  else if(expr.id()==ID_member)
+  else if(expr.id() == ID_member)
   {
     find_dirty_address_of(to_member_expr(expr).struct_op());
   }
-  else if(expr.id()==ID_index)
+  else if(expr.id() == ID_index)
   {
     find_dirty_address_of(to_index_expr(expr).array());
     find_dirty(to_index_expr(expr).index());
   }
-  else if(expr.id()==ID_dereference)
+  else if(expr.id() == ID_dereference)
   {
     find_dirty(to_dereference_expr(expr).pointer());
   }
-  else if(expr.id()==ID_if)
+  else if(expr.id() == ID_if)
   {
     find_dirty_address_of(to_if_expr(expr).true_case());
     find_dirty_address_of(to_if_expr(expr).false_case());

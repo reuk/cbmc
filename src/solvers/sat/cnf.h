@@ -11,13 +11,17 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <solvers/prop/prop.h>
 
-class cnft:public propt
+class cnft : public propt
 {
 public:
   // For CNF, we don't use index 0 as a matter of principle,
   // so we'll start counting variables at 1.
-  cnft():_no_variables(1) { }
-  virtual ~cnft() { }
+  cnft() : _no_variables(1)
+  {
+  }
+  virtual ~cnft()
+  {
+  }
 
   virtual literalt land(literalt a, literalt b) override;
   virtual literalt lor(literalt a, literalt b) override;
@@ -32,9 +36,15 @@ public:
   // a?b:c
   virtual literalt lselect(literalt a, literalt b, literalt c) override;
   virtual literalt new_variable() override;
-  virtual size_t no_variables() const override { return _no_variables; }
-  virtual void set_no_variables(size_t no) { _no_variables=no; }
-  virtual size_t no_clauses() const=0;
+  virtual size_t no_variables() const override
+  {
+    return _no_variables;
+  }
+  virtual void set_no_variables(size_t no)
+  {
+    _no_variables= no;
+  }
+  virtual size_t no_clauses() const= 0;
 
   void gate_and(literalt a, literalt b, literalt o);
   void gate_or(literalt a, literalt b, literalt o);
@@ -54,16 +64,16 @@ protected:
   static bool is_all(const bvt &bv, literalt l)
   {
     forall_literals(it, bv)
-      if(*it!=l)
+      if(*it != l)
         return false;
     return true;
   }
 };
 
-class cnf_solvert:public cnft
+class cnf_solvert : public cnft
 {
 public:
-  cnf_solvert():status(INIT), clause_counter(0)
+  cnf_solvert() : status(INIT), clause_counter(0)
   {
   }
 

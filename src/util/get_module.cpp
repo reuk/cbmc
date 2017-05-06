@@ -15,13 +15,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 typedef std::list<const symbolt *> symbolptr_listt;
 
-#define forall_symbolptr_list(it, list) \
-  for(symbolptr_listt::const_iterator it=(list).begin(); \
-      it!=(list).end(); ++it)
+#define forall_symbolptr_list(it, list)                                        \
+  for(symbolptr_listt::const_iterator it= (list).begin(); it != (list).end();  \
+      ++it)
 
-#define Forall_symbolptr_list(it, list) \
-  for(symbolptr_listt::iterator it=(list).begin(); \
-      it!=(list).end(); ++it)
+#define Forall_symbolptr_list(it, list)                                        \
+  for(symbolptr_listt::iterator it= (list).begin(); it != (list).end(); ++it)
 
 /*******************************************************************\
 
@@ -48,12 +47,12 @@ const symbolt &get_module_by_name(
     symbol_tablet::symbolst::const_iterator it2=
       symbol_table.symbols.find(it->second);
 
-    if(it2==symbol_table.symbols.end())
+    if(it2 == symbol_table.symbols.end())
       continue;
 
-    const symbolt &s=it2->second;
+    const symbolt &s= it2->second;
 
-    if(s.is_type || s.type.id()!=ID_module)
+    if(s.is_type || s.type.id() != ID_module)
       continue;
 
     symbolptr_list.push_back(&s);
@@ -64,7 +63,7 @@ const symbolt &get_module_by_name(
     message.error() << "module `" << module << "' not found" << messaget::eom;
     throw 0;
   }
-  else if(symbolptr_list.size()>=2)
+  else if(symbolptr_list.size() >= 2)
   {
     message.error() << "module `" << module << "' does not uniquely resolve:\n";
 
@@ -97,7 +96,7 @@ const symbolt &get_module(
   const std::string &module,
   message_handlert &message_handler)
 {
-  if(module!="")
+  if(module != "")
     return get_module_by_name(symbol_table, module, message_handler);
 
   symbolptr_listt symbolptr_list, main_symbolptr_list;
@@ -105,13 +104,13 @@ const symbolt &get_module(
 
   forall_symbols(it, symbol_table.symbols)
   {
-    const symbolt &s=it->second;
+    const symbolt &s= it->second;
 
-    if(s.type.id()!=ID_module)
+    if(s.type.id() != ID_module)
       continue;
 
     // this is our default
-    if(s.base_name==ID_main)
+    if(s.base_name == ID_main)
       return get_module_by_name(symbol_table, "main", message_handler);
 
     symbolptr_list.push_back(&s);
@@ -122,7 +121,7 @@ const symbolt &get_module(
     message.error() << "no module found" << messaget::eom;
     throw 0;
   }
-  else if(symbolptr_list.size()>=2)
+  else if(symbolptr_list.size() >= 2)
   {
     // sorted alphabetically
     std::set<std::string> modules;
@@ -141,7 +140,7 @@ const symbolt &get_module(
 
   // symbolptr_list has exactly one element
 
-  const symbolt &symbol=*symbolptr_list.front();
+  const symbolt &symbol= *symbolptr_list.front();
 
   message.status() << "Using module `" << symbol.pretty_name << "'"
                    << messaget::eom;

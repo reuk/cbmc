@@ -18,8 +18,7 @@ Author: Daniel Kroening
 class graphml_witnesst
 {
 public:
-  explicit graphml_witnesst(const namespacet &_ns)
-    : ns(_ns)
+  explicit graphml_witnesst(const namespacet &_ns) : ns(_ns)
   {
   }
 
@@ -36,9 +35,8 @@ protected:
   graphmlt graphml;
 
   void remove_l0_l1(exprt &expr);
-  std::string convert_assign_rec(
-    const irep_idt &identifier,
-    const code_assignt &assign);
+  std::string
+  convert_assign_rec(const irep_idt &identifier, const code_assignt &assign);
 };
 
 #endif // CPROVER_GOTO_PROGRAMS_GRAPHML_WITNESS_H

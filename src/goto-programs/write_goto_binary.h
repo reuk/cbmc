@@ -24,7 +24,7 @@ bool write_goto_binary(
   std::ostream &out,
   const symbol_tablet &symbol_table,
   const goto_functionst &goto_functions,
-  int version=GOTO_BINARY_VERSION);
+  int version= GOTO_BINARY_VERSION);
 
 bool write_goto_binary(
   const std::string &filename,

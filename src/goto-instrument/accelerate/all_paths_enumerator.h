@@ -16,16 +16,14 @@ Author: Matt Lewis
 #include "path.h"
 #include "path_enumerator.h"
 
-class all_paths_enumeratort:public path_enumeratort
+class all_paths_enumeratort : public path_enumeratort
 {
 public:
   all_paths_enumeratort(
     goto_programt &_goto_program,
     natural_loops_mutablet::natural_loopt &_loop,
-    goto_programt::targett _loop_header):
-    goto_program(_goto_program),
-    loop(_loop),
-    loop_header(_loop_header)
+    goto_programt::targett _loop_header)
+    : goto_program(_goto_program), loop(_loop), loop_header(_loop_header)
   {
   }
 

@@ -18,18 +18,27 @@ Author: Daniel Kroening, kroening@kroening.com
 class var_mapt
 {
 public:
-  explicit var_mapt(const namespacet &_ns):
-    ns(_ns), shared_count(0), local_count(0), nondet_count(0), dynamic_count(0)
+  explicit var_mapt(const namespacet &_ns)
+    : ns(_ns),
+      shared_count(0),
+      local_count(0),
+      nondet_count(0),
+      dynamic_count(0)
   {
   }
 
   struct var_infot
   {
-    enum { SHARED, THREAD_LOCAL, PROCEDURE_LOCAL } kind;
+    enum
+    {
+      SHARED,
+      THREAD_LOCAL,
+      PROCEDURE_LOCAL
+    } kind;
 
     bool is_shared() const
     {
-      return kind==SHARED;
+      return kind == SHARED;
     }
 
     // the variables are numbered
@@ -43,7 +52,7 @@ public:
 
     unsigned ssa_counter;
 
-    var_infot():kind(SHARED), number(0), ssa_counter(0)
+    var_infot() : kind(SHARED), number(0), ssa_counter(0)
     {
     }
 
@@ -51,7 +60,7 @@ public:
 
     symbol_exprt ssa_symbol() const
     {
-      symbol_exprt s=symbol_exprt(ssa_identifier(), type);
+      symbol_exprt s= symbol_exprt(ssa_identifier(), type);
       s.set(ID_C_SSA_symbol, true);
       s.set(ID_C_full_identifier, full_identifier);
       return s;
@@ -68,10 +77,8 @@ public:
   typedef std::map<irep_idt, var_infot> id_mapt;
   id_mapt id_map;
 
-  var_infot &operator()(
-    const irep_idt &symbol,
-    const irep_idt &suffix,
-    const typet &type);
+  var_infot &
+  operator()(const irep_idt &symbol, const irep_idt &suffix, const typet &type);
 
   var_infot &operator[](const irep_idt &full_identifier)
   {
@@ -80,10 +87,10 @@ public:
 
   void clear()
   {
-    shared_count=0;
-    local_count=0;
-    nondet_count=0;
-    dynamic_count=0;
+    shared_count= 0;
+    local_count= 0;
+    nondet_count= 0;
+    dynamic_count= 0;
     id_map.clear();
   }
 

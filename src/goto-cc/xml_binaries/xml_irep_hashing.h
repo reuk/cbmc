@@ -22,7 +22,7 @@ private:
   {
     unsigned short operator()(const unsigned long l) const
     {
-      return (l &0xFFFF);
+      return (l & 0xFFFF);
     }
   };
 
@@ -31,7 +31,7 @@ private:
   {
     bool operator()(const unsigned long l, const unsigned long r) const
     {
-      return (l==r);
+      return (l == r);
     }
   };
 
@@ -56,32 +56,30 @@ private:
 public:
   struct ireps_containert
   {
-      typedef std::unordered_map<unsigned long, irept, ul_hash, ul_eq>
-        id_containert;
-      id_containert id_container;
+    typedef std::unordered_map<unsigned long, irept, ul_hash, ul_eq>
+      id_containert;
+    id_containert id_container;
 
-      typedef std::unordered_map<irept, unsigned long,
-                                 irep_full_hash, irep_content_eq>
+    typedef std::
+      unordered_map<irept, unsigned long, irep_full_hash, irep_content_eq>
         content_containert;
-      content_containert content_container;
+    content_containert content_container;
 
-      typedef std::map<unsigned, unsigned> id_replace_mapt;
-      id_replace_mapt id_replace_map;
+    typedef std::map<unsigned, unsigned> id_replace_mapt;
+    id_replace_mapt id_replace_map;
 
-      void clear()
-      {
-        id_container.clear();
-        content_container.clear();
-        id_replace_map.clear();
-      }
+    void clear()
+    {
+      id_container.clear();
+      content_container.clear();
+      id_replace_map.clear();
+    }
   };
 
-  explicit xml_irep_convertt(ireps_containert &ic):ireps_container(ic)
-  {
-  };
+  explicit xml_irep_convertt(ireps_containert &ic) : ireps_container(ic){};
 
-  unsigned long insert(unsigned long, const irept&);
-  unsigned long insert(const std::string&, const irept&);
+  unsigned long insert(unsigned long, const irept &);
+  unsigned long insert(const std::string &, const irept &);
 
   void convert(const irept &irep, xmlt &xml);
   void convert(const xmlt &xml, irept &irep);
@@ -100,14 +98,14 @@ private:
   ireps_containert &ireps_container;
 
   ireps_containert::id_containert::const_iterator
-    find_irep_by_id(const unsigned int);
+  find_irep_by_id(const unsigned int);
   ireps_containert::content_containert::const_iterator
-    find_irep_by_content(const irept &irep);
+  find_irep_by_content(const irept &irep);
 
   std::string long_to_string(const unsigned long);
   unsigned long string_to_long(const std::string &);
 
-  unsigned long add_with_childs(const irept&);
+  unsigned long add_with_childs(const irept &);
 };
 
 #endif // CPROVER_GOTO_CC_XML_BINARIES_XML_IREP_HASHING_H

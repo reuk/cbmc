@@ -38,11 +38,11 @@ void goto_diff_languagest::register_languages()
   register_language(new_ansi_c_language);
   register_language(new_cpp_language);
 
-  #ifdef HAVE_SPECC
+#ifdef HAVE_SPECC
   register_language(new_specc_language);
-  #endif
+#endif
 
-  #ifdef HAVE_JAVA_BYTECODE
+#ifdef HAVE_JAVA_BYTECODE
   register_language(new_java_bytecode_language);
-  #endif
+#endif
 }

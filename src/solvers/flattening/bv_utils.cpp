@@ -26,12 +26,12 @@ Function: bv_utilst::build_constant
 
 bvt bv_utilst::build_constant(const mp_integer &n, std::size_t width)
 {
-  std::string n_str=integer2binary(n, width);
+  std::string n_str= integer2binary(n, width);
   bvt result;
   result.resize(width);
-  assert(n_str.size()==width);
-  for(std::size_t i=0; i<width; i++)
-    result[i]=const_literal(n_str[width-i-1]=='1');
+  assert(n_str.size() == width);
+  for(std::size_t i= 0; i < width; i++)
+    result[i]= const_literal(n_str[width - i - 1] == '1');
   return result;
 }
 
@@ -51,8 +51,8 @@ literalt bv_utilst::is_one(const bvt &bv)
 {
   assert(!bv.empty());
   bvt tmp;
-  tmp=bv;
-  tmp.erase(tmp.begin(), tmp.begin()+1);
+  tmp= bv;
+  tmp.erase(tmp.begin(), tmp.begin() + 1);
   return prop.land(is_zero(tmp), bv[0]);
 }
 
@@ -70,8 +70,8 @@ Function: bv_utilst::set_equal
 
 void bv_utilst::set_equal(const bvt &a, const bvt &b)
 {
-  assert(a.size()==b.size());
-  for(std::size_t i=0; i<a.size(); i++)
+  assert(a.size() == b.size());
+  for(std::size_t i= 0; i < a.size(); i++)
     prop.set_equal(a[i], b[i]);
 }
 
@@ -90,16 +90,16 @@ Function: bv_utilst::extract
 bvt bv_utilst::extract(const bvt &a, std::size_t first, std::size_t last)
 {
   // preconditions
-  assert(first<a.size());
-  assert(last<a.size());
-  assert(first<=last);
+  assert(first < a.size());
+  assert(last < a.size());
+  assert(first <= last);
 
-  bvt result=a;
-  result.resize(last+1);
-  if(first!=0)
-    result.erase(result.begin(), result.begin()+first);
+  bvt result= a;
+  result.resize(last + 1);
+  if(first != 0)
+    result.erase(result.begin(), result.begin() + first);
 
-  assert(result.size()==last-first+1);
+  assert(result.size() == last - first + 1);
   return result;
 }
 
@@ -118,12 +118,12 @@ Function: bv_utilst::extract_msb
 bvt bv_utilst::extract_msb(const bvt &a, std::size_t n)
 {
   // preconditions
-  assert(n<=a.size());
+  assert(n <= a.size());
 
-  bvt result=a;
-  result.erase(result.begin(), result.begin()+(result.size()-n));
+  bvt result= a;
+  result.erase(result.begin(), result.begin() + (result.size() - n));
 
-  assert(result.size()==n);
+  assert(result.size() == n);
   return result;
 }
 
@@ -142,9 +142,9 @@ Function: bv_utilst::extract_lsb
 bvt bv_utilst::extract_lsb(const bvt &a, std::size_t n)
 {
   // preconditions
-  assert(n<=a.size());
+  assert(n <= a.size());
 
-  bvt result=a;
+  bvt result= a;
   result.resize(n);
   return result;
 }
@@ -165,13 +165,13 @@ bvt bv_utilst::concatenate(const bvt &a, const bvt &b) const
 {
   bvt result;
 
-  result.resize(a.size()+b.size());
+  result.resize(a.size() + b.size());
 
-  for(std::size_t i=0; i<a.size(); i++)
-    result[i]=a[i];
+  for(std::size_t i= 0; i < a.size(); i++)
+    result[i]= a[i];
 
-  for(std::size_t i=0; i<b.size(); i++)
-    result[i+a.size()]=b[i];
+  for(std::size_t i= 0; i < b.size(); i++)
+    result[i + a.size()]= b[i];
 
   return result;
 }
@@ -190,13 +190,13 @@ Function: bv_utilst::select
 
 bvt bv_utilst::select(literalt s, const bvt &a, const bvt &b)
 {
-  assert(a.size()==b.size());
+  assert(a.size() == b.size());
 
   bvt result;
 
   result.resize(a.size());
-  for(std::size_t i=0; i<result.size(); i++)
-    result[i]=prop.lselect(s, a[i], b[i]);
+  for(std::size_t i= 0; i < result.size(); i++)
+    result[i]= prop.lselect(s, a[i], b[i]);
 
   return result;
 }
@@ -218,22 +218,20 @@ bvt bv_utilst::extension(
   std::size_t new_size,
   representationt rep)
 {
-  std::size_t old_size=bv.size();
-  bvt result=bv;
+  std::size_t old_size= bv.size();
+  bvt result= bv;
   result.resize(new_size);
 
-  assert(old_size!=0);
+  assert(old_size != 0);
 
   literalt extend_with=
-    (rep==SIGNED && !bv.empty())?bv[old_size-1]:
-    const_literal(false);
+    (rep == SIGNED && !bv.empty()) ? bv[old_size - 1] : const_literal(false);
 
-  for(std::size_t i=old_size; i<new_size; i++)
-    result[i]=extend_with;
+  for(std::size_t i= old_size; i < new_size; i++)
+    result[i]= extend_with;
 
   return result;
 }
-
 
 /*******************************************************************\
 
@@ -257,30 +255,30 @@ literalt bv_utilst::full_adder(
   const literalt carry_in,
   literalt &carry_out)
 {
-  #ifdef OPTIMAL_FULL_ADDER
+#ifdef OPTIMAL_FULL_ADDER
   if(prop.has_set_to() && prop.cnf_handled_well())
   {
     literalt x;
     literalt y;
-    int constantProp = -1;
+    int constantProp= -1;
 
     if(a.is_constant())
     {
-      x = b;
-      y = carry_in;
-      constantProp = (a.is_true()) ? 1 : 0;
+      x= b;
+      y= carry_in;
+      constantProp= (a.is_true()) ? 1 : 0;
     }
     else if(b.is_constant())
     {
-      x = a;
-      y = carry_in;
-      constantProp = (b.is_true()) ? 1 : 0;
+      x= a;
+      y= carry_in;
+      constantProp= (b.is_true()) ? 1 : 0;
     }
     else if(carry_in.is_constant())
     {
-      x = a;
-      y = b;
-      constantProp = (carry_in.is_true()) ? 1 : 0;
+      x= a;
+      y= b;
+      constantProp= (carry_in.is_true()) ? 1 : 0;
     }
 
     literalt sum;
@@ -289,27 +287,27 @@ literalt bv_utilst::full_adder(
     if(constantProp == 1)
     {
       // At least one input bit is 1
-      carry_out = prop.lor(x, y);
-      sum = prop.lequal(x, y);
+      carry_out= prop.lor(x, y);
+      sum= prop.lequal(x, y);
     }
     else if(constantProp == 0)
     {
       // At least one input bit is 0
-      carry_out = prop.land(x, y);
-      sum = prop.lxor(x, y);
+      carry_out= prop.land(x, y);
+      sum= prop.lxor(x, y);
     }
     else
     {
-      carry_out = prop.new_variable();
-      sum = prop.new_variable();
+      carry_out= prop.new_variable();
+      sum= prop.new_variable();
 
       // Any two inputs 1 will set the carry_out to 1
-      prop.lcnf(!a,        !b, carry_out);
+      prop.lcnf(!a, !b, carry_out);
       prop.lcnf(!a, !carry_in, carry_out);
       prop.lcnf(!b, !carry_in, carry_out);
 
       // Any two inputs 0 will set the carry_out to 0
-      prop.lcnf(a,        b, !carry_out);
+      prop.lcnf(a, b, !carry_out);
       prop.lcnf(a, carry_in, !carry_out);
       prop.lcnf(b, carry_in, !carry_out);
 
@@ -324,17 +322,17 @@ literalt bv_utilst::full_adder(
       prop.lcnf(!carry_in, sum, carry_out);
 
       // If all of the inputs are 1 or all are 0 it sets the sum
-      prop.lcnf(!a, !b, !carry_in,  sum);
-      prop.lcnf(a,  b,  carry_in, !sum);
+      prop.lcnf(!a, !b, !carry_in, sum);
+      prop.lcnf(a, b, carry_in, !sum);
     }
 
     return sum;
   }
   else // NOLINT(readability/braces)
-  #endif // OPTIMAL_FULL_ADDER
+#endif // OPTIMAL_FULL_ADDER
   {
     // trivial encoding
-    carry_out=carry(a, b, carry_in);
+    carry_out= carry(a, b, carry_in);
     return prop.lxor(prop.lxor(a, b), carry_in);
   }
 }
@@ -356,26 +354,23 @@ Function: bv_utilst::carry
 
 literalt bv_utilst::carry(literalt a, literalt b, literalt c)
 {
-  #ifdef COMPACT_CARRY
+#ifdef COMPACT_CARRY
   if(prop.has_set_to() && prop.cnf_handled_well())
   {
     // propagation possible?
-    unsigned const_count=
-      a.is_constant() + b.is_constant() + c.is_constant();
+    unsigned const_count= a.is_constant() + b.is_constant() + c.is_constant();
 
     // propagation is possible if two or three inputs are constant
-    if(const_count>=2)
-      return prop.lor(prop.lor(
-          prop.land(a, b),
-          prop.land(a, c)),
-          prop.land(b, c));
+    if(const_count >= 2)
+      return prop.lor(
+        prop.lor(prop.land(a, b), prop.land(a, c)), prop.land(b, c));
 
     // it's also possible if two of a,b,c are the same
-    if(a==b)
+    if(a == b)
       return a;
-    else if(a==c)
+    else if(a == c)
       return a;
-    else if(b==c)
+    else if(b == c)
       return b;
 
     // the below yields fewer clauses and variables,
@@ -383,7 +378,7 @@ literalt bv_utilst::carry(literalt a, literalt b, literalt c)
 
     bvt clause;
 
-    literalt x=prop.new_variable();
+    literalt x= prop.new_variable();
 
     /*
     carry_correct: LEMMA
@@ -397,17 +392,17 @@ literalt bv_utilst::carry(literalt a, literalt b, literalt c)
       (x=((a AND b) OR (a AND c) OR (b AND c)));
     */
 
-    prop.lcnf(a,  b,     !x);
-    prop.lcnf(a, !b,  c, !x);
-    prop.lcnf(a, !b, !c,  x);
-    prop.lcnf(!a,  b,  c, !x);
-    prop.lcnf(!a,  b, !c,  x);
-    prop.lcnf(!a, !b,      x);
+    prop.lcnf(a, b, !x);
+    prop.lcnf(a, !b, c, !x);
+    prop.lcnf(a, !b, !c, x);
+    prop.lcnf(!a, b, c, !x);
+    prop.lcnf(!a, b, !c, x);
+    prop.lcnf(!a, !b, x);
 
     return x;
   }
   else
-  #endif // COMPACT_CARRY
+#endif // COMPACT_CARRY
   {
     // trivial encoding
     bvt tmp;
@@ -438,13 +433,13 @@ void bv_utilst::adder(
   literalt carry_in,
   literalt &carry_out)
 {
-  assert(sum.size()==op.size());
+  assert(sum.size() == op.size());
 
-  carry_out=carry_in;
+  carry_out= carry_in;
 
-  for(std::size_t i=0; i<sum.size(); i++)
+  for(std::size_t i= 0; i < sum.size(); i++)
   {
-    sum[i] = full_adder(sum[i], op[i], carry_out, carry_out);
+    sum[i]= full_adder(sum[i], op[i], carry_out, carry_out);
   }
 }
 
@@ -460,17 +455,14 @@ Function: bv_utilst::carry_out
 
 \*******************************************************************/
 
-literalt bv_utilst::carry_out(
-  const bvt &op0,
-  const bvt &op1,
-  literalt carry_in)
+literalt bv_utilst::carry_out(const bvt &op0, const bvt &op1, literalt carry_in)
 {
-  assert(op0.size()==op1.size());
+  assert(op0.size() == op1.size());
 
-  literalt carry_out=carry_in;
+  literalt carry_out= carry_in;
 
-  for(std::size_t i=0; i<op0.size(); i++)
-    carry_out=carry(op0[i], op1[i], carry_out);
+  for(std::size_t i= 0; i < op0.size(); i++)
+    carry_out= carry(op0[i], op1[i], carry_out);
 
   return carry_out;
 }
@@ -493,7 +485,7 @@ bvt bv_utilst::add_sub_no_overflow(
   bool subtract,
   representationt rep)
 {
-  bvt sum=op0;
+  bvt sum= op0;
   adder_no_overflow(sum, op1, subtract, rep);
   return sum;
 }
@@ -512,13 +504,13 @@ Function: bv_utilst::add_sub
 
 bvt bv_utilst::add_sub(const bvt &op0, const bvt &op1, bool subtract)
 {
-  assert(op0.size()==op1.size());
+  assert(op0.size() == op1.size());
 
-  literalt carry_in=const_literal(subtract);
+  literalt carry_in= const_literal(subtract);
   literalt carry_out;
 
-  bvt result=op0;
-  bvt tmp_op1=subtract?inverted(op1):op1;
+  bvt result= op0;
+  bvt tmp_op1= subtract ? inverted(op1) : op1;
 
   adder(result, tmp_op1, carry_in, carry_out);
 
@@ -539,10 +531,9 @@ Function: bv_utilst::add_sub
 
 bvt bv_utilst::add_sub(const bvt &op0, const bvt &op1, literalt subtract)
 {
-  const bvt op1_sign_applied=
-    select(subtract, inverted(op1), op1);
+  const bvt op1_sign_applied= select(subtract, inverted(op1), op1);
 
-  bvt result=op0;
+  bvt result= op0;
   literalt carry_out;
 
   adder(result, op1_sign_applied, subtract, carry_out);
@@ -562,22 +553,23 @@ Function: bv_utilst::overflow_add
 
 \*******************************************************************/
 
-literalt bv_utilst::overflow_add(
-  const bvt &op0, const bvt &op1, representationt rep)
+literalt
+bv_utilst::overflow_add(const bvt &op0, const bvt &op1, representationt rep)
 {
-  if(rep==SIGNED)
+  if(rep == SIGNED)
   {
     // An overflow occurs if the signs of the two operands are the same
     // and the sign of the sum is the opposite.
 
-    literalt old_sign=op0[op0.size()-1];
-    literalt sign_the_same=prop.lequal(op0[op0.size()-1], op1[op1.size()-1]);
+    literalt old_sign= op0[op0.size() - 1];
+    literalt sign_the_same=
+      prop.lequal(op0[op0.size() - 1], op1[op1.size() - 1]);
 
-    bvt result=add(op0, op1);
-    return
-      prop.land(sign_the_same, prop.lxor(result[result.size()-1], old_sign));
+    bvt result= add(op0, op1);
+    return prop.land(
+      sign_the_same, prop.lxor(result[result.size() - 1], old_sign));
   }
-  else if(rep==UNSIGNED)
+  else if(rep == UNSIGNED)
   {
     // overflow is simply carry-out
     return carry_out(op0, op1, const_literal(false));
@@ -598,23 +590,21 @@ Function: bv_utilst::overflow_sub
 
 \*******************************************************************/
 
-literalt bv_utilst::overflow_sub(
-  const bvt &op0, const bvt &op1, representationt rep)
+literalt
+bv_utilst::overflow_sub(const bvt &op0, const bvt &op1, representationt rep)
 {
-  if(rep==SIGNED)
+  if(rep == SIGNED)
   {
     // We special-case x-INT_MIN, which is >=0 if
     // x is negative, always representable, and
     // thus not an overflow.
-    literalt op1_is_int_min=is_int_min(op1);
-    literalt op0_is_negative=op0[op0.size()-1];
+    literalt op1_is_int_min= is_int_min(op1);
+    literalt op0_is_negative= op0[op0.size() - 1];
 
-    return
-      prop.lselect(op1_is_int_min,
-        !op0_is_negative,
-        overflow_add(op0, negate(op1), SIGNED));
+    return prop.lselect(
+      op1_is_int_min, !op0_is_negative, overflow_add(op0, negate(op1), SIGNED));
   }
-  else if(rep==UNSIGNED)
+  else if(rep == UNSIGNED)
   {
     // overflow is simply _negated_ carry-out
     return !carry_out(op0, inverted(op1), const_literal(true));
@@ -641,25 +631,25 @@ void bv_utilst::adder_no_overflow(
   bool subtract,
   representationt rep)
 {
-  const bvt tmp_op=subtract?inverted(op):op;
+  const bvt tmp_op= subtract ? inverted(op) : op;
 
-  if(rep==SIGNED)
+  if(rep == SIGNED)
   {
     // an overflow occurs if the signs of the two operands are the same
     // and the sign of the sum is the opposite
 
-    literalt old_sign=sum[sum.size()-1];
+    literalt old_sign= sum[sum.size() - 1];
     literalt sign_the_same=
-      prop.lequal(sum[sum.size()-1], tmp_op[tmp_op.size()-1]);
+      prop.lequal(sum[sum.size() - 1], tmp_op[tmp_op.size() - 1]);
 
     literalt carry;
     adder(sum, tmp_op, const_literal(subtract), carry);
 
     // result of addition in sum
     prop.l_set_to_false(
-      prop.land(sign_the_same, prop.lxor(sum[sum.size()-1], old_sign)));
+      prop.land(sign_the_same, prop.lxor(sum[sum.size() - 1], old_sign)));
   }
-  else if(rep==UNSIGNED)
+  else if(rep == UNSIGNED)
   {
     literalt carry_out;
     adder(sum, tmp_op, const_literal(subtract), carry_out);
@@ -683,7 +673,7 @@ Function: bv_utilst::adder_no_overflow
 
 void bv_utilst::adder_no_overflow(bvt &sum, const bvt &op)
 {
-  literalt carry_out=const_literal(false);
+  literalt carry_out= const_literal(false);
 
   adder(sum, op, carry_out, carry_out);
 
@@ -704,20 +694,20 @@ Function: bv_utilst::shift
 
 bvt bv_utilst::shift(const bvt &op, const shiftt s, const bvt &dist)
 {
-  std::size_t d=1, width=op.size();
-  bvt result=op;
+  std::size_t d= 1, width= op.size();
+  bvt result= op;
 
-  for(std::size_t stage=0; stage<dist.size(); stage++)
+  for(std::size_t stage= 0; stage < dist.size(); stage++)
   {
-    if(dist[stage]!=const_literal(false))
+    if(dist[stage] != const_literal(false))
     {
-      bvt tmp=shift(result, s, d);
+      bvt tmp= shift(result, s, d);
 
-      for(std::size_t i=0; i<width; i++)
-        result[i]=prop.lselect(dist[stage], tmp[i], result[i]);
+      for(std::size_t i= 0; i < width; i++)
+        result[i]= prop.lselect(dist[stage], tmp[i], result[i]);
     }
 
-    d=d<<1;
+    d= d << 1;
   }
 
   return result;
@@ -740,29 +730,31 @@ bvt bv_utilst::shift(const bvt &src, const shiftt s, std::size_t dist)
   bvt result;
   result.resize(src.size());
 
-  for(std::size_t i=0; i<src.size(); i++)
+  for(std::size_t i= 0; i < src.size(); i++)
   {
     literalt l;
 
     switch(s)
     {
     case LEFT:
-      l=(dist<=i?src[i-dist]:const_literal(false));
+      l= (dist <= i ? src[i - dist] : const_literal(false));
       break;
 
     case ARIGHT:
-      l=(i+dist<src.size()?src[i+dist]:src[src.size()-1]); // sign bit
+      l=
+        (i + dist < src.size() ? src[i + dist]
+                               : src[src.size() - 1]); // sign bit
       break;
 
     case LRIGHT:
-      l=(i+dist<src.size()?src[i+dist]:const_literal(false));
+      l= (i + dist < src.size() ? src[i + dist] : const_literal(false));
       break;
 
     default:
       assert(false);
     }
 
-    result[i]=l;
+    result[i]= l;
   }
 
   return result;
@@ -782,7 +774,7 @@ Function: bv_utilst::negate
 
 bvt bv_utilst::negate(const bvt &bv)
 {
-  bvt result=inverted(bv);
+  bvt result= inverted(bv);
   literalt carry_out;
   incrementer(result, const_literal(true), carry_out);
   return result;
@@ -826,7 +818,7 @@ literalt bv_utilst::overflow_negate(const bvt &bv)
   bvt zeros(bv);
   zeros.erase(--zeros.end());
 
-  return prop.land(bv[bv.size()-1], !prop.lor(zeros));
+  return prop.land(bv[bv.size() - 1], !prop.lor(zeros));
 }
 
 /*******************************************************************\
@@ -841,18 +833,15 @@ Function: bv_utilst::incrementer
 
 \*******************************************************************/
 
-void bv_utilst::incrementer(
-  bvt &bv,
-  literalt carry_in,
-  literalt &carry_out)
+void bv_utilst::incrementer(bvt &bv, literalt carry_in, literalt &carry_out)
 {
-  carry_out=carry_in;
+  carry_out= carry_in;
 
   Forall_literals(it, bv)
   {
-    literalt new_carry=prop.land(carry_out, *it);
-    *it=prop.lxor(*it, carry_out);
-    carry_out=new_carry;
+    literalt new_carry= prop.land(carry_out, *it);
+    *it= prop.lxor(*it, carry_out);
+    carry_out= new_carry;
   }
 }
 
@@ -870,7 +859,7 @@ Function: bv_utilst::incrementer
 
 bvt bv_utilst::incrementer(const bvt &bv, literalt carry_in)
 {
-  bvt result=bv;
+  bvt result= bv;
   literalt carry_out;
   incrementer(result, carry_in, carry_out);
   return result;
@@ -890,9 +879,9 @@ Function: bv_utilst::invert
 
 bvt bv_utilst::inverted(const bvt &bv)
 {
-  bvt result=bv;
+  bvt result= bv;
   Forall_literals(it, result)
-    *it=!*it;
+    *it= !*it;
   return result;
 }
 
@@ -912,32 +901,30 @@ bvt bv_utilst::wallace_tree(const std::vector<bvt> &pps)
 {
   assert(!pps.empty());
 
-  if(pps.size()==1)
+  if(pps.size() == 1)
     return pps.front();
-  else if(pps.size()==2)
+  else if(pps.size() == 2)
     return add(pps[0], pps[1]);
   else
   {
     std::vector<bvt> new_pps;
-    std::size_t no_full_adders=pps.size()/3;
+    std::size_t no_full_adders= pps.size() / 3;
 
     // add groups of three partial products using CSA
-    for(std::size_t i=0; i<no_full_adders; i++)
+    for(std::size_t i= 0; i < no_full_adders; i++)
     {
-      const bvt &a=pps[i*3+0],
-                &b=pps[i*3+1],
-                &c=pps[i*3+2];
+      const bvt &a= pps[i * 3 + 0], &b= pps[i * 3 + 1], &c= pps[i * 3 + 2];
 
-      assert(a.size()==b.size() && a.size()==c.size());
+      assert(a.size() == b.size() && a.size() == c.size());
 
       bvt s(a.size()), t(a.size());
 
-      for(std::size_t bit=0; bit<a.size(); bit++)
+      for(std::size_t bit= 0; bit < a.size(); bit++)
       {
         // \todo reformulate using full_adder
-        s[bit]=prop.lxor(a[bit], prop.lxor(b[bit], c[bit]));
-        t[bit]=(bit==0)?const_literal(false):
-               carry(a[bit-1], b[bit-1], c[bit-1]);
+        s[bit]= prop.lxor(a[bit], prop.lxor(b[bit], c[bit]));
+        t[bit]= (bit == 0) ? const_literal(false)
+                           : carry(a[bit - 1], b[bit - 1], c[bit - 1]);
       }
 
       new_pps.push_back(s);
@@ -945,10 +932,10 @@ bvt bv_utilst::wallace_tree(const std::vector<bvt> &pps)
     }
 
     // pass onwards up to two remaining partial products
-    for(std::size_t i=no_full_adders*3; i<pps.size(); i++)
+    for(std::size_t i= no_full_adders * 3; i < pps.size(); i++)
       new_pps.push_back(pps[i]);
 
-    assert(new_pps.size()<pps.size());
+    assert(new_pps.size() < pps.size());
     return wallace_tree(new_pps);
   }
 }
@@ -967,8 +954,8 @@ Function: bv_utilst::unsigned_multiplier
 
 bvt bv_utilst::unsigned_multiplier(const bvt &_op0, const bvt &_op1)
 {
-  #if 1
-  bvt op0=_op0, op1=_op1;
+#if 1
+  bvt op0= _op0, op1= _op1;
 
   if(is_constant(op1))
     std::swap(op0, op1);
@@ -976,33 +963,33 @@ bvt bv_utilst::unsigned_multiplier(const bvt &_op0, const bvt &_op1)
   bvt product;
   product.resize(op0.size());
 
-  for(std::size_t i=0; i<product.size(); i++)
-    product[i]=const_literal(false);
+  for(std::size_t i= 0; i < product.size(); i++)
+    product[i]= const_literal(false);
 
-  for(std::size_t sum=0; sum<op0.size(); sum++)
-    if(op0[sum]!=const_literal(false))
+  for(std::size_t sum= 0; sum < op0.size(); sum++)
+    if(op0[sum] != const_literal(false))
     {
       bvt tmpop;
 
       tmpop.reserve(op0.size());
 
-      for(std::size_t idx=0; idx<sum; idx++)
+      for(std::size_t idx= 0; idx < sum; idx++)
         tmpop.push_back(const_literal(false));
 
-      for(std::size_t idx=sum; idx<op0.size(); idx++)
-        tmpop.push_back(prop.land(op1[idx-sum], op0[sum]));
+      for(std::size_t idx= sum; idx < op0.size(); idx++)
+        tmpop.push_back(prop.land(op1[idx - sum], op0[sum]));
 
-      product=add(product, tmpop);
+      product= add(product, tmpop);
     }
 
   return product;
-  #else
+#else
   // Wallace tree multiplier. This is disabled, as runtimes have
   // been observed to go up by 5%-10%, and on some models even by 20%.
 
   // build the usual quadratic number of partial products
 
-  bvt op0=_op0, op1=_op1;
+  bvt op0= _op0, op1= _op1;
 
   if(is_constant(op1))
     std::swap(op0, op1);
@@ -1010,19 +997,19 @@ bvt bv_utilst::unsigned_multiplier(const bvt &_op0, const bvt &_op1)
   std::vector<bvt> pps;
   pps.reserve(op0.size());
 
-  for(std::size_t bit=0; bit<op0.size(); bit++)
-    if(op0[bit]!=const_literal(false))
+  for(std::size_t bit= 0; bit < op0.size(); bit++)
+    if(op0[bit] != const_literal(false))
     {
       bvt pp;
 
       pp.reserve(op0.size());
 
       // zeros according to weight
-      for(std::size_t idx=0; idx<bit; idx++)
+      for(std::size_t idx= 0; idx < bit; idx++)
         pp.push_back(const_literal(false));
 
-      for(std::size_t idx=bit; idx<op0.size(); idx++)
-        pp.push_back(prop.land(op1[idx-bit], op0[bit]));
+      for(std::size_t idx= bit; idx < op0.size(); idx++)
+        pp.push_back(prop.land(op1[idx - bit], op0[bit]));
 
       pps.push_back(pp);
     }
@@ -1032,7 +1019,7 @@ bvt bv_utilst::unsigned_multiplier(const bvt &_op0, const bvt &_op1)
   else
     return wallace_tree(pps);
 
-  #endif
+#endif
 }
 
 /*******************************************************************\
@@ -1047,39 +1034,37 @@ Function: bv_utilst::unsigned_multiplier_no_overflow
 
 \*******************************************************************/
 
-bvt bv_utilst::unsigned_multiplier_no_overflow(
-  const bvt &op0,
-  const bvt &op1)
+bvt bv_utilst::unsigned_multiplier_no_overflow(const bvt &op0, const bvt &op1)
 {
-  bvt _op0=op0, _op1=op1;
+  bvt _op0= op0, _op1= op1;
 
   if(is_constant(_op1))
     _op0.swap(_op1);
 
-  assert(_op0.size()==_op1.size());
+  assert(_op0.size() == _op1.size());
 
   bvt product;
   product.resize(_op0.size());
 
-  for(std::size_t i=0; i<product.size(); i++)
-    product[i]=const_literal(false);
+  for(std::size_t i= 0; i < product.size(); i++)
+    product[i]= const_literal(false);
 
-  for(std::size_t sum=0; sum<op0.size(); sum++)
-    if(op0[sum]!=const_literal(false))
+  for(std::size_t sum= 0; sum < op0.size(); sum++)
+    if(op0[sum] != const_literal(false))
     {
       bvt tmpop;
 
       tmpop.reserve(product.size());
 
-      for(std::size_t idx=0; idx<sum; idx++)
+      for(std::size_t idx= 0; idx < sum; idx++)
         tmpop.push_back(const_literal(false));
 
-      for(std::size_t idx=sum; idx<product.size(); idx++)
-        tmpop.push_back(prop.land(op1[idx-sum], op0[sum]));
+      for(std::size_t idx= sum; idx < product.size(); idx++)
+        tmpop.push_back(prop.land(op1[idx - sum], op0[sum]));
 
       adder_no_overflow(product, tmpop);
 
-      for(std::size_t idx=op1.size()-sum; idx<op1.size(); idx++)
+      for(std::size_t idx= op1.size() - sum; idx < op1.size(); idx++)
         prop.l_set_to_false(prop.land(op1[idx], op0[sum]));
     }
 
@@ -1103,15 +1088,15 @@ bvt bv_utilst::signed_multiplier(const bvt &op0, const bvt &op1)
   if(op0.empty() || op1.empty())
     return bvt();
 
-  literalt sign0=op0[op0.size()-1];
-  literalt sign1=op1[op1.size()-1];
+  literalt sign0= op0[op0.size() - 1];
+  literalt sign1= op1[op1.size() - 1];
 
-  bvt neg0=cond_negate(op0, sign0);
-  bvt neg1=cond_negate(op1, sign1);
+  bvt neg0= cond_negate(op0, sign0);
+  bvt neg1= cond_negate(op1, sign1);
 
-  bvt result=unsigned_multiplier(neg0, neg1);
+  bvt result= unsigned_multiplier(neg0, neg1);
 
-  literalt result_sign=prop.lxor(sign0, sign1);
+  literalt result_sign= prop.lxor(sign0, sign1);
 
   return cond_negate(result, result_sign);
 }
@@ -1130,13 +1115,13 @@ Function: bv_utilst::cond_negate
 
 bvt bv_utilst::cond_negate(const bvt &bv, const literalt cond)
 {
-  bvt neg_bv=negate(bv);
+  bvt neg_bv= negate(bv);
 
   bvt result;
   result.resize(bv.size());
 
-  for(std::size_t i=0; i<bv.size(); i++)
-    result[i]=prop.lselect(cond, neg_bv[i], bv[i]);
+  for(std::size_t i= 0; i < bv.size(); i++)
+    result[i]= prop.lselect(cond, neg_bv[i], bv[i]);
 
   return result;
 }
@@ -1156,7 +1141,7 @@ Function: bv_utilst::absolute_value
 bvt bv_utilst::absolute_value(const bvt &bv)
 {
   assert(!bv.empty());
-  return cond_negate(bv, bv[bv.size()-1]);
+  return cond_negate(bv, bv[bv.size() - 1]);
 }
 
 /*******************************************************************\
@@ -1173,9 +1158,7 @@ Function: bv_utilst::cond_negate_no_overflow
 
 bvt bv_utilst::cond_negate_no_overflow(const bvt &bv, literalt cond)
 {
-  prop.l_set_to(
-    prop.limplies(cond, !overflow_negate(bv)),
-    true);
+  prop.l_set_to(prop.limplies(cond, !overflow_negate(bv)), true);
 
   return cond_negate(bv, cond);
 }
@@ -1192,24 +1175,22 @@ Function: bv_utilst::signed_multiplier_no_overflow
 
 \*******************************************************************/
 
-bvt bv_utilst::signed_multiplier_no_overflow(
-  const bvt &op0,
-  const bvt &op1)
+bvt bv_utilst::signed_multiplier_no_overflow(const bvt &op0, const bvt &op1)
 {
   if(op0.empty() || op1.empty())
     return bvt();
 
-  literalt sign0=op0[op0.size()-1];
-  literalt sign1=op1[op1.size()-1];
+  literalt sign0= op0[op0.size() - 1];
+  literalt sign1= op1[op1.size() - 1];
 
-  bvt neg0=cond_negate_no_overflow(op0, sign0);
-  bvt neg1=cond_negate_no_overflow(op1, sign1);
+  bvt neg0= cond_negate_no_overflow(op0, sign0);
+  bvt neg1= cond_negate_no_overflow(op1, sign1);
 
-  bvt result=unsigned_multiplier_no_overflow(neg0, neg1);
+  bvt result= unsigned_multiplier_no_overflow(neg0, neg1);
 
-  prop.l_set_to(result[result.size()-1], false);
+  prop.l_set_to(result[result.size() - 1], false);
 
-  literalt result_sign=prop.lxor(sign0, sign1);
+  literalt result_sign= prop.lxor(sign0, sign1);
 
   return cond_negate_no_overflow(result, result_sign);
 }
@@ -1226,16 +1207,16 @@ Function: bv_utilst::multiplier
 
 \*******************************************************************/
 
-bvt bv_utilst::multiplier(
-  const bvt &op0,
-  const bvt &op1,
-  representationt rep)
+bvt bv_utilst::multiplier(const bvt &op0, const bvt &op1, representationt rep)
 {
   switch(rep)
   {
-  case SIGNED: return signed_multiplier(op0, op1);
-  case UNSIGNED: return unsigned_multiplier(op0, op1);
-  default: assert(false);
+  case SIGNED:
+    return signed_multiplier(op0, op1);
+  case UNSIGNED:
+    return unsigned_multiplier(op0, op1);
+  default:
+    assert(false);
   }
 }
 
@@ -1258,9 +1239,12 @@ bvt bv_utilst::multiplier_no_overflow(
 {
   switch(rep)
   {
-  case SIGNED: return signed_multiplier_no_overflow(op0, op1);
-  case UNSIGNED: return unsigned_multiplier_no_overflow(op0, op1);
-  default: assert(false);
+  case SIGNED:
+    return signed_multiplier_no_overflow(op0, op1);
+  case UNSIGNED:
+    return unsigned_multiplier_no_overflow(op0, op1);
+  default:
+    assert(false);
   }
 }
 
@@ -1287,28 +1271,28 @@ void bv_utilst::signed_divider(
 
   bvt _op0(op0), _op1(op1);
 
-  literalt sign_0=_op0[_op0.size()-1];
-  literalt sign_1=_op1[_op1.size()-1];
+  literalt sign_0= _op0[_op0.size() - 1];
+  literalt sign_1= _op1[_op1.size() - 1];
 
-  bvt neg_0=negate(_op0), neg_1=negate(_op1);
+  bvt neg_0= negate(_op0), neg_1= negate(_op1);
 
-  for(std::size_t i=0; i<_op0.size(); i++)
-    _op0[i]=(prop.lselect(sign_0, neg_0[i], _op0[i]));
+  for(std::size_t i= 0; i < _op0.size(); i++)
+    _op0[i]= (prop.lselect(sign_0, neg_0[i], _op0[i]));
 
-  for(std::size_t i=0; i<_op1.size(); i++)
-    _op1[i]=(prop.lselect(sign_1, neg_1[i], _op1[i]));
+  for(std::size_t i= 0; i < _op1.size(); i++)
+    _op1[i]= (prop.lselect(sign_1, neg_1[i], _op1[i]));
 
   unsigned_divider(_op0, _op1, res, rem);
 
-  bvt neg_res=negate(res), neg_rem=negate(rem);
+  bvt neg_res= negate(res), neg_rem= negate(rem);
 
-  literalt result_sign=prop.lxor(sign_0, sign_1);
+  literalt result_sign= prop.lxor(sign_0, sign_1);
 
-  for(std::size_t i=0; i<res.size(); i++)
-    res[i]=prop.lselect(result_sign, neg_res[i], res[i]);
+  for(std::size_t i= 0; i < res.size(); i++)
+    res[i]= prop.lselect(result_sign, neg_res[i], res[i]);
 
-  for(std::size_t i=0; i<res.size(); i++)
-    rem[i]=prop.lselect(sign_0, neg_rem[i], rem[i]);
+  for(std::size_t i= 0; i < res.size(); i++)
+    rem[i]= prop.lselect(sign_0, neg_rem[i], rem[i]);
 }
 
 /*******************************************************************\
@@ -1334,9 +1318,14 @@ void bv_utilst::divider(
 
   switch(rep)
   {
-  case SIGNED: signed_divider(op0, op1, result, remainer); break;
-  case UNSIGNED: unsigned_divider(op0, op1, result, remainer); break;
-  default: assert(false);
+  case SIGNED:
+    signed_divider(op0, op1, result, remainer);
+    break;
+  case UNSIGNED:
+    unsigned_divider(op0, op1, result, remainer);
+    break;
+  default:
+    assert(false);
   }
 }
 
@@ -1358,10 +1347,10 @@ void bv_utilst::unsigned_divider(
   bvt &res,
   bvt &rem)
 {
-  std::size_t width=op0.size();
+  std::size_t width= op0.size();
 
-  // check if we divide by a power of two
-  #if 0
+// check if we divide by a power of two
+#if 0
   {
     std::size_t one_count=0, non_const_count=0, one_pos=0;
 
@@ -1389,7 +1378,7 @@ void bv_utilst::unsigned_divider(
       return;
     }
   }
-  #endif
+#endif
 
   // Division by zero test.
   // Note that we produce a non-deterministic result in
@@ -1397,30 +1386,29 @@ void bv_utilst::unsigned_divider(
   // bvudiv returns a vector of all 1s if the second operand is 0
   // bvurem returns its first operand if the second operand is 0
 
-  literalt is_not_zero=prop.lor(op1);
+  literalt is_not_zero= prop.lor(op1);
 
   // free variables for result of division
 
   res.resize(width);
   rem.resize(width);
-  for(std::size_t i=0; i<width; i++)
+  for(std::size_t i= 0; i < width; i++)
   {
-    res[i]=prop.new_variable();
-    rem[i]=prop.new_variable();
+    res[i]= prop.new_variable();
+    rem[i]= prop.new_variable();
   }
 
   // add implications
 
-  bvt product=
-    unsigned_multiplier_no_overflow(res, op1);
+  bvt product= unsigned_multiplier_no_overflow(res, op1);
 
   // res*op1 + rem = op0
 
-  bvt sum=product;
+  bvt sum= product;
 
   adder_no_overflow(sum, rem);
 
-  literalt is_equal=equal(sum, op0);
+  literalt is_equal= equal(sum, op0);
 
   prop.l_set_to_true(prop.limplies(is_not_zero, is_equal));
 
@@ -1434,7 +1422,6 @@ void bv_utilst::unsigned_divider(
   prop.l_set_to_true(
     prop.limplies(is_not_zero, lt_or_le(true, res, op0, UNSIGNED)));
 }
-
 
 #ifdef COMPACT_EQUAL_CONST
 // TODO : use for lt_or_le as well
@@ -1458,7 +1445,6 @@ void bv_utilst::equal_const_register(const bvt &var)
   return;
 }
 
-
 /*******************************************************************\
 
 Function: bv_utilst::equal_const_rec
@@ -1476,7 +1462,7 @@ Function: bv_utilst::equal_const_rec
 
 literalt bv_utilst::equal_const_rec(bvt &var, bvt &constant)
 {
-  std::size_t size = var.size();
+  std::size_t size= var.size();
 
   assert(size != 0);
   assert(size == constant.size());
@@ -1484,7 +1470,7 @@ literalt bv_utilst::equal_const_rec(bvt &var, bvt &constant)
 
   if(size == 1)
   {
-    literalt comp = prop.lequal(var[size - 1], constant[size - 1]);
+    literalt comp= prop.lequal(var[size - 1], constant[size - 1]);
     var.pop_back();
     constant.pop_back();
     return comp;
@@ -1493,7 +1479,7 @@ literalt bv_utilst::equal_const_rec(bvt &var, bvt &constant)
   {
     var_constant_pairt index(var, constant);
 
-    equal_const_cachet::iterator entry = equal_const_cache.find(index);
+    equal_const_cachet::iterator entry= equal_const_cache.find(index);
 
     if(entry != equal_const_cache.end())
     {
@@ -1501,12 +1487,12 @@ literalt bv_utilst::equal_const_rec(bvt &var, bvt &constant)
     }
     else
     {
-      literalt comp = prop.lequal(var[size - 1], constant[size - 1]);
+      literalt comp= prop.lequal(var[size - 1], constant[size - 1]);
       var.pop_back();
       constant.pop_back();
 
-      literalt rec = equal_const_rec(var, constant);
-      literalt compare = prop.land(rec, comp);
+      literalt rec= equal_const_rec(var, constant);
+      literalt compare= prop.land(rec, comp);
 
       equal_const_cache.insert(
         std::pair<var_constant_pairt, literalt>(index, compare));
@@ -1536,7 +1522,7 @@ Function: bv_utilst::equal_const
 
 literalt bv_utilst::equal_const(const bvt &var, const bvt &constant)
 {
-  std::size_t size = constant.size();
+  std::size_t size= constant.size();
 
   assert(var.size() == size);
   assert(!is_constant(var));
@@ -1554,13 +1540,13 @@ literalt bv_utilst::equal_const(const bvt &var, const bvt &constant)
    * so combinations of the lower bits are heavily used but the upper
    * bits are almost always either all 0 or all 1.
    */
-  literalt top_bit = constant[size - 1];
+  literalt top_bit= constant[size - 1];
 
-  std::size_t split = size - 1;
+  std::size_t split= size - 1;
   var_upper.push_back(var[size - 1]);
   constant_upper.push_back(constant[size - 1]);
 
-  for(split = size - 2; split != 0; --split)
+  for(split= size - 2; split != 0; --split)
   {
     if(constant[split] != top_bit)
     {
@@ -1573,7 +1559,7 @@ literalt bv_utilst::equal_const(const bvt &var, const bvt &constant)
     }
   }
 
-  for(std::size_t i = 0; i <= split; ++i)
+  for(std::size_t i= 0; i <= split; ++i)
   {
     var_lower.push_back(var[i]);
     constant_lower.push_back(constant[i]);
@@ -1583,8 +1569,8 @@ literalt bv_utilst::equal_const(const bvt &var, const bvt &constant)
   assert(var_upper.size() + var_lower.size() == size);
   assert(constant_upper.size() + constant_lower.size() == size);
 
-  literalt top_comparison = equal_const_rec(var_upper, constant_upper);
-  literalt bottom_comparison = equal_const_rec(var_lower, constant_lower);
+  literalt top_comparison= equal_const_rec(var_upper, constant_upper);
+  literalt bottom_comparison= equal_const_rec(var_lower, constant_lower);
 
   return prop.land(top_comparison, bottom_comparison);
 }
@@ -1605,24 +1591,26 @@ Function: bv_utilst::equal
 
 literalt bv_utilst::equal(const bvt &op0, const bvt &op1)
 {
-  assert(op0.size()==op1.size());
+  assert(op0.size() == op1.size());
 
-  #ifdef COMPACT_EQUAL_CONST
+#ifdef COMPACT_EQUAL_CONST
   // simplify_expr should put the constant on the right
   // but bit-level simplification may result in the other cases
-  if(is_constant(op0) && !is_constant(op1) && op0.size() > 2 &&
-      equal_const_registered.find(op1) != equal_const_registered.end())
+  if(
+    is_constant(op0) && !is_constant(op1) && op0.size() > 2 &&
+    equal_const_registered.find(op1) != equal_const_registered.end())
     return equal_const(op1, op0);
-  else if(!is_constant(op0) && is_constant(op1) && op0.size() > 2 &&
-      equal_const_registered.find(op0) != equal_const_registered.end())
+  else if(
+    !is_constant(op0) && is_constant(op1) && op0.size() > 2 &&
+    equal_const_registered.find(op0) != equal_const_registered.end())
     return equal_const(op0, op1);
-  #endif
+#endif
 
   bvt equal_bv;
   equal_bv.resize(op0.size());
 
-  for(std::size_t i=0; i<op0.size(); i++)
-    equal_bv[i]=prop.lequal(op0[i], op1[i]);
+  for(std::size_t i= 0; i < op0.size(); i++)
+    equal_bv[i]= prop.lequal(op0[i], op1[i]);
 
   return prop.land(equal_bv);
 }
@@ -1640,7 +1628,6 @@ Function: bv_utilst::lt_or_le
 
 \*******************************************************************/
 
-
 /* Some clauses are not needed for correctness but they remove
    models (effectively setting "don't care" bits) and so may be worth
    including.*/
@@ -1650,8 +1637,6 @@ Function: bv_utilst::lt_or_le
 // There is a variant that uses the xor as an auxiliary that should improve both
 // #define COMPACT_LT_OR_LE
 
-
-
 literalt bv_utilst::lt_or_le(
   bool or_equal,
   const bvt &bv0,
@@ -1660,108 +1645,109 @@ literalt bv_utilst::lt_or_le(
 {
   assert(bv0.size() == bv1.size());
 
-  literalt top0=bv0[bv0.size()-1],
-    top1=bv1[bv1.size()-1];
+  literalt top0= bv0[bv0.size() - 1], top1= bv1[bv1.size() - 1];
 
 #ifdef COMPACT_LT_OR_LE
   if(prop.has_set_to() && prop.cnf_handled_well())
   {
-    bvt compareBelow;   // 1 if a compare is needed below this bit
+    bvt compareBelow; // 1 if a compare is needed below this bit
     literalt result;
     size_t start;
     size_t i;
 
     compareBelow.resize(bv0.size());
-    Forall_literals(it, compareBelow) { (*it) = prop.new_variable(); }
-    result = prop.new_variable();
+    Forall_literals(it, compareBelow)
+    {
+      (*it)= prop.new_variable();
+    }
+    result= prop.new_variable();
 
-    if(rep==SIGNED)
+    if(rep == SIGNED)
     {
       assert(bv0.size() >= 2);
-      start = compareBelow.size() - 2;
+      start= compareBelow.size() - 2;
 
-      literalt firstComp=compareBelow[start];
+      literalt firstComp= compareBelow[start];
 
-      // When comparing signs we are comparing the top bit
+// When comparing signs we are comparing the top bit
 #ifdef INCLUDE_REDUNDANT_CLAUSES
-      prop.l_set_to_true(compareBelow[start + 1])
+      prop
+        .l_set_to_true(compareBelow[start + 1])
 #endif
 
-      // Four cases...
-      prop.lcnf(top0, top1, firstComp);  // + + compare needed
+        // Four cases...
+        prop.lcnf(top0, top1, firstComp); // + + compare needed
       prop.lcnf(top0, !top1, !result); // + - result false and no compare needed
-      prop.lcnf(!top0, top1, result); // - + result true and no compare needed
-      prop.lcnf(!top0, !top1, firstComp);  // - - negated compare needed
+      prop.lcnf(!top0, top1, result);  // - + result true and no compare needed
+      prop.lcnf(!top0, !top1, firstComp); // - - negated compare needed
 
 #ifdef INCLUDE_REDUNDANT_CLAUSES
       prop.lcnf(top0, !top1, !firstComp);
-      prop.lcnf(!top0,  top1, !firstComp);
+      prop.lcnf(!top0, top1, !firstComp);
 #endif
     }
     else
     {
       // Unsigned is much easier
-      start = compareBelow.size() - 1;
+      start= compareBelow.size() - 1;
       prop.l_set_to_true(compareBelow[start]);
     }
 
     // Determine the output
     //  \forall i .  cb[i] & -a[i] &  b[i] =>  result
     //  \forall i .  cb[i] &  a[i] & -b[i] => -result
-    i = start;
+    i= start;
     do
     {
-      prop.lcnf(!compareBelow[i],  bv0[i], !bv1[i],  result);
-      prop.lcnf(!compareBelow[i], !bv0[i],  bv1[i], !result);
-    }
-    while(i-- != 0);
+      prop.lcnf(!compareBelow[i], bv0[i], !bv1[i], result);
+      prop.lcnf(!compareBelow[i], !bv0[i], bv1[i], !result);
+    } while(i-- != 0);
 
     // Chain the comparison bit
     //  \forall i != 0 . cb[i] &  a[i] &  b[i] => cb[i-1]
     //  \forall i != 0 . cb[i] & -a[i] & -b[i] => cb[i-1]
-    for(i = start; i > 0; i--)
+    for(i= start; i > 0; i--)
     {
-      prop.lcnf(!compareBelow[i], !bv0[i], !bv1[i], compareBelow[i-1]);
-      prop.lcnf(!compareBelow[i],  bv0[i],  bv1[i], compareBelow[i-1]);
+      prop.lcnf(!compareBelow[i], !bv0[i], !bv1[i], compareBelow[i - 1]);
+      prop.lcnf(!compareBelow[i], bv0[i], bv1[i], compareBelow[i - 1]);
     }
-
 
 #ifdef INCLUDE_REDUNDANT_CLAUSES
     // Optional zeroing of the comparison bit when not needed
     //  \forall i != 0 . -c[i] => -c[i-1]
     //  \forall i != 0 .  c[i] & -a[i] &  b[i] => -c[i-1]
     //  \forall i != 0 .  c[i] &  a[i] & -b[i] => -c[i-1]
-    for(i = start; i > 0; i--)
+    for(i= start; i > 0; i--)
     {
-      prop.lcnf(compareBelow[i],                   !compareBelow[i-1]);
-      prop.lcnf(!compareBelow[i],  bv0[i], !bv1[i], !compareBelow[i-1]);
-      prop.lcnf(!compareBelow[i], !bv0[i],  bv1[i], !compareBelow[i-1]);
+      prop.lcnf(compareBelow[i], !compareBelow[i - 1]);
+      prop.lcnf(!compareBelow[i], bv0[i], !bv1[i], !compareBelow[i - 1]);
+      prop.lcnf(!compareBelow[i], !bv0[i], bv1[i], !compareBelow[i - 1]);
     }
 #endif
 
     // The 'base case' of the induction is the case when they are equal
-    prop.lcnf(!compareBelow[0], !bv0[0], !bv1[0], (or_equal)?result:!result);
-    prop.lcnf(!compareBelow[0],  bv0[0],  bv1[0], (or_equal)?result:!result);
+    prop.lcnf(
+      !compareBelow[0], !bv0[0], !bv1[0], (or_equal) ? result : !result);
+    prop.lcnf(!compareBelow[0], bv0[0], bv1[0], (or_equal) ? result : !result);
 
     return result;
   }
   else
 #endif
   {
-    literalt carry=
-      carry_out(bv0, inverted(bv1), const_literal(true));
+    literalt carry= carry_out(bv0, inverted(bv1), const_literal(true));
 
     literalt result;
 
-    if(rep==SIGNED)
-      result=prop.lxor(prop.lequal(top0, top1), carry);
-    else if(rep==UNSIGNED)
-      result=!carry;
+    if(rep == SIGNED)
+      result= prop.lxor(prop.lequal(top0, top1), carry);
+    else if(rep == UNSIGNED)
+      result= !carry;
     else
       assert(false);
 
     if(or_equal)
-      result=prop.lor(result, equal(bv0, bv1));
+      result= prop.lor(result, equal(bv0, bv1));
 
     return result;
   }
@@ -1779,9 +1765,7 @@ Function: bv_utilst::unsigned_less_than
 
 \*******************************************************************/
 
-literalt bv_utilst::unsigned_less_than(
-  const bvt &op0,
-  const bvt &op1)
+literalt bv_utilst::unsigned_less_than(const bvt &op0, const bvt &op1)
 {
 #ifdef COMPACT_LT_OR_LE
   return lt_or_le(false, op0, op1, UNSIGNED);
@@ -1803,9 +1787,7 @@ Function: bv_utilst::signed_less_than
 
 \*******************************************************************/
 
-literalt bv_utilst::signed_less_than(
-  const bvt &bv0,
-  const bvt &bv1)
+literalt bv_utilst::signed_less_than(const bvt &bv0, const bvt &bv1)
 {
   return lt_or_le(false, bv0, bv1, SIGNED);
 }
@@ -1822,23 +1804,20 @@ Function: bv_utilst::rel
 
 \*******************************************************************/
 
-literalt bv_utilst::rel(
-  const bvt &bv0,
-  irep_idt id,
-  const bvt &bv1,
-  representationt rep)
+literalt
+bv_utilst::rel(const bvt &bv0, irep_idt id, const bvt &bv1, representationt rep)
 {
-  if(id==ID_equal)
+  if(id == ID_equal)
     return equal(bv0, bv1);
-  else if(id==ID_notequal)
+  else if(id == ID_notequal)
     return !equal(bv0, bv1);
-  else if(id==ID_le)
+  else if(id == ID_le)
     return lt_or_le(true, bv0, bv1, rep);
-  else if(id==ID_lt)
+  else if(id == ID_lt)
     return lt_or_le(false, bv0, bv1, rep);
-  else if(id==ID_ge)
+  else if(id == ID_ge)
     return lt_or_le(true, bv1, bv0, rep); // swapped
-  else if(id==ID_gt)
+  else if(id == ID_gt)
     return lt_or_le(false, bv1, bv0, rep); // swapped
   else
     assert(false);
@@ -1877,19 +1856,16 @@ Function: bv_utilst::cond_implies_equal
 
 \*******************************************************************/
 
-void bv_utilst::cond_implies_equal(
-  literalt cond,
-  const bvt &a,
-  const bvt &b)
+void bv_utilst::cond_implies_equal(literalt cond, const bvt &a, const bvt &b)
 {
-  assert(a.size()==b.size());
+  assert(a.size() == b.size());
 
   if(prop.cnf_handled_well())
   {
-    for(std::size_t i=0; i<a.size(); i++)
+    for(std::size_t i= 0; i < a.size(); i++)
     {
-      prop.lcnf(!cond,  a[i], !b[i]);
-      prop.lcnf(!cond, !a[i],  b[i]);
+      prop.lcnf(!cond, a[i], !b[i]);
+      prop.lcnf(!cond, !a[i], b[i]);
     }
   }
   else
@@ -1915,12 +1891,12 @@ Function: bv_utilst::verilog_bv_has_x_or_z
 literalt bv_utilst::verilog_bv_has_x_or_z(const bvt &src)
 {
   bvt odd_bits;
-  odd_bits.reserve(src.size()/2);
+  odd_bits.reserve(src.size() / 2);
 
   // check every odd bit
-  for(std::size_t i=0; i<src.size(); i++)
+  for(std::size_t i= 0; i < src.size(); i++)
   {
-    if(i%2!=0)
+    if(i % 2 != 0)
       odd_bits.push_back(src[i]);
   }
 
@@ -1942,12 +1918,12 @@ Function: bv_utilst::verilog_bv_normal_bits
 bvt bv_utilst::verilog_bv_normal_bits(const bvt &src)
 {
   bvt even_bits;
-  even_bits.reserve(src.size()/2);
+  even_bits.reserve(src.size() / 2);
 
   // get every even bit
-  for(std::size_t i=0; i<src.size(); i++)
+  for(std::size_t i= 0; i < src.size(); i++)
   {
-    if(i%2==0)
+    if(i % 2 == 0)
       even_bits.push_back(src[i]);
   }
 

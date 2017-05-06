@@ -28,20 +28,15 @@ public:
 
   typedef goto_programt::const_targett locationt;
 
-  virtual void initialize(const namespacet &ns)=0;
+  virtual void initialize(const namespacet &ns)= 0;
 
-  virtual bool transform(
-    const namespacet &ns,
-    locationt from,
-    locationt to)=0;
+  virtual bool transform(const namespacet &ns, locationt from, locationt to)= 0;
 
   virtual ~flow_insensitive_abstract_domain_baset()
   {
   }
 
-  virtual void output(
-    const namespacet &ns,
-    std::ostream &out) const
+  virtual void output(const namespacet &ns, std::ostream &out) const
   {
   }
 
@@ -56,7 +51,7 @@ public:
     expr_set.clear();
   }
 
-  virtual void clear(void)=0;
+  virtual void clear(void)= 0;
 
 protected:
   bool changed;
@@ -82,30 +77,27 @@ public:
 
   bool seen(const locationt &l)
   {
-    return (seen_locations.find(l)!=seen_locations.end());
+    return (seen_locations.find(l) != seen_locations.end());
   }
 
-  explicit flow_insensitive_analysis_baset(const namespacet &_ns):
-    ns(_ns),
-    initialized(false)
+  explicit flow_insensitive_analysis_baset(const namespacet &_ns)
+    : ns(_ns), initialized(false)
   {
   }
 
-  virtual void initialize(
-    const goto_programt &goto_program)
+  virtual void initialize(const goto_programt &goto_program)
   {
     if(!initialized)
     {
-      initialized=true;
+      initialized= true;
     }
   }
 
-  virtual void initialize(
-    const goto_functionst &goto_functions)
+  virtual void initialize(const goto_functionst &goto_functions)
   {
     if(!initialized)
     {
-      initialized=true;
+      initialized= true;
     }
   }
 
@@ -113,11 +105,9 @@ public:
 
   virtual void update(const goto_functionst &goto_functions);
 
-  virtual void operator()(
-    const goto_programt &goto_program);
+  virtual void operator()(const goto_programt &goto_program);
 
-  virtual void operator()(
-    const goto_functionst &goto_functions);
+  virtual void operator()(const goto_functionst &goto_functions);
 
   virtual ~flow_insensitive_analysis_baset()
   {
@@ -125,16 +115,12 @@ public:
 
   virtual void clear()
   {
-    initialized=false;
+    initialized= false;
   }
 
-  virtual void output(
-    const goto_functionst &goto_functions,
-    std::ostream &out);
+  virtual void output(const goto_functionst &goto_functions, std::ostream &out);
 
-  virtual void output(
-    const goto_programt &goto_program,
-    std::ostream &out)
+  virtual void output(const goto_programt &goto_program, std::ostream &out)
   {
     output(goto_program, "", out);
   }
@@ -151,9 +137,7 @@ protected:
 
   locationt get_next(working_sett &working_set);
 
-  void put_in_working_set(
-    working_sett &working_set,
-    locationt l)
+  void put_in_working_set(working_sett &working_set, locationt l)
   {
     working_set.push(l);
   }
@@ -167,8 +151,7 @@ protected:
     goto_functionst::function_mapt::const_iterator it,
     const goto_functionst &goto_functions);
 
-  void fixedpoint(
-    const goto_functionst &goto_functions);
+  void fixedpoint(const goto_functionst &goto_functions);
 
   // true = found s.th. new
   bool visit(
@@ -208,24 +191,21 @@ protected:
 
   // abstract methods
 
-  virtual statet &get_state()=0;
-  virtual const statet &get_state() const=0;
+  virtual statet &get_state()= 0;
+  virtual const statet &get_state() const= 0;
 
   typedef flow_insensitive_abstract_domain_baset::expr_sett expr_sett;
 
-  virtual void get_reference_set(
-    const exprt &expr,
-    expr_sett &expr_set)=0;
+  virtual void get_reference_set(const exprt &expr, expr_sett &expr_set)= 0;
 };
 
-
-template<typename T>
-class flow_insensitive_analysist:public flow_insensitive_analysis_baset
+template <typename T>
+class flow_insensitive_analysist : public flow_insensitive_analysis_baset
 {
 public:
   // constructor
-  explicit flow_insensitive_analysist(const namespacet &_ns):
-    flow_insensitive_analysis_baset(_ns)
+  explicit flow_insensitive_analysist(const namespacet &_ns)
+    : flow_insensitive_analysis_baset(_ns)
   {
   }
 
@@ -237,26 +217,40 @@ public:
     flow_insensitive_analysis_baset::clear();
   }
 
-  T &get_data() { return state; }
-  const T &get_data() const { return state; }
+  T &get_data()
+  {
+    return state;
+  }
+  const T &get_data() const
+  {
+    return state;
+  }
 
 protected:
   T state; // one global state
 
-  virtual statet &get_state() { return state; }
+  virtual statet &get_state()
+  {
+    return state;
+  }
 
-  virtual const statet &get_state() const { return state; }
+  virtual const statet &get_state() const
+  {
+    return state;
+  }
 
-  void get_reference_set(
-    const exprt &expr,
-    expr_sett &expr_set)
+  void get_reference_set(const exprt &expr, expr_sett &expr_set)
   {
     state.get_reference_set(ns, expr, expr_set);
   }
 
 private:
   // to enforce that T is derived from abstract_domain_baset
-  void dummy(const T &s) { const statet &x=dummy1(s); (void)x; }
+  void dummy(const T &s)
+  {
+    const statet &x= dummy1(s);
+    (void)x;
+  }
 };
 
 #endif // CPROVER_ANALYSES_FLOW_INSENSITIVE_ANALYSIS_H

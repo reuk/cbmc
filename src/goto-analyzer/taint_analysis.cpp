@@ -30,7 +30,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-class taint_analysist:public messaget
+class taint_analysist : public messaget
 {
 public:
   taint_analysist()
@@ -88,157 +88,155 @@ void taint_analysist::instrument(
   const namespacet &ns,
   goto_functionst::goto_functiont &goto_function)
 {
-  for(goto_programt::instructionst::iterator
-      it=goto_function.body.instructions.begin();
-      it!=goto_function.body.instructions.end();
+  for(goto_programt::instructionst::iterator it=
+        goto_function.body.instructions.begin();
+      it != goto_function.body.instructions.end();
       it++)
   {
-    const goto_programt::instructiont &instruction=*it;
+    const goto_programt::instructiont &instruction= *it;
 
     goto_programt tmp;
 
     switch(instruction.type)
     {
     case FUNCTION_CALL:
+    {
+      const code_function_callt &function_call=
+        to_code_function_call(instruction.code);
+      const exprt &function= function_call.function();
+
+      if(function.id() == ID_symbol)
       {
-        const code_function_callt &function_call=
-          to_code_function_call(instruction.code);
-        const exprt &function=function_call.function();
+        const irep_idt &identifier= to_symbol_expr(function).get_identifier();
 
-        if(function.id()==ID_symbol)
+        std::set<irep_idt> identifiers;
+
+        identifiers.insert(identifier);
+
+        irep_idt class_id= function.get(ID_C_class);
+        if(class_id.empty())
         {
-          const irep_idt &identifier=
-            to_symbol_expr(function).get_identifier();
+        }
+        else
+        {
+          std::string suffix= std::string(
+            id2string(identifier), class_id.size(), std::string::npos);
 
-          std::set<irep_idt> identifiers;
+          class_hierarchyt::idst parents=
+            class_hierarchy.get_parents_trans(class_id);
+          for(const auto &p : parents)
+            identifiers.insert(id2string(p) + suffix);
+        }
 
-          identifiers.insert(identifier);
-
-          irep_idt class_id=function.get(ID_C_class);
-          if(class_id.empty())
-          {
-          }
-          else
-          {
-            std::string suffix=
-              std::string(
-                id2string(identifier), class_id.size(), std::string::npos);
-
-            class_hierarchyt::idst parents=
-              class_hierarchy.get_parents_trans(class_id);
-            for(const auto &p : parents)
-              identifiers.insert(id2string(p)+suffix);
-          }
-
-          for(const auto &rule : taint.rules)
-          {
-            bool match=false;
-            for(const auto &i : identifiers)
-              if(i==rule.function_identifier ||
-                 has_prefix(
-                   id2string(i),
-                   "java::"+id2string(rule.function_identifier)+":"))
-              {
-                match=true;
-                break;
-              }
-
-            if(match)
+        for(const auto &rule : taint.rules)
+        {
+          bool match= false;
+          for(const auto &i : identifiers)
+            if(
+              i == rule.function_identifier ||
+              has_prefix(
+                id2string(i),
+                "java::" + id2string(rule.function_identifier) + ":"))
             {
-              debug() << "MATCH " << rule.id << " on " << identifier << eom;
+              match= true;
+              break;
+            }
 
-              exprt where=nil_exprt();
+          if(match)
+          {
+            debug() << "MATCH " << rule.id << " on " << identifier << eom;
 
-              const code_typet &code_type=to_code_type(function.type());
+            exprt where= nil_exprt();
 
-              bool have_this=
-                !code_type.parameters().empty() &&
-                code_type.parameters().front().get_bool(ID_C_this);
+            const code_typet &code_type= to_code_type(function.type());
 
-              switch(rule.where)
+            bool have_this= !code_type.parameters().empty() &&
+                            code_type.parameters().front().get_bool(ID_C_this);
+
+            switch(rule.where)
+            {
+            case taint_parse_treet::rulet::RETURN_VALUE:
+            {
+              const symbolt &return_value_symbol=
+                ns.lookup(id2string(identifier) + "#return_value");
+              where= return_value_symbol.symbol_expr();
+            }
+            break;
+
+            case taint_parse_treet::rulet::PARAMETER:
+            {
+              unsigned nr=
+                have_this ? rule.parameter_number : rule.parameter_number - 1;
+              if(function_call.arguments().size() > nr)
+                where= function_call.arguments()[nr];
+            }
+            break;
+
+            case taint_parse_treet::rulet::THIS:
+              if(have_this)
               {
-              case taint_parse_treet::rulet::RETURN_VALUE:
-                {
-                  const symbolt &return_value_symbol=
-                    ns.lookup(id2string(identifier)+"#return_value");
-                  where=return_value_symbol.symbol_expr();
-                }
-                break;
-
-              case taint_parse_treet::rulet::PARAMETER:
-                {
-                  unsigned nr=
-                    have_this?rule.parameter_number:rule.parameter_number-1;
-                  if(function_call.arguments().size()>nr)
-                    where=function_call.arguments()[nr];
-                }
-                break;
-
-              case taint_parse_treet::rulet::THIS:
-                if(have_this)
-                {
-                  assert(!function_call.arguments().empty());
-                  where=function_call.arguments()[0];
-                }
-                break;
+                assert(!function_call.arguments().empty());
+                where= function_call.arguments()[0];
               }
+              break;
+            }
 
-              switch(rule.kind)
-              {
-              case taint_parse_treet::rulet::SOURCE:
-                {
-                  codet code_set_may("set_may");
-                  code_set_may.operands().resize(2);
-                  code_set_may.op0()=where;
-                  code_set_may.op1()=
-                    address_of_exprt(string_constantt(rule.taint));
-                  goto_programt::targett t=tmp.add_instruction();
-                  t->make_other(code_set_may);
-                  t->source_location=instruction.source_location;
-                }
-                break;
+            switch(rule.kind)
+            {
+            case taint_parse_treet::rulet::SOURCE:
+            {
+              codet code_set_may("set_may");
+              code_set_may.operands().resize(2);
+              code_set_may.op0()= where;
+              code_set_may.op1()=
+                address_of_exprt(string_constantt(rule.taint));
+              goto_programt::targett t= tmp.add_instruction();
+              t->make_other(code_set_may);
+              t->source_location= instruction.source_location;
+            }
+            break;
 
-              case taint_parse_treet::rulet::SINK:
-                {
-                  goto_programt::targett t=tmp.add_instruction();
-                  binary_predicate_exprt get_may("get_may");
-                  get_may.op0()=where;
-                  get_may.op1()=address_of_exprt(string_constantt(rule.taint));
-                  t->make_assertion(not_exprt(get_may));
-                  t->source_location=instruction.source_location;
-                  t->source_location.set_property_class(
-                    "taint rule "+id2string(rule.id));
-                  t->source_location.set_comment(rule.message);
-                }
-                break;
+            case taint_parse_treet::rulet::SINK:
+            {
+              goto_programt::targett t= tmp.add_instruction();
+              binary_predicate_exprt get_may("get_may");
+              get_may.op0()= where;
+              get_may.op1()= address_of_exprt(string_constantt(rule.taint));
+              t->make_assertion(not_exprt(get_may));
+              t->source_location= instruction.source_location;
+              t->source_location.set_property_class(
+                "taint rule " + id2string(rule.id));
+              t->source_location.set_comment(rule.message);
+            }
+            break;
 
-              case taint_parse_treet::rulet::SANITIZER:
-                {
-                  codet code_clear_may("clear_may");
-                  code_clear_may.operands().resize(2);
-                  code_clear_may.op0()=where;
-                  code_clear_may.op1()=
-                    address_of_exprt(string_constantt(rule.taint));
-                  goto_programt::targett t=tmp.add_instruction();
-                  t->make_other(code_clear_may);
-                  t->source_location=instruction.source_location;
-                }
-                break;
-              }
+            case taint_parse_treet::rulet::SANITIZER:
+            {
+              codet code_clear_may("clear_may");
+              code_clear_may.operands().resize(2);
+              code_clear_may.op0()= where;
+              code_clear_may.op1()=
+                address_of_exprt(string_constantt(rule.taint));
+              goto_programt::targett t= tmp.add_instruction();
+              t->make_other(code_clear_may);
+              t->source_location= instruction.source_location;
+            }
+            break;
             }
           }
         }
       }
-      break;
+    }
+    break;
 
     default:
-      {
-      }
+    {
+    }
     }
 
     if(!tmp.empty())
     {
-      goto_programt::targett next=it;
+      goto_programt::targett next= it;
       next++;
       goto_function.body.destructive_insert(next, tmp);
     }
@@ -267,10 +265,9 @@ bool taint_analysist::operator()(
   try
   {
     json_arrayt json_result;
-    bool use_json=!json_file_name.empty();
+    bool use_json= !json_file_name.empty();
 
-    status() << "Reading taint file `" << taint_file_name
-             << "'" << eom;
+    status() << "Reading taint file `" << taint_file_name << "'" << eom;
 
     if(taint_parser(taint_file_name, taint, get_message_handler()))
     {
@@ -278,8 +275,7 @@ bool taint_analysist::operator()(
       return true;
     }
 
-    status() << "Got " << taint.rules.size()
-             << " taint definitions" << eom;
+    status() << "Got " << taint.rules.size() << " taint definitions" << eom;
 
     taint.output(debug());
     debug() << eom;
@@ -293,7 +289,7 @@ bool taint_analysist::operator()(
     goto_functions.update();
 
     bool have_entry_point=
-      goto_functions.function_map.find(goto_functionst::entry_point())!=
+      goto_functions.function_map.find(goto_functionst::entry_point()) !=
       goto_functions.function_map.end();
 
     // do we have an entry point?
@@ -312,22 +308,23 @@ bool taint_analysist::operator()(
       end.add_instruction(END_FUNCTION);
 
       forall_goto_functions(f_it, goto_functions)
-        if(f_it->second.body_available() &&
-           f_it->first!=goto_functionst::entry_point())
+        if(
+          f_it->second.body_available() &&
+          f_it->first != goto_functionst::entry_point())
         {
-          goto_programt::targett t=calls.add_instruction();
+          goto_programt::targett t= calls.add_instruction();
           code_function_callt call;
-          call.function()=ns.lookup(f_it->first).symbol_expr();
+          call.function()= ns.lookup(f_it->first).symbol_expr();
           t->make_function_call(call);
           calls.add_instruction()->make_goto(end.instructions.begin());
-          goto_programt::targett g=gotos.add_instruction();
+          goto_programt::targett g= gotos.add_instruction();
           g->make_goto(t, side_effect_expr_nondett(bool_typet()));
         }
 
       goto_functionst::goto_functiont &entry=
         goto_functions.function_map[goto_functionst::entry_point()];
 
-      goto_programt &body=entry.body;
+      goto_programt &body= entry.body;
 
       body.destructive_append(gotos);
       body.destructive_append(calls);
@@ -352,12 +349,12 @@ bool taint_analysist::operator()(
       if(!f_it->second.body.has_assertion())
         continue;
 
-      const symbolt &symbol=ns.lookup(f_it->first);
+      const symbolt &symbol= ns.lookup(f_it->first);
 
-      if(f_it->first=="__actual_thread_spawn")
+      if(f_it->first == "__actual_thread_spawn")
         continue;
 
-      bool first=true;
+      bool first= true;
 
       forall_goto_program_instructions(i_it, f_it->second.body)
       {
@@ -369,15 +366,15 @@ bool taint_analysist::operator()(
         if(custom_bitvector_analysis[i_it].has_values.is_false())
           continue;
 
-        exprt result=custom_bitvector_analysis.eval(i_it->guard, i_it);
-        exprt result2=simplify_expr(result, ns);
+        exprt result= custom_bitvector_analysis.eval(i_it->guard, i_it);
+        exprt result2= simplify_expr(result, ns);
 
         if(result2.is_true())
           continue;
 
         if(first)
         {
-          first=false;
+          first= false;
           if(!use_json)
             std::cout << "\n"
                       << "******** Function " << symbol.display_name() << '\n';
@@ -401,8 +398,8 @@ bool taint_analysist::operator()(
             std::cout << ": " << i_it->source_location.get_comment();
 
           if(!i_it->source_location.get_property_class().empty())
-            std::cout << " ("
-                      << i_it->source_location.get_property_class() << ")";
+            std::cout << " (" << i_it->source_location.get_property_class()
+                      << ")";
 
           std::cout << '\n';
         }
@@ -415,13 +412,13 @@ bool taint_analysist::operator()(
 
       if(!json_out)
       {
-        error() << "Failed to open json output `"
-                << json_file_name << "'" << eom;
+        error() << "Failed to open json output `" << json_file_name << "'"
+                << eom;
         return true;
       }
 
-      status() << "Analysis result is written to `"
-               << json_file_name << "'" << eom;
+      status() << "Analysis result is written to `" << json_file_name << "'"
+               << eom;
 
       json_out << json_result << '\n';
     }

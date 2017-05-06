@@ -22,12 +22,11 @@ Function: cpp_typecheckt::find_dtor
 
 bool cpp_typecheckt::find_dtor(const symbolt &symbol) const
 {
-  const irept &components=
-    symbol.type.find(ID_components);
+  const irept &components= symbol.type.find(ID_components);
 
   forall_irep(cit, components.get_sub())
   {
-    if(cit->get(ID_base_name)=="~"+id2string(symbol.base_name))
+    if(cit->get(ID_base_name) == "~" + id2string(symbol.base_name))
       return true;
   }
 
@@ -48,16 +47,13 @@ Function: default_dtor
 
 \*******************************************************************/
 
-void cpp_typecheckt::default_dtor(
-  const symbolt &symbol,
-  cpp_declarationt &dtor)
+void cpp_typecheckt::default_dtor(const symbolt &symbol, cpp_declarationt &dtor)
 {
-  assert(symbol.type.id()==ID_struct ||
-         symbol.type.id()==ID_union);
+  assert(symbol.type.id() == ID_struct || symbol.type.id() == ID_union);
 
   irept name;
   name.id(ID_name);
-  name.set(ID_identifier, "~"+id2string(symbol.base_name));
+  name.set(ID_identifier, "~" + id2string(symbol.base_name));
   name.set(ID_C_source_location, symbol.location);
 
   cpp_declaratort decl;
@@ -93,24 +89,21 @@ Function: cpp_typecheckt::dtor
 
 codet cpp_typecheckt::dtor(const symbolt &symbol)
 {
-  assert(symbol.type.id()==ID_struct ||
-         symbol.type.id()==ID_union);
+  assert(symbol.type.id() == ID_struct || symbol.type.id() == ID_union);
 
-  source_locationt source_location=symbol.type.source_location();
+  source_locationt source_location= symbol.type.source_location();
 
   source_location.set_function(
-    id2string(symbol.base_name)+
-    "::~"+id2string(symbol.base_name)+"()");
+    id2string(symbol.base_name) + "::~" + id2string(symbol.base_name) + "()");
 
   code_blockt block;
 
-  const struct_union_typet::componentst &components =
+  const struct_union_typet::componentst &components=
     to_struct_union_type(symbol.type).components();
 
   // take care of virtual methods
-  for(struct_union_typet::componentst::const_iterator
-      cit=components.begin();
-      cit!=components.end();
+  for(struct_union_typet::componentst::const_iterator cit= components.begin();
+      cit != components.end();
       cit++)
   {
     if(cit->get_bool("is_vtptr"))
@@ -121,17 +114,19 @@ codet cpp_typecheckt::dtor(const symbolt &symbol)
       cpp_namet cppname;
       cppname.move_to_sub(name);
 
-      const symbolt &virtual_table_symbol_type =
-        namespacet(symbol_table).lookup(
-          cit->type().subtype().get(ID_identifier));
+      const symbolt &virtual_table_symbol_type=
+        namespacet(symbol_table)
+          .lookup(cit->type().subtype().get(ID_identifier));
 
-      const symbolt &virtual_table_symbol_var  =
-        namespacet(symbol_table).lookup(
-          id2string(virtual_table_symbol_type.name)+"@"+id2string(symbol.name));
+      const symbolt &virtual_table_symbol_var=
+        namespacet(symbol_table)
+          .lookup(
+            id2string(virtual_table_symbol_type.name) + "@" +
+            id2string(symbol.name));
 
-      exprt var=virtual_table_symbol_var.symbol_expr();
+      exprt var= virtual_table_symbol_var.symbol_expr();
       address_of_exprt address(var);
-      assert(address.type()==cit->type());
+      assert(address.type() == cit->type());
 
       already_typechecked(address);
 
@@ -146,19 +141,17 @@ codet cpp_typecheckt::dtor(const symbolt &symbol)
   }
 
   // call the data member destructors in the reverse order
-  for(struct_union_typet::componentst::const_reverse_iterator
-      cit=components.rbegin();
-      cit!=components.rend();
+  for(struct_union_typet::componentst::const_reverse_iterator cit=
+        components.rbegin();
+      cit != components.rend();
       cit++)
   {
-    const typet &type=cit->type();
+    const typet &type= cit->type();
 
-    if(cit->get_bool(ID_from_base) ||
-       cit->get_bool(ID_is_type) ||
-       cit->get_bool(ID_is_static) ||
-       type.id()==ID_code ||
-       is_reference(type) ||
-       cpp_is_pod(type))
+    if(
+      cit->get_bool(ID_from_base) || cit->get_bool(ID_is_type) ||
+      cit->get_bool(ID_is_static) || type.id() == ID_code ||
+      is_reference(type) || cpp_is_pod(type))
       continue;
 
     irept name(ID_name);
@@ -171,33 +164,30 @@ codet cpp_typecheckt::dtor(const symbolt &symbol)
     exprt member(ID_ptrmember);
     member.set(ID_component_cpp_name, cppname);
     member.operands().push_back(exprt("cpp-this"));
-    member.add_source_location() = source_location;
+    member.add_source_location()= source_location;
 
-    codet dtor_code=
-      cpp_destructor(source_location, cit->type(), member);
+    codet dtor_code= cpp_destructor(source_location, cit->type(), member);
 
     if(dtor_code.is_not_nil())
       block.move_to_operands(dtor_code);
   }
 
-  const irept::subt &bases=symbol.type.find(ID_bases).get_sub();
+  const irept::subt &bases= symbol.type.find(ID_bases).get_sub();
 
   // call the base destructors in the reverse order
-  for(irept::subt::const_reverse_iterator
-      bit=bases.rbegin();
-      bit!=bases.rend();
+  for(irept::subt::const_reverse_iterator bit= bases.rbegin();
+      bit != bases.rend();
       bit++)
   {
-    assert(bit->id()==ID_base);
-    assert(bit->find(ID_type).id()==ID_symbol);
-    const symbolt &psymb = lookup(bit->find(ID_type).get(ID_identifier));
+    assert(bit->id() == ID_base);
+    assert(bit->find(ID_type).id() == ID_symbol);
+    const symbolt &psymb= lookup(bit->find(ID_type).get(ID_identifier));
 
     exprt object(ID_dereference);
     object.operands().push_back(exprt("cpp-this"));
-    object.add_source_location() = source_location;
+    object.add_source_location()= source_location;
 
-    exprt dtor_code =
-      cpp_destructor(source_location, psymb.type, object);
+    exprt dtor_code= cpp_destructor(source_location, psymb.type, object);
 
     if(dtor_code.is_not_nil())
       block.move_to_operands(dtor_code);

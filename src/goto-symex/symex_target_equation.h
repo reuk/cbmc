@@ -25,7 +25,7 @@ class decision_proceduret;
 class namespacet;
 class prop_convt;
 
-class symex_target_equationt:public symex_targett
+class symex_target_equationt : public symex_targett
 {
 public:
   explicit symex_target_equationt(const namespacet &_ns);
@@ -63,10 +63,8 @@ public:
     assignment_typet assignment_type);
 
   // note the death of a variable - lhs must be symbol
-  virtual void dead(
-    const exprt &guard,
-    const ssa_exprt &ssa_lhs,
-    const sourcet &source);
+  virtual void
+  dead(const exprt &guard, const ssa_exprt &ssa_lhs, const sourcet &source);
 
   // record a function call
   virtual void function_call(
@@ -81,9 +79,7 @@ public:
     const sourcet &source);
 
   // just record a location
-  virtual void location(
-    const exprt &guard,
-    const sourcet &source);
+  virtual void location(const exprt &guard, const sourcet &source);
 
   // output
   virtual void output(
@@ -108,10 +104,8 @@ public:
     const std::list<exprt> &args);
 
   // record an assumption
-  virtual void assumption(
-    const exprt &guard,
-    const exprt &cond,
-    const sourcet &source);
+  virtual void
+  assumption(const exprt &guard, const exprt &cond, const sourcet &source);
 
   // record an assertion
   virtual void assertion(
@@ -127,20 +121,14 @@ public:
     const sourcet &source);
 
   // record a (global) constraint
-  virtual void constraint(
-    const exprt &cond,
-    const std::string &msg,
-    const sourcet &source);
+  virtual void
+  constraint(const exprt &cond, const std::string &msg, const sourcet &source);
 
   // record thread spawn
-  virtual void spawn(
-    const exprt &guard,
-    const sourcet &source);
+  virtual void spawn(const exprt &guard, const sourcet &source);
 
   // record memory barrier
-  virtual void memory_barrier(
-    const exprt &guard,
-    const sourcet &source);
+  virtual void memory_barrier(const exprt &guard, const sourcet &source);
 
   // record atomic section
   virtual void atomic_begin(
@@ -170,31 +158,79 @@ public:
     sourcet source;
     goto_trace_stept::typet type;
 
-    bool is_assert() const          { return type==goto_trace_stept::ASSERT; }
-    bool is_assume() const          { return type==goto_trace_stept::ASSUME; }
+    bool is_assert() const
+    {
+      return type == goto_trace_stept::ASSERT;
+    }
+    bool is_assume() const
+    {
+      return type == goto_trace_stept::ASSUME;
+    }
     // NOLINTNEXTLINE(whitespace/line_length)
-    bool is_assignment() const      { return type==goto_trace_stept::ASSIGNMENT; }
-    bool is_goto() const            { return type==goto_trace_stept::GOTO; }
+    bool is_assignment() const
+    {
+      return type == goto_trace_stept::ASSIGNMENT;
+    }
+    bool is_goto() const
+    {
+      return type == goto_trace_stept::GOTO;
+    }
     // NOLINTNEXTLINE(whitespace/line_length)
-    bool is_constraint() const      { return type==goto_trace_stept::CONSTRAINT; }
-    bool is_location() const        { return type==goto_trace_stept::LOCATION; }
-    bool is_output() const          { return type==goto_trace_stept::OUTPUT; }
-    bool is_decl() const            { return type==goto_trace_stept::DECL; }
+    bool is_constraint() const
+    {
+      return type == goto_trace_stept::CONSTRAINT;
+    }
+    bool is_location() const
+    {
+      return type == goto_trace_stept::LOCATION;
+    }
+    bool is_output() const
+    {
+      return type == goto_trace_stept::OUTPUT;
+    }
+    bool is_decl() const
+    {
+      return type == goto_trace_stept::DECL;
+    }
     // NOLINTNEXTLINE(whitespace/line_length)
-    bool is_function_call() const   { return type==goto_trace_stept::FUNCTION_CALL; }
+    bool is_function_call() const
+    {
+      return type == goto_trace_stept::FUNCTION_CALL;
+    }
     // NOLINTNEXTLINE(whitespace/line_length)
-    bool is_function_return() const { return type==goto_trace_stept::FUNCTION_RETURN; }
+    bool is_function_return() const
+    {
+      return type == goto_trace_stept::FUNCTION_RETURN;
+    }
     // NOLINTNEXTLINE(whitespace/line_length)
-    bool is_shared_read() const     { return type==goto_trace_stept::SHARED_READ; }
+    bool is_shared_read() const
+    {
+      return type == goto_trace_stept::SHARED_READ;
+    }
     // NOLINTNEXTLINE(whitespace/line_length)
-    bool is_shared_write() const    { return type==goto_trace_stept::SHARED_WRITE; }
-    bool is_spawn() const           { return type==goto_trace_stept::SPAWN; }
+    bool is_shared_write() const
+    {
+      return type == goto_trace_stept::SHARED_WRITE;
+    }
+    bool is_spawn() const
+    {
+      return type == goto_trace_stept::SPAWN;
+    }
     // NOLINTNEXTLINE(whitespace/line_length)
-    bool is_memory_barrier() const  { return type==goto_trace_stept::MEMORY_BARRIER; }
+    bool is_memory_barrier() const
+    {
+      return type == goto_trace_stept::MEMORY_BARRIER;
+    }
     // NOLINTNEXTLINE(whitespace/line_length)
-    bool is_atomic_begin() const    { return type==goto_trace_stept::ATOMIC_BEGIN; }
+    bool is_atomic_begin() const
+    {
+      return type == goto_trace_stept::ATOMIC_BEGIN;
+    }
     // NOLINTNEXTLINE(whitespace/line_length)
-    bool is_atomic_end() const      { return type==goto_trace_stept::ATOMIC_END; }
+    bool is_atomic_end() const
+    {
+      return type == goto_trace_stept::ATOMIC_END;
+    }
 
     // we may choose to hide
     bool hidden;
@@ -228,34 +264,31 @@ public:
     // for slicing
     bool ignore;
 
-    SSA_stept():
-      type(goto_trace_stept::NONE),
-      hidden(false),
-      guard(static_cast<const exprt &>(get_nil_irep())),
-      guard_literal(const_literal(false)),
-      ssa_lhs(static_cast<const ssa_exprt &>(get_nil_irep())),
-      ssa_full_lhs(static_cast<const exprt &>(get_nil_irep())),
-      original_full_lhs(static_cast<const exprt &>(get_nil_irep())),
-      ssa_rhs(static_cast<const exprt &>(get_nil_irep())),
-      cond_expr(static_cast<const exprt &>(get_nil_irep())),
-      cond_literal(const_literal(false)),
-      formatted(false),
-      atomic_section_id(0),
-      ignore(false)
+    SSA_stept()
+      : type(goto_trace_stept::NONE),
+        hidden(false),
+        guard(static_cast<const exprt &>(get_nil_irep())),
+        guard_literal(const_literal(false)),
+        ssa_lhs(static_cast<const ssa_exprt &>(get_nil_irep())),
+        ssa_full_lhs(static_cast<const exprt &>(get_nil_irep())),
+        original_full_lhs(static_cast<const exprt &>(get_nil_irep())),
+        ssa_rhs(static_cast<const exprt &>(get_nil_irep())),
+        cond_expr(static_cast<const exprt &>(get_nil_irep())),
+        cond_literal(const_literal(false)),
+        formatted(false),
+        atomic_section_id(0),
+        ignore(false)
     {
     }
 
-    void output(
-      const namespacet &ns,
-      std::ostream &out) const;
+    void output(const namespacet &ns, std::ostream &out) const;
   };
 
   unsigned count_assertions() const
   {
-    unsigned i=0;
-    for(SSA_stepst::const_iterator
-        it=SSA_steps.begin();
-        it!=SSA_steps.end(); it++)
+    unsigned i= 0;
+    for(SSA_stepst::const_iterator it= SSA_steps.begin(); it != SSA_steps.end();
+        it++)
       if(it->is_assert())
         i++;
     return i;
@@ -263,10 +296,9 @@ public:
 
   unsigned count_ignored_SSA_steps() const
   {
-    unsigned i=0;
-    for(SSA_stepst::const_iterator
-        it=SSA_steps.begin();
-        it!=SSA_steps.end(); it++)
+    unsigned i= 0;
+    for(SSA_stepst::const_iterator it= SSA_steps.begin(); it != SSA_steps.end();
+        it++)
       if(it->ignore)
         i++;
     return i;
@@ -277,10 +309,10 @@ public:
 
   SSA_stepst::iterator get_SSA_step(unsigned s)
   {
-    SSA_stepst::iterator it=SSA_steps.begin();
-    for(; s!=0; s--)
+    SSA_stepst::iterator it= SSA_steps.begin();
+    for(; s != 0; s--)
     {
-      assert(it!=SSA_steps.end());
+      assert(it != SSA_steps.end());
       it++;
     }
     return it;
@@ -295,10 +327,9 @@ public:
 
   bool has_threads() const
   {
-    for(SSA_stepst::const_iterator it=SSA_steps.begin();
-        it!=SSA_steps.end();
+    for(SSA_stepst::const_iterator it= SSA_steps.begin(); it != SSA_steps.end();
         it++)
-      if(it->source.thread_nr!=0)
+      if(it->source.thread_nr != 0)
         return true;
 
     return false;
@@ -316,14 +347,12 @@ inline bool operator<(
   const symex_target_equationt::SSA_stepst::const_iterator a,
   const symex_target_equationt::SSA_stepst::const_iterator b)
 {
-  return &(*a)<&(*b);
+  return &(*a) < &(*b);
 }
 
-std::ostream &operator<<(
-  std::ostream &out,
-  const symex_target_equationt::SSA_stept &step);
-std::ostream &operator<<(
-  std::ostream &out,
-  const symex_target_equationt &equation);
+std::ostream &
+operator<<(std::ostream &out, const symex_target_equationt::SSA_stept &step);
+std::ostream &
+operator<<(std::ostream &out, const symex_target_equationt &equation);
 
 #endif // CPROVER_GOTO_SYMEX_SYMEX_TARGET_EQUATION_H

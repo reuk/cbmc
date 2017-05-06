@@ -36,10 +36,8 @@ Function: goto_cc_modet::goto_cc_modet
 goto_cc_modet::goto_cc_modet(
   goto_cc_cmdlinet &_cmdline,
   const std::string &_base_name,
-  message_handlert &_message_handler):
-  messaget(_message_handler),
-  cmdline(_cmdline),
-  base_name(_base_name)
+  message_handlert &_message_handler)
+  : messaget(_message_handler), cmdline(_cmdline), base_name(_base_name)
 {
   register_languages();
 }
@@ -74,27 +72,30 @@ Function: goto_cc_modet::help
 
 void goto_cc_modet::help()
 {
-  std::cout <<
-  "\n"
-  // NOLINTNEXTLINE(whitespace/line_length)
-  "* *         goto-cc " CBMC_VERSION "  - Copyright (C) 2006-2014          * *\n"
-  "* *        Daniel Kroening, Christoph Wintersteiger         * *\n"
-  "* *                 kroening@kroening.com                   * *\n"
-  "\n";
+  std::cout
+    << "\n"
+       // NOLINTNEXTLINE(whitespace/line_length)
+       "* *         goto-cc " CBMC_VERSION
+       "  - Copyright (C) 2006-2014          * *\n"
+       "* *        Daniel Kroening, Christoph Wintersteiger         * *\n"
+       "* *                 kroening@kroening.com                   * *\n"
+       "\n";
 
   help_mode();
 
-  std::cout <<
-  "Usage:                       Purpose:\n"
-  "\n"
-  " --verbosity #               verbosity level\n"
-  " --function name             set entry point to name\n"
-  " --native-compiler cmd       command to invoke as preprocessor/compiler\n"
-  " --native-linker cmd         command to invoke as linker\n"
-  " --native-assembler cmd      command to invoke as assembler (goto-as only)\n"
-  " --print-rejected-preprocessed-source file\n"
-  "                             copy failing (preprocessed) source to file\n"
-  "\n";
+  std::cout << "Usage:                       Purpose:\n"
+               "\n"
+               " --verbosity #               verbosity level\n"
+               " --function name             set entry point to name\n"
+               " --native-compiler cmd       command to invoke as "
+               "preprocessor/compiler\n"
+               " --native-linker cmd         command to invoke as linker\n"
+               " --native-assembler cmd      command to invoke as assembler "
+               "(goto-as only)\n"
+               " --print-rejected-preprocessed-source file\n"
+               "                             copy failing (preprocessed) "
+               "source to file\n"
+               "\n";
 }
 
 /*******************************************************************\

@@ -11,10 +11,10 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 #include "cpp_name.h"
 
-class cpp_usingt:public irept
+class cpp_usingt : public irept
 {
 public:
-  cpp_usingt():irept(ID_cpp_using)
+  cpp_usingt() : irept(ID_cpp_using)
   {
   }
 

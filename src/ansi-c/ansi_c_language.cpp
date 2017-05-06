@@ -39,7 +39,7 @@ Function: ansi_c_languaget::extensions
 
 std::set<std::string> ansi_c_languaget::extensions() const
 {
-  return { "c", "i" };
+  return {"c", "i"};
 }
 
 /*******************************************************************\
@@ -77,7 +77,7 @@ bool ansi_c_languaget::preprocess(
   std::ostream &outstream)
 {
   // stdin?
-  if(path=="")
+  if(path == "")
     return c_preprocess(instream, outstream, get_message_handler());
 
   return c_preprocess(path, outstream, get_message_handler());
@@ -95,12 +95,10 @@ Function: ansi_c_languaget::parse
 
 \*******************************************************************/
 
-bool ansi_c_languaget::parse(
-  std::istream &instream,
-  const std::string &path)
+bool ansi_c_languaget::parse(std::istream &instream, const std::string &path)
 {
   // store the path
-  parse_path=path;
+  parse_path= path;
 
   // preprocessing
   std::ostringstream o_preprocessed;
@@ -118,24 +116,24 @@ bool ansi_c_languaget::parse(
 
   ansi_c_parser.clear();
   ansi_c_parser.set_file(ID_built_in);
-  ansi_c_parser.in=&codestr;
+  ansi_c_parser.in= &codestr;
   ansi_c_parser.set_message_handler(get_message_handler());
-  ansi_c_parser.for_has_scope=config.ansi_c.for_has_scope;
-  ansi_c_parser.cpp98=false; // it's not C++
-  ansi_c_parser.cpp11=false; // it's not C++
-  ansi_c_parser.mode=config.ansi_c.mode;
+  ansi_c_parser.for_has_scope= config.ansi_c.for_has_scope;
+  ansi_c_parser.cpp98= false; // it's not C++
+  ansi_c_parser.cpp11= false; // it's not C++
+  ansi_c_parser.mode= config.ansi_c.mode;
 
   ansi_c_scanner_init();
 
-  bool result=ansi_c_parser.parse();
+  bool result= ansi_c_parser.parse();
 
   if(!result)
   {
     ansi_c_parser.set_line_no(0);
     ansi_c_parser.set_file(path);
-    ansi_c_parser.in=&i_preprocessed;
+    ansi_c_parser.in= &i_preprocessed;
     ansi_c_scanner_init();
-    result=ansi_c_parser.parse();
+    result= ansi_c_parser.parse();
   }
 
   // save result
@@ -166,10 +164,7 @@ bool ansi_c_languaget::typecheck(
   symbol_tablet new_symbol_table;
 
   if(ansi_c_typecheck(
-    parse_tree,
-    new_symbol_table,
-    module,
-    get_message_handler()))
+       parse_tree, new_symbol_table, module, get_message_handler()))
   {
     return true;
   }
@@ -253,7 +248,7 @@ bool ansi_c_languaget::from_expr(
   std::string &code,
   const namespacet &ns)
 {
-  code=expr2c(expr, ns);
+  code= expr2c(expr, ns);
   return false;
 }
 
@@ -274,7 +269,7 @@ bool ansi_c_languaget::from_type(
   std::string &code,
   const namespacet &ns)
 {
-  code=type2c(type, ns);
+  code= type2c(type, ns);
   return false;
 }
 
@@ -295,7 +290,7 @@ bool ansi_c_languaget::type_to_name(
   std::string &name,
   const namespacet &ns)
 {
-  name=type2name(type, ns);
+  name= type2name(type, ns);
   return false;
 }
 
@@ -322,37 +317,37 @@ bool ansi_c_languaget::to_expr(
   // no preprocessing yet...
 
   std::istringstream i_preprocessed(
-    "void __my_expression = (void) (\n"+code+"\n);");
+    "void __my_expression = (void) (\n" + code + "\n);");
 
   // parsing
 
   ansi_c_parser.clear();
   ansi_c_parser.set_file(irep_idt());
-  ansi_c_parser.in=&i_preprocessed;
+  ansi_c_parser.in= &i_preprocessed;
   ansi_c_parser.set_message_handler(get_message_handler());
-  ansi_c_parser.mode=config.ansi_c.mode;
+  ansi_c_parser.mode= config.ansi_c.mode;
   ansi_c_scanner_init();
 
-  bool result=ansi_c_parser.parse();
+  bool result= ansi_c_parser.parse();
 
   if(ansi_c_parser.parse_tree.items.empty())
-    result=true;
+    result= true;
   else
   {
-    expr=ansi_c_parser.parse_tree.items.front().declarator().value();
+    expr= ansi_c_parser.parse_tree.items.front().declarator().value();
 
     // typecheck it
-    result=ansi_c_typecheck(expr, get_message_handler(), ns);
+    result= ansi_c_typecheck(expr, get_message_handler(), ns);
   }
 
   // save some memory
   ansi_c_parser.clear();
 
   // now remove that (void) cast
-  if(expr.id()==ID_typecast &&
-     expr.type().id()==ID_empty &&
-     expr.operands().size()==1)
-    expr=expr.op0();
+  if(
+    expr.id() == ID_typecast && expr.type().id() == ID_empty &&
+    expr.operands().size() == 1)
+    expr= expr.op0();
 
   return result;
 }

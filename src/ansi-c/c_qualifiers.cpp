@@ -27,25 +27,25 @@ std::string c_qualifierst::as_string() const
   std::string qualifiers;
 
   if(is_constant)
-    qualifiers+="const ";
+    qualifiers+= "const ";
 
   if(is_volatile)
-    qualifiers+="volatile ";
+    qualifiers+= "volatile ";
 
   if(is_restricted)
-    qualifiers+="restrict ";
+    qualifiers+= "restrict ";
 
   if(is_atomic)
-    qualifiers+="_Atomic ";
+    qualifiers+= "_Atomic ";
 
   if(is_ptr32)
-    qualifiers+="__ptr32 ";
+    qualifiers+= "__ptr32 ";
 
   if(is_ptr64)
-    qualifiers+="__ptr64 ";
+    qualifiers+= "__ptr64 ";
 
   if(is_noreturn)
-    qualifiers+="_Noreturn ";
+    qualifiers+= "_Noreturn ";
 
   return qualifiers;
 }
@@ -65,28 +65,28 @@ Function: c_qualifierst::read
 void c_qualifierst::read(const typet &src)
 {
   if(src.get_bool(ID_C_constant))
-    is_constant=true;
+    is_constant= true;
 
   if(src.get_bool(ID_C_volatile))
-    is_volatile=true;
+    is_volatile= true;
 
   if(src.get_bool(ID_C_restricted))
-    is_restricted=true;
+    is_restricted= true;
 
   if(src.get_bool(ID_C_atomic))
-    is_atomic=true;
+    is_atomic= true;
 
   if(src.get_bool(ID_C_ptr32))
-    is_ptr32=true;
+    is_ptr32= true;
 
   if(src.get_bool(ID_C_ptr64))
-    is_ptr64=true;
+    is_ptr64= true;
 
   if(src.get_bool(ID_C_transparent_union))
-    is_transparent_union=true;
+    is_transparent_union= true;
 
   if(src.get_bool(ID_C_noreturn))
-    is_noreturn=true;
+    is_noreturn= true;
 }
 
 /*******************************************************************\
@@ -179,9 +179,7 @@ Function: operator <<
 
 \*******************************************************************/
 
-std::ostream &operator << (
-  std::ostream &out,
-  const c_qualifierst &c_qualifiers)
+std::ostream &operator<<(std::ostream &out, const c_qualifierst &c_qualifiers)
 {
   return out << c_qualifiers.as_string();
 }

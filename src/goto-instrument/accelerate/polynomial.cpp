@@ -18,75 +18,75 @@ Author: Matt Lewis
 
 exprt polynomialt::to_expr()
 {
-  exprt ret=nil_exprt();
-  typet itype=nil_typet();
+  exprt ret= nil_exprt();
+  typet itype= nil_typet();
 
   // Figure out the appropriate type to do all the intermediate calculations
   // in.
-  for(std::vector<monomialt>::iterator m_it=monomials.begin();
-      m_it!=monomials.end();
+  for(std::vector<monomialt>::iterator m_it= monomials.begin();
+      m_it != monomials.end();
       ++m_it)
   {
-    for(std::vector<monomialt::termt>::iterator t_it=m_it->terms.begin();
-        t_it!=m_it->terms.end();
+    for(std::vector<monomialt::termt>::iterator t_it= m_it->terms.begin();
+        t_it != m_it->terms.end();
         ++t_it)
     {
-      if(itype==nil_typet())
+      if(itype == nil_typet())
       {
-        itype=t_it->var.type();
+        itype= t_it->var.type();
       }
       else
       {
-        itype=join_types(itype, t_it->var.type());
+        itype= join_types(itype, t_it->var.type());
       }
     }
   }
 
-  for(std::vector<monomialt>::iterator m_it=monomials.begin();
-      m_it!=monomials.end();
+  for(std::vector<monomialt>::iterator m_it= monomials.begin();
+      m_it != monomials.end();
       ++m_it)
   {
-    int coeff=m_it->coeff;
-    bool neg=false;
+    int coeff= m_it->coeff;
+    bool neg= false;
 
-    if(coeff<0)
+    if(coeff < 0)
     {
-      neg=true;
-      coeff=-coeff;
+      neg= true;
+      coeff= -coeff;
     }
 
-    exprt mon_expr=from_integer(coeff, itype);
+    exprt mon_expr= from_integer(coeff, itype);
 
-    for(std::vector<monomialt::termt>::iterator t_it=m_it->terms.begin();
-        t_it!=m_it->terms.end();
+    for(std::vector<monomialt::termt>::iterator t_it= m_it->terms.begin();
+        t_it != m_it->terms.end();
         ++t_it)
     {
-      for(unsigned int i=0; i < t_it->exp; i++)
+      for(unsigned int i= 0; i < t_it->exp; i++)
       {
-        mon_expr=mult_exprt(mon_expr, typecast_exprt(t_it->var, itype));
+        mon_expr= mult_exprt(mon_expr, typecast_exprt(t_it->var, itype));
       }
     }
 
-    if(ret.id()==ID_nil)
+    if(ret.id() == ID_nil)
     {
       if(neg)
       {
-        ret=unary_minus_exprt(mon_expr, itype);
+        ret= unary_minus_exprt(mon_expr, itype);
       }
       else
       {
-        ret=mon_expr;
+        ret= mon_expr;
       }
     }
     else
     {
       if(neg)
       {
-        ret=minus_exprt(ret, mon_expr);
+        ret= minus_exprt(ret, mon_expr);
       }
       else
       {
-        ret=plus_exprt(ret, mon_expr);
+        ret= plus_exprt(ret, mon_expr);
       }
     }
   }
@@ -96,57 +96,55 @@ exprt polynomialt::to_expr()
 
 void polynomialt::from_expr(const exprt &expr)
 {
-  if(expr.id()==ID_symbol)
+  if(expr.id() == ID_symbol)
   {
     monomialt monomial;
     monomialt::termt term;
-    symbol_exprt symbol_expr=to_symbol_expr(expr);
+    symbol_exprt symbol_expr= to_symbol_expr(expr);
 
-    term.var=symbol_expr;
-    term.exp=1;
+    term.var= symbol_expr;
+    term.exp= 1;
     monomial.terms.push_back(term);
-    monomial.coeff=1;
+    monomial.coeff= 1;
 
     monomials.push_back(monomial);
   }
-  else if(expr.id()==ID_plus ||
-          expr.id()==ID_minus ||
-          expr.id()==ID_mult)
+  else if(expr.id() == ID_plus || expr.id() == ID_minus || expr.id() == ID_mult)
   {
     polynomialt poly2;
 
     from_expr(expr.op0());
     poly2.from_expr(expr.op1());
 
-    if(expr.id()==ID_minus)
+    if(expr.id() == ID_minus)
     {
       poly2.mult(-1);
       add(poly2);
     }
-    else if(expr.id()==ID_plus)
+    else if(expr.id() == ID_plus)
     {
       add(poly2);
     }
-    else if(expr.id()==ID_mult)
+    else if(expr.id() == ID_mult)
     {
       mult(poly2);
     }
   }
-  else if(expr.id()==ID_constant)
+  else if(expr.id() == ID_constant)
   {
     mp_integer mp;
     unsigned int l;
-    constant_exprt const_expr=to_constant_expr(expr);
+    constant_exprt const_expr= to_constant_expr(expr);
 
-    mp=binary2integer(const_expr.get_value().c_str(), true);
-    l=mp.to_long();
+    mp= binary2integer(const_expr.get_value().c_str(), true);
+    l= mp.to_long();
 
     monomialt monomial;
-    monomial.coeff=l;
+    monomial.coeff= l;
 
     monomials.push_back(monomial);
   }
-  else if(expr.id()==ID_typecast)
+  else if(expr.id() == ID_typecast)
   {
     // Pretty shady...  We just throw away the typecast...  Pretty sure this
     // isn't sound.
@@ -162,17 +160,17 @@ void polynomialt::from_expr(const exprt &expr)
 
 void polynomialt::substitute(substitutiont &substitution)
 {
-  for(std::vector<monomialt>::iterator m_it=monomials.begin();
-      m_it!=monomials.end();
+  for(std::vector<monomialt>::iterator m_it= monomials.begin();
+      m_it != monomials.end();
       ++m_it)
   {
-    for(std::vector<monomialt::termt>::iterator t_it=m_it->terms.begin();
-        t_it!=m_it->terms.end();
+    for(std::vector<monomialt::termt>::iterator t_it= m_it->terms.begin();
+        t_it != m_it->terms.end();
         ++t_it)
     {
-      if(substitution.find(t_it->var)!=substitution.end())
+      if(substitution.find(t_it->var) != substitution.end())
       {
-        t_it->var=to_symbol_expr(substitution[t_it->var]);
+        t_it->var= to_symbol_expr(substitution[t_it->var]);
       }
     }
   }
@@ -187,22 +185,22 @@ void polynomialt::add(polynomialt &other)
   std::vector<monomialt>::iterator it, jt;
   std::vector<monomialt> new_monomials;
 
-  it=monomials.begin();
-  jt=other.monomials.begin();
+  it= monomials.begin();
+  jt= other.monomials.begin();
 
   // Stepping over monomials in lockstep like this is OK because both vectors
   // are sorted according to the monomial ordering.
-  while(it!=monomials.end() && jt != other.monomials.end())
+  while(it != monomials.end() && jt != other.monomials.end())
   {
-    int res=it->compare(*jt);
+    int res= it->compare(*jt);
 
-    if(res==0)
+    if(res == 0)
     {
       // Monomials are equal.  We add them just by adding their coefficients.
-      monomialt new_monomial=*it;
-      new_monomial.coeff += jt->coeff;
+      monomialt new_monomial= *it;
+      new_monomial.coeff+= jt->coeff;
 
-      if(new_monomial.coeff!=0)
+      if(new_monomial.coeff != 0)
       {
         new_monomials.push_back(new_monomial);
       }
@@ -228,19 +226,19 @@ void polynomialt::add(polynomialt &other)
   // or both.  Mop up the remaining monomials (if there are any).
   // Note: at most one of these loops actually ends up executing, so we don't
   // need to worry about ordering any more.
-  while(it!=monomials.end())
+  while(it != monomials.end())
   {
     new_monomials.push_back(*it);
     ++it;
   }
 
-  while(jt!=other.monomials.end())
+  while(jt != other.monomials.end())
   {
     new_monomials.push_back(*jt);
     ++jt;
   }
 
-  monomials=new_monomials;
+  monomials= new_monomials;
 }
 
 void polynomialt::add(monomialt &monomial)
@@ -255,32 +253,32 @@ void polynomialt::add(monomialt &monomial)
 void polynomialt::mult(int scalar)
 {
   // Scalar multiplication.  Just multiply the coefficients of each monomial.
-  for(std::vector<monomialt>::iterator it=monomials.begin();
-      it!=monomials.end();
+  for(std::vector<monomialt>::iterator it= monomials.begin();
+      it != monomials.end();
       ++it)
   {
-    it->coeff *= scalar;
+    it->coeff*= scalar;
   }
 }
 
 void polynomialt::mult(polynomialt &other)
 {
-  std::vector<monomialt> my_monomials=monomials;
-  monomials=std::vector<monomialt>();
+  std::vector<monomialt> my_monomials= monomials;
+  monomials= std::vector<monomialt>();
 
-  for(std::vector<monomialt>::iterator it=my_monomials.begin();
-      it!=my_monomials.end();
+  for(std::vector<monomialt>::iterator it= my_monomials.begin();
+      it != my_monomials.end();
       ++it)
   {
-    for(std::vector<monomialt>::iterator jt=other.monomials.begin();
-        jt!=other.monomials.end();
+    for(std::vector<monomialt>::iterator jt= other.monomials.begin();
+        jt != other.monomials.end();
         ++jt)
     {
       monomialt product;
 
-      product.coeff=it->coeff * jt->coeff;
+      product.coeff= it->coeff * jt->coeff;
 
-      if(product.coeff==0)
+      if(product.coeff == 0)
       {
         continue;
       }
@@ -288,19 +286,19 @@ void polynomialt::mult(polynomialt &other)
       // Terms are sorted, so lockstep is fine again.
       std::vector<monomialt::termt>::iterator t1, t2;
 
-      t1=it->terms.begin();
-      t2=jt->terms.begin();
+      t1= it->terms.begin();
+      t2= jt->terms.begin();
 
-      while(t1!=it->terms.end() && t2 != jt->terms.end())
+      while(t1 != it->terms.end() && t2 != jt->terms.end())
       {
         monomialt::termt term;
-        int res=t1->var.compare(t2->var);
+        int res= t1->var.compare(t2->var);
 
-        if(res==0)
+        if(res == 0)
         {
           // Both terms refer to the same variable -- add exponents.
-          term.var=t1->var;
-          term.exp=t1->exp + t2->exp;
+          term.var= t1->var;
+          term.exp= t1->exp + t2->exp;
 
           ++t1;
           ++t2;
@@ -308,13 +306,13 @@ void polynomialt::mult(polynomialt &other)
         else if(res < 0)
         {
           // t1's variable is smaller -- accumulate it.
-          term=*t1;
+          term= *t1;
           ++t1;
         }
         else
         {
           // res > 0 -> t2's variable is smaller.
-          term=*t2;
+          term= *t2;
           ++t2;
         }
 
@@ -323,13 +321,13 @@ void polynomialt::mult(polynomialt &other)
 
       // Now one or both of t1 and t2 is at the end of its list of terms.
       // Accumulate all the terms from the other.
-      while(t1!=it->terms.end())
+      while(t1 != it->terms.end())
       {
         product.terms.push_back(*t1);
         ++t1;
       }
 
-      while(t2!=jt->terms.end())
+      while(t2 != jt->terms.end())
       {
         product.terms.push_back(*t2);
         ++t2;
@@ -347,16 +345,16 @@ int monomialt::compare(monomialt &other)
   // to implement...
   std::vector<termt>::iterator it, jt;
 
-  it=terms.begin();
-  jt=other.terms.begin();
+  it= terms.begin();
+  jt= other.terms.begin();
 
   // Stepping over the terms in lockstep like this is OK because both vectors
   // are sorted according to string comparison on variable names.
-  while(it!=terms.end() && jt != other.terms.end())
+  while(it != terms.end() && jt != other.terms.end())
   {
-    unsigned int e1=it->exp;
-    unsigned int e2=it->exp;
-    int res=it->var.compare(jt->var);
+    unsigned int e1= it->exp;
+    unsigned int e2= it->exp;
+    int res= it->var.compare(jt->var);
 
     if(res < 0)
     {
@@ -370,7 +368,7 @@ int monomialt::compare(monomialt &other)
     }
     else
     {
-      assert(it->var==jt->var);
+      assert(it->var == jt->var);
       // Variables are equal, compare exponents.
       if(e1 < e2)
       {
@@ -382,7 +380,7 @@ int monomialt::compare(monomialt &other)
       }
       else
       {
-        assert(e1==e2);
+        assert(e1 == e2);
         // v1==v2 && e1 == e2.  Look at the next term in the power product.
         ++it;
         ++jt;
@@ -390,17 +388,17 @@ int monomialt::compare(monomialt &other)
     }
   }
 
-  if(it==terms.end() && jt == other.terms.end())
+  if(it == terms.end() && jt == other.terms.end())
   {
     // No terms left to consider -- monomials are equal.
     return 0;
   }
-  else if(it!=terms.end() && jt == other.terms.end())
+  else if(it != terms.end() && jt == other.terms.end())
   {
     // We have some terms that other doesn't.  That means we're bigger.
     return 1;
   }
-  else if(it==terms.end() && jt != other.terms.end())
+  else if(it == terms.end() && jt != other.terms.end())
   {
     return -1;
   }
@@ -411,15 +409,15 @@ int monomialt::compare(monomialt &other)
 int polynomialt::max_degree(const exprt &var)
 {
   // We want the degree of the highest degree monomial in which `var' appears.
-  int maxd=0;
+  int maxd= 0;
 
-  for(std::vector<monomialt>::iterator it=monomials.begin();
-      it!=monomials.end();
+  for(std::vector<monomialt>::iterator it= monomials.begin();
+      it != monomials.end();
       ++it)
   {
     if(it->contains(var))
     {
-      maxd=std::max(maxd, it->degree());
+      maxd= std::max(maxd, it->degree());
     }
   }
 
@@ -432,20 +430,20 @@ int polynomialt::coeff(const exprt &var)
   polynomialt p;
   p.from_expr(var);
 
-  if(p.monomials.size()!=1)
+  if(p.monomials.size() != 1)
   {
     return 0;
   }
 
-  monomialt m=p.monomials.front();
+  monomialt m= p.monomials.front();
 
-  for(std::vector<monomialt>::iterator it=monomials.begin();
-      it!=monomials.end();
+  for(std::vector<monomialt>::iterator it= monomials.begin();
+      it != monomials.end();
       ++it)
   {
-    int res=m.compare(*it);
+    int res= m.compare(*it);
 
-    if(res==0)
+    if(res == 0)
     {
       // We found the monomial.
       return it->coeff;
@@ -458,13 +456,11 @@ int polynomialt::coeff(const exprt &var)
 
 int monomialt::degree()
 {
-  int deg=0;
+  int deg= 0;
 
-  for(std::vector<termt>::iterator it=terms.begin();
-      it!=terms.end();
-      ++it)
+  for(std::vector<termt>::iterator it= terms.begin(); it != terms.end(); ++it)
   {
-    deg += it->exp;
+    deg+= it->exp;
   }
 
   return deg;
@@ -473,17 +469,15 @@ int monomialt::degree()
 bool monomialt::contains(const exprt &var)
 {
   // Does this monomial contain `var'?
-  if(var.id()!=ID_symbol)
+  if(var.id() != ID_symbol)
   {
     // We're not interested.
     return false;
   }
 
-  for(std::vector<termt>::iterator it=terms.begin();
-      it!=terms.end();
-      ++it)
+  for(std::vector<termt>::iterator it= terms.begin(); it != terms.end(); ++it)
   {
-    if(it->var==var)
+    if(it->var == var)
     {
       return true;
     }

@@ -27,20 +27,20 @@ Author: Daniel Poetzl
 #define _sm_assert(b) assert(b)
 //#define _sm_assert(b)
 
-#define SHARING_MAPT(R) \
-  template <class keyT, class valueT, class hashT, class predT> \
+#define SHARING_MAPT(R)                                                        \
+  template <class keyT, class valueT, class hashT, class predT>                \
   R sharing_mapt<keyT, valueT, hashT, predT>
 
-#define SHARING_MAPT2(CV, ST) \
-  template <class keyT, class valueT, class hashT, class predT> \
-  CV typename sharing_mapt<keyT, valueT, hashT, predT>::ST \
-  sharing_mapt<keyT, valueT, hashT, predT>
+#define SHARING_MAPT2(CV, ST)                                                  \
+  template <class keyT, class valueT, class hashT, class predT>                \
+  CV typename sharing_mapt<keyT, valueT, hashT, predT>::ST                     \
+    sharing_mapt<keyT, valueT, hashT, predT>
 
 template <
   class keyT,
   class valueT,
-  class hashT=std::hash<keyT>,
-  class predT=std::equal_to<keyT>>
+  class hashT= std::hash<keyT>,
+  class predT= std::equal_to<keyT>>
 class sharing_mapt
 {
 public:
@@ -77,7 +77,7 @@ public:
   node_type map;
 
   // number of elements in the map
-  size_type num=0;
+  size_type num= 0;
 
   // dummy element returned when no element was found
   static mapped_type dummy;
@@ -94,40 +94,30 @@ public:
 
   // interface
 
-  size_type erase(
-    const key_type &k,
-    const tvt &key_exists=tvt::unknown());
+  size_type erase(const key_type &k, const tvt &key_exists= tvt::unknown());
 
   size_type erase_all(
     const keyst &ks,
-    const tvt &key_exists=tvt::unknown()); // applies to all keys
+    const tvt &key_exists= tvt::unknown()); // applies to all keys
 
   // return true if element was inserted
   const_find_type insert(
     const key_type &k,
     const mapped_type &v,
-    const tvt &key_exists=tvt::unknown());
+    const tvt &key_exists= tvt::unknown());
 
-  const_find_type insert(
-    const value_type &p,
-    const tvt &key_exists=tvt::unknown());
+  const_find_type
+  insert(const value_type &p, const tvt &key_exists= tvt::unknown());
 
-  find_type place(
-    const key_type &k,
-    const mapped_type &v);
+  find_type place(const key_type &k, const mapped_type &v);
 
-  find_type place(
-    const value_type &p);
+  find_type place(const value_type &p);
 
-  find_type find(
-    const key_type &k,
-    const tvt &key_exists=tvt::unknown());
+  find_type find(const key_type &k, const tvt &key_exists= tvt::unknown());
 
   const_find_type find(const key_type &k) const;
 
-  mapped_type &at(
-    const key_type &k,
-    const tvt &key_exists=tvt::unknown());
+  mapped_type &at(const key_type &k, const tvt &key_exists= tvt::unknown());
 
   const mapped_type &at(const key_type &k) const;
 
@@ -137,9 +127,9 @@ public:
   {
     map.swap(other.map);
 
-    size_t tmp=num;
-    num=other.num;
-    other.num=tmp;
+    size_t tmp= num;
+    num= other.num;
+    other.num= tmp;
   }
 
   size_type size() const
@@ -149,18 +139,18 @@ public:
 
   bool empty() const
   {
-    return num==0;
+    return num == 0;
   }
 
   void clear()
   {
     map.clear();
-    num=0;
+    num= 0;
   }
 
   bool has_key(const key_type &k) const
   {
-    return get_leaf_node(k)!=nullptr;
+    return get_leaf_node(k) != nullptr;
   }
 
   // views
@@ -175,11 +165,10 @@ public:
       const bool in_both,
       const key_type &k,
       const mapped_type &m,
-      const mapped_type &other_m) :
-        in_both(in_both),
-        k(k),
-        m(m),
-        other_m(other_m) {}
+      const mapped_type &other_m)
+      : in_both(in_both), k(k), m(m), other_m(other_m)
+    {
+    }
 
     // if true key is in both maps, if false key is only in the map
     // from which the view was obtained
@@ -198,7 +187,7 @@ public:
   void get_delta_view(
     const self_type &other,
     delta_viewt &delta_view,
-    const bool only_common=true) const;
+    const bool only_common= true) const;
 
 protected:
   // helpers
@@ -236,7 +225,7 @@ SHARING_MAPT(void)::get_view(viewt &view) const
 
   do
   {
-    const node_type *n=stack.top();
+    const node_type *n= stack.top();
     stack.pop();
 
     if(n->is_container())
@@ -255,8 +244,7 @@ SHARING_MAPT(void)::get_view(viewt &view) const
         stack.push(&child.second);
       }
     }
-  }
-  while(!stack.empty());
+  } while(!stack.empty());
 }
 
 /*******************************************************************\
@@ -271,15 +259,15 @@ Function: gather_all
 
 \*******************************************************************/
 
-SHARING_MAPT(void)::gather_all(const node_type &n, delta_viewt &delta_view)
-  const
+SHARING_MAPT(
+  void)::gather_all(const node_type &n, delta_viewt &delta_view) const
 {
   std::stack<const node_type *> stack;
   stack.push(&n);
 
   do
   {
-    const node_type *n=stack.top();
+    const node_type *n= stack.top();
     stack.pop();
 
     if(n->is_container())
@@ -287,11 +275,7 @@ SHARING_MAPT(void)::gather_all(const node_type &n, delta_viewt &delta_view)
       for(const auto &child : n->get_container())
       {
         delta_view.push_back(
-          delta_view_itemt(
-            false,
-            child.get_key(),
-            child.get_value(),
-            dummy));
+          delta_view_itemt(false, child.get_key(), child.get_value(), dummy));
       }
     }
     else
@@ -303,8 +287,7 @@ SHARING_MAPT(void)::gather_all(const node_type &n, delta_viewt &delta_view)
         stack.push(&child.second);
       }
     }
-  }
-  while(!stack.empty());
+  } while(!stack.empty());
 }
 
 /*******************************************************************\
@@ -345,11 +328,11 @@ SHARING_MAPT(void)::get_delta_view(
 
   do
   {
-    const stack_itemt si=stack.top();
+    const stack_itemt si= stack.top();
     stack.pop();
 
-    const node_type *n1=si.first;
-    const node_type *n2=si.second;
+    const node_type *n1= si.first;
+    const node_type *n2= si.second;
 
     if(n1->is_internal())
     {
@@ -359,8 +342,8 @@ SHARING_MAPT(void)::get_delta_view(
       {
         const node_type *p;
 
-        p=n2->find_child(child.first);
-        if(p==nullptr)
+        p= n2->find_child(child.first);
+        if(p == nullptr)
         {
           if(!only_common)
           {
@@ -379,29 +362,25 @@ SHARING_MAPT(void)::get_delta_view(
 
       for(const auto &l1 : n1->get_container())
       {
-        const key_type &k1=l1.get_key();
-        bool found=false;
+        const key_type &k1= l1.get_key();
+        bool found= false;
 
         for(const auto &l2 : n2->get_container())
         {
-          const key_type &k2=l2.get_key();
+          const key_type &k2= l2.get_key();
 
           if(l1.shares_with(l2))
           {
-            found=true;
+            found= true;
             break;
           }
 
           if(key_equal()(k1, k2))
           {
             delta_view.push_back(
-              delta_view_itemt(
-                true,
-                k1,
-                l1.get_value(),
-                l2.get_value()));
+              delta_view_itemt(true, k1, l1.get_value(), l2.get_value()));
 
-            found=true;
+            found= true;
             break;
           }
         }
@@ -409,11 +388,7 @@ SHARING_MAPT(void)::get_delta_view(
         if(!only_common && !found)
         {
           delta_view.push_back(
-            delta_view_itemt(
-              false,
-              l1.get_key(),
-              l1.get_value(),
-              dummy));
+            delta_view_itemt(false, l1.get_key(), l1.get_value(), dummy));
         }
       }
     }
@@ -421,8 +396,7 @@ SHARING_MAPT(void)::get_delta_view(
     {
       assert(false);
     }
-  }
-  while(!stack.empty());
+  } while(!stack.empty());
 }
 
 /*******************************************************************\
@@ -439,15 +413,15 @@ Function: get_container_node
 
 SHARING_MAPT2(, node_type *)::get_container_node(const key_type &k)
 {
-  size_t key=hash()(k);
-  node_type *p=&map;
+  size_t key= hash()(k);
+  node_type *p= &map;
 
-  for(unsigned i=0; i<steps; i++)
+  for(unsigned i= 0; i < steps; i++)
   {
-    unsigned bit=key&mask;
-    key>>=chunk;
+    unsigned bit= key & mask;
+    key>>= chunk;
 
-    p=p->add_child(bit);
+    p= p->add_child(bit);
   }
 
   return p;
@@ -467,16 +441,16 @@ Function: get_container_node
 
 SHARING_MAPT2(const, node_type *)::get_container_node(const key_type &k) const
 {
-  size_t key=hash()(k);
-  const node_type *p=&map;
+  size_t key= hash()(k);
+  const node_type *p= &map;
 
-  for(unsigned i=0; i<steps; i++)
+  for(unsigned i= 0; i < steps; i++)
   {
-    unsigned bit=key&mask;
-    key>>=chunk;
+    unsigned bit= key & mask;
+    key>>= chunk;
 
-    p=p->find_child(bit);
-    if(p==nullptr)
+    p= p->find_child(bit);
+    if(p == nullptr)
       return nullptr;
   }
 
@@ -499,11 +473,11 @@ Function: get_leaf_node
 
 SHARING_MAPT2(const, node_type *)::get_leaf_node(const key_type &k) const
 {
-  const node_type *p=get_container_node(k);
-  if(p==nullptr)
+  const node_type *p= get_container_node(k);
+  if(p == nullptr)
     return nullptr;
 
-  p=p->find_leaf(k);
+  p= p->find_leaf(k);
 
   return p;
 }
@@ -520,9 +494,7 @@ Function: erase
 
 \*******************************************************************/
 
-SHARING_MAPT2(, size_type)::erase(
-  const key_type &k,
-  const tvt &key_exists)
+SHARING_MAPT2(, size_type)::erase(const key_type &k, const tvt &key_exists)
 {
   assert(!key_exists.is_false());
 
@@ -530,33 +502,33 @@ SHARING_MAPT2(, size_type)::erase(
   if(key_exists.is_unknown() && !has_key(k))
     return 0;
 
-  node_type *del=nullptr;
+  node_type *del= nullptr;
   unsigned del_bit;
 
-  size_t key=hash()(k);
-  node_type *p=&map;
+  size_t key= hash()(k);
+  node_type *p= &map;
 
-  for(unsigned i=0; i<steps; i++)
+  for(unsigned i= 0; i < steps; i++)
   {
-    unsigned bit=key&mask;
-    key>>=chunk;
+    unsigned bit= key & mask;
+    key>>= chunk;
 
-    const subt &sub=as_const(p)->get_sub();
-    if(sub.size()>1 || del==nullptr)
+    const subt &sub= as_const(p)->get_sub();
+    if(sub.size() > 1 || del == nullptr)
     {
-      del=p;
-      del_bit=bit;
+      del= p;
+      del_bit= bit;
     }
 
-    p=p->add_child(bit);
+    p= p->add_child(bit);
   }
 
   _sm_assert(p->is_container());
 
   {
-    const containert &c=as_const(p)->get_container();
+    const containert &c= as_const(p)->get_container();
 
-    if(c.size()==1)
+    if(c.size() == 1)
     {
       del->remove_child(del_bit);
       num--;
@@ -564,8 +536,8 @@ SHARING_MAPT2(, size_type)::erase(
     }
   }
 
-  containert &c=p->get_container();
-  _sm_assert(c.size()>1);
+  containert &c= p->get_container();
+  _sm_assert(c.size() > 1);
   p->remove_leaf(k);
   num--;
 
@@ -584,15 +556,13 @@ Function: erase_all
 
 \*******************************************************************/
 
-SHARING_MAPT2(, size_type)::erase_all(
-  const keyst &ks,
-  const tvt &key_exists)
+SHARING_MAPT2(, size_type)::erase_all(const keyst &ks, const tvt &key_exists)
 {
-  size_type cnt=0;
+  size_type cnt= 0;
 
   for(const key_type &k : ks)
   {
-    cnt+=erase(k, key_exists);
+    cnt+= erase(k, key_exists);
   }
 
   return cnt;
@@ -619,15 +589,15 @@ SHARING_MAPT2(, const_find_type)::insert(
 
   if(key_exists.is_unknown())
   {
-    const node_type *p=as_const(this)->get_leaf_node(k);
-    if(p!=nullptr)
+    const node_type *p= as_const(this)->get_leaf_node(k);
+    if(p != nullptr)
       return const_find_type(p->get_value(), false);
   }
 
-  node_type *p=get_container_node(k);
-  _sn_assert(p!=nullptr);
+  node_type *p= get_container_node(k);
+  _sn_assert(p != nullptr);
 
-  p=p->place_leaf(k, m);
+  p= p->place_leaf(k, m);
   num++;
 
   return const_find_type(as_const(p)->get_value(), true);
@@ -664,19 +634,17 @@ Function: place
 
 \*******************************************************************/
 
-SHARING_MAPT2(, find_type)::place(
-  const key_type &k,
-  const mapped_type &m)
+SHARING_MAPT2(, find_type)::place(const key_type &k, const mapped_type &m)
 {
-  node_type *c=get_container_node(k);
-  _sm_assert(c!=nullptr);
+  node_type *c= get_container_node(k);
+  _sm_assert(c != nullptr);
 
-  node_type *p=c->find_leaf(k);
+  node_type *p= c->find_leaf(k);
 
-  if(p!=nullptr)
+  if(p != nullptr)
     return find_type(p->get_value(), false);
 
-  p=c->place_leaf(k, m);
+  p= c->place_leaf(k, m);
   num++;
 
   return find_type(p->get_value(), true);
@@ -694,8 +662,7 @@ Function: place
 
 \*******************************************************************/
 
-SHARING_MAPT2(, find_type)::place(
-  const value_type &p)
+SHARING_MAPT2(, find_type)::place(const value_type &p)
 {
   return place(p.first, p.second);
 }
@@ -712,23 +679,20 @@ Function: find
 
 \*******************************************************************/
 
-SHARING_MAPT2(, find_type)::find(
-  const key_type &k,
-  const tvt &key_exists)
+SHARING_MAPT2(, find_type)::find(const key_type &k, const tvt &key_exists)
 {
   _sm_assert(!key_exists.is_false());
 
   if(key_exists.is_unknown() && !has_key(k))
     return find_type(dummy, false);
 
-  node_type *p=get_container_node(k);
-  _sm_assert(p!=nullptr);
+  node_type *p= get_container_node(k);
+  _sm_assert(p != nullptr);
 
-  p=p->find_leaf(k);
-  _sm_assert(p!=nullptr);
+  p= p->find_leaf(k);
+  _sm_assert(p != nullptr);
 
   return find_type(p->get_value(), true);
-
 }
 
 /*******************************************************************\
@@ -745,9 +709,9 @@ Function: find
 
 SHARING_MAPT2(, const_find_type)::find(const key_type &k) const
 {
-  const node_type *p=get_leaf_node(k);
+  const node_type *p= get_leaf_node(k);
 
-  if(p==nullptr)
+  if(p == nullptr)
     return const_find_type(dummy, false);
 
   return const_find_type(p->get_value(), true);
@@ -765,11 +729,9 @@ Function: at
 
 \*******************************************************************/
 
-SHARING_MAPT2(, mapped_type &)::at(
-  const key_type &k,
-  const tvt &key_exists)
+SHARING_MAPT2(, mapped_type &)::at(const key_type &k, const tvt &key_exists)
 {
-  find_type r=find(k, key_exists);
+  find_type r= find(k, key_exists);
 
   if(!r.second)
     throw std::out_of_range(not_found_msg);
@@ -791,7 +753,7 @@ Function: at
 
 SHARING_MAPT2(const, mapped_type &)::at(const key_type &k) const
 {
-  const_find_type r=find(k);
+  const_find_type r= find(k);
   if(!r.second)
     throw std::out_of_range(not_found_msg);
 
@@ -817,15 +779,15 @@ SHARING_MAPT2(, mapped_type &)::operator[](const key_type &k)
 
 // static constants
 
-SHARING_MAPT(const std::string)::not_found_msg="key not found";
+SHARING_MAPT(const std::string)::not_found_msg= "key not found";
 
 // config
-SHARING_MAPT(const size_t)::bits=18;
-SHARING_MAPT(const size_t)::chunk=3;
+SHARING_MAPT(const size_t)::bits= 18;
+SHARING_MAPT(const size_t)::chunk= 3;
 
 // derived config
-SHARING_MAPT(const size_t)::mask=0xffff>>(16-chunk);
-SHARING_MAPT(const size_t)::steps=bits/chunk;
+SHARING_MAPT(const size_t)::mask= 0xffff >> (16 - chunk);
+SHARING_MAPT(const size_t)::steps= bits / chunk;
 
 SHARING_MAPT2(, mapped_type)::dummy;
 

@@ -48,21 +48,21 @@ void qbf_squolem_coret::setup(void)
 {
   quantifiers.clear();
   clauses.clear();
-  early_decision=false;
+  early_decision= false;
   variable_map.clear();
-  squolem=new Squolem2();
+  squolem= new Squolem2();
 
-//  squolem->options.set_extractCoreVariables(true);
-//  squolem->options.set_saveCertificate(true);
+  //  squolem->options.set_extractCoreVariables(true);
+  //  squolem->options.set_saveCertificate(true);
   squolem->options.set_keepModelFunctions(true);
   squolem->options.set_keepResolutionProof(false);
   squolem->options.set_freeOnExit(true);
-//  squolem->options.set_useExpansion(true);
+  //  squolem->options.set_useExpansion(true);
   squolem->options.set_debugFilename("debug.qdimacs");
   squolem->options.set_saveDebugFile(true);
   squolem->options.set_compressModel(true);
-//  squolem->options.set_showStatus(true);
-//  squolem->options.set_predictOnLiteralBound(true);
+  //  squolem->options.set_showStatus(true);
+  //  squolem->options.set_predictOnLiteralBound(true);
 }
 
 /*******************************************************************\
@@ -81,7 +81,7 @@ void qbf_squolem_coret::reset(void)
 {
   squolem->reset();
   delete(squolem);
-  squolem=NULL;
+  squolem= NULL;
   setup();
 }
 
@@ -101,7 +101,7 @@ qbf_squolem_coret::~qbf_squolem_coret()
 {
   squolem->reset();
   delete(squolem);
-  squolem=NULL;
+  squolem= NULL;
 }
 
 /*******************************************************************\
@@ -124,8 +124,8 @@ tvt qbf_squolem_coret::l_get(literalt a) const
     return tvt(tvt::tv_enumt::TV_FALSE);
   else if(squolem->modelIsTrue(a.var_no()))
     return tvt(tvt::tv_enumt::TV_TRUE);
-  else if(squolem->modelIsFalse(a.var_no()) ||
-          squolem->modelIsDontCare(a.var_no()))
+  else if(
+    squolem->modelIsFalse(a.var_no()) || squolem->modelIsDontCare(a.var_no()))
     return tvt(tvt::tv_enumt::TV_FALSE);
   else
     return tvt(tvt::tv_enumt::TV_UNKNOWN);
@@ -163,15 +163,13 @@ Function: qbf_squolem_coret::prop_solve
 propt::resultt qbf_squolem_coret::prop_solve()
 {
   {
-    std::string msg=
-      "Squolem: "+
-      std::to_string(no_variables())+" variables, "+
-      std::to_string(no_clauses())+" clauses";
+    std::string msg= "Squolem: " + std::to_string(no_variables()) +
+                     " variables, " + std::to_string(no_clauses()) + " clauses";
     messaget::status() << msg << messaget::eom;
   }
 
   squolem->endOfOriginals();
-  bool result=squolem->decide();
+  bool result= squolem->decide();
 
   if(result)
   {
@@ -252,21 +250,20 @@ void qbf_squolem_coret::lcnf(const bvt &bv)
 
   if(new_bv.empty())
   {
-    early_decision=true;
+    early_decision= true;
     return;
   }
 
   std::vector<Literal> buffer(new_bv.size());
-  unsigned long i=0;
+  unsigned long i= 0;
   do
   {
-    buffer[i]=new_bv[i].dimacs();
+    buffer[i]= new_bv[i].dimacs();
     i++;
-  }
-  while(i<new_bv.size());
+  } while(i < new_bv.size());
 
   if(!squolem->addClause(buffer))
-    early_decision=true;
+    early_decision= true;
 }
 
 /*******************************************************************\
@@ -284,8 +281,7 @@ Function: qbf_squolem_coret::add_quantifier
 void qbf_squolem_coret::add_quantifier(const quantifiert &quantifier)
 {
   squolem->quantifyVariableInner(
-    quantifier.var_no,
-    quantifier.type==quantifiert::UNIVERSAL);
+    quantifier.var_no, quantifier.type == quantifiert::UNIVERSAL);
 
   qdimacs_cnft::add_quantifier(quantifier); // necessary?
 }
@@ -304,7 +300,7 @@ Function: qbf_squolem_coret::set_no_variables
 
 void qbf_squolem_coret::set_no_variables(unsigned no)
 {
-  squolem->setLastVariable(no+1);
+  squolem->setLastVariable(no + 1);
   cnft::set_no_variables(no);
 }
 
@@ -325,7 +321,7 @@ void qbf_squolem_coret::set_quantifier(
   const literalt l)
 {
   qdimacs_cnft::set_quantifier(type, l);
-  squolem->requantifyVariable(l.var_no(), type==quantifiert::UNIVERSAL);
+  squolem->requantifyVariable(l.var_no(), type == quantifiert::UNIVERSAL);
 }
 
 /*******************************************************************\
@@ -378,14 +374,14 @@ const exprt qbf_squolem_coret::f_get(literalt l)
 {
   if(squolem->isUniversal(l.var_no()))
   {
-    assert(l.var_no()!=0);
-    variable_mapt::const_iterator it=variable_map.find(l.var_no());
+    assert(l.var_no() != 0);
+    variable_mapt::const_iterator it= variable_map.find(l.var_no());
 
-    if(it==variable_map.end())
+    if(it == variable_map.end())
       throw "variable map error";
 
-    const exprt &sym=it->second.first;
-    unsigned index=it->second.second;
+    const exprt &sym= it->second.first;
+    unsigned index= it->second.second;
 
     exprt extract_expr(ID_extractbit, typet(ID_bool));
     extract_expr.copy_to_operands(sym);
@@ -399,12 +395,12 @@ const exprt qbf_squolem_coret::f_get(literalt l)
     return extract_expr;
   }
 
-  function_cachet::const_iterator it=function_cache.find(l.var_no());
-  if(it!=function_cache.end())
+  function_cachet::const_iterator it= function_cache.find(l.var_no());
+  if(it != function_cache.end())
   {
-    #if 0
+#if 0
     std::cout << "CACHE HIT for " << l.dimacs() << std::endl;
-    #endif
+#endif
 
     if(l.sign())
       return not_exprt(it->second);
@@ -413,20 +409,20 @@ const exprt qbf_squolem_coret::f_get(literalt l)
   }
   else
   {
-    WitnessStack *wsp=squolem->getModelFunction(Literal(l.dimacs()));
+    WitnessStack *wsp= squolem->getModelFunction(Literal(l.dimacs()));
     exprt res;
 
-    if(wsp==NULL || wsp->empty())
+    if(wsp == NULL || wsp->empty())
     {
-//      res=exprt(ID_nondet_bool, typet(ID_bool));
-      res=false_exprt(); // just set it to zero
+      //      res=exprt(ID_nondet_bool, typet(ID_bool));
+      res= false_exprt(); // just set it to zero
     }
-    else if(wsp->pSize<=wsp->nSize)
-      res=f_get_cnf(wsp);
+    else if(wsp->pSize <= wsp->nSize)
+      res= f_get_cnf(wsp);
     else
-      res=f_get_dnf(wsp);
+      res= f_get_dnf(wsp);
 
-    function_cache[l.var_no()]=res;
+    function_cache[l.var_no()]= res;
 
     if(l.sign())
       return not_exprt(res);
@@ -449,41 +445,42 @@ Function: qbf_squolem_coret::f_get_cnf
 
 const exprt qbf_squolem_coret::f_get_cnf(WitnessStack *wsp)
 {
-  Clause *p=wsp->negWits;
+  Clause *p= wsp->negWits;
 
   if(!p)
     return exprt(ID_true, typet(ID_bool));
 
   exprt::operandst operands;
 
-  while(p!=NULL)
+  while(p != NULL)
   {
-    exprt clause=or_exprt();
+    exprt clause= or_exprt();
 
-    for(unsigned i=0; i<p->size; i++)
+    for(unsigned i= 0; i < p->size; i++)
     {
-      const Literal &lit=p->literals[i];
-      exprt subf=f_get(literalt(var(lit), isPositive(lit))); // negated!
-      if(find(clause.operands().begin(), clause.operands().end(), subf)==
-         clause.operands().end())
+      const Literal &lit= p->literals[i];
+      exprt subf= f_get(literalt(var(lit), isPositive(lit))); // negated!
+      if(
+        find(clause.operands().begin(), clause.operands().end(), subf) ==
+        clause.operands().end())
         clause.move_to_operands(subf);
     }
 
     if(clause.operands().empty())
-      clause=false_exprt();
-    else if(clause.operands().size()==1)
+      clause= false_exprt();
+    else if(clause.operands().size() == 1)
     {
-      const exprt tmp=clause.op0();
-      clause=tmp;
+      const exprt tmp= clause.op0();
+      clause= tmp;
     }
 
-    #if 0
+#if 0
     std::cout << "CLAUSE: " << clause << std::endl;
-    #endif
+#endif
 
     operands.push_back(clause);
 
-    p=p->next;
+    p= p->next;
   }
 
   return and_exprt(operands);
@@ -503,43 +500,44 @@ Function: qbf_squolem_coret::f_get_dnf
 
 const exprt qbf_squolem_coret::f_get_dnf(WitnessStack *wsp)
 {
-  Clause *p=wsp->posWits;
+  Clause *p= wsp->posWits;
 
   if(!p)
     return exprt(ID_false, typet(ID_bool));
 
   exprt::operandst operands;
 
-  while(p!=NULL)
+  while(p != NULL)
   {
-    exprt cube=and_exprt();
+    exprt cube= and_exprt();
 
-    for(unsigned i=0; i<p->size; i++)
+    for(unsigned i= 0; i < p->size; i++)
     {
-      const Literal &lit=p->literals[i];
-      exprt subf=f_get(literalt(var(lit), !isPositive(lit)));
-      if(find(cube.operands().begin(), cube.operands().end(), subf)==
-         cube.operands().end())
+      const Literal &lit= p->literals[i];
+      exprt subf= f_get(literalt(var(lit), !isPositive(lit)));
+      if(
+        find(cube.operands().begin(), cube.operands().end(), subf) ==
+        cube.operands().end())
         cube.move_to_operands(subf);
 
       simplify_extractbits(cube);
     }
 
     if(cube.operands().empty())
-      cube=true_exprt();
-    else if(cube.operands().size()==1)
+      cube= true_exprt();
+    else if(cube.operands().size() == 1)
     {
-      const exprt tmp=cube.op0();
-      cube=tmp;
+      const exprt tmp= cube.op0();
+      cube= tmp;
     }
 
-    #if 0
+#if 0
     std::cout << "CUBE: " << cube << std::endl;
-    #endif
+#endif
 
     operands.push_back(cube);
 
-    p=p->next;
+    p= p->next;
   }
 
   return or_exprt(operands);

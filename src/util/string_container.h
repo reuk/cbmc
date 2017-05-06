@@ -27,7 +27,7 @@ struct string_ptrt
 
   explicit string_ptrt(const char *_s);
 
-  explicit string_ptrt(const std::string &_s):s(_s.c_str()), len(_s.size())
+  explicit string_ptrt(const std::string &_s) : s(_s.c_str()), len(_s.size())
   {
   }
 
@@ -38,7 +38,10 @@ struct string_ptrt
 class string_ptr_hash
 {
 public:
-  size_t operator()(const string_ptrt s) const { return hash_string(s.s); }
+  size_t operator()(const string_ptrt s) const
+  {
+    return hash_string(s.s);
+  }
 };
 
 class string_containert

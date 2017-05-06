@@ -9,9 +9,10 @@ Author: Chris Smowton, chris@smowton.net
 #ifndef CPROVER_UTIL_SAFE_POINTER_H
 #define CPROVER_UTIL_SAFE_POINTER_H
 
-template<class T> class safe_pointer
+template <class T>
+class safe_pointer
 {
- public:
+public:
   operator bool() const
   {
     return !!ptr;
@@ -38,27 +39,27 @@ template<class T> class safe_pointer
     return safe_pointer();
   }
 
-  static safe_pointer<T> create_non_null(
-    T *target)
+  static safe_pointer<T> create_non_null(T *target)
   {
     assert(target && "initialized safe pointer with null");
     return safe_pointer(target);
   }
 
-  static safe_pointer<T> create_maybe_null(
-    T *target)
+  static safe_pointer<T> create_maybe_null(T *target)
   {
     return safe_pointer(target);
   }
 
- protected:
+protected:
   T *ptr;
 
   explicit safe_pointer(T *target) : ptr(target)
-  {}
+  {
+  }
 
   safe_pointer() : ptr(nullptr)
-  {}
+  {
+  }
 };
 
 #endif

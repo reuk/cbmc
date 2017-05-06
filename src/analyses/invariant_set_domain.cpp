@@ -31,38 +31,38 @@ void invariant_set_domaint::transform(
   switch(from_l->type)
   {
   case GOTO:
-    {
-      exprt tmp(from_l->guard);
+  {
+    exprt tmp(from_l->guard);
 
-      goto_programt::const_targett next=from_l;
-      next++;
-      if(next==to_l)
-        tmp.make_not();
+    goto_programt::const_targett next= from_l;
+    next++;
+    if(next == to_l)
+      tmp.make_not();
 
-      simplify(tmp, ns);
-      invariant_set.strengthen(tmp);
-    }
-    break;
+    simplify(tmp, ns);
+    invariant_set.strengthen(tmp);
+  }
+  break;
 
   case ASSERT:
   case ASSUME:
-    {
-      exprt tmp(from_l->guard);
-      simplify(tmp, ns);
-      invariant_set.strengthen(tmp);
-    }
-    break;
+  {
+    exprt tmp(from_l->guard);
+    simplify(tmp, ns);
+    invariant_set.strengthen(tmp);
+  }
+  break;
 
   case RETURN:
     // ignore
     break;
 
   case ASSIGN:
-    {
-      const code_assignt &assignment=to_code_assign(from_l->code);
-      invariant_set.assignment(assignment.lhs(), assignment.rhs());
-    }
-    break;
+  {
+    const code_assignt &assignment= to_code_assign(from_l->code);
+    invariant_set.assignment(assignment.lhs(), assignment.rhs());
+  }
+  break;
 
   case OTHER:
     if(from_l->code.is_not_nil())
@@ -82,8 +82,8 @@ void invariant_set_domaint::transform(
     break;
 
   default:
-    {
-      // do nothing
-    }
+  {
+    // do nothing
+  }
   }
 }

@@ -13,7 +13,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 /*! \brief Expression providing an SSA-renamed symbol of expressions
 */
-class ssa_exprt:public symbol_exprt
+class ssa_exprt : public symbol_exprt
 {
 public:
   ssa_exprt()
@@ -24,8 +24,7 @@ public:
   /*! \brief Constructor
    * \param expr Expression to be converted to SSA symbol
   */
-  explicit ssa_exprt(const exprt &expr):
-    symbol_exprt(expr.type())
+  explicit ssa_exprt(const exprt &expr) : symbol_exprt(expr.type())
   {
     set(ID_C_SSA_symbol, true);
     add(ID_expression, expr);
@@ -34,7 +33,7 @@ public:
 
   void update_type()
   {
-    static_cast<exprt &>(add(ID_expression)).type()=type();
+    static_cast<exprt &>(add(ID_expression)).type()= type();
   }
 
   const exprt &get_original_expr() const
@@ -45,14 +44,14 @@ public:
   irep_idt get_object_name() const
   {
     object_descriptor_exprt ode;
-    ode.object()=get_original_expr();
+    ode.object()= get_original_expr();
     return to_symbol_expr(ode.root_object()).get_identifier();
   }
 
   const ssa_exprt get_l1_object() const
   {
     object_descriptor_exprt ode;
-    ode.object()=get_original_expr();
+    ode.object()= get_original_expr();
 
     ssa_exprt root(ode.root_object());
     root.set(ID_L0, get(ID_L0));
@@ -64,13 +63,13 @@ public:
 
   const irep_idt get_l1_object_identifier() const
   {
-    #if 0
+#if 0
     return get_l1_object().get_identifier();
-    #else
+#else
     // the above is the clean version, this is the fast one, using
     // an identifier cached during build_identifier
     return get(ID_L1_object_identifier);
-    #endif
+#endif
   }
 
   const irep_idt get_original_name() const
@@ -120,11 +119,11 @@ public:
 
   void update_identifier()
   {
-    const irep_idt &l0=get_level_0();
-    const irep_idt &l1=get_level_1();
-    const irep_idt &l2=get_level_2();
+    const irep_idt &l0= get_level_0();
+    const irep_idt &l1= get_level_1();
+    const irep_idt &l2= get_level_2();
 
-    auto idpair=build_identifier(get_original_expr(), l0, l1, l2);
+    auto idpair= build_identifier(get_original_expr(), l0, l1, l2);
     set_identifier(idpair.first);
     set(ID_L1_object_identifier, idpair.second);
   }
@@ -148,9 +147,9 @@ public:
 */
 inline const ssa_exprt &to_ssa_expr(const exprt &expr)
 {
-  assert(expr.id()==ID_symbol &&
-         expr.get_bool(ID_C_SSA_symbol) &&
-         !expr.has_operands());
+  assert(
+    expr.id() == ID_symbol && expr.get_bool(ID_C_SSA_symbol) &&
+    !expr.has_operands());
   return static_cast<const ssa_exprt &>(expr);
 }
 
@@ -159,16 +158,15 @@ inline const ssa_exprt &to_ssa_expr(const exprt &expr)
 */
 inline ssa_exprt &to_ssa_expr(exprt &expr)
 {
-  assert(expr.id()==ID_symbol &&
-         expr.get_bool(ID_C_SSA_symbol) &&
-         !expr.has_operands());
+  assert(
+    expr.id() == ID_symbol && expr.get_bool(ID_C_SSA_symbol) &&
+    !expr.has_operands());
   return static_cast<ssa_exprt &>(expr);
 }
 
 inline bool is_ssa_expr(const exprt &expr)
 {
-  return expr.id()==ID_symbol &&
-         expr.get_bool(ID_C_SSA_symbol);
+  return expr.id() == ID_symbol && expr.get_bool(ID_C_SSA_symbol);
 }
 
 #endif // CPROVER_UTIL_SSA_EXPR_H

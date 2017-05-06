@@ -27,21 +27,23 @@ class value_setst;
 class shared_bufferst
 {
 public:
-  shared_bufferst(symbol_tablet &_symbol_table, unsigned _nb_threads,
-    messaget &_message):
-    symbol_table(_symbol_table),
-    nb_threads(_nb_threads+1),
-    uniq(0),
-    cav11(false),
-    message(_message)
+  shared_bufferst(
+    symbol_tablet &_symbol_table,
+    unsigned _nb_threads,
+    messaget &_message)
+    : symbol_table(_symbol_table),
+      nb_threads(_nb_threads + 1),
+      uniq(0),
+      cav11(false),
+      message(_message)
   {
   }
 
   void set_cav11(memory_modelt model)
   {
-    if(model!=TSO)
+    if(model != TSO)
       throw "sorry, CAV11 only available for TSO";
-    cav11 = true;
+    cav11= true;
   }
 
   /* instrumentation of a variable */
@@ -138,7 +140,11 @@ public:
     const irep_idt &id_rhs)
   {
     namespacet ns(symbol_table);
-    assignment(goto_program, t, source_location, id_lhs,
+    assignment(
+      goto_program,
+      t,
+      source_location,
+      id_lhs,
       ns.lookup(id_rhs).symbol_expr());
   }
 
@@ -146,7 +152,7 @@ public:
   {
     namespacet ns(symbol_table);
 
-    const symbolt &symbol=ns.lookup(id);
+    const symbolt &symbol= ns.lookup(id);
     if(symbol.is_thread_local)
       return false;
     if(has_prefix(id2string(id), CPROVER_PREFIX))
@@ -157,21 +163,22 @@ public:
 
   irep_idt choice(const irep_idt &function, const std::string &suffix)
   {
-    const std::string function_base_name = (symbol_table.has_symbol(function)?
-      id2string(symbol_table.lookup(function).base_name):
-      "main");
-    return add(function_base_name+"_weak_choice",
-      function_base_name+"_weak_choice", suffix, bool_typet());
+    const std::string function_base_name=
+      (symbol_table.has_symbol(function)
+         ? id2string(symbol_table.lookup(function).base_name)
+         : "main");
+    return add(
+      function_base_name + "_weak_choice",
+      function_base_name + "_weak_choice",
+      suffix,
+      bool_typet());
   }
 
-  bool is_buffered(
-    const namespacet&,
-    const symbol_exprt&,
-    bool is_write);
+  bool is_buffered(const namespacet &, const symbol_exprt &, bool is_write);
 
   bool is_buffered_in_general(
-    const namespacet&,
-    const symbol_exprt&,
+    const namespacet &,
+    const symbol_exprt &,
     bool is_write);
 
   void weak_memory(
@@ -202,20 +209,23 @@ public:
     std::set<irep_idt> past_writes;
 
   public:
-    cfg_visitort(shared_bufferst &_shared, symbol_tablet &_symbol_table,
+    cfg_visitort(
+      shared_bufferst &_shared,
+      symbol_tablet &_symbol_table,
       goto_functionst &_goto_functions)
-      :shared_buffers(_shared), symbol_table(_symbol_table),
+      : shared_buffers(_shared),
+        symbol_table(_symbol_table),
         goto_functions(_goto_functions)
     {
-      current_thread = 0;
-      coming_from = 0;
-      max_thread = 0;
+      current_thread= 0;
+      coming_from= 0;
+      max_thread= 0;
     }
 
-  void weak_memory(
-    value_setst &value_sets,
-    const irep_idt &function,
-    memory_modelt model);
+    void weak_memory(
+      value_setst &value_sets,
+      const irep_idt &function,
+      memory_modelt model);
   };
 
 protected:

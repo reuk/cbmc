@@ -19,7 +19,7 @@ Author: Daniel Kroening, kroening@kroening.com
            goto programs in which instructions have codet type.
     \ingroup gr_goto_programs
 */
-class goto_programt:public goto_program_templatet<codet, exprt>
+class goto_programt : public goto_program_templatet<codet, exprt>
 {
 public:
   std::ostream &output_instruction(
@@ -34,22 +34,26 @@ public:
     std::ostream &out,
     const instructiont &instruction) const;
 
-  goto_programt() { }
+  goto_programt()
+  {
+  }
 
   // get the variables in decl statements
   typedef std::set<irep_idt> decl_identifierst;
   void get_decl_identifiers(decl_identifierst &decl_identifiers) const;
 };
 
-#define forall_goto_program_instructions(it, program) \
-  for(goto_programt::instructionst::const_iterator \
-      it=(program).instructions.begin(); \
-      it!=(program).instructions.end(); it++)
+#define forall_goto_program_instructions(it, program)                          \
+  for(goto_programt::instructionst::const_iterator it=                         \
+        (program).instructions.begin();                                        \
+      it != (program).instructions.end();                                      \
+      it++)
 
-#define Forall_goto_program_instructions(it, program) \
-  for(goto_programt::instructionst::iterator \
-      it=(program).instructions.begin(); \
-      it!=(program).instructions.end(); it++)
+#define Forall_goto_program_instructions(it, program)                          \
+  for(goto_programt::instructionst::iterator it=                               \
+        (program).instructions.begin();                                        \
+      it != (program).instructions.end();                                      \
+      it++)
 
 inline bool operator<(
   const goto_programt::const_targett i1,
@@ -67,8 +71,7 @@ std::list<exprt> objects_written(const goto_programt::instructiont &);
 std::list<exprt> expressions_read(const goto_programt::instructiont &);
 std::list<exprt> expressions_written(const goto_programt::instructiont &);
 
-std::string as_string(
-  const namespacet &ns,
-  const goto_programt::instructiont &);
+std::string
+as_string(const namespacet &ns, const goto_programt::instructiont &);
 
 #endif // CPROVER_GOTO_PROGRAMS_GOTO_PROGRAM_H

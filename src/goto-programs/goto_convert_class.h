@@ -20,19 +20,19 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "goto_program.h"
 
-class goto_convertt:public messaget
+class goto_convertt : public messaget
 {
 public:
   void goto_convert(const codet &code, goto_programt &dest);
 
   goto_convertt(
     symbol_tablet &_symbol_table,
-    message_handlert &_message_handler):
-    messaget(_message_handler),
-    symbol_table(_symbol_table),
-    ns(_symbol_table),
-    temporary_counter(0),
-    tmp_symbol_prefix("goto_convertt")
+    message_handlert &_message_handler)
+    : messaget(_message_handler),
+      symbol_table(_symbol_table),
+      ns(_symbol_table),
+      temporary_counter(0),
+      tmp_symbol_prefix("goto_convertt")
   {
   }
 
@@ -60,30 +60,21 @@ protected:
     goto_programt &dest,
     const source_locationt &);
 
-  symbol_exprt make_compound_literal(
-    const exprt &expr,
-    goto_programt &dest);
+  symbol_exprt make_compound_literal(const exprt &expr, goto_programt &dest);
 
   //
   // translation of C expressions (with side effects)
   // into the program logic
   //
 
-  void clean_expr(
-    exprt &expr,
-    goto_programt &dest,
-    bool result_is_used=true);
+  void clean_expr(exprt &expr, goto_programt &dest, bool result_is_used= true);
 
-  void clean_expr_address_of(
-    exprt &expr,
-    goto_programt &dest);
+  void clean_expr_address_of(exprt &expr, goto_programt &dest);
 
   static bool needs_cleaning(const exprt &expr);
 
-  void make_temp_symbol(
-    exprt &expr,
-    const std::string &suffix,
-    goto_programt &);
+  void
+  make_temp_symbol(exprt &expr, const std::string &suffix, goto_programt &);
 
   void rewrite_boolean(exprt &dest);
 
@@ -94,17 +85,13 @@ protected:
     side_effect_exprt &expr,
     goto_programt &dest,
     bool result_is_used);
-  void remove_push_catch(
-    side_effect_exprt &expr,
-    goto_programt &dest);
+  void remove_push_catch(side_effect_exprt &expr, goto_programt &dest);
   void remove_assignment(
     side_effect_exprt &expr,
     goto_programt &dest,
     bool result_is_used);
-  void remove_pre(
-    side_effect_exprt &expr,
-    goto_programt &dest,
-    bool result_is_used);
+  void
+  remove_pre(side_effect_exprt &expr, goto_programt &dest, bool result_is_used);
   void remove_post(
     side_effect_exprt &expr,
     goto_programt &dest,
@@ -133,9 +120,7 @@ protected:
     side_effect_exprt &expr,
     goto_programt &dest,
     bool result_is_used);
-  void remove_gcc_conditional_expression(
-    exprt &expr,
-    goto_programt &dest);
+  void remove_gcc_conditional_expression(exprt &expr, goto_programt &dest);
 
   virtual void do_cpp_new(
     const exprt &lhs,
@@ -152,9 +137,7 @@ protected:
     const side_effect_exprt &rhs,
     goto_programt &dest);
 
-  static void replace_new_object(
-    const exprt &object,
-    exprt &dest);
+  static void replace_new_object(const exprt &object, exprt &dest);
 
   void cpp_new_initializer(
     const exprt &lhs,
@@ -222,14 +205,12 @@ protected:
   void convert_gcc_local_label(const codet &code, goto_programt &dest);
   void convert_switch_case(const code_switch_caset &code, goto_programt &dest);
   void convert_gcc_switch_case_range(const codet &code, goto_programt &dest);
-  void convert_function_call(
-    const code_function_callt &code,
-    goto_programt &dest);
+  void
+  convert_function_call(const code_function_callt &code, goto_programt &dest);
   void convert_specc_notify(const codet &code, goto_programt &dest);
   void convert_specc_wait(const codet &code, goto_programt &dest);
   void convert_specc_par(const codet &code, goto_programt &dest);
-  void convert_specc_event(const exprt &op,
-                           std::set<irep_idt> &events);
+  void convert_specc_event(const exprt &op, std::set<irep_idt> &events);
   void convert_start_thread(const codet &code, goto_programt &dest);
   void convert_end_thread(const codet &code, goto_programt &dest);
   void convert_atomic_begin(const codet &code, goto_programt &dest);
@@ -278,20 +259,20 @@ protected:
   void finish_computed_gotos(goto_programt &dest);
   void finish_guarded_gotos(goto_programt &dest);
 
-  typedef std::map<irep_idt,
-                   std::pair<goto_programt::targett, destructor_stackt>>
-    labelst;
+  typedef std::
+    map<irep_idt, std::pair<goto_programt::targett, destructor_stackt>>
+      labelst;
   typedef std::list<std::pair<goto_programt::targett, destructor_stackt>>
     gotost;
   typedef std::list<goto_programt::targett> computed_gotost;
   typedef exprt::operandst caset;
-  typedef std::list<std::pair<goto_programt::targett, caset> > casest;
+  typedef std::list<std::pair<goto_programt::targett, caset>> casest;
   typedef std::map<goto_programt::targett, casest::iterator> cases_mapt;
 
   struct targetst
   {
-    bool return_set, has_return_value, break_set, continue_set,
-         default_set, throw_set, leave_set;
+    bool return_set, has_return_value, break_set, continue_set, default_set,
+      throw_set, leave_set;
 
     labelst labels;
     gotost gotos;
@@ -305,57 +286,57 @@ protected:
       default_target, throw_target, leave_target;
 
     std::size_t break_stack_size, continue_stack_size, throw_stack_size,
-                leave_stack_size;
+      leave_stack_size;
 
-    targetst():
-      return_set(false),
-      has_return_value(false),
-      break_set(false),
-      continue_set(false),
-      default_set(false),
-      throw_set(false),
-      leave_set(false)
+    targetst()
+      : return_set(false),
+        has_return_value(false),
+        break_set(false),
+        continue_set(false),
+        default_set(false),
+        throw_set(false),
+        leave_set(false)
     {
     }
 
     void set_break(goto_programt::targett _break_target)
     {
-      break_set=true;
-      break_target=_break_target;
-      break_stack_size=destructor_stack.size();
+      break_set= true;
+      break_target= _break_target;
+      break_stack_size= destructor_stack.size();
     }
 
     void set_continue(goto_programt::targett _continue_target)
     {
-      continue_set=true;
-      continue_target=_continue_target;
-      continue_stack_size=destructor_stack.size();
+      continue_set= true;
+      continue_target= _continue_target;
+      continue_stack_size= destructor_stack.size();
     }
 
     void set_default(goto_programt::targett _default_target)
     {
-      default_set=true;
-      default_target=_default_target;
+      default_set= true;
+      default_target= _default_target;
     }
 
     void set_return(goto_programt::targett _return_target)
     {
-      return_set=true;
-      return_target=_return_target;
+      return_set= true;
+      return_target= _return_target;
     }
 
     void set_throw(goto_programt::targett _throw_target)
     {
-      throw_set=true;
-      throw_target=_throw_target;
-      throw_stack_size=destructor_stack.size();
+      throw_set= true;
+      throw_target= _throw_target;
+      throw_stack_size= destructor_stack.size();
     }
 
     void set_leave(goto_programt::targett _leave_target)
     {
-      leave_set=true;
-      leave_target=_leave_target;
-      leave_stack_size=destructor_stack.size();
+      leave_set= true;
+      leave_target= _leave_target;
+      leave_stack_size= destructor_stack.size();
     }
   } targets;
 
@@ -365,18 +346,18 @@ protected:
 
     explicit break_continue_targetst(const targetst &targets)
     {
-      break_set=targets.break_set;
-      continue_set=targets.continue_set;
-      break_target=targets.break_target;
-      continue_target=targets.continue_target;
+      break_set= targets.break_set;
+      continue_set= targets.continue_set;
+      break_target= targets.break_target;
+      continue_target= targets.continue_target;
     }
 
     void restore(targetst &targets)
     {
-      targets.break_set=break_set;
-      targets.continue_set=continue_set;
-      targets.break_target=break_target;
-      targets.continue_target=continue_target;
+      targets.break_set= break_set;
+      targets.continue_set= continue_set;
+      targets.break_target= break_target;
+      targets.continue_target= continue_target;
     }
 
     goto_programt::targett break_target;
@@ -390,23 +371,23 @@ protected:
 
     explicit break_switch_targetst(const targetst &targets)
     {
-      break_set=targets.break_set;
-      default_set=targets.default_set;
-      break_target=targets.break_target;
-      default_target=targets.default_target;
-      break_stack_size=targets.destructor_stack.size();
-      cases=targets.cases;
-      cases_map=targets.cases_map;
+      break_set= targets.break_set;
+      default_set= targets.default_set;
+      break_target= targets.break_target;
+      default_target= targets.default_target;
+      break_stack_size= targets.destructor_stack.size();
+      cases= targets.cases;
+      cases_map= targets.cases_map;
     }
 
     void restore(targetst &targets)
     {
-      targets.break_set=break_set;
-      targets.default_set=default_set;
-      targets.break_target=break_target;
-      targets.default_target=default_target;
-      targets.cases=cases;
-      targets.cases_map=cases_map;
+      targets.break_set= break_set;
+      targets.default_set= default_set;
+      targets.break_target= break_target;
+      targets.default_target= default_target;
+      targets.cases= cases;
+      targets.cases_map= cases_map;
     }
 
     goto_programt::targett break_target;
@@ -424,15 +405,15 @@ protected:
 
     explicit throw_targett(const targetst &targets)
     {
-      throw_set=targets.throw_set;
-      throw_target=targets.throw_target;
-      throw_stack_size=targets.destructor_stack.size();
+      throw_set= targets.throw_set;
+      throw_target= targets.throw_target;
+      throw_stack_size= targets.destructor_stack.size();
     }
 
     void restore(targetst &targets)
     {
-      targets.throw_set=throw_set;
-      targets.throw_target=throw_target;
+      targets.throw_set= throw_set;
+      targets.throw_target= throw_target;
     }
 
     goto_programt::targett throw_target;
@@ -446,15 +427,15 @@ protected:
 
     explicit leave_targett(const targetst &targets)
     {
-      leave_set=targets.leave_set;
-      leave_target=targets.leave_target;
-      leave_stack_size=targets.destructor_stack.size();
+      leave_set= targets.leave_set;
+      leave_target= targets.leave_target;
+      leave_stack_size= targets.destructor_stack.size();
     }
 
     void restore(targetst &targets)
     {
-      targets.leave_set=leave_set;
-      targets.leave_target=leave_target;
+      targets.leave_set= leave_set;
+      targets.leave_target= leave_target;
     }
 
     goto_programt::targett leave_target;
@@ -471,9 +452,7 @@ protected:
   typedef std::list<guarded_gotot> guarded_gotost;
   guarded_gotost guarded_gotos;
 
-  exprt case_guard(
-    const exprt &value,
-    const caset &case_op);
+  exprt case_guard(const exprt &value, const caset &case_op);
 
   // if(cond) { true_case } else { false_case }
   void generate_ifthenelse(

@@ -20,46 +20,53 @@ class json_arrayt;
 class jsont
 {
 public:
-  typedef enum { J_STRING, J_NUMBER, J_OBJECT, J_ARRAY,
-                 J_TRUE, J_FALSE, J_NULL } kindt;
+  typedef enum {
+    J_STRING,
+    J_NUMBER,
+    J_OBJECT,
+    J_ARRAY,
+    J_TRUE,
+    J_FALSE,
+    J_NULL
+  } kindt;
   kindt kind;
 
   bool is_string() const
   {
-    return kind==J_STRING;
+    return kind == J_STRING;
   }
 
   bool is_number() const
   {
-    return kind==J_NUMBER;
+    return kind == J_NUMBER;
   }
 
   bool is_object() const
   {
-    return kind==J_OBJECT;
+    return kind == J_OBJECT;
   }
 
   bool is_array() const
   {
-    return kind==J_ARRAY;
+    return kind == J_ARRAY;
   }
 
   bool is_true() const
   {
-    return kind==J_TRUE;
+    return kind == J_TRUE;
   }
 
   bool is_false() const
   {
-    return kind==J_FALSE;
+    return kind == J_FALSE;
   }
 
   bool is_null() const
   {
-    return kind==J_NULL;
+    return kind == J_NULL;
   }
 
-  jsont():kind(J_NULL)
+  jsont() : kind(J_NULL)
   {
   }
 
@@ -72,13 +79,13 @@ public:
 
   static jsont json_boolean(bool value)
   {
-    return jsont(value?J_TRUE:J_FALSE);
+    return jsont(value ? J_TRUE : J_FALSE);
   }
 
   void clear()
   {
     value.clear();
-    kind=J_NULL;
+    kind= J_NULL;
     object.clear();
     array.clear();
   }
@@ -89,8 +96,8 @@ public:
   // this presumes that this is an object
   const jsont &operator[](const std::string &key) const
   {
-    objectt::const_iterator it=object.find(key);
-    if(it==object.end())
+    objectt::const_iterator it= object.find(key);
+    if(it == object.end())
       return null_json_object;
     else
       return it->second;
@@ -102,11 +109,11 @@ protected:
 
   static const jsont null_json_object;
 
-  explicit jsont(kindt _kind):kind(_kind)
+  explicit jsont(kindt _kind) : kind(_kind)
   {
   }
 
-  jsont(kindt _kind, const std::string &_value):kind(_kind), value(_value)
+  jsont(kindt _kind, const std::string &_value) : kind(_kind), value(_value)
   {
   }
 
@@ -127,10 +134,10 @@ inline std::ostream &operator<<(std::ostream &out, const jsont &src)
   return out;
 }
 
-class json_arrayt:public jsont
+class json_arrayt : public jsont
 {
 public:
-  json_arrayt():jsont(J_ARRAY)
+  json_arrayt() : jsont(J_ARRAY)
   {
   }
 
@@ -157,28 +164,26 @@ public:
   }
 };
 
-class json_stringt:public jsont
+class json_stringt : public jsont
 {
 public:
-  explicit json_stringt(const std::string &_value):
-    jsont(J_STRING, _value)
+  explicit json_stringt(const std::string &_value) : jsont(J_STRING, _value)
   {
   }
 };
 
-class json_numbert:public jsont
+class json_numbert : public jsont
 {
 public:
-  explicit json_numbert(const std::string &_value):
-    jsont(J_NUMBER, _value)
+  explicit json_numbert(const std::string &_value) : jsont(J_NUMBER, _value)
   {
   }
 };
 
-class json_objectt:public jsont
+class json_objectt : public jsont
 {
 public:
-  json_objectt():jsont(J_OBJECT)
+  json_objectt() : jsont(J_OBJECT)
   {
   }
 
@@ -189,41 +194,47 @@ public:
 
   const jsont &operator[](const std::string &key) const
   {
-    objectt::const_iterator it=object.find(key);
-    if(it==object.end())
+    objectt::const_iterator it= object.find(key);
+    if(it == object.end())
       return null_json_object;
     else
       return it->second;
   }
 };
 
-class json_truet:public jsont
+class json_truet : public jsont
 {
 public:
-  json_truet():jsont(J_TRUE) { }
+  json_truet() : jsont(J_TRUE)
+  {
+  }
 };
 
-class json_falset:public jsont
+class json_falset : public jsont
 {
 public:
-  json_falset():jsont(J_FALSE) { }
+  json_falset() : jsont(J_FALSE)
+  {
+  }
 };
 
-class json_nullt:public jsont
+class json_nullt : public jsont
 {
 public:
-  json_nullt():jsont(J_NULL) { }
+  json_nullt() : jsont(J_NULL)
+  {
+  }
 };
 
 inline json_arrayt &jsont::make_array()
 {
-  kind=J_ARRAY;
+  kind= J_ARRAY;
   return static_cast<json_arrayt &>(*this);
 }
 
 inline json_objectt &jsont::make_object()
 {
-  kind=J_OBJECT;
+  kind= J_OBJECT;
   return static_cast<json_objectt &>(*this);
 }
 

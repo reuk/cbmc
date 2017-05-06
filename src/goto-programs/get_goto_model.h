@@ -14,7 +14,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "goto_model.h"
 
-class get_goto_modelt:public goto_modelt, public messaget
+class get_goto_modelt : public goto_modelt, public messaget
 {
 public:
   bool operator()(const cmdlinet &);

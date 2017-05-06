@@ -29,13 +29,10 @@ void path_symex(path_symex_statet &state);
 
 // Transforms a state by executing a goto statement;
 // the 'taken' argument indicates which way.
-void path_symex_goto(
-  path_symex_statet &state,
-  bool taken);
+void path_symex_goto(path_symex_statet &state, bool taken);
 
 // Transforms a state by executing an assertion statement;
 // it is enforced that the assertion fails.
-void path_symex_assert_fail(
-  path_symex_statet &state);
+void path_symex_assert_fail(path_symex_statet &state);
 
 #endif // CPROVER_PATH_SYMEX_PATH_SYMEX_H

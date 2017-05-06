@@ -14,10 +14,10 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "cnf.h"
 #include "resolution_proof.h"
 
-class satcheck_minisat1_baset:public cnf_solvert
+class satcheck_minisat1_baset : public cnf_solvert
 {
 public:
-  satcheck_minisat1_baset():solver(NULL)
+  satcheck_minisat1_baset() : solver(NULL)
   {
   }
 
@@ -35,8 +35,14 @@ public:
   virtual void set_assumptions(const bvt &_assumptions) override;
 
   // features
-  virtual bool has_set_assumptions() const override { return true; }
-  virtual bool has_is_in_conflict() const override { return true; }
+  virtual bool has_set_assumptions() const override
+  {
+    return true;
+  }
+  virtual bool has_is_in_conflict() const override
+  {
+    return true;
+  }
 
   virtual bool is_in_conflict(literalt l) const override;
 
@@ -48,13 +54,13 @@ protected:
   bool empty_clause_added;
 };
 
-class satcheck_minisat1t:public satcheck_minisat1_baset
+class satcheck_minisat1t : public satcheck_minisat1_baset
 {
 public:
   satcheck_minisat1t();
 };
 
-class satcheck_minisat1_prooft:public satcheck_minisat1t
+class satcheck_minisat1_prooft : public satcheck_minisat1t
 {
 public:
   satcheck_minisat1_prooft();
@@ -70,7 +76,7 @@ protected:
   class minisat_prooft *minisat_proof;
 };
 
-class satcheck_minisat1_coret:public satcheck_minisat1_prooft
+class satcheck_minisat1_coret : public satcheck_minisat1_prooft
 {
 public:
   satcheck_minisat1_coret();
@@ -79,11 +85,14 @@ public:
   virtual const std::string solver_text() override;
   virtual resultt prop_solve() override;
 
-  virtual bool has_in_core() const { return true; }
+  virtual bool has_in_core() const
+  {
+    return true;
+  }
 
   virtual bool is_in_core(literalt l) const
   {
-    assert(l.var_no()<in_core.size());
+    assert(l.var_no() < in_core.size());
     return in_core[l.var_no()];
   }
 

@@ -45,13 +45,11 @@ protected:
     char optchar;
     std::string optstring;
     std::list<std::string> values;
+
   public:
-    optiont():
-      isset(false),
-      hasval(false),
-      islong(false),
-      optchar(0)
-      {}
+    optiont() : isset(false), hasval(false), islong(false), optchar(0)
+    {
+    }
   };
 
   std::vector<optiont> options;

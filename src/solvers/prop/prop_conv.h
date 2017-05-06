@@ -23,16 +23,18 @@ Author: Daniel Kroening, kroening@kroening.com
 // API that provides a "handle" in the form of a literalt
 // for expressions.
 
-class prop_convt:public decision_proceduret
+class prop_convt : public decision_proceduret
 {
 public:
-  explicit prop_convt(
-    const namespacet &_ns):
-    decision_proceduret(_ns) { }
-  virtual ~prop_convt() { }
+  explicit prop_convt(const namespacet &_ns) : decision_proceduret(_ns)
+  {
+  }
+  virtual ~prop_convt()
+  {
+  }
 
   // conversion to handle
-  virtual literalt convert(const exprt &expr)=0;
+  virtual literalt convert(const exprt &expr)= 0;
 
   literalt operator()(const exprt &expr)
   {
@@ -42,18 +44,26 @@ public:
   using decision_proceduret::operator();
 
   // specialised variant of get
-  virtual tvt l_get(literalt a) const=0;
+  virtual tvt l_get(literalt a) const= 0;
 
   // incremental solving
   virtual void set_frozen(literalt a);
   virtual void set_frozen(const bvt &);
   virtual void set_assumptions(const bvt &_assumptions);
-  virtual bool has_set_assumptions() const { return false; }
-  virtual void set_all_frozen() {}
+  virtual bool has_set_assumptions() const
+  {
+    return false;
+  }
+  virtual void set_all_frozen()
+  {
+  }
 
   // returns true if an assumption is in the final conflict
   virtual bool is_in_conflict(literalt l) const;
-  virtual bool has_is_in_conflict() const { return false; }
+  virtual bool has_is_in_conflict() const
+  {
+    return false;
+  }
 };
 
 //
@@ -63,41 +73,64 @@ public:
 
 /*! \brief TO_BE_DOCUMENTED
 */
-class prop_conv_solvert:public prop_convt
+class prop_conv_solvert : public prop_convt
 {
 public:
-  prop_conv_solvert(const namespacet &_ns, propt &_prop):
-    prop_convt(_ns),
-    use_cache(true),
-    equality_propagation(true),
-    freeze_all(false),
-    post_processing_done(false),
-    prop(_prop) { }
+  prop_conv_solvert(const namespacet &_ns, propt &_prop)
+    : prop_convt(_ns),
+      use_cache(true),
+      equality_propagation(true),
+      freeze_all(false),
+      post_processing_done(false),
+      prop(_prop)
+  {
+  }
 
-  virtual ~prop_conv_solvert() { }
+  virtual ~prop_conv_solvert()
+  {
+  }
 
   // overloading from decision_proceduret
   virtual void set_to(const exprt &expr, bool value) override;
   virtual decision_proceduret::resultt dec_solve() override;
   virtual void print_assignment(std::ostream &out) const override;
   virtual std::string decision_procedure_text() const override
-  { return "propositional reduction"; }
+  {
+    return "propositional reduction";
+  }
   virtual exprt get(const exprt &expr) const override;
 
   // overloading from prop_convt
   using prop_convt::set_frozen;
-  virtual tvt l_get(literalt a) const override { return prop.l_get(a); }
-  virtual void set_frozen(literalt a) override { prop.set_frozen(a); }
+  virtual tvt l_get(literalt a) const override
+  {
+    return prop.l_get(a);
+  }
+  virtual void set_frozen(literalt a) override
+  {
+    prop.set_frozen(a);
+  }
   virtual void set_assumptions(const bvt &_assumptions) override
-  { prop.set_assumptions(_assumptions); }
+  {
+    prop.set_assumptions(_assumptions);
+  }
   virtual bool has_set_assumptions() const override
-  { return prop.has_set_assumptions(); }
-  virtual void set_all_frozen() override { freeze_all = true; }
+  {
+    return prop.has_set_assumptions();
+  }
+  virtual void set_all_frozen() override
+  {
+    freeze_all= true;
+  }
   virtual literalt convert(const exprt &expr) override;
   virtual bool is_in_conflict(literalt l) const override
-  { return prop.is_in_conflict(l); }
+  {
+    return prop.is_in_conflict(l);
+  }
   virtual bool has_is_in_conflict() const override
-  { return prop.has_is_in_conflict(); }
+  {
+    return prop.has_is_in_conflict();
+  }
 
   // get literal for expression, if available
   virtual bool literal(const exprt &expr, literalt &literal) const;
@@ -106,13 +139,22 @@ public:
   bool equality_propagation;
   bool freeze_all; // freezing variables (for incremental solving)
 
-  virtual void clear_cache() { cache.clear();}
+  virtual void clear_cache()
+  {
+    cache.clear();
+  }
 
   typedef std::map<irep_idt, literalt> symbolst;
   typedef std::unordered_map<exprt, literalt, irep_hash> cachet;
 
-  const cachet &get_cache() const { return cache; }
-  const symbolst &get_symbols() const { return symbols; }
+  const cachet &get_cache() const
+  {
+    return cache;
+  }
+  const symbolst &get_symbols() const
+  {
+    return symbols;
+  }
 
 protected:
   virtual void post_process();

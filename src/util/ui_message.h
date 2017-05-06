@@ -11,7 +11,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "message.h"
 
-class ui_message_handlert:public message_handlert
+class ui_message_handlert : public message_handlert
 {
 public:
   typedef enum { PLAIN, XML_UI, JSON_UI } uit;
@@ -28,16 +28,14 @@ public:
 
   void set_ui(uit __ui)
   {
-    _ui=__ui;
+    _ui= __ui;
   }
 
 protected:
   uit _ui;
 
   // overloading
-  virtual void print(
-    unsigned level,
-    const std::string &message);
+  virtual void print(unsigned level, const std::string &message);
 
   // overloading
   virtual void print(

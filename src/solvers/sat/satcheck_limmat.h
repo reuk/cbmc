@@ -12,9 +12,9 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <vector>
 #include "dimacs_cnf.h"
 
-class satcheck_limmatt:public dimacs_cnft
+class satcheck_limmatt : public dimacs_cnft
 {
- public:
+public:
   satcheck_limmatt();
   virtual ~satcheck_limmatt();
 
@@ -24,7 +24,7 @@ class satcheck_limmatt:public dimacs_cnft
 
   void copy_cnf();
 
- protected:
+protected:
   struct Limmat *solver;
   std::vector<unsigned char> assignment;
 };

@@ -20,15 +20,17 @@ Date: 2012
                           abstract event
 \*******************************************************************/
 
-class abstract_eventt:public graph_nodet<empty_edget>
+class abstract_eventt : public graph_nodet<empty_edget>
 {
 protected:
-  bool unsafe_pair_lwfence_param(const abstract_eventt &next,
-    memory_modelt model, bool lwsync_met) const;
+  bool unsafe_pair_lwfence_param(
+    const abstract_eventt &next,
+    memory_modelt model,
+    bool lwsync_met) const;
 
 public:
   /* for now, both fence functions and asm fences accepted */
-  typedef enum {Write, Read, Fence, Lwfence, ASMfence} operationt;
+  typedef enum { Write, Read, Fence, Lwfence, ASMfence } operationt;
 
   operationt operation;
   unsigned thread;
@@ -51,10 +53,18 @@ public:
   }
 
   abstract_eventt(
-    operationt _op, unsigned _th, irep_idt _var,
-    unsigned _id, source_locationt _loc, bool _local)
-    :operation(_op), thread(_th), variable(_var), id(_id),
-    source_location(_loc), local(_local)
+    operationt _op,
+    unsigned _th,
+    irep_idt _var,
+    unsigned _id,
+    source_locationt _loc,
+    bool _local)
+    : operation(_op),
+      thread(_th),
+      variable(_var),
+      id(_id),
+      source_location(_loc),
+      local(_local)
   {
   }
 
@@ -71,32 +81,32 @@ public:
     bool RWf,
     bool WWc,
     bool RWc,
-    bool RRc):
-    operation(_op),
-    thread(_th),
-    variable(_var),
-    id(_id),
-    source_location(_loc),
-    local(_local),
-    WRfence(RWf),
-    WWfence(WWf),
-    RRfence(RRf),
-    RWfence(WRf),
-    WWcumul(WWc),
-    RWcumul(RWc),
-    RRcumul(RRc)
+    bool RRc)
+    : operation(_op),
+      thread(_th),
+      variable(_var),
+      id(_id),
+      source_location(_loc),
+      local(_local),
+      WRfence(RWf),
+      WWfence(WWf),
+      RRfence(RRf),
+      RWfence(WRf),
+      WWcumul(WWc),
+      RWcumul(RWc),
+      RRcumul(RRc)
   {
   }
 
   /* post declaration (through graph) -- doesn't copy */
   void operator()(const abstract_eventt &other)
   {
-    operation=other.operation;
-    thread=other.thread;
-    variable=other.variable;
-    id=other.id;
-    source_location=other.source_location;
-    local=other.local;
+    operation= other.operation;
+    thread= other.thread;
+    variable= other.variable;
+    id= other.id;
+    source_location= other.source_location;
+    local= other.local;
   }
 
   bool operator==(const abstract_eventt &other) const
@@ -111,7 +121,7 @@ public:
 
   bool is_fence() const
   {
-    return operation==Fence || operation==Lwfence || operation==ASMfence;
+    return operation == Fence || operation == Lwfence || operation == ASMfence;
   }
 
   /* checks the safety of the pair locally (i.e., w/o taking fences
@@ -122,9 +132,8 @@ public:
     return unsafe_pair_lwfence_param(next, model, false);
   }
 
-  bool unsafe_pair_lwfence(
-    const abstract_eventt &next,
-    memory_modelt model) const
+  bool
+  unsafe_pair_lwfence(const abstract_eventt &next, memory_modelt model) const
   {
     return unsafe_pair_lwfence_param(next, model, true);
   }
@@ -138,46 +147,52 @@ public:
   {
     switch(operation)
     {
-      case Write: return "W";
-      case Read: return "R";
-      case Fence: return "F";
-      case Lwfence: return "f";
-      case ASMfence: return "asm:";
+    case Write:
+      return "W";
+    case Read:
+      return "R";
+    case Fence:
+      return "F";
+    case Lwfence:
+      return "f";
+    case ASMfence:
+      return "asm:";
     }
     assert(false);
     return "?";
   }
 
-  bool is_corresponding_fence(const abstract_eventt &first,
+  bool is_corresponding_fence(
+    const abstract_eventt &first,
     const abstract_eventt &second) const
   {
-    return
-      (WRfence && first.operation==Write && second.operation==Read) ||
-      ((WWfence || WWcumul) &&
-       first.operation==Write &&
-       second.operation==Write) ||
-      ((RWfence || RWcumul) &&
-       first.operation==Read &&
-       second.operation==Write) ||
-      ((RRfence || RRcumul) &&
-       first.operation==Read &&
-       second.operation==Read);
+    return (WRfence && first.operation == Write && second.operation == Read) ||
+           ((WWfence || WWcumul) && first.operation == Write &&
+            second.operation == Write) ||
+           ((RWfence || RWcumul) && first.operation == Read &&
+            second.operation == Write) ||
+           ((RRfence || RRcumul) && first.operation == Read &&
+            second.operation == Read);
   }
 
-  bool is_direct() const { return WWfence || WRfence || RRfence || RWfence; }
-  bool is_cumul() const { return WWcumul || RWcumul || RRcumul; }
+  bool is_direct() const
+  {
+    return WWfence || WRfence || RRfence || RWfence;
+  }
+  bool is_cumul() const
+  {
+    return WWcumul || RWcumul || RRcumul;
+  }
 
   unsigned char fence_value() const
   {
-    unsigned char value = WRfence + 2*WWfence + 4*RRfence + 8*RWfence
-      + 16*WWcumul + 32*RWcumul + 64*RRcumul;
+    unsigned char value= WRfence + 2 * WWfence + 4 * RRfence + 8 * RWfence +
+                         16 * WWcumul + 32 * RWcumul + 64 * RRcumul;
     return value;
   }
 };
 
-inline std::ostream &operator<<(
-  std::ostream &s,
-  const abstract_eventt &e)
+inline std::ostream &operator<<(std::ostream &s, const abstract_eventt &e)
 {
   return s << e.get_operation() << e.variable;
 }

@@ -13,11 +13,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "literal.h"
 
-class literal_exprt:public predicate_exprt
+class literal_exprt : public predicate_exprt
 {
 public:
-  explicit literal_exprt(literalt a):
-    predicate_exprt(ID_literal)
+  explicit literal_exprt(literalt a) : predicate_exprt(ID_literal)
   {
     set_literal(a);
   }
@@ -47,7 +46,7 @@ public:
 */
 inline const literal_exprt &to_literal_expr(const exprt &expr)
 {
-  assert(expr.id()==ID_literal && !expr.has_operands());
+  assert(expr.id() == ID_literal && !expr.has_operands());
   return static_cast<const literal_exprt &>(expr);
 }
 
@@ -56,7 +55,7 @@ inline const literal_exprt &to_literal_expr(const exprt &expr)
 */
 inline literal_exprt &to_literal_expr(exprt &expr)
 {
-  assert(expr.id()==ID_literal && !expr.has_operands());
+  assert(expr.id() == ID_literal && !expr.has_operands());
   return static_cast<literal_exprt &>(expr);
 }
 

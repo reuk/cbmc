@@ -63,10 +63,10 @@ Function: goto_analyzer_parse_optionst::goto_analyzer_parse_optionst
 
 goto_analyzer_parse_optionst::goto_analyzer_parse_optionst(
   int argc,
-  const char **argv):
-  parse_options_baset(GOTO_ANALYSER_OPTIONS, argc, argv),
-  language_uit(cmdline, ui_message_handler),
-  ui_message_handler(cmdline, "GOTO-ANALYZER " CBMC_VERSION)
+  const char **argv)
+  : parse_options_baset(GOTO_ANALYSER_OPTIONS, argc, argv),
+    language_uit(cmdline, ui_message_handler),
+    ui_message_handler(cmdline, "GOTO-ANALYZER " CBMC_VERSION)
 {
 }
 
@@ -105,13 +105,13 @@ Function: goto_analyzer_parse_optionst::eval_verbosity
 void goto_analyzer_parse_optionst::eval_verbosity()
 {
   // this is our default verbosity
-  unsigned int v=messaget::M_STATISTICS;
+  unsigned int v= messaget::M_STATISTICS;
 
   if(cmdline.isset("verbosity"))
   {
-    v=unsafe_string2unsigned(cmdline.get_value("verbosity"));
-    if(v>10)
-      v=10;
+    v= unsafe_string2unsigned(cmdline.get_value("verbosity"));
+    if(v > 10)
+      v= 10;
   }
 
   ui_message_handler.set_verbosity(v);
@@ -137,7 +137,7 @@ void goto_analyzer_parse_optionst::get_command_line_options(optionst &options)
     exit(1);
   }
 
-  #if 0
+#if 0
   if(cmdline.isset("c89"))
     config.ansi_c.set_c89();
 
@@ -155,9 +155,9 @@ void goto_analyzer_parse_optionst::get_command_line_options(optionst &options)
 
   if(cmdline.isset("cpp11"))
     config.cpp.set_cpp11();
-  #endif
+#endif
 
-  #if 0
+#if 0
   // check assertions
   if(cmdline.isset("no-assertions"))
     options.set_option("assertions", false);
@@ -173,7 +173,7 @@ void goto_analyzer_parse_optionst::get_command_line_options(optionst &options)
   // magic error label
   if(cmdline.isset("error-label"))
     options.set_option("error-label", cmdline.get_values("error-label"));
-  #endif
+#endif
 }
 
 /*******************************************************************\
@@ -207,9 +207,8 @@ int goto_analyzer_parse_optionst::doit()
   //
   // Print a banner
   //
-  status() << "GOTO-ANALYSER version " CBMC_VERSION " "
-           << sizeof(void *)*8 << "-bit "
-           << config.this_architecture() << " "
+  status() << "GOTO-ANALYSER version " CBMC_VERSION " " << sizeof(void *) * 8
+           << "-bit " << config.this_architecture() << " "
            << config.this_operating_system() << eom;
 
   register_languages();
@@ -224,7 +223,7 @@ int goto_analyzer_parse_optionst::doit()
 
   if(cmdline.isset("taint"))
   {
-    std::string taint_file=cmdline.get_value("taint");
+    std::string taint_file= cmdline.get_value("taint");
 
     if(cmdline.isset("show-taint"))
     {
@@ -233,29 +232,27 @@ int goto_analyzer_parse_optionst::doit()
     }
     else
     {
-      std::string json_file=cmdline.get_value("json");
-      bool result=
-        taint_analysis(
-          goto_model, taint_file, get_message_handler(), false, json_file);
-      return result?10:0;
+      std::string json_file= cmdline.get_value("json");
+      bool result= taint_analysis(
+        goto_model, taint_file, get_message_handler(), false, json_file);
+      return result ? 10 : 0;
     }
   }
 
   if(cmdline.isset("unreachable-instructions"))
   {
-    const std::string json_file=cmdline.get_value("json");
+    const std::string json_file= cmdline.get_value("json");
 
     if(json_file.empty())
       unreachable_instructions(goto_model, false, std::cout);
-    else if(json_file=="-")
+    else if(json_file == "-")
       unreachable_instructions(goto_model, true, std::cout);
     else
     {
       std::ofstream ofs(json_file);
       if(!ofs)
       {
-        error() << "Failed to open json output `"
-                << json_file << "'" << eom;
+        error() << "Failed to open json output `" << json_file << "'" << eom;
         return 6;
       }
 
@@ -267,19 +264,18 @@ int goto_analyzer_parse_optionst::doit()
 
   if(cmdline.isset("unreachable-functions"))
   {
-    const std::string json_file=cmdline.get_value("json");
+    const std::string json_file= cmdline.get_value("json");
 
     if(json_file.empty())
       unreachable_functions(goto_model, false, std::cout);
-    else if(json_file=="-")
+    else if(json_file == "-")
       unreachable_functions(goto_model, true, std::cout);
     else
     {
       std::ofstream ofs(json_file);
       if(!ofs)
       {
-        error() << "Failed to open json output `"
-                << json_file << "'" << eom;
+        error() << "Failed to open json output `" << json_file << "'" << eom;
         return 6;
       }
 
@@ -291,19 +287,18 @@ int goto_analyzer_parse_optionst::doit()
 
   if(cmdline.isset("reachable-functions"))
   {
-    const std::string json_file=cmdline.get_value("json");
+    const std::string json_file= cmdline.get_value("json");
 
     if(json_file.empty())
       reachable_functions(goto_model, false, std::cout);
-    else if(json_file=="-")
+    else if(json_file == "-")
       reachable_functions(goto_model, true, std::cout);
     else
     {
       std::ofstream ofs(json_file);
       if(!ofs)
       {
-        error() << "Failed to open json output `"
-                << json_file << "'" << eom;
+        error() << "Failed to open json output `" << json_file << "'" << eom;
         return 6;
       }
 
@@ -347,19 +342,16 @@ int goto_analyzer_parse_optionst::doit()
     return 0;
   }
 
-  if(cmdline.isset("non-null") ||
-     cmdline.isset("intervals"))
+  if(cmdline.isset("non-null") || cmdline.isset("intervals"))
   {
     optionst options;
     options.set_option("json", cmdline.get_value("json"));
     options.set_option("xml", cmdline.get_value("xml"));
-    bool result=
-      static_analyzer(goto_model, options, get_message_handler());
-    return result?10:0;
+    bool result= static_analyzer(goto_model, options, get_message_handler());
+    return result ? 10 : 0;
   }
 
-  error() << "no analysis option given -- consider reading --help"
-          << eom;
+  error() << "no analysis option given -- consider reading --help" << eom;
   return 6;
 }
 
@@ -415,19 +407,18 @@ Function: goto_analyzer_parse_optionst::process_goto_program
 
 \*******************************************************************/
 
-bool goto_analyzer_parse_optionst::process_goto_program(
-  const optionst &options)
+bool goto_analyzer_parse_optionst::process_goto_program(const optionst &options)
 {
   try
   {
-    #if 0
+#if 0
     // Remove inline assembler; this needs to happen before
     // adding the library.
     remove_asm(goto_model);
 
     // add the library
     link_to_library(goto_model, ui_message_handler);
-    #endif
+#endif
 
     // remove function pointers
     status() << "Removing function pointers and virtual functions" << eom;
@@ -449,11 +440,11 @@ bool goto_analyzer_parse_optionst::process_goto_program(
     remove_vector(goto_model);
     remove_complex(goto_model);
 
-    #if 0
+#if 0
     // add generic checks
     status() << "Generic Property Instrumentation" << eom;
     goto_check(options, goto_model);
-    #endif
+#endif
 
     // recalculate numbers, etc.
     goto_model.goto_functions.update();
@@ -516,85 +507,97 @@ Function: goto_analyzer_parse_optionst::help
 
 void goto_analyzer_parse_optionst::help()
 {
-  std::cout <<
-    "\n"
-    "* * GOTO-ANALYSER " CBMC_VERSION " - Copyright (C) 2016 ";
+  std::cout << "\n"
+               "* * GOTO-ANALYSER " CBMC_VERSION " - Copyright (C) 2016 ";
 
-  std::cout << "(" << (sizeof(void *)*8) << "-bit version)";
+  std::cout << "(" << (sizeof(void *) * 8) << "-bit version)";
 
   std::cout << " * *\n";
 
-  std::cout <<
-    "* *                Daniel Kroening, DiffBlue                * *\n"
-    "* *                 kroening@kroening.com                   * *\n"
-    "\n"
-    "Usage:                       Purpose:\n"
-    "\n"
-    " goto-analyzer [-h] [--help]  show help\n"
-    " goto-analyzer file.c ...     source file names\n"
-    "\n"
-    "Analyses:\n"
-    "\n"
-    // NOLINTNEXTLINE(whitespace/line_length)
-    " --taint file_name            perform taint analysis using rules in given file\n"
-    " --unreachable-instructions   list dead code\n"
-    // NOLINTNEXTLINE(whitespace/line_length)
-    " --unreachable-functions      list functions unreachable from the entry point\n"
-    // NOLINTNEXTLINE(whitespace/line_length)
-    " --reachable-functions        list functions reachable from the entry point\n"
-    " --intervals                  interval analysis\n"
-    " --non-null                   non-null analysis\n"
-    "\n"
-    "Analysis options:\n"
-    // NOLINTNEXTLINE(whitespace/line_length)
-    " --json file_name             output results in JSON format to given file\n"
-    " --xml file_name              output results in XML format to given file\n"
-    "\n"
-    "C/C++ frontend options:\n"
-    " -I path                      set include path (C/C++)\n"
-    " -D macro                     define preprocessor macro (C/C++)\n"
-    " --arch X                     set architecture (default: "
-                                   << configt::this_architecture() << ")\n"
-    " --os                         set operating system (default: "
-                                   << configt::this_operating_system() << ")\n"
-    " --c89/99/11                  set C language standard (default: "
-                                   << (configt::ansi_ct::default_c_standard()==
-                                       configt::ansi_ct::c_standardt::C89?"c89":
-                                       configt::ansi_ct::default_c_standard()==
-                                       configt::ansi_ct::c_standardt::C99?"c99":
-                                       configt::ansi_ct::default_c_standard()==
-                                       configt::ansi_ct::c_standardt::C11?
-                                         "c11":"") << ")\n"
-    " --cpp98/03/11                set C++ language standard (default: "
-                                   << (configt::cppt::default_cpp_standard()==
-                                       configt::cppt::cpp_standardt::CPP98?
-                                         "cpp98":
-                                       configt::cppt::default_cpp_standard()==
-                                       configt::cppt::cpp_standardt::CPP03?
-                                         "cpp03":
-                                       configt::cppt::default_cpp_standard()==
-                                       configt::cppt::cpp_standardt::CPP11?
-                                         "cpp11":"") << ")\n"
-    #ifdef _WIN32
-    " --gcc                        use GCC as preprocessor\n"
-    #endif
-    " --no-library                 disable built-in abstract C library\n"
-    "\n"
-    "Java Bytecode frontend options:\n"
-    " --classpath dir/jar          set the classpath\n"
-    " --main-class class-name      set the name of the main class\n"
-    "\n"
-    "Program representations:\n"
-    " --show-parse-tree            show parse tree\n"
-    " --show-symbol-table          show symbol table\n"
-    HELP_SHOW_GOTO_FUNCTIONS
-    // NOLINTNEXTLINE(whitespace/line_length)
-    " --show-properties            show the properties, but don't run analysis\n"
-    "\n"
-    "Program instrumentation options:\n"
-    HELP_GOTO_CHECK
-    "\n"
-    "Other options:\n"
-    " --version                    show version and exit\n"
-    "\n";
+  std::cout
+    << "* *                Daniel Kroening, DiffBlue                * *\n"
+       "* *                 kroening@kroening.com                   * *\n"
+       "\n"
+       "Usage:                       Purpose:\n"
+       "\n"
+       " goto-analyzer [-h] [--help]  show help\n"
+       " goto-analyzer file.c ...     source file names\n"
+       "\n"
+       "Analyses:\n"
+       "\n"
+       // NOLINTNEXTLINE(whitespace/line_length)
+       " --taint file_name            perform taint analysis using rules in "
+       "given file\n"
+       " --unreachable-instructions   list dead code\n"
+       // NOLINTNEXTLINE(whitespace/line_length)
+       " --unreachable-functions      list functions unreachable from the "
+       "entry point\n"
+       // NOLINTNEXTLINE(whitespace/line_length)
+       " --reachable-functions        list functions reachable from the entry "
+       "point\n"
+       " --intervals                  interval analysis\n"
+       " --non-null                   non-null analysis\n"
+       "\n"
+       "Analysis options:\n"
+       // NOLINTNEXTLINE(whitespace/line_length)
+       " --json file_name             output results in JSON format to given "
+       "file\n"
+       " --xml file_name              output results in XML format to given "
+       "file\n"
+       "\n"
+       "C/C++ frontend options:\n"
+       " -I path                      set include path (C/C++)\n"
+       " -D macro                     define preprocessor macro (C/C++)\n"
+       " --arch X                     set architecture (default: "
+    << configt::this_architecture()
+    << ")\n"
+       " --os                         set operating system (default: "
+    << configt::this_operating_system()
+    << ")\n"
+       " --c89/99/11                  set C language standard (default: "
+    << (configt::ansi_ct::default_c_standard() ==
+            configt::ansi_ct::c_standardt::C89
+          ? "c89"
+          : configt::ansi_ct::default_c_standard() ==
+                configt::ansi_ct::c_standardt::C99
+              ? "c99"
+              : configt::ansi_ct::default_c_standard() ==
+                    configt::ansi_ct::c_standardt::C11
+                  ? "c11"
+                  : "")
+    << ")\n"
+       " --cpp98/03/11                set C++ language standard (default: "
+    << (configt::cppt::default_cpp_standard() ==
+            configt::cppt::cpp_standardt::CPP98
+          ? "cpp98"
+          : configt::cppt::default_cpp_standard() ==
+                configt::cppt::cpp_standardt::CPP03
+              ? "cpp03"
+              : configt::cppt::default_cpp_standard() ==
+                    configt::cppt::cpp_standardt::CPP11
+                  ? "cpp11"
+                  : "")
+    << ")\n"
+#ifdef _WIN32
+       " --gcc                        use GCC as preprocessor\n"
+#endif
+       " --no-library                 disable built-in abstract C library\n"
+       "\n"
+       "Java Bytecode frontend options:\n"
+       " --classpath dir/jar          set the classpath\n"
+       " --main-class class-name      set the name of the main class\n"
+       "\n"
+       "Program representations:\n"
+       " --show-parse-tree            show parse tree\n"
+       " --show-symbol-table          show symbol "
+       "table\n" HELP_SHOW_GOTO_FUNCTIONS
+       // NOLINTNEXTLINE(whitespace/line_length)
+       " --show-properties            show the properties, but don't run "
+       "analysis\n"
+       "\n"
+       "Program instrumentation options:\n" HELP_GOTO_CHECK
+       "\n"
+       "Other options:\n"
+       " --version                    show version and exit\n"
+       "\n";
 }

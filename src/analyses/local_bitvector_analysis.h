@@ -30,11 +30,8 @@ class local_bitvector_analysist
 public:
   typedef goto_functionst::goto_functiont goto_functiont;
 
-  explicit local_bitvector_analysist(
-    const goto_functiont &_goto_function):
-    dirty(_goto_function),
-    locals(_goto_function),
-    cfg(_goto_function.body)
+  explicit local_bitvector_analysist(const goto_functiont &_goto_function)
+    : dirty(_goto_function), locals(_goto_function), cfg(_goto_function.body)
   {
     build(_goto_function);
   }
@@ -51,29 +48,28 @@ public:
   // categories of things one can point to
   struct flagst
   {
-    flagst():bits(0)
+    flagst() : bits(0)
     {
     }
 
     void clear()
     {
-      bits=0;
+      bits= 0;
     }
 
     // the bits for the "bitvector analysis"
-    typedef enum
-    {
-      B_unknown=1<<0,
-      B_uninitialized=1<<1,
-      B_uses_offset=1<<2,
-      B_dynamic_local=1<<3,
-      B_dynamic_heap=1<<4,
-      B_null=1<<5,
-      B_static_lifetime=1<<6,
-      B_integer_address=1<<7
+    typedef enum {
+      B_unknown= 1 << 0,
+      B_uninitialized= 1 << 1,
+      B_uses_offset= 1 << 2,
+      B_dynamic_local= 1 << 3,
+      B_dynamic_heap= 1 << 4,
+      B_null= 1 << 5,
+      B_static_lifetime= 1 << 6,
+      B_integer_address= 1 << 7
     } bitst;
 
-    explicit flagst(const bitst _bits):bits(_bits)
+    explicit flagst(const bitst _bits) : bits(_bits)
     {
     }
 
@@ -81,9 +77,9 @@ public:
 
     bool merge(const flagst &other)
     {
-      unsigned old=bits;
-      bits|=other.bits; // bit-wise or
-      return old!=bits;
+      unsigned old= bits;
+      bits|= other.bits; // bit-wise or
+      return old != bits;
     }
 
     static flagst mk_unknown()
@@ -93,7 +89,7 @@ public:
 
     bool is_unknown() const
     {
-      return (bits&B_unknown)!=0;
+      return (bits & B_unknown) != 0;
     }
 
     static flagst mk_uninitialized()
@@ -103,7 +99,7 @@ public:
 
     bool is_uninitialized() const
     {
-      return (bits&B_uninitialized)!=0;
+      return (bits & B_uninitialized) != 0;
     }
 
     static flagst mk_uses_offset()
@@ -113,7 +109,7 @@ public:
 
     bool is_uses_offset() const
     {
-      return (bits&B_uses_offset)!=0;
+      return (bits & B_uses_offset) != 0;
     }
 
     static flagst mk_dynamic_local()
@@ -123,7 +119,7 @@ public:
 
     bool is_dynamic_local() const
     {
-      return (bits&B_dynamic_local)!=0;
+      return (bits & B_dynamic_local) != 0;
     }
 
     static flagst mk_dynamic_heap()
@@ -133,7 +129,7 @@ public:
 
     bool is_dynamic_heap() const
     {
-      return (bits&B_dynamic_heap)!=0;
+      return (bits & B_dynamic_heap) != 0;
     }
 
     static flagst mk_null()
@@ -143,7 +139,7 @@ public:
 
     bool is_null() const
     {
-      return (bits&B_null)!=0;
+      return (bits & B_null) != 0;
     }
 
     static flagst mk_static_lifetime()
@@ -153,7 +149,7 @@ public:
 
     bool is_static_lifetime() const
     {
-      return (bits&B_static_lifetime)!=0;
+      return (bits & B_static_lifetime) != 0;
     }
 
     static flagst mk_integer_address()
@@ -163,7 +159,7 @@ public:
 
     bool is_integer_address() const
     {
-      return (bits&B_integer_address)!=0;
+      return (bits & B_integer_address) != 0;
     }
 
     void print(std::ostream &) const;
@@ -171,14 +167,12 @@ public:
     flagst operator|(const flagst other) const
     {
       flagst result(*this);
-      result.bits|=other.bits;
+      result.bits|= other.bits;
       return result;
     }
   };
 
-  flagst get(
-    const goto_programt::const_targett t,
-    const exprt &src);
+  flagst get(const goto_programt::const_targett t, const exprt &src);
 
 protected:
   void build(const goto_functiont &goto_function);
@@ -209,16 +203,13 @@ protected:
     const loc_infot &loc_info_src,
     loc_infot &loc_info_dest);
 
-  flagst get_rec(
-    const exprt &rhs,
-    const loc_infot &loc_info_src);
+  flagst get_rec(const exprt &rhs, const loc_infot &loc_info_src);
 
   bool is_tracked(const irep_idt &identifier);
 };
 
-inline std::ostream &operator<<(
-  std::ostream &out,
-  const local_bitvector_analysist::flagst &flags)
+inline std::ostream &
+operator<<(std::ostream &out, const local_bitvector_analysist::flagst &flags)
 {
   flags.print(out);
   return out;

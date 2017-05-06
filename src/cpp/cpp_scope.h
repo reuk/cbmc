@@ -14,22 +14,24 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 #include "cpp_id.h"
 
-class cpp_scopet:public cpp_idt
+class cpp_scopet : public cpp_idt
 {
 public:
   cpp_scopet()
   {
-    is_scope=true;
+    is_scope= true;
   }
 
   typedef std::set<cpp_idt *> id_sett;
 
-  enum lookup_kindt { SCOPE_ONLY, QUALIFIED, RECURSIVE };
+  enum lookup_kindt
+  {
+    SCOPE_ONLY,
+    QUALIFIED,
+    RECURSIVE
+  };
 
-  void lookup(
-    const irep_idt &base_name,
-    lookup_kindt kind,
-    id_sett &id_set);
+  void lookup(const irep_idt &base_name, lookup_kindt kind, id_sett &id_set);
 
   void lookup(
     const irep_idt &base_name,
@@ -45,10 +47,9 @@ public:
   cpp_idt &insert(const irep_idt &_base_name)
   {
     cpp_id_mapt::iterator it=
-      sub.insert(std::pair<irep_idt, cpp_idt>
-        (_base_name, cpp_idt()));
+      sub.insert(std::pair<irep_idt, cpp_idt>(_base_name, cpp_idt()));
 
-    it->second.base_name=_base_name;
+    it->second.base_name= _base_name;
     it->second.set_parent(*this);
 
     return it->second;
@@ -57,8 +58,7 @@ public:
   cpp_idt &insert(const cpp_idt &cpp_id)
   {
     cpp_id_mapt::iterator it=
-      sub.insert(std::pair<irep_idt, cpp_idt>
-        (cpp_id.base_name, cpp_id));
+      sub.insert(std::pair<irep_idt, cpp_idt>(cpp_id.base_name, cpp_id));
 
     it->second.set_parent(*this);
 
@@ -69,18 +69,17 @@ public:
 
   bool is_root_scope() const
   {
-    return id_class==ROOT_SCOPE;
+    return id_class == ROOT_SCOPE;
   }
 
   bool is_global_scope() const
   {
-    return id_class==ROOT_SCOPE ||
-           id_class==NAMESPACE;
+    return id_class == ROOT_SCOPE || id_class == NAMESPACE;
   }
 
   bool is_template_scope() const
   {
-    return id_class==TEMPLATE_SCOPE;
+    return id_class == TEMPLATE_SCOPE;
   }
 
   cpp_scopet &get_parent() const
@@ -90,10 +89,10 @@ public:
 
   cpp_scopet &get_global_scope()
   {
-    cpp_scopet *p=this;
+    cpp_scopet *p= this;
 
     while(!p->is_global_scope())
-      p=&(p->get_parent());
+      p= &(p->get_parent());
 
     return *p;
   }
@@ -113,16 +112,16 @@ public:
   class cpp_scopet &new_scope(const irep_idt &new_scope_name);
 };
 
-class cpp_root_scopet:public cpp_scopet
+class cpp_root_scopet : public cpp_scopet
 {
 public:
   cpp_root_scopet()
   {
-    id_class=ROOT_SCOPE;
-    identifier="::";
+    id_class= ROOT_SCOPE;
+    identifier= "::";
   }
 };
 
-std::ostream &operator << (std::ostream &out, cpp_scopet::lookup_kindt);
+std::ostream &operator<<(std::ostream &out, cpp_scopet::lookup_kindt);
 
 #endif // CPROVER_CPP_CPP_SCOPE_H

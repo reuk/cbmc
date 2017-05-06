@@ -37,13 +37,13 @@ void instrument_intervals(
 
   Forall_goto_program_instructions(i_it, goto_function.body)
   {
-    if(i_it==goto_function.body.instructions.begin())
+    if(i_it == goto_function.body.instructions.begin())
     {
       // first instruction, we instrument
     }
     else
     {
-      goto_programt::const_targett previous=i_it;
+      goto_programt::const_targett previous= i_it;
       previous--;
       if(previous->is_goto() && !previous->guard.is_true())
       {
@@ -61,25 +61,25 @@ void instrument_intervals(
         continue; // don't instrument
     }
 
-    const interval_domaint &d=interval_analysis[i_it];
+    const interval_domaint &d= interval_analysis[i_it];
 
     exprt::operandst assertion;
 
     for(const auto &symbol_expr : symbols)
     {
-      exprt tmp=d.make_expression(symbol_expr);
+      exprt tmp= d.make_expression(symbol_expr);
       if(!tmp.is_true())
         assertion.push_back(tmp);
     }
 
     if(!assertion.empty())
     {
-      goto_programt::targett t=i_it;
+      goto_programt::targett t= i_it;
       goto_function.body.insert_before_swap(i_it);
       t->make_assumption(conjunction(assertion));
       i_it++; // goes to original instruction
-      t->source_location=i_it->source_location;
-      t->function=i_it->function;
+      t->source_location= i_it->source_location;
+      t->function= i_it->function;
     }
   }
 }
@@ -96,9 +96,7 @@ Function: interval_analysis
 
 \*******************************************************************/
 
-void interval_analysis(
-  const namespacet &ns,
-  goto_functionst &goto_functions)
+void interval_analysis(const namespacet &ns, goto_functionst &goto_functions)
 {
   ait<interval_domaint> interval_analysis;
 

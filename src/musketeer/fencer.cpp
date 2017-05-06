@@ -59,9 +59,13 @@ void fence_weak_memory(
 
   // all access to shared variables is pushed into assignments
   Forall_goto_functions(f_it, goto_functions)
-    if(f_it->first!=CPROVER_PREFIX "initialize" &&
-      f_it->first!=goto_functionst::entry_point())
-      introduce_temporaries(value_sets, symbol_table, f_it->first,
+    if(
+      f_it->first != CPROVER_PREFIX "initialize" &&
+      f_it->first != goto_functionst::entry_point())
+      introduce_temporaries(
+        value_sets,
+        symbol_table,
+        f_it->first,
         f_it->second.body,
 #ifdef LOCAL_MAY
         f_it->second,
@@ -69,17 +73,17 @@ void fence_weak_memory(
         message);
   message.status() << "Temporary variables added" << messaget::eom;
 
-  unsigned max_thds = 0;
+  unsigned max_thds= 0;
   instrumentert instrumenter(symbol_table, goto_functions, message);
-  max_thds=instrumenter.goto2graph_cfg(value_sets, model,
-    no_dependencies, duplicate_body);
+  max_thds= instrumenter.goto2graph_cfg(
+    value_sets, model, no_dependencies, duplicate_body);
   ++max_thds;
   message.status() << "Abstract event graph computed" << messaget::eom;
 
   // collects cycles, directly or by SCCs
-  if(input_max_var!=0 || input_max_po_trans!=0)
-    instrumenter.set_parameters_collection(input_max_var, input_max_po_trans,
-      ignore_arrays);
+  if(input_max_var != 0 || input_max_po_trans != 0)
+    instrumenter.set_parameters_collection(
+      input_max_var, input_max_po_trans, ignore_arrays);
   else
     instrumenter.set_parameters_collection(max_thds, 0, ignore_arrays);
 
@@ -87,23 +91,24 @@ void fence_weak_memory(
   {
     instrumenter.collect_cycles_by_SCCs(model);
     message.statistics() << "cycles collected: " << messaget::eom;
-    std::size_t interesting_scc = 0;
-    std::size_t total_cycles = 0;
-    for(std::size_t i=0; i<instrumenter.num_sccs; i++)
-      if(instrumenter.egraph_SCCs[i].size()>=4)
+    std::size_t interesting_scc= 0;
+    std::size_t total_cycles= 0;
+    for(std::size_t i= 0; i < instrumenter.num_sccs; i++)
+      if(instrumenter.egraph_SCCs[i].size() >= 4)
       {
-        message.statistics() << "SCC #" << i << ": "
-          <<instrumenter.set_of_cycles_per_SCC[interesting_scc++].size()
-          <<" cycles found" << messaget::eom;
-        total_cycles += instrumenter
-          .set_of_cycles_per_SCC[interesting_scc++].size();
+        message.statistics()
+          << "SCC #" << i << ": "
+          << instrumenter.set_of_cycles_per_SCC[interesting_scc++].size()
+          << " cycles found" << messaget::eom;
+        total_cycles+=
+          instrumenter.set_of_cycles_per_SCC[interesting_scc++].size();
       }
 
     /* if no cycle, no need to instrument */
     if(total_cycles == 0)
     {
       message.result() << "program safe -- no need to place additional fences"
-        <<messaget::eom;
+                       << messaget::eom;
 
       // prints the whole abstract graph
       if(print_graph)
@@ -116,15 +121,14 @@ void fence_weak_memory(
   {
     instrumenter.collect_cycles(model);
     message.statistics() << "cycles collected: "
-      << instrumenter.set_of_cycles.size()
-      << " cycles found" << messaget::eom;
+                         << instrumenter.set_of_cycles.size() << " cycles found"
+                         << messaget::eom;
 
     /* if no cycle, no need to instrument */
     if(instrumenter.set_of_cycles.size() == 0)
     {
-      message.result()
-        << "program safe -- no need to place additional fences"
-        << messaget::eom;
+      message.result() << "program safe -- no need to place additional fences"
+                       << messaget::eom;
       instrumenter.print_map_function_graph();
 
       // prints the whole abstract graph
@@ -142,30 +146,30 @@ void fence_weak_memory(
   /* selects method, infers fences then outputs them */
   switch(mode)
   {
-    case INFER:
-    {
-      fence_insertert fence_inserter(instrumenter, model);
-      fence_inserter.compute();
-      fence_inserter.print_to_file_3();
-      break;
-    }
-    case USER_DEF:
-    {
-      fence_user_def_insertert fence_inserter(instrumenter, model);
-      fence_inserter.compute();
-      fence_inserter.print_to_file_3();
-      break;
-    }
-    case USER_ASSERT:
-    {
-      fence_assert_insertert fence_inserter(instrumenter, model);
-      fence_inserter.compute();
-      fence_inserter.print_to_file_3();
-      break;
-    }
+  case INFER:
+  {
+    fence_insertert fence_inserter(instrumenter, model);
+    fence_inserter.compute();
+    fence_inserter.print_to_file_3();
+    break;
+  }
+  case USER_DEF:
+  {
+    fence_user_def_insertert fence_inserter(instrumenter, model);
+    fence_inserter.compute();
+    fence_inserter.print_to_file_3();
+    break;
+  }
+  case USER_ASSERT:
+  {
+    fence_assert_insertert fence_inserter(instrumenter, model);
+    fence_inserter.compute();
+    fence_inserter.print_to_file_3();
+    break;
+  }
   }
 
-  // additional outputs
+// additional outputs
 #if 0
   instrumenter.set_rendering_options(render_po, render_file, render_function);
   instrumenter.print_outputs(model, hide_internals);
@@ -185,7 +189,7 @@ void fence_weak_memory(
   if(print_graph)
     instrumenter.egraph.print_graph();
 
-  // for debug only
+// for debug only
 #if 0
   instrumenter.print_map_function_graph();
 #endif

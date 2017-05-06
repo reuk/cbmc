@@ -26,14 +26,10 @@ Function: link_to_library
 
 \*******************************************************************/
 
-void link_to_library(
-  goto_modelt &goto_model,
-  message_handlert &message_handler)
+void link_to_library(goto_modelt &goto_model, message_handlert &message_handler)
 {
   link_to_library(
-    goto_model.symbol_table,
-    goto_model.goto_functions,
-    message_handler);
+    goto_model.symbol_table, goto_model.goto_functions, message_handler);
 }
 
 /*******************************************************************\
@@ -58,8 +54,8 @@ void link_to_library(
 
   messaget message(message_handler);
 
-  message.status() << "Adding CPROVER library ("
-                   << config.ansi_c.arch << ")" << messaget::eom;
+  message.status() << "Adding CPROVER library (" << config.ansi_c.arch << ")"
+                   << messaget::eom;
 
   std::set<irep_idt> added_functions;
 
@@ -74,15 +70,16 @@ void link_to_library(
 
     for(const auto &id : called_functions)
     {
-      goto_functionst::function_mapt::const_iterator
-        f_it=goto_functions.function_map.find(id);
+      goto_functionst::function_mapt::const_iterator f_it=
+        goto_functions.function_map.find(id);
 
-      if(f_it!=goto_functions.function_map.end() &&
-         f_it->second.body_available())
+      if(
+        f_it != goto_functions.function_map.end() &&
+        f_it->second.body_available())
       {
         // it's overridden!
       }
-      else if(added_functions.find(id)!=added_functions.end())
+      else if(added_functions.find(id) != added_functions.end())
       {
         // already added
       }
@@ -99,7 +96,7 @@ void link_to_library(
     // convert to CFG
     for(const auto &id : missing_functions)
     {
-      if(symbol_table.symbols.find(id)!=symbol_table.symbols.end())
+      if(symbol_table.symbols.find(id) != symbol_table.symbols.end())
         goto_convert(id, symbol_table, goto_functions, message_handler);
 
       added_functions.insert(id);

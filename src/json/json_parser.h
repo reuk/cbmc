@@ -17,17 +17,20 @@ Author: Daniel Kroening, kroening@kroening.com
 
 int yyjsonparse();
 
-class json_parsert:public parsert
+class json_parsert : public parsert
 {
 public:
-  typedef std::stack<jsont, std::vector<jsont> > stackt;
+  typedef std::stack<jsont, std::vector<jsont>> stackt;
   stackt stack;
 
-  jsont &top() { return stack.top(); }
+  jsont &top()
+  {
+    return stack.top();
+  }
 
   virtual bool parse() override
   {
-    return yyjsonparse()!=0;
+    return yyjsonparse() != 0;
   }
 
   void push(const jsont &x)
@@ -44,7 +47,7 @@ public:
 
   virtual void clear() override
   {
-    stack=stackt();
+    stack= stackt();
   }
 };
 

@@ -35,7 +35,7 @@ public:
   mini_bddt operator!() const;
   mini_bddt operator^(const mini_bddt &) const;
   mini_bddt operator==(const mini_bddt &) const;
-  mini_bddt operator&(const mini_bddt &) const;
+  mini_bddt operator&(const mini_bddt &)const;
   mini_bddt operator|(const mini_bddt &) const;
 
   // copy operator
@@ -51,7 +51,10 @@ public:
   unsigned node_number() const;
   void clear();
 
-  bool is_initialized() const { return node!=0; }
+  bool is_initialized() const
+  {
+    return node != 0;
+  }
 
   // internal
   explicit mini_bddt(class mini_bdd_nodet *_node);
@@ -67,8 +70,10 @@ public:
 
   mini_bdd_nodet(
     class mini_bdd_mgrt *_mgr,
-    unsigned _var, unsigned _node_number,
-    const mini_bddt &_low, const mini_bddt &_high);
+    unsigned _var,
+    unsigned _node_number,
+    const mini_bddt &_low,
+    const mini_bddt &_high);
 
   void add_reference();
   void remove_reference();
@@ -82,11 +87,11 @@ public:
 
   mini_bddt Var(const std::string &label);
 
-  void DumpDot(std::ostream &out, bool supress_zero=false) const;
+  void DumpDot(std::ostream &out, bool supress_zero= false) const;
   void DumpTikZ(
     std::ostream &out,
-    bool supress_zero=false,
-    bool node_numbers=true) const;
+    bool supress_zero= false,
+    bool node_numbers= true) const;
   void DumpTable(std::ostream &out) const;
 
   const mini_bddt &True() const;
@@ -117,8 +122,7 @@ protected:
   struct reverse_keyt
   {
     unsigned var, low, high;
-    reverse_keyt(
-      unsigned _var, const mini_bddt &_low, const mini_bddt &_high);
+    reverse_keyt(unsigned _var, const mini_bddt &_low, const mini_bddt &_high);
 
     bool operator<(const reverse_keyt &other) const;
   };
@@ -132,10 +136,8 @@ protected:
 
 mini_bddt restrict(const mini_bddt &u, unsigned var, const bool value);
 mini_bddt exists(const mini_bddt &u, unsigned var);
-mini_bddt substitute(
-  const mini_bddt &where,
-  unsigned var,
-  const mini_bddt &by_what);
+mini_bddt
+substitute(const mini_bddt &where, unsigned var, const mini_bddt &by_what);
 std::string cubes(const mini_bddt &u);
 bool OneSat(const mini_bddt &v, std::map<unsigned, bool> &assignment);
 

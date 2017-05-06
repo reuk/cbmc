@@ -28,19 +28,17 @@ static exprt make_member_expr(
   const struct_union_typet::componentt &component,
   const namespacet &ns)
 {
-  member_exprt result(
-    struct_union, component.get_name(), component.type());
+  member_exprt result(struct_union, component.get_name(), component.type());
 
   if(struct_union.get_bool(ID_C_lvalue))
     result.set(ID_C_lvalue, true);
 
   // todo: should to typedef chains properly
-  const typet &type=
-    ns.follow(struct_union.type());
+  const typet &type= ns.follow(struct_union.type());
 
-  if(result.get_bool(ID_C_constant) ||
-     type.get_bool(ID_C_constant) ||
-     struct_union.type().get_bool(ID_C_constant))
+  if(
+    result.get_bool(ID_C_constant) || type.get_bool(ID_C_constant) ||
+    struct_union.type().get_bool(ID_C_constant))
     result.set(ID_C_constant, true);
 
   return result;
@@ -71,17 +69,17 @@ exprt get_component_rec(
 
   for(const auto &comp : components)
   {
-    const typet &type=ns.follow(comp.type());
+    const typet &type= ns.follow(comp.type());
 
-    if(comp.get_name()==component_name)
+    if(comp.get_name() == component_name)
     {
       return make_member_expr(struct_union, comp, ns);
     }
-    else if(comp.get_anonymous() &&
-            (type.id()==ID_struct || type.id()==ID_union))
+    else if(
+      comp.get_anonymous() && (type.id() == ID_struct || type.id() == ID_union))
     {
-      exprt tmp=make_member_expr(struct_union, comp, ns);
-      exprt result=get_component_rec(tmp, component_name, ns);
+      exprt tmp= make_member_expr(struct_union, comp, ns);
+      exprt result= get_component_rec(tmp, component_name, ns);
       if(result.is_not_nil())
         return result;
     }
@@ -115,7 +113,7 @@ bool has_component_rec(
 
   for(const auto &comp : components)
   {
-    if(comp.get_name()==component_name)
+    if(comp.get_name() == component_name)
     {
       return true;
     }

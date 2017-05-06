@@ -28,8 +28,7 @@ Function: value_set_analysis_fivrnst::initialize
 
 \*******************************************************************/
 
-void value_set_analysis_fivrnst::initialize(
-  const goto_programt &goto_program)
+void value_set_analysis_fivrnst::initialize(const goto_programt &goto_program)
 {
   baset::initialize(goto_program);
   add_vars(goto_program);
@@ -66,8 +65,7 @@ Function: value_set_analysis_fivrnst::add_vars
 
 \*******************************************************************/
 
-void value_set_analysis_fivrnst::add_vars(
-  const goto_programt &goto_program)
+void value_set_analysis_fivrnst::add_vars(const goto_programt &goto_program)
 {
   typedef std::list<value_set_fivrnst::entryt> entry_listt;
 
@@ -83,19 +81,19 @@ void value_set_analysis_fivrnst::add_vars(
   typedef std::unordered_map<irep_idt, entry_listt, irep_id_hash> entry_cachet;
   entry_cachet entry_cache;
 
-  value_set_fivrnst &v=state.value_set;
+  value_set_fivrnst &v= state.value_set;
   v.add_vars(globals);
 
   for(auto l : locals)
   {
     // cache hit?
-    entry_cachet::const_iterator e_it=entry_cache.find(l);
+    entry_cachet::const_iterator e_it= entry_cache.find(l);
 
-    if(e_it==entry_cache.end())
+    if(e_it == entry_cache.end())
     {
-      const symbolt &symbol=ns.lookup(l);
+      const symbolt &symbol= ns.lookup(l);
 
-      std::list<value_set_fivrnst::entryt> &entries=entry_cache[l];
+      std::list<value_set_fivrnst::entryt> &entries= entry_cache[l];
       get_entries(symbol, entries);
       v.add_vars(entries);
     }
@@ -141,30 +139,24 @@ void value_set_analysis_fivrnst::get_entries_rec(
   const typet &type,
   std::list<value_set_fivrnst::entryt> &dest)
 {
-  const typet &t=ns.follow(type);
+  const typet &t= ns.follow(type);
 
-  if(t.id()==ID_struct ||
-     t.id()==ID_union)
+  if(t.id() == ID_struct || t.id() == ID_union)
   {
-    const struct_typet &struct_type=to_struct_type(t);
+    const struct_typet &struct_type= to_struct_type(t);
 
-    const struct_typet::componentst &c=struct_type.components();
+    const struct_typet::componentst &c= struct_type.components();
 
-    for(struct_typet::componentst::const_iterator
-        it=c.begin();
-        it!=c.end();
+    for(struct_typet::componentst::const_iterator it= c.begin(); it != c.end();
         it++)
     {
       get_entries_rec(
-        identifier,
-        suffix+"."+it->get_string(ID_name),
-        it->type(),
-        dest);
+        identifier, suffix + "." + it->get_string(ID_name), it->type(), dest);
     }
   }
-  else if(t.id()==ID_array)
+  else if(t.id() == ID_array)
   {
-    get_entries_rec(identifier, suffix+"[]", t.subtype(), dest);
+    get_entries_rec(identifier, suffix + "[]", t.subtype(), dest);
   }
   else if(check_type(t))
   {
@@ -184,14 +176,13 @@ Function: value_set_analysis_fivrnst::add_vars
 
 \*******************************************************************/
 
-void value_set_analysis_fivrnst::add_vars(
-  const goto_functionst &goto_functions)
+void value_set_analysis_fivrnst::add_vars(const goto_functionst &goto_functions)
 {
   // get the globals
   std::list<value_set_fivrnst::entryt> globals;
   get_globals(globals);
 
-  value_set_fivrnst &v=state.value_set;
+  value_set_fivrnst &v= state.value_set;
   v.add_vars(globals);
 
   forall_goto_functions(f_it, goto_functions)
@@ -202,7 +193,7 @@ void value_set_analysis_fivrnst::add_vars(
 
     for(auto l : locals)
     {
-      const symbolt &symbol=ns.lookup(l);
+      const symbolt &symbol= ns.lookup(l);
 
       std::list<value_set_fivrnst::entryt> entries;
       get_entries(symbol, entries);
@@ -228,8 +219,7 @@ void value_set_analysis_fivrnst::get_globals(
 {
   // static ones
   forall_symbols(it, ns.get_symbol_table().symbols)
-    if(it->second.is_lvalue &&
-       it->second.is_static_lifetime)
+    if(it->second.is_lvalue && it->second.is_static_lifetime)
       get_entries(it->second, dest);
 }
 
@@ -247,49 +237,50 @@ Function: value_set_analysis_fivrnst::check_type
 
 bool value_set_analysis_fivrnst::check_type(const typet &type)
 {
-    if(type.id()==ID_pointer)
+  if(type.id() == ID_pointer)
+  {
+    switch(track_options)
     {
-      switch(track_options)
-      {
-        case TRACK_ALL_POINTERS:
-          { return true; break; }
-        case TRACK_FUNCTION_POINTERS:
-        {
-          if(type.id()==ID_pointer)
-          {
-            const typet *t = &type;
-            while(t->id()==ID_pointer) t = &(t->subtype());
-
-            return (t->id()==ID_code);
-          }
-
-          break;
-        }
-        default: // don't track.
-          break;
-      }
-    }
-    else if(type.id()==ID_struct ||
-            type.id()==ID_union)
+    case TRACK_ALL_POINTERS:
     {
-      const struct_typet &struct_type=to_struct_type(type);
-
-      const struct_typet::componentst &components=
-        struct_type.components();
-
-      for(struct_typet::componentst::const_iterator
-          it=components.begin();
-          it!=components.end();
-          it++)
-      {
-        if(check_type(it->type()))
-          return true;
-      }
+      return true;
+      break;
     }
-    else if(type.id()==ID_array)
-      return check_type(type.subtype());
-    else if(type.id()==ID_symbol)
-      return check_type(ns.follow(type));
+    case TRACK_FUNCTION_POINTERS:
+    {
+      if(type.id() == ID_pointer)
+      {
+        const typet *t= &type;
+        while(t->id() == ID_pointer)
+          t= &(t->subtype());
+
+        return (t->id() == ID_code);
+      }
+
+      break;
+    }
+    default: // don't track.
+      break;
+    }
+  }
+  else if(type.id() == ID_struct || type.id() == ID_union)
+  {
+    const struct_typet &struct_type= to_struct_type(type);
+
+    const struct_typet::componentst &components= struct_type.components();
+
+    for(struct_typet::componentst::const_iterator it= components.begin();
+        it != components.end();
+        it++)
+    {
+      if(check_type(it->type()))
+        return true;
+    }
+  }
+  else if(type.id() == ID_array)
+    return check_type(type.subtype());
+  else if(type.id() == ID_symbol)
+    return check_type(ns.follow(type));
 
   return false;
 }

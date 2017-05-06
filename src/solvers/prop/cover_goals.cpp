@@ -46,10 +46,11 @@ void cover_goalst::mark()
     o->satisfying_assignment();
 
   for(auto &g : goals)
-    if(g.status==goalt::statust::UNKNOWN &&
-       prop_conv.l_get(g.condition).is_true())
+    if(
+      g.status == goalt::statust::UNKNOWN &&
+      prop_conv.l_get(g.condition).is_true())
     {
-      g.status=goalt::statust::COVERED;
+      g.status= goalt::statust::COVERED;
       _number_covered++;
 
       // notify observers
@@ -76,12 +77,9 @@ void cover_goalst::constraint()
 
   // cover at least one unknown goal
 
-  for(std::list<goalt>::const_iterator
-      g_it=goals.begin();
-      g_it!=goals.end();
+  for(std::list<goalt>::const_iterator g_it= goals.begin(); g_it != goals.end();
       g_it++)
-    if(g_it->status==goalt::statust::UNKNOWN &&
-       !g_it->condition.is_false())
+    if(g_it->status == goalt::statust::UNKNOWN && !g_it->condition.is_false())
       disjuncts.push_back(literal_exprt(g_it->condition));
 
   // this is 'false' if there are no disjuncts
@@ -102,9 +100,7 @@ Function: cover_goalst::freeze_goal_variables
 
 void cover_goalst::freeze_goal_variables()
 {
-  for(std::list<goalt>::const_iterator
-      g_it=goals.begin();
-      g_it!=goals.end();
+  for(std::list<goalt>::const_iterator g_it= goals.begin(); g_it != goals.end();
       g_it++)
     if(!g_it->condition.is_constant())
       prop_conv.set_frozen(g_it->condition);
@@ -124,7 +120,7 @@ Function: cover_goalst::operator()
 
 decision_proceduret::resultt cover_goalst::operator()()
 {
-  _iterations=_number_covered=0;
+  _iterations= _number_covered= 0;
 
   decision_proceduret::resultt dec_result;
 
@@ -138,7 +134,7 @@ decision_proceduret::resultt cover_goalst::operator()()
     _iterations++;
 
     constraint();
-    dec_result=prop_conv.dec_solve();
+    dec_result= prop_conv.dec_solve();
 
     switch(dec_result)
     {
@@ -154,9 +150,8 @@ decision_proceduret::resultt cover_goalst::operator()()
       error() << "decision procedure has failed" << eom;
       return dec_result;
     }
-  }
-  while(dec_result==decision_proceduret::D_SATISFIABLE &&
-        number_covered()<size());
+  } while(dec_result == decision_proceduret::D_SATISFIABLE &&
+          number_covered() < size());
 
   return decision_proceduret::D_SATISFIABLE;
 }

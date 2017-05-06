@@ -44,20 +44,20 @@ int cw_modet::doit()
     return EX_OK;
   }
 
-  unsigned int verbosity=1;
+  unsigned int verbosity= 1;
 
   compilet compiler(cmdline);
 
-  #if 0
+#if 0
   bool act_as_ld=
     has_prefix(base_name, "ld") ||
     has_prefix(base_name, "goto-ld") ||
     has_prefix(base_name, "link") ||
     has_prefix(base_name, "goto-link");
-  #endif
+#endif
 
   if(cmdline.isset("verbosity"))
-    verbosity=unsafe_string2unsigned(cmdline.get_value("verbosity"));
+    verbosity= unsafe_string2unsigned(cmdline.get_value("verbosity"));
 
   compiler.set_message_handler(get_message_handler());
   message_handler.set_verbosity(verbosity);
@@ -67,20 +67,20 @@ int cw_modet::doit()
   // get configuration
   config.set(cmdline);
 
-  config.ansi_c.mode=configt::ansi_ct::flavourt::CODEWARRIOR;
+  config.ansi_c.mode= configt::ansi_ct::flavourt::CODEWARRIOR;
 
-  compiler.object_file_extension="o";
+  compiler.object_file_extension= "o";
 
   // determine actions to be taken
   if(cmdline.isset('E'))
-    compiler.mode=compilet::PREPROCESS_ONLY;
+    compiler.mode= compilet::PREPROCESS_ONLY;
   else if(cmdline.isset('c') || cmdline.isset('S'))
-    compiler.mode=compilet::COMPILE_ONLY;
+    compiler.mode= compilet::COMPILE_ONLY;
   else
-    compiler.mode=compilet::COMPILE_LINK_EXECUTABLE;
+    compiler.mode= compilet::COMPILE_LINK_EXECUTABLE;
 
   if(cmdline.isset('U'))
-    config.ansi_c.undefines=cmdline.get_values('U');
+    config.ansi_c.undefines= cmdline.get_values('U');
 
   if(cmdline.isset("undef"))
     config.ansi_c.preprocessor_options.push_back("-undef");
@@ -89,97 +89,91 @@ int cw_modet::doit()
     config.ansi_c.preprocessor_options.push_back("-nostdinc");
 
   if(cmdline.isset('L'))
-    compiler.library_paths=cmdline.get_values('L');
-    // Don't add the system paths!
+    compiler.library_paths= cmdline.get_values('L');
+  // Don't add the system paths!
 
   if(cmdline.isset('l'))
-    compiler.libraries=cmdline.get_values('l');
+    compiler.libraries= cmdline.get_values('l');
 
   if(cmdline.isset('o'))
   {
     // given gcc -o file1 -o file2,
     // gcc will output to file2, not file1
-    compiler.output_file_object=cmdline.get_values('o').back();
-    compiler.output_file_executable=cmdline.get_values('o').back();
+    compiler.output_file_object= cmdline.get_values('o').back();
+    compiler.output_file_executable= cmdline.get_values('o').back();
   }
   else
   {
-    compiler.output_file_object="";
-    compiler.output_file_executable="a.out";
+    compiler.output_file_object= "";
+    compiler.output_file_executable= "a.out";
   }
 
   if(cmdline.isset("Wp,"))
   {
-    const std::list<std::string> &values=
-      cmdline.get_values("Wp,");
+    const std::list<std::string> &values= cmdline.get_values("Wp,");
 
-    for(std::list<std::string>::const_iterator
-        it=values.begin();
-        it!=values.end();
+    for(std::list<std::string>::const_iterator it= values.begin();
+        it != values.end();
         it++)
-      config.ansi_c.preprocessor_options.push_back("-Wp,"+*it);
+      config.ansi_c.preprocessor_options.push_back("-Wp," + *it);
   }
 
   if(cmdline.isset("isystem"))
   {
-    const std::list<std::string> &values=
-      cmdline.get_values("isystem");
+    const std::list<std::string> &values= cmdline.get_values("isystem");
 
-    for(std::list<std::string>::const_iterator
-        it=values.begin();
-        it!=values.end();
+    for(std::list<std::string>::const_iterator it= values.begin();
+        it != values.end();
         it++)
-      config.ansi_c.preprocessor_options.push_back("-isystem "+*it);
+      config.ansi_c.preprocessor_options.push_back("-isystem " + *it);
   }
 
-  if(verbosity>8)
+  if(verbosity > 8)
   {
     std::list<std::string>::iterator it;
 
     std::cout << "Defines:\n";
-    for(it=config.ansi_c.defines.begin();
-        it!=config.ansi_c.defines.end();
+    for(it= config.ansi_c.defines.begin(); it != config.ansi_c.defines.end();
         it++)
     {
       std::cout << "  " << (*it) << std::endl;
     }
 
     std::cout << "Undefines:\n";
-    for(it=config.ansi_c.undefines.begin();
-        it!=config.ansi_c.undefines.end();
+    for(it= config.ansi_c.undefines.begin();
+        it != config.ansi_c.undefines.end();
         it++)
     {
       std::cout << "  " << (*it) << std::endl;
     }
 
     std::cout << "Preprocessor Options:\n";
-    for(it=config.ansi_c.preprocessor_options.begin();
-        it!=config.ansi_c.preprocessor_options.end();
+    for(it= config.ansi_c.preprocessor_options.begin();
+        it != config.ansi_c.preprocessor_options.end();
         it++)
     {
       std::cout << "  " << (*it) << std::endl;
     }
 
     std::cout << "Include Paths:\n";
-    for(it=config.ansi_c.include_paths.begin();
-        it!=config.ansi_c.include_paths.end();
+    for(it= config.ansi_c.include_paths.begin();
+        it != config.ansi_c.include_paths.end();
         it++)
     {
       std::cout << "  " << (*it) << std::endl;
     }
 
     std::cout << "Library Paths:\n";
-    for(it=compiler.library_paths.begin();
-        it!=compiler.library_paths.end();
+    for(it= compiler.library_paths.begin(); it != compiler.library_paths.end();
         it++)
     {
       std::cout << "  " << (*it) << std::endl;
     }
 
-    std::cout << "Output file (object): "
-              << compiler.output_file_object << std::endl;
-    std::cout << "Output file (executable): "
-              << compiler.output_file_executable << std::endl;
+    std::cout << "Output file (object): " << compiler.output_file_object
+              << std::endl;
+    std::cout << "Output file (executable): " << compiler.output_file_executable
+              << std::endl;
   }
 
   // Parse input program, convert to goto program, write output

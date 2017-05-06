@@ -15,14 +15,14 @@ Author: Michael Tautschnig, tautschn@amazon.com
 
 int yyjsilparse();
 
-class jsil_parsert:public parsert
+class jsil_parsert : public parsert
 {
 public:
   jsil_parse_treet parse_tree;
 
   virtual bool parse() override
   {
-    return yyjsilparse()!=0;
+    return yyjsilparse() != 0;
   }
 
   virtual void clear() override

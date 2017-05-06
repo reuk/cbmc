@@ -11,7 +11,7 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 #include <util/expr.h>
 
-class cpp_namet:public irept
+class cpp_namet : public irept
 {
 public:
   // the subs are one of the following:
@@ -21,24 +21,23 @@ public:
   // ::
   // ~
 
-  class namet:public irept
+  class namet : public irept
   {
   public:
-    namet():irept(ID_name)
+    namet() : irept(ID_name)
     {
     }
 
-    explicit namet(const irep_idt &base_name):irept(ID_name)
+    explicit namet(const irep_idt &base_name) : irept(ID_name)
     {
       set(ID_identifier, base_name);
     }
 
-    namet(
-      const irep_idt &_base_name,
-      const source_locationt &_source_location):irept(ID_name)
+    namet(const irep_idt &_base_name, const source_locationt &_source_location)
+      : irept(ID_name)
     {
       set(ID_identifier, _base_name);
-      add_source_location()=_source_location;
+      add_source_location()= _source_location;
     }
 
     source_locationt &add_source_location()
@@ -52,18 +51,19 @@ public:
     }
   };
 
-  cpp_namet():irept(ID_cpp_name)
+  cpp_namet() : irept(ID_cpp_name)
   {
   }
 
-  explicit cpp_namet(const irep_idt &base_name):irept(ID_cpp_name)
+  explicit cpp_namet(const irep_idt &base_name) : irept(ID_cpp_name)
   {
     get_sub().push_back(namet(base_name));
   }
 
   cpp_namet(
     const irep_idt &_base_name,
-    const source_locationt &_source_location):irept(ID_cpp_name)
+    const source_locationt &_source_location)
+    : irept(ID_cpp_name)
   {
     get_sub().push_back(namet(_base_name, _source_location));
   }
@@ -86,17 +86,17 @@ public:
   // '~identifier'
   bool is_simple_name() const
   {
-    const subt &sub=get_sub();
-    return (sub.size()==1 && sub.front().id()==ID_name) ||
-           (sub.size()==2 && sub.front().id()==ID_operator) ||
-           (sub.size()==2 && sub[0].id()=="~" && sub[1].id()==ID_name);
+    const subt &sub= get_sub();
+    return (sub.size() == 1 && sub.front().id() == ID_name) ||
+           (sub.size() == 2 && sub.front().id() == ID_operator) ||
+           (sub.size() == 2 && sub[0].id() == "~" && sub[1].id() == ID_name);
   }
 
   bool is_operator() const
   {
     if(get_sub().empty())
       return false;
-    return get_sub().front().id()==ID_operator;
+    return get_sub().front().id() == ID_operator;
   }
 
   bool is_typename() const
@@ -107,20 +107,20 @@ public:
   bool is_qualified() const
   {
     forall_irep(it, get_sub())
-      if(it->id()=="::")
+      if(it->id() == "::")
         return true;
     return false;
   }
 
   bool is_destructor() const
   {
-    return get_sub().size()>=1 && get_sub().front().id()=="~";
+    return get_sub().size() >= 1 && get_sub().front().id() == "~";
   }
 
   bool has_template_args() const
   {
     forall_irep(it, get_sub())
-      if(it->id()==ID_template_args)
+      if(it->id() == ID_template_args)
         return true;
 
     return false;

@@ -33,7 +33,7 @@ public:
   stepst steps;
 };
 
-template<class T=clauset>
+template <class T= clauset>
 class resolution_prooft
 {
 public:

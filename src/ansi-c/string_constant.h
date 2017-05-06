@@ -12,7 +12,7 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/std_expr.h>
 #include <util/expr.h>
 
-class string_constantt:public exprt
+class string_constantt : public exprt
 {
 public:
   string_constantt();
@@ -31,13 +31,13 @@ public:
 
 inline const string_constantt &to_string_constant(const exprt &expr)
 {
-  assert(expr.id()==ID_string_constant);
+  assert(expr.id() == ID_string_constant);
   return static_cast<const string_constantt &>(expr);
 }
 
 inline string_constantt &to_string_constant(exprt &expr)
 {
-  assert(expr.id()==ID_string_constant);
+  assert(expr.id() == ID_string_constant);
   return static_cast<string_constantt &>(expr);
 }
 

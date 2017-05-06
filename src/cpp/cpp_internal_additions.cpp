@@ -32,18 +32,18 @@ std::string c2cpp(const std::string &s)
 
   result.reserve(s.size());
 
-  for(unsigned i=0; i<s.size(); i++)
+  for(unsigned i= 0; i < s.size(); i++)
   {
-    char ch=s[i];
+    char ch= s[i];
 
-    if(ch=='_' && std::string(s, i, 5)=="_Bool")
+    if(ch == '_' && std::string(s, i, 5) == "_Bool")
     {
       result.append("bool");
-      i+=4;
+      i+= 4;
       continue;
     }
 
-    result+=ch;
+    result+= ch;
   }
 
   return result;
@@ -72,11 +72,16 @@ void cpp_internal_additions(std::ostream &out)
   // auxiliaries for new/delete
   out << "extern \"C\" void *__new(__typeof__(sizeof(int)));" << '\n';
   // NOLINTNEXTLINE(whitespace/line_length)
-  out << "extern \"C\" void *__new_array(__typeof__(sizeof(int)), __typeof__(sizeof(int)));" << '\n';
+  out << "extern \"C\" void *__new_array(__typeof__(sizeof(int)), "
+         "__typeof__(sizeof(int)));"
+      << '\n';
   // NOLINTNEXTLINE(whitespace/line_length)
-  out << "extern \"C\" void *__placement_new(__typeof__(sizeof(int)), void *);" << '\n';
+  out << "extern \"C\" void *__placement_new(__typeof__(sizeof(int)), void *);"
+      << '\n';
   // NOLINTNEXTLINE(whitespace/line_length)
-  out << "extern \"C\" void *__placement_new_array(__typeof__(sizeof(int)), __typeof__(sizeof(int)), void *);" << '\n';
+  out << "extern \"C\" void *__placement_new_array(__typeof__(sizeof(int)), "
+         "__typeof__(sizeof(int)), void *);"
+      << '\n';
   out << "extern \"C\" void __delete(void *);" << '\n';
   out << "extern \"C\" void __delete_array(void *);" << '\n';
   out << "extern \"C\" bool __CPROVER_malloc_is_new_array=0;" << '\n';
@@ -92,10 +97,12 @@ void cpp_internal_additions(std::ostream &out)
   out << "extern \"C\" void assert(bool assertion);" << '\n';
   out << "extern \"C\" void __CPROVER_assume(bool assumption);" << '\n';
   out << "extern \"C\" void __CPROVER_assert("
-         "bool assertion, const char *description);" << '\n';
+         "bool assertion, const char *description);"
+      << '\n';
   out << "extern \"C\" void __CPROVER::assume(bool assumption);" << '\n';
   out << "extern \"C\" void __CPROVER::assert("
-         "bool assertion, const char *description);" << '\n';
+         "bool assertion, const char *description);"
+      << '\n';
 
   // CPROVER extensions
   out << "extern \"C\" const unsigned __CPROVER::constant_infinity_uint;\n";
@@ -111,7 +118,9 @@ void cpp_internal_additions(std::ostream &out)
   out << "extern \"C\" signed __CPROVER_POINTER_OFFSET(const void *p);" << '\n';
   out << "extern \"C\" bool __CPROVER_DYNAMIC_OBJECT(const void *p);" << '\n';
   // NOLINTNEXTLINE(whitespace/line_length)
-  out << "extern \"C\" extern unsigned char __CPROVER_memory[__CPROVER::constant_infinity_uint];" << '\n';
+  out << "extern \"C\" extern unsigned char "
+         "__CPROVER_memory[__CPROVER::constant_infinity_uint];"
+      << '\n';
   out << "extern \"C\" const void *__CPROVER_dead_object=0;" << '\n';
 
   // malloc
@@ -125,27 +134,30 @@ void cpp_internal_additions(std::ostream &out)
 
   // arrays
   // NOLINTNEXTLINE(whitespace/line_length)
-  out << "bool __CPROVER::array_equal(const void array1[], const void array2[]);" << '\n';
+  out
+    << "bool __CPROVER::array_equal(const void array1[], const void array2[]);"
+    << '\n';
   out << "void __CPROVER::array_copy(const void dest[], const void src[]);\n";
   out << "void __CPROVER::array_set(const void dest[], ...);" << '\n';
 
   // GCC stuff, but also for ARM
-  if(config.ansi_c.mode==configt::ansi_ct::flavourt::GCC ||
-     config.ansi_c.mode==configt::ansi_ct::flavourt::APPLE ||
-     config.ansi_c.mode==configt::ansi_ct::flavourt::ARM)
+  if(
+    config.ansi_c.mode == configt::ansi_ct::flavourt::GCC ||
+    config.ansi_c.mode == configt::ansi_ct::flavourt::APPLE ||
+    config.ansi_c.mode == configt::ansi_ct::flavourt::ARM)
   {
     out << "extern \"C\" {" << '\n';
     out << c2cpp(gcc_builtin_headers_generic);
 
-     if(config.ansi_c.mode==configt::ansi_ct::flavourt::APPLE)
-       out << "typedef double __float128;\n"; // clang doesn't do __float128
+    if(config.ansi_c.mode == configt::ansi_ct::flavourt::APPLE)
+      out << "typedef double __float128;\n"; // clang doesn't do __float128
 
     out << c2cpp(gcc_builtin_headers_ia32);
     out << "}" << '\n';
   }
 
   // extensions for Visual C/C++
-  if(config.ansi_c.os==configt::ansi_ct::ost::OS_WIN)
+  if(config.ansi_c.os == configt::ansi_ct::ost::OS_WIN)
     out << "extern \"C\" int __noop(...);\n";
 
   // string symbols to identify the architecture we have compiled for
@@ -157,7 +169,7 @@ void cpp_internal_additions(std::ostream &out)
   out << "}" << '\n';
 
   // Microsoft stuff
-  if(config.ansi_c.mode==configt::ansi_ct::flavourt::VISUAL_STUDIO)
+  if(config.ansi_c.mode == configt::ansi_ct::flavourt::VISUAL_STUDIO)
   {
     // type_info infrastructure -- the standard wants this to be in the
     // std:: namespace, but MS has it in the root namespace

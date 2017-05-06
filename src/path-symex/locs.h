@@ -18,11 +18,8 @@ Author: Daniel Kroening, kroening@kroening.com
 struct loct
 {
 public:
-  loct(
-    goto_programt::const_targett _target,
-    const irep_idt &_function):
-    target(_target),
-    function(_function)
+  loct(goto_programt::const_targett _target, const irep_idt &_function)
+    : target(_target), function(_function)
   {
   }
 
@@ -54,29 +51,29 @@ public:
   void build(const goto_functionst &goto_functions);
   void output(std::ostream &out) const;
 
-  loct &operator[] (loc_reft l)
+  loct &operator[](loc_reft l)
   {
-    assert(l.loc_number>=0 && l.loc_number<loc_vector.size());
+    assert(l.loc_number >= 0 && l.loc_number < loc_vector.size());
     return loc_vector[l.loc_number];
   }
 
-  const loct &operator[] (loc_reft l) const
+  const loct &operator[](loc_reft l) const
   {
-    assert(l.loc_number>=0 && l.loc_number<loc_vector.size());
+    assert(l.loc_number >= 0 && l.loc_number < loc_vector.size());
     return loc_vector[l.loc_number];
   }
 
   static inline loc_reft begin()
   {
     loc_reft tmp;
-    tmp.loc_number=0;
+    tmp.loc_number= 0;
     return tmp;
   }
 
   loc_reft end() const
   {
     loc_reft tmp;
-    tmp.loc_number=loc_vector.size();
+    tmp.loc_number= loc_vector.size();
     return tmp;
   }
 
@@ -94,14 +91,14 @@ class target_to_loc_mapt
 public:
   explicit target_to_loc_mapt(const locst &locs)
   {
-    for(loc_reft it=locs.begin(); it!=locs.end(); ++it)
-      map[locs[it].target]=it;
+    for(loc_reft it= locs.begin(); it != locs.end(); ++it)
+      map[locs[it].target]= it;
   }
 
   loc_reft operator[](const goto_programt::const_targett t) const
   {
-    mapt::const_iterator it=map.find(t);
-    assert(it!=map.end());
+    mapt::const_iterator it= map.find(t);
+    assert(it != map.end());
     return it->second;
   }
 

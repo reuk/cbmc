@@ -11,7 +11,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "goto_program.h"
 
-void basic_blocks(goto_programt &goto_program,
-                  unsigned max_block_size=0);
+void basic_blocks(goto_programt &goto_program, unsigned max_block_size= 0);
 
 #endif // CPROVER_GOTO_PROGRAMS_BASIC_BLOCKS_H

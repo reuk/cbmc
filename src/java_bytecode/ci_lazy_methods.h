@@ -19,11 +19,12 @@ public:
   ci_lazy_methodst(
     std::vector<irep_idt> &_needed_methods,
     std::set<irep_idt> &_needed_classes,
-    symbol_tablet &_symbol_table):
-  needed_methods(_needed_methods),
-  needed_classes(_needed_classes),
-  symbol_table(_symbol_table)
-  {}
+    symbol_tablet &_symbol_table)
+    : needed_methods(_needed_methods),
+      needed_classes(_needed_classes),
+      symbol_table(_symbol_table)
+  {
+  }
 
   void add_needed_method(const irep_idt &);
   // Returns true if new

@@ -56,11 +56,11 @@ Function: goto_diff_parse_optionst::goto_diff_parse_optionst
 
 \*******************************************************************/
 
-goto_diff_parse_optionst::goto_diff_parse_optionst(int argc, const char **argv):
-  parse_options_baset(GOTO_DIFF_OPTIONS, argc, argv),
-  goto_diff_languagest(cmdline, ui_message_handler),
-  ui_message_handler(cmdline, "GOTO-DIFF " CBMC_VERSION),
-  languages2(cmdline, ui_message_handler)
+goto_diff_parse_optionst::goto_diff_parse_optionst(int argc, const char **argv)
+  : parse_options_baset(GOTO_DIFF_OPTIONS, argc, argv),
+    goto_diff_languagest(cmdline, ui_message_handler),
+    ui_message_handler(cmdline, "GOTO-DIFF " CBMC_VERSION),
+    languages2(cmdline, ui_message_handler)
 {
 }
 
@@ -79,11 +79,11 @@ Function: goto_diff_parse_optionst::goto_diff_parse_optionst
 ::goto_diff_parse_optionst::goto_diff_parse_optionst(
   int argc,
   const char **argv,
-  const std::string &extra_options):
-  parse_options_baset(GOTO_DIFF_OPTIONS+extra_options, argc, argv),
-  goto_diff_languagest(cmdline, ui_message_handler),
-  ui_message_handler(cmdline, "GOTO-DIFF " CBMC_VERSION),
-  languages2(cmdline, ui_message_handler)
+  const std::string &extra_options)
+  : parse_options_baset(GOTO_DIFF_OPTIONS + extra_options, argc, argv),
+    goto_diff_languagest(cmdline, ui_message_handler),
+    ui_message_handler(cmdline, "GOTO-DIFF " CBMC_VERSION),
+    languages2(cmdline, ui_message_handler)
 {
 }
 
@@ -102,13 +102,13 @@ Function: goto_diff_parse_optionst::eval_verbosity
 void goto_diff_parse_optionst::eval_verbosity()
 {
   // this is our default verbosity
-  unsigned int v=messaget::M_STATISTICS;
+  unsigned int v= messaget::M_STATISTICS;
 
   if(cmdline.isset("verbosity"))
   {
-    v=unsafe_string2unsigned(cmdline.get_value("verbosity"));
-    if(v>10)
-      v=10;
+    v= unsafe_string2unsigned(cmdline.get_value("verbosity"));
+    if(v > 10)
+      v= 10;
   }
 
   ui_message_handler.set_verbosity(v);
@@ -169,8 +169,9 @@ void goto_diff_parse_optionst::get_command_line_options(optionst &options)
   else
     options.set_option("simplify", true);
 
-  if(cmdline.isset("all-claims") || // will go away
-     cmdline.isset("all-properties")) // use this one
+  if(
+    cmdline.isset("all-claims") ||   // will go away
+    cmdline.isset("all-properties")) // use this one
     options.set_option("all-properties", true);
   else
     options.set_option("all-properties", false);
@@ -265,14 +266,14 @@ void goto_diff_parse_optionst::get_command_line_options(optionst &options)
     options.set_option("unwinding-assertions", false);
   else
     options.set_option(
-      "unwinding-assertions",
-      cmdline.isset("unwinding-assertions"));
+      "unwinding-assertions", cmdline.isset("unwinding-assertions"));
 
   // generate unwinding assumptions otherwise
   options.set_option("partial-loops", cmdline.isset("partial-loops"));
 
-  if(options.get_bool_option("partial-loops") &&
-     options.get_bool_option("unwinding-assertions"))
+  if(
+    options.get_bool_option("partial-loops") &&
+    options.get_bool_option("unwinding-assertions"))
   {
     error() << "--partial-loops and --unwinding-assertions"
             << " must not be given together" << eom;
@@ -311,12 +312,11 @@ int goto_diff_parse_optionst::doit()
   //
   // Print a banner
   //
-  status() << "GOTO-DIFF version " CBMC_VERSION " "
-           << sizeof(void *)*8 << "-bit "
-           << config.this_architecture() << " "
+  status() << "GOTO-DIFF version " CBMC_VERSION " " << sizeof(void *) * 8
+           << "-bit " << config.this_architecture() << " "
            << config.this_operating_system() << eom;
 
-  if(cmdline.args.size()!=2)
+  if(cmdline.args.size() != 2)
   {
     error() << "Please provide two programs to compare" << eom;
     return 6;
@@ -324,13 +324,11 @@ int goto_diff_parse_optionst::doit()
 
   goto_modelt goto_model1, goto_model2;
 
-  int get_goto_program_ret=
-    get_goto_program(options, *this, goto_model1);
-  if(get_goto_program_ret!=-1)
+  int get_goto_program_ret= get_goto_program(options, *this, goto_model1);
+  if(get_goto_program_ret != -1)
     return get_goto_program_ret;
-  get_goto_program_ret=
-    get_goto_program(options, languages2, goto_model2);
-  if(get_goto_program_ret!=-1)
+  get_goto_program_ret= get_goto_program(options, languages2, goto_model2);
+  if(get_goto_program_ret != -1)
     return get_goto_program_ret;
 
   if(cmdline.isset("show-goto-functions"))
@@ -340,29 +338,25 @@ int goto_diff_parse_optionst::doit()
     return 0;
   }
 
-  if(cmdline.isset("change-impact") ||
-     cmdline.isset("forward-impact") ||
-     cmdline.isset("backward-impact"))
+  if(
+    cmdline.isset("change-impact") || cmdline.isset("forward-impact") ||
+    cmdline.isset("backward-impact"))
   {
     // Workaround to avoid deps not propagating between return and end_func
     remove_returns(goto_model1);
     remove_returns(goto_model2);
 
     impact_modet impact_mode=
-      cmdline.isset("forward-impact") ?
-      FORWARD :
-      (cmdline.isset("backward-impact") ? BACKWARD : BOTH);
+      cmdline.isset("forward-impact")
+        ? FORWARD
+        : (cmdline.isset("backward-impact") ? BACKWARD : BOTH);
     change_impact(
-      goto_model1,
-      goto_model2,
-      impact_mode,
-      cmdline.isset("compact-output"));
+      goto_model1, goto_model2, impact_mode, cmdline.isset("compact-output"));
 
     return 0;
   }
 
-  if(cmdline.isset("unified") ||
-     cmdline.isset('u'))
+  if(cmdline.isset("unified") || cmdline.isset('u'))
   {
     unified_difft u(goto_model1, goto_model2);
     u();
@@ -372,7 +366,7 @@ int goto_diff_parse_optionst::doit()
   }
 
   std::unique_ptr<goto_difft> goto_diff;
-  goto_diff = std::unique_ptr<goto_difft>(
+  goto_diff= std::unique_ptr<goto_difft>(
     new syntactic_difft(goto_model1, goto_model2, get_message_handler()));
   goto_diff->set_ui(get_ui());
 
@@ -405,10 +399,10 @@ int goto_diff_parse_optionst::get_goto_program(
   if(is_goto_binary(cmdline.args[0]))
   {
     if(read_goto_binary(
-        cmdline.args[0],
-        goto_model.symbol_table,
-        goto_model.goto_functions,
-        languages.get_message_handler()))
+         cmdline.args[0],
+         goto_model.symbol_table,
+         goto_model.goto_functions,
+         languages.get_message_handler()))
       return 6;
 
     config.set(cmdline);
@@ -422,15 +416,13 @@ int goto_diff_parse_optionst::get_goto_program(
     // This is a a workaround to make parse() think that there is only
     // one source file.
     std::string arg2("");
-    if(cmdline.args.size()==2)
+    if(cmdline.args.size() == 2)
     {
-      arg2 = cmdline.args[1];
+      arg2= cmdline.args[1];
       cmdline.args.erase(--cmdline.args.end());
     }
 
-    if(languages.parse() ||
-       languages.typecheck() ||
-       languages.final())
+    if(languages.parse() || languages.typecheck() || languages.final())
       return 6;
 
     // we no longer need any parse trees or language files
@@ -438,15 +430,13 @@ int goto_diff_parse_optionst::get_goto_program(
 
     status() << "Generating GOTO Program" << eom;
 
-    goto_model.symbol_table=languages.symbol_table;
+    goto_model.symbol_table= languages.symbol_table;
     goto_convert(
-      goto_model.symbol_table,
-      goto_model.goto_functions,
-      ui_message_handler);
+      goto_model.symbol_table, goto_model.goto_functions, ui_message_handler);
 
     // if we had a second argument then we will handle it next
-    if(arg2!="")
-      cmdline.args[0]=arg2;
+    if(arg2 != "")
+      cmdline.args[0]= arg2;
   }
 
   return -1; // no error, continue
@@ -468,8 +458,8 @@ bool goto_diff_parse_optionst::process_goto_program(
   const optionst &options,
   goto_modelt &goto_model)
 {
-  symbol_tablet &symbol_table = goto_model.symbol_table;
-  goto_functionst &goto_functions = goto_model.goto_functions;
+  symbol_tablet &symbol_table= goto_model.symbol_table;
+  goto_functionst &goto_functions= goto_model.goto_functions;
 
   try
   {
@@ -564,30 +554,31 @@ Function: goto_diff_parse_optionst::help
 
 void goto_diff_parse_optionst::help()
 {
-  std::cout <<
-    "\n"
-    // NOLINTNEXTLINE(whitespace/line_length)
-    "* *           GOTO_DIFF " CBMC_VERSION " - Copyright (C) 2016            * *\n"
-    "* *            Daniel Kroening, Peter Schrammel             * *\n"
-    "* *                 kroening@kroening.com                   * *\n"
-    "\n"
-    "Usage:                       Purpose:\n"
-    "\n"
-    " goto_diff [-?] [-h] [--help]      show help\n"
-    " goto_diff old new                 goto binaries to be compared\n"
-    "\n"
-    "Diff options:\n"
-    HELP_SHOW_GOTO_FUNCTIONS
-    " --syntactic                  do syntactic diff (default)\n"
-    " -u | --unified               output unified diff\n"
-    " --change-impact | \n"
-    "  --forward-impact |\n"
-    // NOLINTNEXTLINE(whitespace/line_length)
-    "  --backward-impact           output unified diff with forward&backward/forward/backward dependencies\n"
-    " --compact-output             output dependencies in compact mode\n"
-    "\n"
-    "Other options:\n"
-    " --version                    show version and exit\n"
-    " --json-ui                    use JSON-formatted output\n"
-    "\n";
+  std::cout
+    << "\n"
+       // NOLINTNEXTLINE(whitespace/line_length)
+       "* *           GOTO_DIFF " CBMC_VERSION
+       " - Copyright (C) 2016            * *\n"
+       "* *            Daniel Kroening, Peter Schrammel             * *\n"
+       "* *                 kroening@kroening.com                   * *\n"
+       "\n"
+       "Usage:                       Purpose:\n"
+       "\n"
+       " goto_diff [-?] [-h] [--help]      show help\n"
+       " goto_diff old new                 goto binaries to be compared\n"
+       "\n"
+       "Diff options:\n" HELP_SHOW_GOTO_FUNCTIONS
+       " --syntactic                  do syntactic diff (default)\n"
+       " -u | --unified               output unified diff\n"
+       " --change-impact | \n"
+       "  --forward-impact |\n"
+       // NOLINTNEXTLINE(whitespace/line_length)
+       "  --backward-impact           output unified diff with "
+       "forward&backward/forward/backward dependencies\n"
+       " --compact-output             output dependencies in compact mode\n"
+       "\n"
+       "Other options:\n"
+       " --version                    show version and exit\n"
+       " --json-ui                    use JSON-formatted output\n"
+       "\n";
 }

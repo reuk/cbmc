@@ -22,16 +22,14 @@ Author: Peter Schrammel
 class goto_modelt;
 class optionst;
 
-#define GOTO_DIFF_OPTIONS \
-  "(json-ui)" \
-  OPT_SHOW_GOTO_FUNCTIONS \
-  "(verbosity):(version)" \
-  "u(unified)(change-impact)(forward-impact)(backward-impact)" \
+#define GOTO_DIFF_OPTIONS                                                      \
+  "(json-ui)" OPT_SHOW_GOTO_FUNCTIONS                                          \
+  "(verbosity):(version)"                                                      \
+  "u(unified)(change-impact)(forward-impact)(backward-impact)"                 \
   "(compact-output)"
 
-class goto_diff_parse_optionst:
-  public parse_options_baset,
-  public goto_diff_languagest
+class goto_diff_parse_optionst : public parse_options_baset,
+                                 public goto_diff_languagest
 {
 public:
   virtual int doit();
@@ -54,9 +52,8 @@ protected:
     goto_diff_languagest &languages,
     goto_modelt &goto_model);
 
-  virtual bool process_goto_program(
-    const optionst &options,
-    goto_modelt &goto_model);
+  virtual bool
+  process_goto_program(const optionst &options, goto_modelt &goto_model);
 
   void eval_verbosity();
 

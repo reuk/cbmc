@@ -25,11 +25,19 @@ class constant_exprt;
 class index_exprt;
 class member_exprt;
 
-class smt1_convt:public prop_convt
+class smt1_convt : public prop_convt
 {
 public:
-  typedef enum
-  { GENERIC, BOOLECTOR, CVC3, CVC4, MATHSAT, OPENSMT, YICES, Z3 } solvert;
+  typedef enum {
+    GENERIC,
+    BOOLECTOR,
+    CVC3,
+    CVC4,
+    MATHSAT,
+    OPENSMT,
+    YICES,
+    Z3
+  } solvert;
 
   smt1_convt(
     const namespacet &_ns,
@@ -37,22 +45,24 @@ public:
     const std::string &_source,
     const std::string &_logic,
     solvert _solver,
-    std::ostream &_out):
-    prop_convt(_ns),
-    benchmark(_benchmark),
-    source(_source),
-    logic(_logic),
-    solver(_solver),
-    out(_out),
-    boolbv_width(_ns),
-    pointer_logic(_ns),
-    array_index_bits(32),
-    no_boolean_variables(0)
+    std::ostream &_out)
+    : prop_convt(_ns),
+      benchmark(_benchmark),
+      source(_source),
+      logic(_logic),
+      solver(_solver),
+      out(_out),
+      boolbv_width(_ns),
+      pointer_logic(_ns),
+      array_index_bits(32),
+      no_boolean_variables(0)
   {
     write_header();
   }
 
-  virtual ~smt1_convt() { }
+  virtual ~smt1_convt()
+  {
+  }
   virtual resultt dec_solve();
 
   // overloading interfaces
@@ -60,7 +70,10 @@ public:
   virtual void set_to(const exprt &expr, bool value);
   virtual exprt get(const exprt &expr) const;
   virtual tvt l_get(literalt) const;
-  virtual std::string decision_procedure_text() const { return "SMT1"; }
+  virtual std::string decision_procedure_text() const
+  {
+    return "SMT1";
+  }
   virtual void print_assignment(std::ostream &out) const;
 
 protected:
@@ -78,9 +91,7 @@ protected:
 
   // specific expressions go here
   void convert_byte_update(const exprt &expr, bool bool_as_bv);
-  void convert_byte_extract(
-    const byte_extract_exprt &expr,
-    bool bool_as_bv);
+  void convert_byte_extract(const byte_extract_exprt &expr, bool bool_as_bv);
   void convert_typecast(const typecast_exprt &expr, bool bool_as_bv);
   void convert_struct(const exprt &expr);
   void convert_union(const exprt &expr);
@@ -124,8 +135,8 @@ protected:
 
   // pointers
   pointer_logict pointer_logic;
-  void convert_address_of_rec(
-    const exprt &expr, const pointer_typet &result_type);
+  void
+  convert_address_of_rec(const exprt &expr, const pointer_typet &result_type);
 
   // keeps track of all symbols
   struct identifiert
@@ -145,14 +156,14 @@ protected:
     const std::string &index,
     const std::string &value)
   {
-    exprt tmp=ce_value(identifier.type, index, value, false);
-    if(tmp.id()=="array-list" && identifier.value.id()=="array-list")
+    exprt tmp= ce_value(identifier.type, index, value, false);
+    if(tmp.id() == "array-list" && identifier.value.id() == "array-list")
     {
       forall_operands(it, tmp)
         identifier.value.copy_to_operands(*it);
     }
     else
-      identifier.value=tmp;
+      identifier.value= tmp;
   }
 
   typedef std::unordered_map<irep_idt, identifiert, irep_id_hash>
@@ -180,19 +191,15 @@ protected:
     const std::string &v,
     bool in_struct) const;
 
-  exprt binary2struct(
-    const struct_typet &type,
-    const std::string &binary) const;
+  exprt
+  binary2struct(const struct_typet &type, const std::string &binary) const;
 
-  exprt binary2union(
-    const union_typet &type,
-    const std::string &binary) const;
+  exprt binary2union(const union_typet &type, const std::string &binary) const;
 
   // flattens multi-operand expressions into binary
   // expressions
-  void convert_nary(const exprt &expr,
-                    const irep_idt op_string,
-                    bool bool_as_bv);
+  void
+  convert_nary(const exprt &expr, const irep_idt op_string, bool bool_as_bv);
 
   // Boolean part
   unsigned no_boolean_variables;

@@ -15,10 +15,10 @@ Date: January 2010
 
 #include "ai.h"
 
-class uninitialized_domaint:public ai_domain_baset
+class uninitialized_domaint : public ai_domain_baset
 {
 public:
-  uninitialized_domaint():has_values(false)
+  uninitialized_domaint() : has_values(false)
   {
   }
 
@@ -26,27 +26,23 @@ public:
   typedef std::set<irep_idt> uninitializedt;
   uninitializedt uninitialized;
 
-  void transform(
-    locationt from,
-    locationt to,
-    ai_baset &ai,
-    const namespacet &ns) final;
+  void
+  transform(locationt from, locationt to, ai_baset &ai, const namespacet &ns)
+    final;
 
-  void output(
-    std::ostream &out,
-    const ai_baset &ai,
-    const namespacet &ns) const final;
+  void output(std::ostream &out, const ai_baset &ai, const namespacet &ns)
+    const final;
 
   void make_top() final
   {
     uninitialized.clear();
-    has_values=tvt(true);
+    has_values= tvt(true);
   }
 
   void make_bottom() final
   {
     uninitialized.clear();
-    has_values=tvt(false);
+    has_values= tvt(false);
   }
 
   void make_entry() final
@@ -55,10 +51,7 @@ public:
   }
 
   // returns true iff there is s.th. new
-  bool merge(
-    const uninitialized_domaint &other,
-    locationt from,
-    locationt to);
+  bool merge(const uninitialized_domaint &other, locationt from, locationt to);
 
 private:
   tvt has_values;
@@ -66,7 +59,6 @@ private:
   void assign(const exprt &lhs);
 };
 
-typedef ait<uninitialized_domaint>
-  uninitialized_analysist;
+typedef ait<uninitialized_domaint> uninitialized_analysist;
 
 #endif // CPROVER_ANALYSES_UNINITIALIZED_DOMAIN_H

@@ -33,12 +33,12 @@ Function: aig_prop_baset::land
 
 literalt aig_prop_baset::land(const bvt &bv)
 {
-  literalt literal=const_literal(true);
+  literalt literal= const_literal(true);
 
   // Introduces N-1 extra nodes for N bits
   // See convert_node for where this overhead is removed
   forall_literals(it, bv)
-    literal=land(*it, literal);
+    literal= land(*it, literal);
 
   return literal;
 }
@@ -57,12 +57,12 @@ Function: aig_prop_baset::lor
 
 literalt aig_prop_baset::lor(const bvt &bv)
 {
-  literalt literal=const_literal(true);
+  literalt literal= const_literal(true);
 
   // Introduces N-1 extra nodes for N bits
   // See convert_node for where this overhead is removed
   forall_literals(it, bv)
-    literal=land(neg(*it), literal);
+    literal= land(neg(*it), literal);
 
   return neg(literal);
 }
@@ -81,10 +81,10 @@ Function: aig_prop_baset::lxor
 
 literalt aig_prop_baset::lxor(const bvt &bv)
 {
-  literalt literal=const_literal(false);
+  literalt literal= const_literal(false);
 
   forall_literals(it, bv)
-    literal=lxor(*it, literal);
+    literal= lxor(*it, literal);
 
   return literal;
 }
@@ -108,9 +108,9 @@ literalt aig_prop_baset::land(literalt a, literalt b)
   if(b.is_true() || a.is_false())
     return a;
 
-  if(a==neg(b))
+  if(a == neg(b))
     return const_literal(false);
-  if(a==b)
+  if(a == b)
     return a;
 
   return dest.new_and_node(a, b);
@@ -156,9 +156,9 @@ literalt aig_prop_baset::lxor(literalt a, literalt b)
   if(b.is_true())
     return neg(a);
 
-  if(a==b)
+  if(a == b)
     return const_literal(false);
-  if(a==neg(b))
+  if(a == neg(b))
     return const_literal(true);
 
   // This produces up to three nodes!
@@ -247,12 +247,12 @@ Function: aig_prop_baset::lselect
 \*******************************************************************/
 
 literalt aig_prop_baset::lselect(literalt a, literalt b, literalt c)
-{  // a?b:c=(a AND b) OR (/a AND c)
+{ // a?b:c=(a AND b) OR (/a AND c)
   if(a.is_true())
     return b;
   if(a.is_false())
     return c;
-  if(b==c)
+  if(b == c)
     return b;
 
   // This produces unnecessary clauses and variables
@@ -319,8 +319,7 @@ Function: aig_prop_solvert::prop_solve
 
 propt::resultt aig_prop_solvert::prop_solve()
 {
-  status() << "converting AIG, "
-           << aig.nodes.size() << " nodes" << eom;
+  status() << "converting AIG, " << aig.nodes.size() << " nodes" << eom;
   convert_aig();
 
   return solver.prop_solve();
@@ -345,43 +344,43 @@ void aig_prop_solvert::compute_phase(
   std::stack<literalt> queue;
 
   // Get phases of constraints
-  for(aig_plus_constraintst::constraintst::const_iterator
-      c_it=aig.constraints.begin();
-      c_it!=aig.constraints.end();
+  for(aig_plus_constraintst::constraintst::const_iterator c_it=
+        aig.constraints.begin();
+      c_it != aig.constraints.end();
       c_it++)
     queue.push(*c_it);
 
   while(!queue.empty())
   {
-    literalt l=queue.top();
+    literalt l= queue.top();
     queue.pop();
 
     if(l.is_constant())
       continue;
 
-    bool sign=l.sign();
-    unsigned var_no=l.var_no();
+    bool sign= l.sign();
+    unsigned var_no= l.var_no();
 
     // already set?
-    if(sign?n_neg[var_no]:n_pos[var_no])
+    if(sign ? n_neg[var_no] : n_pos[var_no])
       continue; // done already
 
     // set
-    sign?n_neg[var_no]=1:n_pos[var_no]=1;
+    sign ? n_neg[var_no]= 1 : n_pos[var_no]= 1;
 
-    const aigt::nodet &node=aig.nodes[var_no];
+    const aigt::nodet &node= aig.nodes[var_no];
 
     if(node.is_and())
     {
-      queue.push(node.a^sign);
-      queue.push(node.b^sign);
+      queue.push(node.a ^ sign);
+      queue.push(node.b ^ sign);
     }
   }
 
   // Count
-  unsigned pos_only=0, neg_only=0, mixed=0;
+  unsigned pos_only= 0, neg_only= 0, mixed= 0;
 
-  for(unsigned n=0; n<aig.nodes.size(); n++)
+  for(unsigned n= 0; n < aig.nodes.size(); n++)
   {
     if(aig.nodes[n].is_and())
     {
@@ -399,7 +398,6 @@ void aig_prop_solvert::compute_phase(
                << "Mixed: " << mixed << eom;
 }
 
-
 /*******************************************************************\
 
 Function: aig_prop_solvert::usage_count
@@ -416,9 +414,9 @@ void aig_prop_solvert::usage_count(
   std::vector<unsigned> &p_usage_count,
   std::vector<unsigned> &n_usage_count)
 {
-  for(aig_plus_constraintst::constraintst::const_iterator
-      c_it=aig.constraints.begin();
-      c_it!=aig.constraints.end();
+  for(aig_plus_constraintst::constraintst::const_iterator c_it=
+        aig.constraints.begin();
+      c_it != aig.constraints.end();
       c_it++)
   {
     if(!((*c_it).is_constant()))
@@ -434,9 +432,9 @@ void aig_prop_solvert::usage_count(
     }
   }
 
-  for(unsigned n=0; n<aig.nodes.size(); n++)
+  for(unsigned n= 0; n < aig.nodes.size(); n++)
   {
-    const aigt::nodet &node=aig.nodes[n];
+    const aigt::nodet &node= aig.nodes[n];
 
     if(node.is_and())
     {
@@ -460,63 +458,66 @@ void aig_prop_solvert::usage_count(
     }
   }
 
-
-  #if 1
+#if 1
   // Compute stats
-  unsigned unused=0;
-  unsigned usedOncePositive=0;
-  unsigned usedOnceNegative=0;
-  unsigned usedTwicePositive=0;
-  unsigned usedTwiceNegative=0;
-  unsigned usedTwiceMixed=0;
-  unsigned usedThreeTimes=0;
-  unsigned usedMore=0;
+  unsigned unused= 0;
+  unsigned usedOncePositive= 0;
+  unsigned usedOnceNegative= 0;
+  unsigned usedTwicePositive= 0;
+  unsigned usedTwiceNegative= 0;
+  unsigned usedTwiceMixed= 0;
+  unsigned usedThreeTimes= 0;
+  unsigned usedMore= 0;
 
-  for(unsigned n=0; n<aig.nodes.size(); n++)
+  for(unsigned n= 0; n < aig.nodes.size(); n++)
   {
     switch(p_usage_count[n] + n_usage_count[n])
     {
-    case 0: ++unused; break;
+    case 0:
+      ++unused;
+      break;
     case 1:
-      if(p_usage_count[n]==1)
+      if(p_usage_count[n] == 1)
         ++usedOncePositive;
       else
         ++usedOnceNegative;
       break;
 
-    case 2 :
-      if(p_usage_count[n]>=2)
+    case 2:
+      if(p_usage_count[n] >= 2)
       {
         ++usedTwicePositive;
       }
-      else if(n_usage_count[n]>=2)
+      else if(n_usage_count[n] >= 2)
       {
         ++usedTwiceNegative;
       }
       else
       {
-        assert(p_usage_count[n]==1 && n_usage_count[n]==1);
+        assert(p_usage_count[n] == 1 && n_usage_count[n] == 1);
         ++usedTwiceMixed;
       }
       break;
-    case 3: ++usedThreeTimes; break;
-    default: ++usedMore; break;
+    case 3:
+      ++usedThreeTimes;
+      break;
+    default:
+      ++usedMore;
+      break;
     }
   }
 
   statistics() << "Unused: " << unused << " "
                << "Used once: " << usedOncePositive + usedOnceNegative
-               << " (P: " << usedOncePositive
-               << ", N: " << usedOnceNegative << ") "
+               << " (P: " << usedOncePositive << ", N: " << usedOnceNegative
+               << ") "
                << "Used twice: "
                << usedTwicePositive + usedTwiceNegative + usedTwiceMixed
-               << " (P: " << usedTwicePositive
-               << ", N: " << usedTwiceNegative
+               << " (P: " << usedTwicePositive << ", N: " << usedTwiceNegative
                << ", M: " << usedTwiceMixed << ") "
                << "Used three times: " << usedThreeTimes << " "
-               << "Used more: " << usedMore
-               << eom;
-  #endif
+               << "Used more: " << usedMore << eom;
+#endif
 }
 
 /*******************************************************************\
@@ -534,32 +535,34 @@ Function: aig_prop_solvert::convert_node
 void aig_prop_solvert::convert_node(
   unsigned n,
   const aigt::nodet &node,
-  bool n_pos, bool n_neg,
+  bool n_pos,
+  bool n_neg,
   std::vector<unsigned> &p_usage_count,
   std::vector<unsigned> &n_usage_count)
 {
-  if(p_usage_count[n]>0 || n_usage_count[n]>0)
+  if(p_usage_count[n] > 0 || n_usage_count[n] > 0)
   {
-    literalt o=literalt(n, false);
+    literalt o= literalt(n, false);
     bvt body(2);
-    body[0]=node.a;
-    body[1]=node.b;
+    body[0]= node.a;
+    body[1]= node.b;
 
 #ifdef USE_AIG_COMPACT
     // Inline positive literals
     // This should remove the overhead introduced by land and lor for bvt
 
-    for(bvt::size_type i=0; i < body.size(); i++)
+    for(bvt::size_type i= 0; i < body.size(); i++)
     {
-      literalt l=body[i];
+      literalt l= body[i];
 
-      if(!l.sign() &&                      // Used positively...
-         aig.nodes[l.var_no()].is_and() && // ... is a gate ...
-         p_usage_count[l.var_no()] == 1 && // ... only used here.
-         n_usage_count[l.var_no()] == 0)
+      if(
+        !l.sign() &&                      // Used positively...
+        aig.nodes[l.var_no()].is_and() && // ... is a gate ...
+        p_usage_count[l.var_no()] == 1 && // ... only used here.
+        n_usage_count[l.var_no()] == 0)
       {
-        const aigt::nodet &rep=aig.nodes[l.var_no()];
-        body[i]=rep.a;
+        const aigt::nodet &rep= aig.nodes[l.var_no()];
+        body[i]= rep.a;
         body.push_back(rep.b);
         --i;                         // Repeat the process
         --p_usage_count[l.var_no()]; // Supress generation of inlined node
@@ -587,43 +590,44 @@ void aig_prop_solvert::convert_node(
 
     if(body.size() == 2 && body[0].sign() && body[1].sign())
     {
-      const aigt::nodet &left=aig.nodes[body[0].var_no()];
-      const aigt::nodet &right=aig.nodes[body[1].var_no()];
+      const aigt::nodet &left= aig.nodes[body[0].var_no()];
+      const aigt::nodet &right= aig.nodes[body[1].var_no()];
 
       if(left.is_and() && right.is_and())
       {
-        if(left.a==neg(right.a))
+        if(left.a == neg(right.a))
         {
-          if(p_usage_count[body[0].var_no()]==0 &&
-             n_usage_count[body[0].var_no()]==1 &&
-             p_usage_count[body[1].var_no()]==0 &&
-             n_usage_count[body[1].var_no()]==1)
+          if(
+            p_usage_count[body[0].var_no()] == 0 &&
+            n_usage_count[body[0].var_no()] == 1 &&
+            p_usage_count[body[1].var_no()] == 0 &&
+            n_usage_count[body[1].var_no()] == 1)
           {
             bvt lits(3);
 
             if(n_neg)
             {
-              lits[0]=left.a;
-              lits[1]=right.b;
-              lits[2]=o;
+              lits[0]= left.a;
+              lits[1]= right.b;
+              lits[2]= o;
               solver.lcnf(lits);
 
-              lits[0]=neg(left.a);
-              lits[1]=left.b;
-              lits[2]=o;
+              lits[0]= neg(left.a);
+              lits[1]= left.b;
+              lits[2]= o;
               solver.lcnf(lits);
             }
 
             if(n_pos)
             {
-              lits[0]=left.a;
-              lits[1]=neg(right.b);
-              lits[2]=neg(o);
+              lits[0]= left.a;
+              lits[1]= neg(right.b);
+              lits[2]= neg(o);
               solver.lcnf(lits);
 
-              lits[0]=neg(left.a);
-              lits[1]=neg(left.b);
-              lits[2]=neg(o);
+              lits[0]= neg(left.a);
+              lits[1]= neg(left.b);
+              lits[2]= neg(o);
               solver.lcnf(lits);
             }
 
@@ -637,66 +641,66 @@ void aig_prop_solvert::convert_node(
       }
     }
 
-
     // Likewise, carry has an improved encoding which is generated
     // by the CNF encoding
     if(body.size() == 3 && body[0].sign() && body[1].sign() && body[2].sign())
     {
-      const aigt::nodet &left=aig.nodes[body[0].var_no()];
-      const aigt::nodet &mid=aig.nodes[body[1].var_no()];
-      const aigt::nodet &right=aig.nodes[body[2].var_no()];
+      const aigt::nodet &left= aig.nodes[body[0].var_no()];
+      const aigt::nodet &mid= aig.nodes[body[1].var_no()];
+      const aigt::nodet &right= aig.nodes[body[2].var_no()];
 
       if(left.is_and() && mid.is_and() && right.is_and())
       {
-        if(p_usage_count[body[0].var_no()]==0 &&
-           n_usage_count[body[0].var_no()]==1 &&
-           p_usage_count[body[1].var_no()]==0 &&
-           n_usage_count[body[1].var_no()]==1 &&
-           p_usage_count[body[2].var_no()]==0 &&
-           n_usage_count[body[2].var_no()]==1)
+        if(
+          p_usage_count[body[0].var_no()] == 0 &&
+          n_usage_count[body[0].var_no()] == 1 &&
+          p_usage_count[body[1].var_no()] == 0 &&
+          n_usage_count[body[1].var_no()] == 1 &&
+          p_usage_count[body[2].var_no()] == 0 &&
+          n_usage_count[body[2].var_no()] == 1)
         {
-          literalt a=left.a;
-          literalt b=left.b;
-          literalt c=mid.a;
+          literalt a= left.a;
+          literalt b= left.b;
+          literalt c= mid.a;
 
-          if(a==right.b && b==mid.b && c==right.a)
+          if(a == right.b && b == mid.b && c == right.a)
           {
             // A (negative) carry -- 1 if at most one input is 1
             bvt lits(3);
 
             if(n_neg)
             {
-              lits[0]=a;
-              lits[1]=b;
-              lits[2]=o;
+              lits[0]= a;
+              lits[1]= b;
+              lits[2]= o;
               solver.lcnf(lits);
 
-              lits[0]=a;
-              lits[1]=c;
-              lits[2]=o;
+              lits[0]= a;
+              lits[1]= c;
+              lits[2]= o;
               solver.lcnf(lits);
 
-              lits[0]=b;
-              lits[1]=c;
-              lits[2]=o;
+              lits[0]= b;
+              lits[1]= c;
+              lits[2]= o;
               solver.lcnf(lits);
             }
 
             if(n_pos)
             {
-              lits[0]=neg(a);
-              lits[1]=neg(b);
-              lits[2]=neg(o);
+              lits[0]= neg(a);
+              lits[1]= neg(b);
+              lits[2]= neg(o);
               solver.lcnf(lits);
 
-              lits[0]=neg(a);
-              lits[1]=neg(c);
-              lits[2]=neg(o);
+              lits[0]= neg(a);
+              lits[1]= neg(c);
+              lits[2]= neg(o);
               solver.lcnf(lits);
 
-              lits[0]=neg(b);
-              lits[1]=neg(c);
-              lits[2]=neg(o);
+              lits[0]= neg(b);
+              lits[1]= neg(c);
+              lits[2]= neg(o);
               solver.lcnf(lits);
             }
 
@@ -711,20 +715,20 @@ void aig_prop_solvert::convert_node(
       }
     }
 
-    // TODO : these special cases are fragile and could be improved.
-    // They don't handle cases where the construction is partially constant
-    // folded.  Also the usage constraints are sufficient for improvement
-    // but reductions may still be possible with looser restrictions.
+// TODO : these special cases are fragile and could be improved.
+// They don't handle cases where the construction is partially constant
+// folded.  Also the usage constraints are sufficient for improvement
+// but reductions may still be possible with looser restrictions.
 #endif
 
     if(n_pos)
     {
       bvt lits(2);
-      lits[1]=neg(o);
+      lits[1]= neg(o);
 
       forall_literals(it, body)
       {
-        lits[0]=pos(*it);
+        lits[0]= pos(*it);
         solver.lcnf(lits);
       }
     }
@@ -757,7 +761,7 @@ Function: aig_prop_solvert::convert_aig
 void aig_prop_solvert::convert_aig()
 {
   // 1. Do variables
-  while(solver.no_variables()<=aig.nodes.size())
+  while(solver.no_variables() <= aig.nodes.size())
     solver.new_variable();
 
   // Usage count for inlining
@@ -769,18 +773,17 @@ void aig_prop_solvert::convert_aig()
 
   this->usage_count(p_usage_count, n_usage_count);
 
-
-  #ifdef USE_PG
+#ifdef USE_PG
   // Get phases
   std::vector<bool> n_pos, n_neg;
   n_pos.resize(aig.nodes.size(), false);
   n_neg.resize(aig.nodes.size(), false);
 
   this->compute_phase(n_pos, n_neg);
-  #endif
+#endif
 
   // 2. Do nodes
-  for(std::size_t n=aig.nodes.size() - 1; n!=0; n--)
+  for(std::size_t n= aig.nodes.size() - 1; n != 0; n--)
   {
     if(aig.nodes[n].is_and())
     {
@@ -793,7 +796,6 @@ void aig_prop_solvert::convert_aig()
     }
   }
   // Skip zero as it is not used or a valid literal
-
 
   // 3. Do constraints
   for(const auto &c_it : aig.constraints)

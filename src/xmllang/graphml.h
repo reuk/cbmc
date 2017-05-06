@@ -22,7 +22,7 @@ struct xml_edget
   xmlt xml_node;
 };
 
-struct xml_graph_nodet:public graph_nodet<xml_edget>
+struct xml_graph_nodet : public graph_nodet<xml_edget>
 {
   typedef graph_nodet<xml_edget>::edget edget;
   typedef graph_nodet<xml_edget>::edgest edgest;
@@ -37,13 +37,13 @@ struct xml_graph_nodet:public graph_nodet<xml_edget>
   std::string invariant_scope;
 };
 
-class graphmlt:public grapht<xml_graph_nodet>
+class graphmlt : public grapht<xml_graph_nodet>
 {
 public:
   bool has_node(const std::string &node_name) const
   {
     for(const auto &n : nodes)
-      if(n.node_name==node_name)
+      if(n.node_name == node_name)
         return true;
 
     return false;
@@ -51,9 +51,9 @@ public:
 
   node_indext add_node_if_not_exists(std::string node_name)
   {
-    for(node_indext i=0; i<nodes.size(); ++i)
+    for(node_indext i= 0; i < nodes.size(); ++i)
     {
-      if(nodes[i].node_name==node_name)
+      if(nodes[i].node_name == node_name)
         return i;
     }
 

@@ -34,7 +34,7 @@ Function: exprt::move_to_operands
 
 void exprt::move_to_operands(exprt &expr)
 {
-  operandst &op=operands();
+  operandst &op= operands();
   op.push_back(static_cast<const exprt &>(get_nil_irep()));
   op.back().swap(expr);
 }
@@ -53,10 +53,10 @@ Function: exprt::move_to_operands
 
 void exprt::move_to_operands(exprt &e1, exprt &e2)
 {
-  operandst &op=operands();
-  #ifndef USE_LIST
-  op.reserve(op.size()+2);
-  #endif
+  operandst &op= operands();
+#ifndef USE_LIST
+  op.reserve(op.size() + 2);
+#endif
   op.push_back(static_cast<const exprt &>(get_nil_irep()));
   op.back().swap(e1);
   op.push_back(static_cast<const exprt &>(get_nil_irep()));
@@ -77,10 +77,10 @@ Function: exprt::move_to_operands
 
 void exprt::move_to_operands(exprt &e1, exprt &e2, exprt &e3)
 {
-  operandst &op=operands();
-  #ifndef USE_LIST
-  op.reserve(op.size()+3);
-  #endif
+  operandst &op= operands();
+#ifndef USE_LIST
+  op.reserve(op.size() + 3);
+#endif
   op.push_back(static_cast<const exprt &>(get_nil_irep()));
   op.back().swap(e1);
   op.push_back(static_cast<const exprt &>(get_nil_irep()));
@@ -120,10 +120,10 @@ Function: exprt::copy_to_operands
 
 void exprt::copy_to_operands(const exprt &e1, const exprt &e2)
 {
-  operandst &op=operands();
-  #ifndef USE_LIST
-  op.reserve(op.size()+2);
-  #endif
+  operandst &op= operands();
+#ifndef USE_LIST
+  op.reserve(op.size() + 2);
+#endif
   op.push_back(e1);
   op.push_back(e2);
 }
@@ -140,15 +140,12 @@ Function: exprt::copy_to_operands
 
 \*******************************************************************/
 
-void exprt::copy_to_operands(
-  const exprt &e1,
-  const exprt &e2,
-  const exprt &e3)
+void exprt::copy_to_operands(const exprt &e1, const exprt &e2, const exprt &e3)
 {
-  operandst &op=operands();
-  #ifndef USE_LIST
-  op.reserve(op.size()+3);
-  #endif
+  operandst &op= operands();
+#ifndef USE_LIST
+  op.reserve(op.size() + 3);
+#endif
   op.push_back(e1);
   op.push_back(e2);
   op.push_back(e3);
@@ -192,24 +189,24 @@ void exprt::make_not()
 {
   if(is_true())
   {
-    *this=false_exprt();
+    *this= false_exprt();
     return;
   }
   else if(is_false())
   {
-    *this=true_exprt();
+    *this= true_exprt();
     return;
   }
 
   exprt new_expr;
 
-  if(id()==ID_not && operands().size()==1)
+  if(id() == ID_not && operands().size() == 1)
   {
     new_expr.swap(operands().front());
   }
   else
   {
-    new_expr=exprt(ID_not, type());
+    new_expr= exprt(ID_not, type());
     new_expr.move_to_operands(*this);
   }
 
@@ -230,7 +227,7 @@ Function: exprt::is_constant
 
 bool exprt::is_constant() const
 {
-  return id()==ID_constant;
+  return id() == ID_constant;
 }
 
 /*******************************************************************\
@@ -247,9 +244,7 @@ Function: exprt::is_true
 
 bool exprt::is_true() const
 {
-  return is_constant() &&
-         type().id()==ID_bool &&
-         get(ID_value)!=ID_false;
+  return is_constant() && type().id() == ID_bool && get(ID_value) != ID_false;
 }
 
 /*******************************************************************\
@@ -266,9 +261,7 @@ Function: exprt::is_false
 
 bool exprt::is_false() const
 {
-  return is_constant() &&
-         type().id()==ID_bool &&
-         get(ID_value)==ID_false;
+  return is_constant() && type().id() == ID_bool && get(ID_value) == ID_false;
 }
 
 /*******************************************************************\
@@ -285,8 +278,8 @@ Function: exprt::make_bool
 
 void exprt::make_bool(bool value)
 {
-  *this=exprt(ID_constant, typet(ID_bool));
-  set(ID_value, value?ID_true:ID_false);
+  *this= exprt(ID_constant, typet(ID_bool));
+  set(ID_value, value ? ID_true : ID_false);
 }
 
 /*******************************************************************\
@@ -303,7 +296,7 @@ Function: exprt::make_true
 
 void exprt::make_true()
 {
-  *this=exprt(ID_constant, typet(ID_bool));
+  *this= exprt(ID_constant, typet(ID_bool));
   set(ID_value, ID_true);
 }
 
@@ -321,7 +314,7 @@ Function: exprt::make_false
 
 void exprt::make_false()
 {
-  *this=exprt(ID_constant, typet(ID_bool));
+  *this= exprt(ID_constant, typet(ID_bool));
   set(ID_value, ID_false);
 }
 
@@ -339,43 +332,43 @@ Function: exprt::negate
 
 void exprt::negate()
 {
-  const irep_idt &type_id=type().id();
+  const irep_idt &type_id= type().id();
 
-  if(type_id==ID_bool)
+  if(type_id == ID_bool)
     make_not();
   else
   {
     if(is_constant())
     {
-      const irep_idt &value=get(ID_value);
+      const irep_idt &value= get(ID_value);
 
-      if(type_id==ID_integer)
+      if(type_id == ID_integer)
       {
         set(ID_value, integer2string(-string2integer(id2string(value))));
       }
-      else if(type_id==ID_unsignedbv)
+      else if(type_id == ID_unsignedbv)
       {
-        mp_integer int_value=binary2integer(id2string(value), false);
-        typet _type=type();
-        *this=from_integer(-int_value, _type);
+        mp_integer int_value= binary2integer(id2string(value), false);
+        typet _type= type();
+        *this= from_integer(-int_value, _type);
       }
-      else if(type_id==ID_signedbv)
+      else if(type_id == ID_signedbv)
       {
-        mp_integer int_value=binary2integer(id2string(value), true);
-        typet _type=type();
-        *this=from_integer(-int_value, _type);
+        mp_integer int_value= binary2integer(id2string(value), true);
+        typet _type= type();
+        *this= from_integer(-int_value, _type);
       }
-      else if(type_id==ID_fixedbv)
+      else if(type_id == ID_fixedbv)
       {
-        fixedbvt fixedbv_value=fixedbvt(to_constant_expr(*this));
+        fixedbvt fixedbv_value= fixedbvt(to_constant_expr(*this));
         fixedbv_value.negate();
-        *this=fixedbv_value.to_expr();
+        *this= fixedbv_value.to_expr();
       }
-      else if(type_id==ID_floatbv)
+      else if(type_id == ID_floatbv)
       {
-        ieee_floatt ieee_float_value=ieee_floatt(to_constant_expr(*this));
+        ieee_floatt ieee_float_value= ieee_floatt(to_constant_expr(*this));
         ieee_float_value.negate();
-        *this=ieee_float_value.to_expr();
+        *this= ieee_float_value.to_expr();
       }
       else
       {
@@ -385,10 +378,10 @@ void exprt::negate()
     }
     else
     {
-      if(id()==ID_unary_minus)
+      if(id() == ID_unary_minus)
       {
         exprt tmp;
-        assert(operands().size()==1);
+        assert(operands().size() == 1);
         tmp.swap(op0());
         swap(tmp);
       }
@@ -416,7 +409,7 @@ Function: exprt::is_boolean
 
 bool exprt::is_boolean() const
 {
-  return type().id()==ID_bool;
+  return type().id() == ID_bool;
 }
 
 /*******************************************************************\
@@ -435,40 +428,39 @@ bool exprt::is_zero() const
 {
   if(is_constant())
   {
-    const constant_exprt &constant=to_constant_expr(*this);
-    const irep_idt &type_id=type().id_string();
+    const constant_exprt &constant= to_constant_expr(*this);
+    const irep_idt &type_id= type().id_string();
 
-    if(type_id==ID_integer || type_id==ID_natural)
+    if(type_id == ID_integer || type_id == ID_natural)
     {
       return constant.value_is_zero_string();
     }
-    else if(type_id==ID_rational)
+    else if(type_id == ID_rational)
     {
       rationalt rat_value;
       if(to_rational(*this, rat_value))
         assert(false);
       return rat_value.is_zero();
     }
-    else if(type_id==ID_unsignedbv ||
-            type_id==ID_signedbv ||
-            type_id==ID_c_bool)
+    else if(
+      type_id == ID_unsignedbv || type_id == ID_signedbv ||
+      type_id == ID_c_bool)
     {
       return constant.value_is_zero_string();
     }
-    else if(type_id==ID_fixedbv)
+    else if(type_id == ID_fixedbv)
     {
-      if(fixedbvt(constant)==0)
+      if(fixedbvt(constant) == 0)
         return true;
     }
-    else if(type_id==ID_floatbv)
+    else if(type_id == ID_floatbv)
     {
-      if(ieee_floatt(constant)==0)
+      if(ieee_floatt(constant) == 0)
         return true;
     }
-    else if(type_id==ID_pointer)
+    else if(type_id == ID_pointer)
     {
-      return constant.value_is_zero_string() ||
-             constant.get_value()==ID_NULL;
+      return constant.value_is_zero_string() || constant.get_value() == ID_NULL;
     }
   }
 
@@ -491,36 +483,36 @@ bool exprt::is_one() const
 {
   if(is_constant())
   {
-    const std::string &value=get_string(ID_value);
-    const irep_idt &type_id=type().id_string();
+    const std::string &value= get_string(ID_value);
+    const irep_idt &type_id= type().id_string();
 
-    if(type_id==ID_integer || type_id==ID_natural)
+    if(type_id == ID_integer || type_id == ID_natural)
     {
-      mp_integer int_value=string2integer(value);
-      if(int_value==1)
+      mp_integer int_value= string2integer(value);
+      if(int_value == 1)
         return true;
     }
-    else if(type_id==ID_rational)
+    else if(type_id == ID_rational)
     {
       rationalt rat_value;
       if(to_rational(*this, rat_value))
         assert(false);
       return rat_value.is_one();
     }
-    else if(type_id==ID_unsignedbv || type_id==ID_signedbv)
+    else if(type_id == ID_unsignedbv || type_id == ID_signedbv)
     {
-      mp_integer int_value=binary2integer(value, false);
-      if(int_value==1)
+      mp_integer int_value= binary2integer(value, false);
+      if(int_value == 1)
         return true;
     }
-    else if(type_id==ID_fixedbv)
+    else if(type_id == ID_fixedbv)
     {
-      if(fixedbvt(to_constant_expr(*this))==1)
+      if(fixedbvt(to_constant_expr(*this)) == 1)
         return true;
     }
-    else if(type_id==ID_floatbv)
+    else if(type_id == ID_floatbv)
     {
-      if(ieee_floatt(to_constant_expr(*this))==1)
+      if(ieee_floatt(to_constant_expr(*this)) == 1)
         return true;
     }
   }
@@ -544,49 +536,55 @@ bool exprt::sum(const exprt &expr)
 {
   if(!is_constant() || !expr.is_constant())
     return true;
-  if(type()!=expr.type())
+  if(type() != expr.type())
     return true;
 
-  const irep_idt &type_id=type().id();
+  const irep_idt &type_id= type().id();
 
-  if(type_id==ID_integer || type_id==ID_natural)
+  if(type_id == ID_integer || type_id == ID_natural)
   {
-    set(ID_value, integer2string(
-      string2integer(get_string(ID_value))+
-      string2integer(expr.get_string(ID_value))));
+    set(
+      ID_value,
+      integer2string(
+        string2integer(get_string(ID_value)) +
+        string2integer(expr.get_string(ID_value))));
     return false;
   }
-  else if(type_id==ID_rational)
+  else if(type_id == ID_rational)
   {
     rationalt a, b;
     if(!to_rational(*this, a) && !to_rational(expr, b))
     {
-      exprt a_plus_b=from_rational(a+b);
+      exprt a_plus_b= from_rational(a + b);
       set(ID_value, a_plus_b.get_string(ID_value));
       return false;
     }
   }
-  else if(type_id==ID_unsignedbv || type_id==ID_signedbv)
+  else if(type_id == ID_unsignedbv || type_id == ID_signedbv)
   {
-    set(ID_value, integer2binary(
-      binary2integer(get_string(ID_value), false)+
-      binary2integer(expr.get_string(ID_value), false),
-      unsafe_string2unsigned(type().get_string(ID_width))));
+    set(
+      ID_value,
+      integer2binary(
+        binary2integer(get_string(ID_value), false) +
+          binary2integer(expr.get_string(ID_value), false),
+        unsafe_string2unsigned(type().get_string(ID_width))));
     return false;
   }
-  else if(type_id==ID_fixedbv)
+  else if(type_id == ID_fixedbv)
   {
-    set(ID_value, integer2binary(
-      binary2integer(get_string(ID_value), false)+
-      binary2integer(expr.get_string(ID_value), false),
-      unsafe_string2unsigned(type().get_string(ID_width))));
+    set(
+      ID_value,
+      integer2binary(
+        binary2integer(get_string(ID_value), false) +
+          binary2integer(expr.get_string(ID_value), false),
+        unsafe_string2unsigned(type().get_string(ID_width))));
     return false;
   }
-  else if(type_id==ID_floatbv)
+  else if(type_id == ID_floatbv)
   {
     ieee_floatt f(to_constant_expr(*this));
-    f+=ieee_floatt(to_constant_expr(expr));
-    *this=f.to_expr();
+    f+= ieee_floatt(to_constant_expr(expr));
+    *this= f.to_expr();
     return false;
   }
 
@@ -609,49 +607,53 @@ bool exprt::mul(const exprt &expr)
 {
   if(!is_constant() || !expr.is_constant())
     return true;
-  if(type()!=expr.type())
+  if(type() != expr.type())
     return true;
 
-  const irep_idt &type_id=type().id();
+  const irep_idt &type_id= type().id();
 
-  if(type_id==ID_integer || type_id==ID_natural)
+  if(type_id == ID_integer || type_id == ID_natural)
   {
-    set(ID_value, integer2string(
-      string2integer(get_string(ID_value))*
-      string2integer(expr.get_string(ID_value))));
+    set(
+      ID_value,
+      integer2string(
+        string2integer(get_string(ID_value)) *
+        string2integer(expr.get_string(ID_value))));
     return false;
   }
-  else if(type_id==ID_rational)
+  else if(type_id == ID_rational)
   {
     rationalt a, b;
     if(!to_rational(*this, a) && !to_rational(expr, b))
     {
-      exprt a_mul_b=from_rational(a*b);
+      exprt a_mul_b= from_rational(a * b);
       set(ID_value, a_mul_b.get_string(ID_value));
       return false;
     }
   }
-  else if(type_id==ID_unsignedbv || type_id==ID_signedbv)
+  else if(type_id == ID_unsignedbv || type_id == ID_signedbv)
   {
     // the following works for signed and unsigned integers
-    set(ID_value, integer2binary(
-      binary2integer(get_string(ID_value), false)*
-      binary2integer(expr.get_string(ID_value), false),
-      unsafe_string2unsigned(type().get_string(ID_width))));
+    set(
+      ID_value,
+      integer2binary(
+        binary2integer(get_string(ID_value), false) *
+          binary2integer(expr.get_string(ID_value), false),
+        unsafe_string2unsigned(type().get_string(ID_width))));
     return false;
   }
-  else if(type_id==ID_fixedbv)
+  else if(type_id == ID_fixedbv)
   {
     fixedbvt f(to_constant_expr(*this));
-    f*=fixedbvt(to_constant_expr(expr));
-    *this=f.to_expr();
+    f*= fixedbvt(to_constant_expr(expr));
+    *this= f.to_expr();
     return false;
   }
-  else if(type_id==ID_floatbv)
+  else if(type_id == ID_floatbv)
   {
     ieee_floatt f(to_constant_expr(*this));
-    f*=ieee_floatt(to_constant_expr(expr));
-    *this=f.to_expr();
+    f*= ieee_floatt(to_constant_expr(expr));
+    *this= f.to_expr();
     return false;
   }
 
@@ -675,34 +677,38 @@ bool exprt::subtract(const exprt &expr)
   if(!is_constant() || !expr.is_constant())
     return true;
 
-  if(type()!=expr.type())
+  if(type() != expr.type())
     return true;
 
-  const irep_idt &type_id=type().id();
+  const irep_idt &type_id= type().id();
 
-  if(type_id==ID_integer || type_id==ID_natural)
+  if(type_id == ID_integer || type_id == ID_natural)
   {
-    set(ID_value, integer2string(
-      string2integer(get_string(ID_value))-
-      string2integer(expr.get_string(ID_value))));
+    set(
+      ID_value,
+      integer2string(
+        string2integer(get_string(ID_value)) -
+        string2integer(expr.get_string(ID_value))));
     return false;
   }
-  else if(type_id==ID_rational)
+  else if(type_id == ID_rational)
   {
     rationalt a, b;
     if(!to_rational(*this, a) && !to_rational(expr, b))
     {
-      exprt a_minus_b=from_rational(a-b);
+      exprt a_minus_b= from_rational(a - b);
       set(ID_value, a_minus_b.get_string(ID_value));
       return false;
     }
   }
-  else if(type_id==ID_unsignedbv || type_id==ID_signedbv)
+  else if(type_id == ID_unsignedbv || type_id == ID_signedbv)
   {
-    set(ID_value, integer2binary(
-      binary2integer(get_string(ID_value), false)-
-      binary2integer(expr.get_string(ID_value), false),
-      unsafe_string2unsigned(type().get_string(ID_width))));
+    set(
+      ID_value,
+      integer2binary(
+        binary2integer(get_string(ID_value), false) -
+          binary2integer(expr.get_string(ID_value), false),
+        unsafe_string2unsigned(type().get_string(ID_width))));
     return false;
   }
 
@@ -723,14 +729,14 @@ Function: exprt::find_source_location
 
 const source_locationt &exprt::find_source_location() const
 {
-  const source_locationt &l=source_location();
+  const source_locationt &l= source_location();
 
   if(l.is_not_nil())
     return l;
 
   forall_operands(it, (*this))
   {
-    const source_locationt &l=it->find_source_location();
+    const source_locationt &l= it->find_source_location();
     if(l.is_not_nil())
       return l;
   }
@@ -758,7 +764,7 @@ void exprt::visit(expr_visitort &visitor)
 
   while(!stack.empty())
   {
-    exprt &expr=*stack.top();
+    exprt &expr= *stack.top();
     stack.pop();
 
     visitor(expr);
@@ -788,7 +794,7 @@ void exprt::visit(const_expr_visitort &visitor) const
 
   while(!stack.empty())
   {
-    const exprt &expr=*stack.top();
+    const exprt &expr= *stack.top();
     stack.pop();
 
     visitor(expr);

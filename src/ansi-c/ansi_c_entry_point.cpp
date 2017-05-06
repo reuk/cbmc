@@ -47,22 +47,16 @@ exprt::operandst build_function_environment(
   exprt::operandst main_arguments;
   main_arguments.resize(parameters.size());
 
-  for(std::size_t param_number=0;
-      param_number<parameters.size();
+  for(std::size_t param_number= 0; param_number < parameters.size();
       param_number++)
   {
-    const code_typet::parametert &p=parameters[param_number];
-    const irep_idt base_name=p.get_base_name().empty()?
-      ("argument#"+std::to_string(param_number)):p.get_base_name();
+    const code_typet::parametert &p= parameters[param_number];
+    const irep_idt base_name= p.get_base_name().empty()
+                                ? ("argument#" + std::to_string(param_number))
+                                : p.get_base_name();
 
-    main_arguments[param_number]=
-      c_nondet_symbol_factory(
-        init_code,
-        symbol_table,
-        base_name,
-        p.type(),
-        p.source_location(),
-        true);
+    main_arguments[param_number]= c_nondet_symbol_factory(
+      init_code, symbol_table, base_name, p.type(), p.source_location(), true);
   }
 
   return main_arguments;
@@ -86,7 +80,7 @@ void record_function_outputs(
   symbol_tablet &symbol_table)
 {
   bool has_return_value=
-    to_code_type(function.type).return_type()!=empty_typet();
+    to_code_type(function.type).return_type() != empty_typet();
 
   if(has_return_value)
   {
@@ -94,21 +88,19 @@ void record_function_outputs(
     codet output(ID_output);
     output.operands().resize(2);
 
-    const symbolt &return_symbol=symbol_table.lookup("return'");
+    const symbolt &return_symbol= symbol_table.lookup("return'");
 
-    output.op0()=
-      address_of_exprt(
-        index_exprt(
-          string_constantt(return_symbol.base_name),
-          from_integer(0, index_type())));
+    output.op0()= address_of_exprt(index_exprt(
+      string_constantt(return_symbol.base_name),
+      from_integer(0, index_type())));
 
-    output.op1()=return_symbol.symbol_expr();
-    output.add_source_location()=function.location;
+    output.op1()= return_symbol.symbol_expr();
+    output.add_source_location()= function.location;
 
     init_code.move_to_operands(output);
   }
 
-  #if 0
+#if 0
   std::size_t i=0;
 
   for(const auto &p : parameters)
@@ -138,7 +130,7 @@ void record_function_outputs(
 
     i++;
   }
-  #endif
+#endif
 }
 
 /*******************************************************************\
@@ -159,14 +151,15 @@ bool ansi_c_entry_point(
   message_handlert &message_handler)
 {
   // check if entry point is already there
-  if(symbol_table.symbols.find(goto_functionst::entry_point())!=
-     symbol_table.symbols.end())
+  if(
+    symbol_table.symbols.find(goto_functionst::entry_point()) !=
+    symbol_table.symbols.end())
     return false; // silently ignore
 
   irep_idt main_symbol;
 
   // find main symbol
-  if(config.main!="")
+  if(config.main != "")
   {
     std::list<irep_idt> matches;
 
@@ -176,42 +169,42 @@ bool ansi_c_entry_point(
       symbol_tablet::symbolst::const_iterator s_it=
         symbol_table.symbols.find(it->second);
 
-      if(s_it==symbol_table.symbols.end())
+      if(s_it == symbol_table.symbols.end())
         continue;
 
-      if(s_it->second.type.id()==ID_code)
+      if(s_it->second.type.id() == ID_code)
         matches.push_back(it->second);
     }
 
     if(matches.empty())
     {
       messaget message(message_handler);
-      message.error() << "main symbol `" << config.main
-                      << "' not found" << messaget::eom;
+      message.error() << "main symbol `" << config.main << "' not found"
+                      << messaget::eom;
       return true; // give up
     }
 
-    if(matches.size()>=2)
+    if(matches.size() >= 2)
     {
       messaget message(message_handler);
-      message.error() << "main symbol `" << config.main
-                      << "' is ambiguous" << messaget::eom;
+      message.error() << "main symbol `" << config.main << "' is ambiguous"
+                      << messaget::eom;
       return true;
     }
 
-    main_symbol=matches.front();
+    main_symbol= matches.front();
   }
   else
-    main_symbol=standard_main;
+    main_symbol= standard_main;
 
   // look it up
   symbol_tablet::symbolst::const_iterator s_it=
     symbol_table.symbols.find(main_symbol);
 
-  if(s_it==symbol_table.symbols.end())
+  if(s_it == symbol_table.symbols.end())
     return false; // give up silently
 
-  const symbolt &symbol=s_it->second;
+  const symbolt &symbol= s_it->second;
 
   // check if it has a body
   if(symbol.value.is_nil())
@@ -233,7 +226,7 @@ bool ansi_c_entry_point(
     symbol_tablet::symbolst::iterator init_it=
       symbol_table.symbols.find(INITIALIZE_FUNCTION);
 
-    if(init_it==symbol_table.symbols.end())
+    if(init_it == symbol_table.symbols.end())
     {
       messaget message(message_handler);
       message.error() << "failed to find " CPROVER_PREFIX "initialize symbol"
@@ -243,8 +236,8 @@ bool ansi_c_entry_point(
 
     code_function_callt call_init;
     call_init.lhs().make_nil();
-    call_init.add_source_location()=symbol.location;
-    call_init.function()=init_it->second.symbol_expr();
+    call_init.add_source_location()= symbol.location;
+    call_init.function()= init_it->second.symbol_expr();
 
     init_code.move_to_operands(call_init);
   }
@@ -252,42 +245,42 @@ bool ansi_c_entry_point(
   // build call to main function
 
   code_function_callt call_main;
-  call_main.add_source_location()=symbol.location;
-  call_main.function()=symbol.symbol_expr();
-  call_main.function().add_source_location()=symbol.location;
+  call_main.add_source_location()= symbol.location;
+  call_main.function()= symbol.symbol_expr();
+  call_main.function().add_source_location()= symbol.location;
 
-  if(to_code_type(symbol.type).return_type()!=empty_typet())
+  if(to_code_type(symbol.type).return_type() != empty_typet())
   {
     auxiliary_symbolt return_symbol;
-    return_symbol.mode=ID_C;
-    return_symbol.is_static_lifetime=false;
-    return_symbol.name="return'";
-    return_symbol.base_name="return";
-    return_symbol.type=to_code_type(symbol.type).return_type();
+    return_symbol.mode= ID_C;
+    return_symbol.is_static_lifetime= false;
+    return_symbol.name= "return'";
+    return_symbol.base_name= "return";
+    return_symbol.type= to_code_type(symbol.type).return_type();
 
     symbol_table.add(return_symbol);
-    call_main.lhs()=return_symbol.symbol_expr();
+    call_main.lhs()= return_symbol.symbol_expr();
   }
 
   const code_typet::parameterst &parameters=
     to_code_type(symbol.type).parameters();
 
-  if(symbol.name==standard_main)
+  if(symbol.name == standard_main)
   {
     if(parameters.empty())
     {
       // ok
     }
-    else if(parameters.size()==2 || parameters.size()==3)
+    else if(parameters.size() == 2 || parameters.size() == 3)
     {
       namespacet ns(symbol_table);
 
-      const symbolt &argc_symbol=ns.lookup("argc'");
-      const symbolt &argv_symbol=ns.lookup("argv'");
+      const symbolt &argc_symbol= ns.lookup("argc'");
+      const symbolt &argv_symbol= ns.lookup("argv'");
 
       {
         // assume argc is at least one
-        exprt one=from_integer(1, argc_symbol.type);
+        exprt one= from_integer(1, argc_symbol.type);
 
         exprt ge(ID_ge, typet(ID_bool));
         ge.copy_to_operands(argc_symbol.symbol_expr(), one);
@@ -300,10 +293,9 @@ bool ansi_c_entry_point(
 
       {
         // assume argc is at most MAX/8-1
-        mp_integer upper_bound=
-          power(2, config.ansi_c.int_width-4);
+        mp_integer upper_bound= power(2, config.ansi_c.int_width - 4);
 
-        exprt bound_expr=from_integer(upper_bound, argc_symbol.type);
+        exprt bound_expr= from_integer(upper_bound, argc_symbol.type);
 
         exprt le(ID_le, typet(ID_bool));
         le.copy_to_operands(argc_symbol.symbol_expr(), bound_expr);
@@ -318,31 +310,31 @@ bool ansi_c_entry_point(
         // record argc as an input
         codet input(ID_input);
         input.operands().resize(2);
-        input.op0()=address_of_exprt(
+        input.op0()= address_of_exprt(
           index_exprt(string_constantt("argc"), from_integer(0, index_type())));
-        input.op1()=argc_symbol.symbol_expr();
+        input.op1()= argc_symbol.symbol_expr();
         init_code.move_to_operands(input);
       }
 
-      if(parameters.size()==3)
+      if(parameters.size() == 3)
       {
-        const symbolt &envp_size_symbol=ns.lookup("envp_size'");
+        const symbolt &envp_size_symbol= ns.lookup("envp_size'");
 
         // assume envp_size is INTMAX-1
         mp_integer max;
 
-        if(envp_size_symbol.type.id()==ID_signedbv)
+        if(envp_size_symbol.type.id() == ID_signedbv)
         {
-          max=to_signedbv_type(envp_size_symbol.type).largest();
+          max= to_signedbv_type(envp_size_symbol.type).largest();
         }
-        else if(envp_size_symbol.type.id()==ID_unsignedbv)
+        else if(envp_size_symbol.type.id() == ID_unsignedbv)
         {
-          max=to_unsignedbv_type(envp_size_symbol.type).largest();
+          max= to_unsignedbv_type(envp_size_symbol.type).largest();
         }
         else
           assert(false);
 
-        exprt max_minus_one=from_integer(max-1, envp_size_symbol.type);
+        exprt max_minus_one= from_integer(max - 1, envp_size_symbol.type);
 
         exprt le(ID_le, bool_typet());
         le.copy_to_operands(envp_size_symbol.symbol_expr(), max_minus_one);
@@ -385,8 +377,7 @@ bool ansi_c_entry_point(
 
         exprt index_expr(ID_index, argv_symbol.type.subtype());
         index_expr.copy_to_operands(
-          argv_symbol.symbol_expr(),
-          argc_symbol.symbol_expr());
+          argv_symbol.symbol_expr(), argc_symbol.symbol_expr());
 
         // disable bounds check on that one
         index_expr.set("bounds_check", false);
@@ -394,10 +385,10 @@ bool ansi_c_entry_point(
         init_code.copy_to_operands(code_assignt(index_expr, null));
       }
 
-      if(parameters.size()==3)
+      if(parameters.size() == 3)
       {
-        const symbolt &envp_symbol=ns.lookup("envp'");
-        const symbolt &envp_size_symbol=ns.lookup("envp_size'");
+        const symbolt &envp_symbol= ns.lookup("envp'");
+        const symbolt &envp_size_symbol= ns.lookup("envp_size'");
 
         // assume envp[envp_size] is NULL
         exprt null(ID_constant, envp_symbol.type.subtype());
@@ -405,8 +396,7 @@ bool ansi_c_entry_point(
 
         exprt index_expr(ID_index, envp_symbol.type.subtype());
         index_expr.copy_to_operands(
-          envp_symbol.symbol_expr(),
-          envp_size_symbol.symbol_expr());
+          envp_symbol.symbol_expr(), envp_size_symbol.symbol_expr());
 
         // disable bounds check on that one
         index_expr.set("bounds_check", false);
@@ -421,46 +411,45 @@ bool ansi_c_entry_point(
       }
 
       {
-        exprt::operandst &operands=call_main.arguments();
+        exprt::operandst &operands= call_main.arguments();
 
-        if(parameters.size()==3)
+        if(parameters.size() == 3)
           operands.resize(3);
         else
           operands.resize(2);
 
-        exprt &op0=operands[0];
-        exprt &op1=operands[1];
+        exprt &op0= operands[0];
+        exprt &op1= operands[1];
 
-        op0=argc_symbol.symbol_expr();
+        op0= argc_symbol.symbol_expr();
 
         {
-          const exprt &arg1=parameters[1];
+          const exprt &arg1= parameters[1];
 
           exprt index_expr(ID_index, arg1.type().subtype());
           index_expr.copy_to_operands(
-            argv_symbol.symbol_expr(),
-            from_integer(0, index_type()));
+            argv_symbol.symbol_expr(), from_integer(0, index_type()));
 
           // disable bounds check on that one
           index_expr.set("bounds_check", false);
 
-          op1=exprt(ID_address_of, arg1.type());
+          op1= exprt(ID_address_of, arg1.type());
           op1.move_to_operands(index_expr);
         }
 
         // do we need envp?
-        if(parameters.size()==3)
+        if(parameters.size() == 3)
         {
-          const symbolt &envp_symbol=ns.lookup("envp'");
-          exprt &op2=operands[2];
+          const symbolt &envp_symbol= ns.lookup("envp'");
+          exprt &op2= operands[2];
 
-          const exprt &arg2=parameters[2];
+          const exprt &arg2= parameters[2];
 
           exprt index_expr(ID_index, arg2.type().subtype());
           index_expr.copy_to_operands(
             envp_symbol.symbol_expr(), from_integer(0, index_type()));
 
-          op2=exprt(ID_address_of, arg2.type());
+          op2= exprt(ID_address_of, arg2.type());
           op2.move_to_operands(index_expr);
         }
       }
@@ -471,12 +460,8 @@ bool ansi_c_entry_point(
   else
   {
     // produce nondet arguments
-    call_main.arguments()=
-      build_function_environment(
-        parameters,
-        init_code,
-        symbol_table,
-        message_handler);
+    call_main.arguments()= build_function_environment(
+      parameters, init_code, symbol_table, message_handler);
   }
 
   init_code.move_to_operands(call_main);
@@ -489,12 +474,12 @@ bool ansi_c_entry_point(
   symbolt new_symbol;
 
   code_typet main_type;
-  main_type.return_type()=empty_typet();
+  main_type.return_type()= empty_typet();
 
-  new_symbol.name=goto_functionst::entry_point();
+  new_symbol.name= goto_functionst::entry_point();
   new_symbol.type.swap(main_type);
   new_symbol.value.swap(init_code);
-  new_symbol.mode=symbol.mode;
+  new_symbol.mode= symbol.mode;
 
   if(symbol_table.move(new_symbol))
   {

@@ -37,11 +37,11 @@ void cpp_typecheckt::convert_initializer(symbolt &symbol)
     if(symbol.value.is_nil())
       return;
 
-    if(symbol.value.id()!=ID_type)
+    if(symbol.value.id() != ID_type)
     {
-      error().source_location=symbol.location;
-      error() << "expected type as initializer for `"
-              << symbol.base_name << "'" << eom;
+      error().source_location= symbol.location;
+      error() << "expected type as initializer for `" << symbol.base_name << "'"
+              << eom;
       throw 0;
     }
 
@@ -56,10 +56,9 @@ void cpp_typecheckt::convert_initializer(symbolt &symbol)
     // do we need one?
     if(is_reference(symbol.type))
     {
-      error().source_location=symbol.location;
+      error().source_location= symbol.location;
       error() << "`" << symbol.base_name
-              << "' is declared as reference but is not initialized"
-              << eom;
+              << "' is declared as reference but is not initialized" << eom;
       throw 0;
     }
 
@@ -76,66 +75,64 @@ void cpp_typecheckt::convert_initializer(symbolt &symbol)
   }
   else if(cpp_is_pod(symbol.type))
   {
-    if(symbol.type.id() == ID_pointer &&
-       symbol.type.subtype().id() == ID_code &&
-       symbol.value.id() == ID_address_of &&
-       symbol.value.op0().id() == ID_cpp_name)
+    if(
+      symbol.type.id() == ID_pointer && symbol.type.subtype().id() == ID_code &&
+      symbol.value.id() == ID_address_of &&
+      symbol.value.op0().id() == ID_cpp_name)
     {
       // initialization of a function pointer with
       // the address of a function: use pointer type information
       // for the sake of overload resolution
 
       cpp_typecheck_fargst fargs;
-      fargs.in_use = true;
+      fargs.in_use= true;
 
-      const code_typet &code_type=to_code_type(symbol.type.subtype());
+      const code_typet &code_type= to_code_type(symbol.type.subtype());
 
-      for(code_typet::parameterst::const_iterator
-          ait=code_type.parameters().begin();
-          ait!=code_type.parameters().end();
+      for(code_typet::parameterst::const_iterator ait=
+            code_type.parameters().begin();
+          ait != code_type.parameters().end();
           ait++)
       {
         exprt new_object("new_object");
         new_object.set(ID_C_lvalue, true);
-        new_object.type() = ait->type();
+        new_object.type()= ait->type();
 
-        if(ait->get(ID_C_base_name)==ID_this)
+        if(ait->get(ID_C_base_name) == ID_this)
         {
-          fargs.has_object = true;
-          new_object.type() = ait->type().subtype();
+          fargs.has_object= true;
+          new_object.type()= ait->type().subtype();
         }
 
         fargs.operands.push_back(new_object);
       }
 
-      exprt resolved_expr=resolve(
+      exprt resolved_expr= resolve(
         to_cpp_name(static_cast<irept &>(symbol.value.op0())),
-        cpp_typecheck_resolvet::BOTH, fargs);
+        cpp_typecheck_resolvet::BOTH,
+        fargs);
 
       assert(symbol.type.subtype() == resolved_expr.type());
 
-      if(resolved_expr.id()==ID_symbol)
+      if(resolved_expr.id() == ID_symbol)
       {
-        symbol.value=
-          address_of_exprt(resolved_expr);
+        symbol.value= address_of_exprt(resolved_expr);
       }
-      else if(resolved_expr.id()==ID_member)
+      else if(resolved_expr.id() == ID_member)
       {
-        symbol.value =
-          address_of_exprt(
-            lookup(resolved_expr.get(ID_component_name)).symbol_expr());
+        symbol.value= address_of_exprt(
+          lookup(resolved_expr.get(ID_component_name)).symbol_expr());
 
-        symbol.value.type().add("to-member") = resolved_expr.op0().type();
+        symbol.value.type().add("to-member")= resolved_expr.op0().type();
       }
       else
         assert(false);
 
       if(symbol.type != symbol.value.type())
       {
-        error().source_location=symbol.location;
-        error() << "conversion from `"
-                << to_string(symbol.value.type()) << "' to `"
-                << to_string(symbol.type) << "' " << eom;
+        error().source_location= symbol.location;
+        error() << "conversion from `" << to_string(symbol.value.type())
+                << "' to `" << to_string(symbol.type) << "' " << eom;
         throw 0;
       }
 
@@ -144,23 +141,24 @@ void cpp_typecheckt::convert_initializer(symbolt &symbol)
 
     typecheck_expr(symbol.value);
 
-    if(symbol.value.id()==ID_initializer_list ||
-       symbol.value.id()==ID_string_constant)
+    if(
+      symbol.value.id() == ID_initializer_list ||
+      symbol.value.id() == ID_string_constant)
     {
       do_initializer(symbol.value, symbol.type, true);
 
       if(symbol.type.find(ID_size).is_nil())
-        symbol.type=symbol.value.type();
+        symbol.type= symbol.value.type();
     }
     else
       implicit_typecast(symbol.value, symbol.type);
 
-    #if 0
+#if 0
     simplify_exprt simplify(*this);
     exprt tmp_value = symbol.value;
     if(!simplify.simplify(tmp_value))
       symbol.value.swap(tmp_value);
-    #endif
+#endif
   }
   else
   {
@@ -172,10 +170,8 @@ void cpp_typecheckt::convert_initializer(symbolt &symbol)
     exprt::operandst ops;
     ops.push_back(symbol.value);
 
-    symbol.value = cpp_constructor(
-      symbol.value.source_location(),
-      expr_symbol,
-      ops);
+    symbol.value=
+      cpp_constructor(symbol.value.source_location(), expr_symbol, ops);
   }
 }
 
@@ -197,15 +193,15 @@ void cpp_typecheckt::zero_initializer(
   const source_locationt &source_location,
   exprt::operandst &ops)
 {
-  const typet &final_type=follow(type);
+  const typet &final_type= follow(type);
 
-  if(final_type.id()==ID_struct)
+  if(final_type.id() == ID_struct)
   {
     forall_irep(cit, final_type.find(ID_components).get_sub())
     {
-      const exprt &component=static_cast<const exprt &>(*cit);
+      const exprt &component= static_cast<const exprt &>(*cit);
 
-      if(component.type().id()==ID_code)
+      if(component.type().id() == ID_code)
         continue;
 
       if(component.get_bool(ID_is_type))
@@ -222,61 +218,60 @@ void cpp_typecheckt::zero_initializer(
       zero_initializer(member, component.type(), source_location, ops);
     }
   }
-  else if(final_type.id()==ID_array &&
-          !cpp_is_pod(final_type.subtype()))
+  else if(final_type.id() == ID_array && !cpp_is_pod(final_type.subtype()))
   {
-    const array_typet &array_type=to_array_type(type);
-    const exprt &size_expr=array_type.size();
+    const array_typet &array_type= to_array_type(type);
+    const exprt &size_expr= array_type.size();
 
-    if(size_expr.id()==ID_infinity)
+    if(size_expr.id() == ID_infinity)
       return; // don't initialize
 
     mp_integer size;
 
-    bool to_int=to_integer(size_expr, size);
+    bool to_int= to_integer(size_expr, size);
     assert(!to_int);
-    assert(size>=0);
+    assert(size >= 0);
 
     exprt::operandst empty_operands;
-    for(mp_integer i=0; i<size; ++i)
+    for(mp_integer i= 0; i < size; ++i)
     {
       exprt index(ID_index);
       index.copy_to_operands(object, from_integer(i, index_type()));
       zero_initializer(index, array_type.subtype(), source_location, ops);
     }
   }
-  else if(final_type.id()==ID_union)
+  else if(final_type.id() == ID_union)
   {
     c_sizeoft c_sizeof(*this);
 
     // Select the largest component for zero-initialization
-    mp_integer max_comp_size=0;
+    mp_integer max_comp_size= 0;
 
-    exprt comp=nil_exprt();
+    exprt comp= nil_exprt();
 
     forall_irep(it, final_type.find(ID_components).get_sub())
     {
-      const exprt &component=static_cast<const exprt &>(*it);
+      const exprt &component= static_cast<const exprt &>(*it);
 
       assert(component.type().is_not_nil());
 
-      if(component.type().id()==ID_code)
+      if(component.type().id() == ID_code)
         continue;
 
-      exprt component_size=c_sizeof(component.type());
+      exprt component_size= c_sizeof(component.type());
 
       mp_integer size_int;
       if(!to_integer(component_size, size_int))
       {
-        if(size_int>max_comp_size)
+        if(size_int > max_comp_size)
         {
-          max_comp_size=size_int;
-          comp=component;
+          max_comp_size= size_int;
+          comp= component;
         }
       }
     }
 
-    if(max_comp_size>0)
+    if(max_comp_size > 0)
     {
       irept name(ID_name);
       name.set(ID_identifier, comp.get(ID_base_name));
@@ -291,19 +286,19 @@ void cpp_typecheckt::zero_initializer(
       zero_initializer(member, comp.type(), source_location, ops);
     }
   }
-  else if(final_type.id()==ID_c_enum)
+  else if(final_type.id() == ID_c_enum)
   {
     typet enum_type(ID_unsignedbv);
-    enum_type.add(ID_width)=final_type.find(ID_width);
+    enum_type.add(ID_width)= final_type.find(ID_width);
 
     exprt zero(from_integer(0, enum_type));
     zero.make_typecast(type);
     already_typechecked(zero);
 
     code_assignt assign;
-    assign.lhs()=object;
-    assign.rhs()=zero;
-    assign.add_source_location()=source_location;
+    assign.lhs()= object;
+    assign.rhs()= zero;
+    assign.add_source_location()= source_location;
 
     typecheck_expr(assign.lhs());
     assign.lhs().type().set(ID_C_constant, false);
@@ -312,23 +307,23 @@ void cpp_typecheckt::zero_initializer(
     typecheck_code(assign);
     ops.push_back(assign);
   }
-  else if(final_type.id()==ID_incomplete_struct ||
-          final_type.id()==ID_incomplete_union)
+  else if(
+    final_type.id() == ID_incomplete_struct ||
+    final_type.id() == ID_incomplete_union)
   {
-    error().source_location=source_location;
+    error().source_location= source_location;
     error() << "cannot zero-initialize incomplete compound" << eom;
     throw 0;
   }
   else
   {
-    exprt value=
-      ::zero_initializer(
-        final_type, source_location, *this, get_message_handler());
+    exprt value= ::zero_initializer(
+      final_type, source_location, *this, get_message_handler());
 
     code_assignt assign;
-    assign.lhs()=object;
-    assign.rhs()=value;
-    assign.add_source_location()=source_location;
+    assign.lhs()= object;
+    assign.rhs()= value;
+    assign.add_source_location()= source_location;
 
     typecheck_expr(assign.op0());
     assign.lhs().type().set(ID_C_constant, false);

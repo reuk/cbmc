@@ -13,7 +13,7 @@ Author: CM Wintersteiger
 
 #include "qdimacs_cnf.h"
 
-class qbf_squolemt:public qdimacs_cnft
+class qbf_squolemt : public qdimacs_cnft
 {
 protected:
   Squolem2 squolem;
@@ -31,7 +31,10 @@ public:
   virtual void add_quantifier(const quantifiert &quantifier);
   virtual void set_quantifier(const quantifiert::typet type, const literalt l);
   virtual void set_no_variables(size_t no);
-  virtual size_t no_clauses() const { return squolem.clauses(); }
+  virtual size_t no_clauses() const
+  {
+    return squolem.clauses();
+  }
 };
 
 #endif // CPROVER_SOLVERS_QBF_QBF_SQUOLEM_H

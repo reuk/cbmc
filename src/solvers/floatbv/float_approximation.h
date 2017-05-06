@@ -11,13 +11,13 @@ Author:
 
 #include <floatbv/float_utils.h>
 
-class float_approximationt:public float_utilst
+class float_approximationt : public float_utilst
 {
 public:
-  explicit float_approximationt(propt &_prop):
-    float_utilst(_prop),
-    over_approximate(false),
-    partial_interpretation(false)
+  explicit float_approximationt(propt &_prop)
+    : float_utilst(_prop),
+      over_approximate(false),
+      partial_interpretation(false)
   {
   }
 

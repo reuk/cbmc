@@ -15,17 +15,13 @@ class exprt;
 class namespacet;
 class typet;
 
-std::string from_expr(
-  const namespacet &ns,
-  const irep_idt &identifier,
-  const exprt &expr);
+std::string
+from_expr(const namespacet &ns, const irep_idt &identifier, const exprt &expr);
 
 std::string from_expr(const exprt &expr);
 
-std::string from_type(
-  const namespacet &ns,
-  const irep_idt &identifier,
-  const typet &type);
+std::string
+from_type(const namespacet &ns, const irep_idt &identifier, const typet &type);
 
 std::string from_type(const typet &type);
 

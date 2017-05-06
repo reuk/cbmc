@@ -45,20 +45,20 @@ bool read_goto_object(
   messaget message(message_handler);
 
   xml_parser.clear();
-  xml_parser.filename = filename;
-  xml_parser.in = &in;
+  xml_parser.filename= filename;
+  xml_parser.in= &in;
   xml_parser.set_message_handler(message_handler);
 
   if(xml_parser.parse())
     return true;
 
-  xmlt &top = xml_parser.parse_tree.element;
+  xmlt &top= xml_parser.parse_tree.element;
 
-  if(top.get_attribute("version")!=XML_VERSION)
+  if(top.get_attribute("version") != XML_VERSION)
   {
-    message.error() <<
-      "The input was compiled with a different version of "
-      "goto-cc, please recompile." << messaget::eom;
+    message.error() << "The input was compiled with a different version of "
+                       "goto-cc, please recompile."
+                    << messaget::eom;
     return true;
   }
 
@@ -67,18 +67,16 @@ bool read_goto_object(
   xml_symbol_convertt symbolconverter(ic);
   xml_goto_function_convertt gfconverter(ic);
 
-  if(top.name.substr(0, 11)=="goto-object")
+  if(top.name.substr(0, 11) == "goto-object")
   {
-    for(xmlt::elementst::const_iterator
-        sec_it=top.elements.begin();
+    for(xmlt::elementst::const_iterator sec_it= top.elements.begin();
         sec_it != top.elements.end();
         sec_it++)
     {
-      xmlt sec = *sec_it;
-      if(sec.name=="irep_hash_map")
+      xmlt sec= *sec_it;
+      if(sec.name == "irep_hash_map")
       {
-        for(xmlt::elementst::const_iterator
-            irep_it = sec.elements.begin();
+        for(xmlt::elementst::const_iterator irep_it= sec.elements.begin();
             irep_it != sec.elements.end();
             irep_it++)
         {
@@ -87,38 +85,34 @@ bool read_goto_object(
           irepconverter.insert(irep_it->get_attribute("id"), i);
         }
       }
-      else if(sec.name=="symbols")
+      else if(sec.name == "symbols")
       {
-        for(xmlt::elementst::const_iterator
-            sym_it = sec.elements.begin();
+        for(xmlt::elementst::const_iterator sym_it= sec.elements.begin();
             sym_it != sec.elements.end();
             sym_it++)
         {
           symbolt symbol;
           symbolconverter.convert(*sym_it, symbol);
           // std::cout << "Adding Symbol: " << symbol.name << std::endl;
-          if(!symbol.is_type &&
-             symbol.type.id()=="code")
+          if(!symbol.is_type && symbol.type.id() == "code")
           {
             // makes sure there is an empty function
             // for this symbol. if we got code for it,
             // it will be added lateron.
-            functions.function_map[symbol.name].type=
-              to_code_type(symbol.type);
+            functions.function_map[symbol.name].type= to_code_type(symbol.type);
           }
           symbol_table.add(symbol);
         }
       }
-      else if(sec.name=="functions")
+      else if(sec.name == "functions")
       {
-        for(xmlt::elementst::const_iterator
-            fun_it = sec.elements.begin();
+        for(xmlt::elementst::const_iterator fun_it= sec.elements.begin();
             fun_it != sec.elements.end();
             fun_it++)
         {
-          std::string fname = fun_it->get_attribute("name");
+          std::string fname= fun_it->get_attribute("name");
           // std::cout << "Adding function body: " << fname << std::endl;
-          goto_functionst::goto_functiont &f = functions.function_map[fname];
+          goto_functionst::goto_functiont &f= functions.function_map[fname];
           gfconverter.convert(*fun_it, f);
         }
       }

@@ -32,9 +32,8 @@ Function: language_uit::language_uit
 
 language_uit::language_uit(
   const cmdlinet &cmdline,
-  ui_message_handlert &_ui_message_handler):
-  ui_message_handler(_ui_message_handler),
-  _cmdline(cmdline)
+  ui_message_handlert &_ui_message_handler)
+  : ui_message_handler(_ui_message_handler), _cmdline(cmdline)
 {
   set_message_handler(ui_message_handler);
 }
@@ -69,7 +68,7 @@ Function: language_uit::parse()
 
 bool language_uit::parse()
 {
-  for(unsigned i=0; i<_cmdline.args.size(); i++)
+  for(unsigned i= 0; i < _cmdline.args.size(); i++)
   {
     if(parse(_cmdline.args[i]))
       return true;
@@ -92,11 +91,11 @@ Function: language_uit::parse()
 
 bool language_uit::parse(const std::string &filename)
 {
-  #ifdef _MSC_VER
+#ifdef _MSC_VER
   std::ifstream infile(widen(filename));
-  #else
+#else
   std::ifstream infile(filename);
-  #endif
+#endif
 
   if(!infile)
   {
@@ -104,22 +103,22 @@ bool language_uit::parse(const std::string &filename)
     return true;
   }
 
-  std::pair<language_filest::file_mapt::iterator, bool>
-    result=language_files.file_map.insert(
+  std::pair<language_filest::file_mapt::iterator, bool> result=
+    language_files.file_map.insert(
       std::pair<std::string, language_filet>(filename, language_filet()));
 
-  language_filet &lf=result.first->second;
+  language_filet &lf= result.first->second;
 
-  lf.filename=filename;
-  lf.language=get_language_from_filename(filename);
+  lf.filename= filename;
+  lf.language= get_language_from_filename(filename);
 
-  if(lf.language==NULL)
+  if(lf.language == NULL)
   {
     error("failed to figure out type of file", filename);
     return true;
   }
 
-  languaget &language=*lf.language;
+  languaget &language= *lf.language;
   language.set_message_handler(get_message_handler());
   language.get_language_options(_cmdline);
 
@@ -127,7 +126,7 @@ bool language_uit::parse(const std::string &filename)
 
   if(language.parse(infile, filename))
   {
-    if(get_ui()==ui_message_handlert::PLAIN)
+    if(get_ui() == ui_message_handlert::PLAIN)
       std::cerr << "PARSING ERROR" << std::endl;
 
     return true;
@@ -248,9 +247,7 @@ Function: language_uit::show_symbol_table_plain
 
 \*******************************************************************/
 
-void language_uit::show_symbol_table_plain(
-  std::ostream &out,
-  bool brief)
+void language_uit::show_symbol_table_plain(std::ostream &out, bool brief)
 {
   if(!brief)
     out << '\n' << "Symbols:" << '\n' << std::endl;
@@ -265,17 +262,17 @@ void language_uit::show_symbol_table_plain(
 
   for(const std::string &id : symbols)
   {
-    const symbolt &symbol=ns.lookup(id);
+    const symbolt &symbol= ns.lookup(id);
 
     languaget *ptr;
 
-    if(symbol.mode=="")
-      ptr=get_default_language();
+    if(symbol.mode == "")
+      ptr= get_default_language();
     else
     {
-      ptr=get_language_from_mode(symbol.mode);
-      if(ptr==NULL)
-        throw "symbol "+id2string(symbol.name)+" has unknown mode";
+      ptr= get_language_from_mode(symbol.mode);
+      if(ptr == NULL)
+        throw "symbol " + id2string(symbol.name) + " has unknown mode";
     }
 
     std::unique_ptr<languaget> p(ptr);

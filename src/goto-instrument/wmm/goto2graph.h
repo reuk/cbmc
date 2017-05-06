@@ -59,18 +59,17 @@ protected:
   unsigned cost(const event_grapht::critical_cyclet::delayt &e);
 
   typedef std::set<event_grapht::critical_cyclet> set_of_cyclest;
-  void inline instrument_all_inserter(
-    const set_of_cyclest &set);
+  void inline instrument_all_inserter(const set_of_cyclest &set);
   void inline instrument_one_event_per_cycle_inserter(
     const set_of_cyclest &set);
-  void inline instrument_one_read_per_cycle_inserter(
-    const set_of_cyclest &set);
+  void inline instrument_one_read_per_cycle_inserter(const set_of_cyclest &set);
   void inline instrument_one_write_per_cycle_inserter(
     const set_of_cyclest &set);
   void inline instrument_minimum_interference_inserter(
     const set_of_cyclest &set);
   void inline instrument_my_events_inserter(
-    const set_of_cyclest &set, const std::set<event_idt> &events);
+    const set_of_cyclest &set,
+    const std::set<event_idt> &events);
 
   void inline print_outputs_local(
     const std::set<event_grapht::critical_cyclet> &set,
@@ -103,10 +102,11 @@ protected:
       goto_programt::const_targett targ,
       goto_programt::const_targett i_it,
       value_setst &value_sets
-      #ifdef LOCAL_MAY
-      , local_may_aliast local_may
-      #endif
-    ) const; // NOLINT(whitespace/parens)
+#ifdef LOCAL_MAY
+      ,
+      local_may_aliast local_may
+#endif
+      ) const; // NOLINT(whitespace/parens)
 
     /* transformers */
     void visit_cfg_thread() const;
@@ -115,25 +115,33 @@ protected:
       goto_programt::const_targett i_it,
       loop_strategyt replicate_body,
       value_setst &value_sets
-      #ifdef LOCAL_MAY
-      , local_may_aliast &local_may
-      #endif
-    ); // deprecated  NOLINT(whitespace/parens)
-    void inline visit_cfg_backedge(goto_programt::const_targett targ,
+#ifdef LOCAL_MAY
+      ,
+      local_may_aliast &local_may
+#endif
+      ); // deprecated  NOLINT(whitespace/parens)
+    void inline visit_cfg_backedge(
+      goto_programt::const_targett targ,
       goto_programt::const_targett i_it);
-    void inline visit_cfg_duplicate(goto_programt::const_targett targ,
+    void inline visit_cfg_duplicate(
+      goto_programt::const_targett targ,
       goto_programt::const_targett i_it);
-    void visit_cfg_assign(value_setst &value_sets, namespacet &ns,
-      goto_programt::instructionst::iterator &i_it, bool no_dependencies
-      #ifdef LOCAL_MAY
-      , local_may_aliast &local_may
-      #endif
-    ); // NOLINT(whitespace/parens)
+    void visit_cfg_assign(
+      value_setst &value_sets,
+      namespacet &ns,
+      goto_programt::instructionst::iterator &i_it,
+      bool no_dependencies
+#ifdef LOCAL_MAY
+      ,
+      local_may_aliast &local_may
+#endif
+      ); // NOLINT(whitespace/parens)
     void visit_cfg_fence(goto_programt::instructionst::iterator i_it);
     void visit_cfg_skip(goto_programt::instructionst::iterator i_it);
     void visit_cfg_lwfence(goto_programt::instructionst::iterator i_it);
     void visit_cfg_asm_fence(goto_programt::instructionst::iterator i_it);
-    void visit_cfg_function_call(value_setst &value_sets,
+    void visit_cfg_function_call(
+      value_setst &value_sets,
       goto_programt::instructionst::iterator i_it,
       memory_modelt model,
       bool no_dependenciess,
@@ -144,13 +152,14 @@ protected:
          otherwise, duplication of loops with array accesses only */
       loop_strategyt replicate_body,
       value_setst &value_sets
-      #ifdef LOCAL_MAY
-      , local_may_aliast &local_may
-      #endif
-    ); // NOLINT(whitespace/parens)
+#ifdef LOCAL_MAY
+      ,
+      local_may_aliast &local_may
+#endif
+      ); // NOLINT(whitespace/parens)
     void visit_cfg_reference_function(irep_idt id_function);
 
- public:
+  public:
     virtual ~cfg_visitort()
     {
     }
@@ -169,7 +178,7 @@ protected:
 
     /* previous nodes (fwd analysis) */
     typedef std::pair<event_idt, event_idt> nodet;
-    typedef std::map<goto_programt::const_targett, std::set<nodet> >
+    typedef std::map<goto_programt::const_targett, std::set<nodet>>
       incoming_post;
 
     incoming_post in_pos;
@@ -178,18 +187,18 @@ protected:
     /* "next nodes" (bwd steps in fwd/bck analysis) */
     incoming_post out_pos;
 
-    #define add_all_pos(it, target, source) \
-    for(std::set<nodet>::const_iterator \
-      it=(source).begin(); \
-      it!=(source).end(); ++it) \
-      (target).insert(*it);
+#define add_all_pos(it, target, source)                                        \
+  for(std::set<nodet>::const_iterator it= (source).begin();                    \
+      it != (source).end();                                                    \
+      ++it)                                                                    \
+    (target).insert(*it);
 
-    #ifdef CONTEXT_INSENSITIVE
+#ifdef CONTEXT_INSENSITIVE
     /* to keep track of the functions (and their start/end nodes) */
     std::stack<irep_idt> stack_fun;
     irep_idt cur_fun;
-    std::map<irep_idt, std::set<nodet> > in_nodes, out_nodes;
-    #endif
+    std::map<irep_idt, std::set<nodet>> in_nodes, out_nodes;
+#endif
 
     /* current thread number */
     unsigned thread;
@@ -205,23 +214,25 @@ protected:
     std::set<irep_idt> functions_met;
 
     cfg_visitort(namespacet &_ns, instrumentert &_instrumenter)
-    :ns(_ns), instrumenter(_instrumenter), egraph(_instrumenter.egraph),
-      egraph_SCCs(_instrumenter.egraph_SCCs),
-      egraph_alt(_instrumenter.egraph_alt)
+      : ns(_ns),
+        instrumenter(_instrumenter),
+        egraph(_instrumenter.egraph),
+        egraph_SCCs(_instrumenter.egraph_SCCs),
+        egraph_alt(_instrumenter.egraph_alt)
     {
-      write_counter = 0;
-      read_counter = 0;
-      ws_counter = 0;
-      fr_rf_counter = 0;
-      thread = 0;
-      current_thread = 0;
-      max_thread = 0;
-      coming_from = 0;
+      write_counter= 0;
+      read_counter= 0;
+      ws_counter= 0;
+      fr_rf_counter= 0;
+      thread= 0;
+      current_thread= 0;
+      max_thread= 0;
+      coming_from= 0;
     }
 
     void inline enter_function(const irep_idt &function)
     {
-      if(functions_met.find(function)!=functions_met.end())
+      if(functions_met.find(function) != functions_met.end())
         throw "sorry, doesn't handle recursive function for the moment";
       functions_met.insert(function);
     }
@@ -245,8 +256,14 @@ protected:
         enter_function(function);
         const std::set<nodet> empty_in;
         std::set<nodet> end_out;
-        visit_cfg_function(value_sets, model, no_dependencies, duplicate_body,
-          function, empty_in, end_out);
+        visit_cfg_function(
+          value_sets,
+          model,
+          no_dependencies,
+          duplicate_body,
+          function,
+          empty_in,
+          end_out);
         leave_function(function);
       }
       catch(std::string s)
@@ -280,40 +297,41 @@ public:
   event_grapht egraph;
 
   /* graph split into strongly connected components */
-  std::vector<std::set<event_idt> > egraph_SCCs;
+  std::vector<std::set<event_idt>> egraph_SCCs;
 
   /* critical cycles */
   std::set<event_grapht::critical_cyclet> set_of_cycles;
 
   /* critical cycles per SCC */
-  std::vector<std::set<event_grapht::critical_cyclet> > set_of_cycles_per_SCC;
+  std::vector<std::set<event_grapht::critical_cyclet>> set_of_cycles_per_SCC;
   unsigned num_sccs;
 
   /* map from function to begin and end of the corresponding part of the
      graph */
-  typedef std::map<irep_idt, std::pair<std::set<event_idt>,
-    std::set<event_idt> > > map_function_nodest;
+  typedef std::
+    map<irep_idt, std::pair<std::set<event_idt>, std::set<event_idt>>>
+      map_function_nodest;
   map_function_nodest map_function_graph;
 
   void print_map_function_graph() const
   {
-    for(map_function_nodest::const_iterator it=map_function_graph.begin();
-       it!=map_function_graph.end();
-       ++it)
+    for(map_function_nodest::const_iterator it= map_function_graph.begin();
+        it != map_function_graph.end();
+        ++it)
     {
-       message.debug() << "FUNCTION " << it->first << ": " << messaget::eom;
-       message.debug() << "Start nodes: ";
-       for(std::set<event_idt>::const_iterator in_it=it->second.first.begin();
-         in_it!=it->second.first.end();
-         ++in_it)
-         message.debug() << *in_it << " ";
-       message.debug() << messaget::eom;
-       message.debug() << "End nodes: ";
-       for(std::set<event_idt>::const_iterator in_it=it->second.second.begin();
-         in_it!=it->second.second.end();
-         ++in_it)
-         message.debug() << *in_it << " ";
-       message.debug() << messaget::eom;
+      message.debug() << "FUNCTION " << it->first << ": " << messaget::eom;
+      message.debug() << "Start nodes: ";
+      for(std::set<event_idt>::const_iterator in_it= it->second.first.begin();
+          in_it != it->second.first.end();
+          ++in_it)
+        message.debug() << *in_it << " ";
+      message.debug() << messaget::eom;
+      message.debug() << "End nodes: ";
+      for(std::set<event_idt>::const_iterator in_it= it->second.second.begin();
+          in_it != it->second.second.end();
+          ++in_it)
+        message.debug() << *in_it << " ";
+      message.debug() << messaget::eom;
     }
   }
 
@@ -325,10 +343,16 @@ public:
   std::multimap<irep_idt, source_locationt> id2loc;
   std::multimap<irep_idt, source_locationt> id2cycloc;
 
-  instrumentert(symbol_tablet &_symbol_table, goto_functionst &_goto_f,
+  instrumentert(
+    symbol_tablet &_symbol_table,
+    goto_functionst &_goto_f,
     messaget &_message)
-    :ns(_symbol_table), goto_functions(_goto_f), render_po_aligned(true),
-      render_by_file(false), render_by_function(false), message(_message),
+    : ns(_symbol_table),
+      goto_functions(_goto_f),
+      render_po_aligned(true),
+      render_by_file(false),
+      render_by_function(false),
+      message(_message),
       egraph(_message)
   {
   }
@@ -346,7 +370,7 @@ public:
   void collect_cycles(memory_modelt model)
   {
     egraph.collect_cycles(set_of_cycles, model);
-    num_sccs = 0;
+    num_sccs= 0;
   }
 
   /* collects the cycles in the graph by SCCs */
@@ -357,9 +381,9 @@ public:
 
   /* sets parameters for collection, if required */
   void set_parameters_collection(
-    unsigned _max_var = 0,
-    unsigned _max_po_trans = 0,
-    bool _ignore_arrays = false)
+    unsigned _max_var= 0,
+    unsigned _max_po_trans= 0,
+    bool _ignore_arrays= false)
   {
     egraph.set_parameters_collection(_max_var, _max_po_trans, _ignore_arrays);
   }
@@ -378,9 +402,9 @@ public:
   /* sets rendering options */
   void set_rendering_options(bool aligned, bool file, bool function)
   {
-    render_po_aligned = aligned;
-    render_by_file = file;
-    render_by_function = function;
+    render_po_aligned= aligned;
+    render_by_file= file;
+    render_by_function= function;
     assert(!render_by_file || !render_by_function);
   }
 

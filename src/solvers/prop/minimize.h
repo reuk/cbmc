@@ -24,12 +24,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-class prop_minimizet:public messaget
+class prop_minimizet : public messaget
 {
 public:
-  explicit prop_minimizet(prop_convt &_prop_conv):
-    _number_objectives(0),
-    prop_conv(_prop_conv)
+  explicit prop_minimizet(prop_convt &_prop_conv)
+    : _number_objectives(0), prop_conv(_prop_conv)
   {
   }
 
@@ -57,23 +56,21 @@ public:
   typedef long long signed int weightt;
 
   // adds an objective with given weight
-  void objective(
-    const literalt condition,
-    const weightt weight=1);
+  void objective(const literalt condition, const weightt weight= 1);
 
   struct objectivet
   {
     literalt condition;
     bool fixed;
 
-    explicit objectivet(const literalt _condition):
-      condition(_condition), fixed(false)
+    explicit objectivet(const literalt _condition)
+      : condition(_condition), fixed(false)
     {
     }
   };
 
   // the map of objectives, sorted by weight
-  typedef std::map<weightt, std::vector<objectivet> > objectivest;
+  typedef std::map<weightt, std::vector<objectivet>> objectivest;
   objectivest objectives;
 
 protected:

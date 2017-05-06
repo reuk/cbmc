@@ -22,35 +22,33 @@ Function: boolbvt::convert_mod
 
 bvt boolbvt::convert_mod(const mod_exprt &expr)
 {
-  #if 0
+#if 0
   // TODO
   if(expr.type().id()==ID_floatbv)
   {
   }
-  #endif
+#endif
 
-  if(expr.type().id()!=ID_unsignedbv &&
-     expr.type().id()!=ID_signedbv)
+  if(expr.type().id() != ID_unsignedbv && expr.type().id() != ID_signedbv)
     return conversion_failed(expr);
 
-  std::size_t width=boolbv_width(expr.type());
+  std::size_t width= boolbv_width(expr.type());
 
-  if(width==0)
+  if(width == 0)
     return conversion_failed(expr);
 
-  if(expr.op0().type().id()!=expr.type().id() ||
-     expr.op1().type().id()!=expr.type().id())
+  if(
+    expr.op0().type().id() != expr.type().id() ||
+    expr.op1().type().id() != expr.type().id())
     throw "mod got mixed-type operands";
 
   bv_utilst::representationt rep=
-    expr.type().id()==ID_signedbv?bv_utilst::SIGNED:
-                                  bv_utilst::UNSIGNED;
+    expr.type().id() == ID_signedbv ? bv_utilst::SIGNED : bv_utilst::UNSIGNED;
 
-  const bvt &op0=convert_bv(expr.op0());
-  const bvt &op1=convert_bv(expr.op1());
+  const bvt &op0= convert_bv(expr.op0());
+  const bvt &op1= convert_bv(expr.op1());
 
-  if(op0.size()!=width ||
-     op1.size()!=width)
+  if(op0.size() != width || op1.size() != width)
     throw "convert_mod: unexpected operand width";
 
   bvt res, rem;

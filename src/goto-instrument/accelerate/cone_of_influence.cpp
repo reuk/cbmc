@@ -18,12 +18,12 @@ void cone_of_influencet::cone_of_influence(
 {
   if(program.instructions.empty())
   {
-    cone=targets;
+    cone= targets;
     return;
   }
 
-  for(goto_programt::instructionst::const_reverse_iterator
-      rit=program.instructions.rbegin();
+  for(goto_programt::instructionst::const_reverse_iterator rit=
+        program.instructions.rbegin();
       rit != program.instructions.rend();
       ++rit)
   {
@@ -32,7 +32,7 @@ void cone_of_influencet::cone_of_influence(
 
     if(rit == program.instructions.rbegin())
     {
-      curr=targets;
+      curr= targets;
     }
     else
     {
@@ -41,7 +41,7 @@ void cone_of_influencet::cone_of_influence(
 
     cone_of_influence(*rit, curr, next);
 
-    cone_map[rit->location_number]=next;
+    cone_map[rit->location_number]= next;
 
 #ifdef DEBUG
     std::cout << "Previous cone: " << std::endl;
@@ -58,12 +58,10 @@ void cone_of_influencet::cone_of_influence(
 #endif
   }
 
-  cone=cone_map[program.instructions.front().location_number];
+  cone= cone_map[program.instructions.front().location_number];
 }
 
-void cone_of_influencet::cone_of_influence(
-  const exprt &target,
-  expr_sett &cone)
+void cone_of_influencet::cone_of_influence(const exprt &target, expr_sett &cone)
 {
   expr_sett s;
   s.insert(target);
@@ -79,7 +77,7 @@ void cone_of_influencet::get_succs(
     return;
   }
 
-  goto_programt::instructionst::const_reverse_iterator next=rit;
+  goto_programt::instructionst::const_reverse_iterator next= rit;
   --next;
 
   if(rit->is_goto())
@@ -87,12 +85,12 @@ void cone_of_influencet::get_succs(
     if(!rit->guard.is_false())
     {
       // Branch can be taken.
-      for(goto_programt::targetst::const_iterator t=rit->targets.begin();
+      for(goto_programt::targetst::const_iterator t= rit->targets.begin();
           t != rit->targets.end();
           ++t)
       {
-        unsigned int loc=(*t)->location_number;
-        expr_sett &s=cone_map[loc];
+        unsigned int loc= (*t)->location_number;
+        expr_sett &s= cone_map[loc];
         targets.insert(s.begin(), s.end());
       }
     }
@@ -110,8 +108,8 @@ void cone_of_influencet::get_succs(
     }
   }
 
-  unsigned int loc=next->location_number;
-  expr_sett &s=cone_map[loc];
+  unsigned int loc= next->location_number;
+  expr_sett &s= cone_map[loc];
   targets.insert(s.begin(), s.end());
 }
 
@@ -124,16 +122,16 @@ void cone_of_influencet::cone_of_influence(
 
   if(i.is_assign())
   {
-    const code_assignt &assignment=to_code_assign(i.code);
+    const code_assignt &assignment= to_code_assign(i.code);
     expr_sett lhs_syms;
-    bool care=false;
+    bool care= false;
 
     gather_rvalues(assignment.lhs(), lhs_syms);
 
     for(const auto &expr : lhs_syms)
-      if(curr.find(expr)!=curr.end())
+      if(curr.find(expr) != curr.end())
       {
-        care=true;
+        care= true;
         break;
       }
 
@@ -148,10 +146,9 @@ void cone_of_influencet::cone_of_influence(
 
 void cone_of_influencet::gather_rvalues(const exprt &expr, expr_sett &rvals)
 {
-  if(expr.id() == ID_symbol ||
-     expr.id() == ID_index ||
-     expr.id() == ID_member ||
-     expr.id() == ID_dereference)
+  if(
+    expr.id() == ID_symbol || expr.id() == ID_index || expr.id() == ID_member ||
+    expr.id() == ID_dereference)
   {
     rvals.insert(expr);
   }

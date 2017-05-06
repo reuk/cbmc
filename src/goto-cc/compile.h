@@ -17,7 +17,7 @@ Date: June 2006
 #include <langapi/language_ui.h>
 #include <goto-programs/goto_functions.h>
 
-class compilet:public language_uit
+class compilet : public language_uit
 {
 public:
   ui_message_handlert ui_message_handler;
@@ -27,13 +27,15 @@ public:
   std::string working_directory;
   std::string override_language;
 
-  enum { PREPROCESS_ONLY, // gcc -E
-         COMPILE_ONLY, // gcc -c
-         ASSEMBLE_ONLY, // gcc -S
-         LINK_LIBRARY, // ld -r
-         COMPILE_LINK, // gcc -shared
-         COMPILE_LINK_EXECUTABLE // gcc
-       } mode;
+  enum
+  {
+    PREPROCESS_ONLY,        // gcc -E
+    COMPILE_ONLY,           // gcc -c
+    ASSEMBLE_ONLY,          // gcc -S
+    LINK_LIBRARY,           // ld -r
+    COMPILE_LINK,           // gcc -shared
+    COMPILE_LINK_EXECUTABLE // gcc
+  } mode;
 
   std::list<std::string> library_paths;
   std::list<std::string> source_files;

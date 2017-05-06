@@ -29,27 +29,26 @@ struct datat
   mutable unsigned eq_class;
 
   datat(irep_idt _id, source_locationt _loc, unsigned _eq_class)
-  : id(_id), loc(_loc), eq_class(_eq_class)
+    : id(_id), loc(_loc), eq_class(_eq_class)
   {
   }
 
-  datat(irep_idt _id, source_locationt _loc)
-  : id(_id), loc(_loc), eq_class(0)
+  datat(irep_idt _id, source_locationt _loc) : id(_id), loc(_loc), eq_class(0)
   {
   }
 
   bool operator==(const datat &d) const
   {
-    return id==d.id && loc==d.loc;
+    return id == d.id && loc == d.loc;
   }
 
   bool operator<(const datat &d2) const
   {
-    return id<d2.id || (id==d2.id && loc<d2.loc);
+    return id < d2.id || (id == d2.id && loc < d2.loc);
   }
 };
 
-class data_dpt:public std::set<datat>
+class data_dpt : public std::set<datat>
 {
 public:
   unsigned class_nb;

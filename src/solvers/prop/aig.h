@@ -26,18 +26,18 @@ public:
 
   bool is_and() const
   {
-    return a.var_no()!=literalt::unused_var_no();
+    return a.var_no() != literalt::unused_var_no();
   }
 
   bool is_var() const
   {
-    return a.var_no()==literalt::unused_var_no();
+    return a.var_no() == literalt::unused_var_no();
   }
 
   void make_and(literalt _a, literalt _b)
   {
-    a=_a;
-    b=_b;
+    a= _a;
+    b= _b;
   }
 
   void make_var()
@@ -97,20 +97,20 @@ public:
   {
     nodes.push_back(aig_nodet());
     literalt l;
-    l.set(nodes.size()-1, false);
+    l.set(nodes.size() - 1, false);
     return l;
   }
 
   literalt new_var_node()
   {
-    literalt l=new_node();
+    literalt l= new_node();
     nodes.back().make_var();
     return l;
   }
 
   literalt new_and_node(literalt a, literalt b)
   {
-    literalt l=new_node();
+    literalt l= new_node();
     nodes.back().make_and(a, b);
     return l;
   }
@@ -123,22 +123,21 @@ public:
   void print(std::ostream &out) const;
   void print(std::ostream &out, literalt a) const;
   void output_dot_node(std::ostream &out, nodest::size_type v) const;
-  void output_dot_edge(
-    std::ostream &out, nodest::size_type v, literalt l) const;
+  void
+  output_dot_edge(std::ostream &out, nodest::size_type v, literalt l) const;
   void output_dot(std::ostream &out) const;
 
   std::string label(nodest::size_type v) const;
   std::string dot_label(nodest::size_type v) const;
 
 protected:
-  const std::set<literalt::var_not> &get_terminals_rec(
-    literalt::var_not n,
-    terminalst &terminals) const;
+  const std::set<literalt::var_not> &
+  get_terminals_rec(literalt::var_not n, terminalst &terminals) const;
 };
 
-std::ostream &operator << (std::ostream &, const aigt &);
+std::ostream &operator<<(std::ostream &, const aigt &);
 
-class aig_plus_constraintst:public aigt
+class aig_plus_constraintst : public aigt
 {
 public:
   typedef std::vector<literalt> constraintst;

@@ -27,7 +27,9 @@ class namespacet;
 class bdd_exprt
 {
 public:
-  explicit bdd_exprt(const namespacet &_ns):ns(_ns) { }
+  explicit bdd_exprt(const namespacet &_ns) : ns(_ns)
+  {
+  }
 
   void from_expr(const exprt &expr);
   exprt as_expr() const;

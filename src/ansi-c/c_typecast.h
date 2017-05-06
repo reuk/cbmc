@@ -17,9 +17,7 @@ Author: Daniel Kroening, kroening@kroening.com
 // false: typecast successfull, expr modified
 // true:  typecast failed
 
-bool check_c_implicit_typecast(
-  const typet &src_type,
-  const typet &dest_type);
+bool check_c_implicit_typecast(const typet &src_type, const typet &dest_type);
 
 bool check_c_implicit_typecast(
   const typet &src_type,
@@ -32,13 +30,14 @@ bool c_implicit_typecast(
   const namespacet &ns);
 
 bool c_implicit_typecast_arithmetic(
-  exprt &expr1, exprt &expr2,
+  exprt &expr1,
+  exprt &expr2,
   const namespacet &ns);
 
 class c_typecastt
 {
 public:
-  explicit c_typecastt(const namespacet &_ns):ns(_ns)
+  explicit c_typecastt(const namespacet &_ns) : ns(_ns)
   {
   }
 
@@ -46,16 +45,11 @@ public:
   {
   }
 
-  virtual void implicit_typecast(
-    exprt &expr,
-    const typet &type);
+  virtual void implicit_typecast(exprt &expr, const typet &type);
 
-  virtual void implicit_typecast_arithmetic(
-    exprt &expr);
+  virtual void implicit_typecast_arithmetic(exprt &expr);
 
-  virtual void implicit_typecast_arithmetic(
-    exprt &expr1,
-    exprt &expr2);
+  virtual void implicit_typecast_arithmetic(exprt &expr1, exprt &expr2);
 
   std::list<std::string> errors;
   std::list<std::string> warnings;
@@ -65,25 +59,38 @@ protected:
 
   // these are in promotion order
 
-  enum c_typet { BOOL,
-                 CHAR, UCHAR,
-                 SHORT, USHORT,
-                 INT, UINT,
-                 LONG, ULONG,
-                 LONGLONG, ULONGLONG,
-                 LARGE_SIGNED_INT, LARGE_UNSIGNED_INT,
-                 INTEGER, // these are unbounded integers, non-standard
-                 FIXEDBV, // fixed-point, non-standard
-                 SINGLE, DOUBLE, LONGDOUBLE, FLOAT128, // float
-                 RATIONAL, REAL, // infinite precision, non-standard
-                 COMPLEX,
-                 VOIDPTR, PTR, OTHER };
+  enum c_typet
+  {
+    BOOL,
+    CHAR,
+    UCHAR,
+    SHORT,
+    USHORT,
+    INT,
+    UINT,
+    LONG,
+    ULONG,
+    LONGLONG,
+    ULONGLONG,
+    LARGE_SIGNED_INT,
+    LARGE_UNSIGNED_INT,
+    INTEGER, // these are unbounded integers, non-standard
+    FIXEDBV, // fixed-point, non-standard
+    SINGLE,
+    DOUBLE,
+    LONGDOUBLE,
+    FLOAT128, // float
+    RATIONAL,
+    REAL, // infinite precision, non-standard
+    COMPLEX,
+    VOIDPTR,
+    PTR,
+    OTHER
+  };
 
   c_typet get_c_type(const typet &type) const;
 
-  void implicit_typecast_arithmetic(
-    exprt &expr,
-    c_typet c_type);
+  void implicit_typecast_arithmetic(exprt &expr, c_typet c_type);
 
   typet follow_with_qualifiers(const typet &src);
 

@@ -16,13 +16,9 @@ class typet;
 class exprt;
 class namespacet;
 
-json_objectt json(
-  const exprt &,
-  const namespacet &);
+json_objectt json(const exprt &, const namespacet &);
 
-json_objectt json(
-  const typet &,
-  const namespacet &);
+json_objectt json(const typet &, const namespacet &);
 
 json_objectt json(const source_locationt &);
 

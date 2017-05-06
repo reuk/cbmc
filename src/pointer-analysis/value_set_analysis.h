@@ -17,13 +17,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 class xmlt;
 
-class value_set_analysist:
-  public value_setst,
-  public static_analysist<value_set_domaint>
+class value_set_analysist : public value_setst,
+                            public static_analysist<value_set_domaint>
 {
 public:
-  explicit value_set_analysist(const namespacet &_ns):
-    static_analysist<value_set_domaint>(_ns)
+  explicit value_set_analysist(const namespacet &_ns)
+    : static_analysist<value_set_domaint>(_ns)
   {
   }
 
@@ -40,10 +39,8 @@ public:
 
 public:
   // interface value_sets
-  virtual void get_values(
-    locationt l,
-    const exprt &expr,
-    value_setst::valuest &dest)
+  virtual void
+  get_values(locationt l, const exprt &expr, value_setst::valuest &dest)
   {
     (*this)[l].value_set.get_value_set(expr, dest, ns);
   }

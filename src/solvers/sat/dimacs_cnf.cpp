@@ -22,7 +22,7 @@ Function: dimacs_cnft::dimacs_cnft
 
 \*******************************************************************/
 
-dimacs_cnft::dimacs_cnft():break_lines(false)
+dimacs_cnft::dimacs_cnft() : break_lines(false)
 {
 }
 
@@ -38,7 +38,7 @@ Function: dimacs_cnf_dumpt::dimacs_cnf_dumpt
 
 \*******************************************************************/
 
-dimacs_cnf_dumpt::dimacs_cnf_dumpt(std::ostream &_out):out(_out)
+dimacs_cnf_dumpt::dimacs_cnf_dumpt(std::ostream &_out) : out(_out)
 {
 }
 
@@ -75,8 +75,7 @@ Function: dimacs_cnft::write_problem_line
 void dimacs_cnft::write_problem_line(std::ostream &out)
 {
   // We start counting at 1, thus there is one variable fewer.
-  out << "p cnf " << (no_variables()-1) << " "
-      << clauses.size() << "\n";
+  out << "p cnf " << (no_variables() - 1) << " " << clauses.size() << "\n";
 }
 
 /*******************************************************************\
@@ -91,10 +90,8 @@ Function: write_dimacs_clause
 
 \*******************************************************************/
 
-static void write_dimacs_clause(
-  const bvt &clause,
-  std::ostream &out,
-  bool break_lines)
+static void
+write_dimacs_clause(const bvt &clause, std::ostream &out, bool break_lines)
 {
   // The DIMACS CNF format allows line breaks in clauses:
   // "Each clauses is terminated by the value 0. Unlike many formats
@@ -106,15 +103,16 @@ static void write_dimacs_clause(
   // However, the SAT competition format does not allow line
   // breaks in clauses, so we offer both options.
 
-  for(size_t j=0; j<clause.size(); j++)
+  for(size_t j= 0; j < clause.size(); j++)
   {
     out << clause[j].dimacs() << " ";
     // newline to avoid overflow in sat checkers
-    if((j&15)==0 && j!=0 && break_lines)
+    if((j & 15) == 0 && j != 0 && break_lines)
       out << "\n";
   }
 
-  out << "0" << "\n";
+  out << "0"
+      << "\n";
 }
 
 /*******************************************************************\
@@ -131,8 +129,7 @@ Function: dimacs_cnft::write_clauses
 
 void dimacs_cnft::write_clauses(std::ostream &out)
 {
-  for(clausest::const_iterator it=clauses.begin();
-      it!=clauses.end(); it++)
+  for(clausest::const_iterator it= clauses.begin(); it != clauses.end(); it++)
     write_dimacs_clause(*it, out, break_lines);
 }
 

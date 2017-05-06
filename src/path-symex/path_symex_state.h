@@ -19,15 +19,15 @@ public:
   path_symex_statet(
     var_mapt &_var_map,
     const locst &_locs,
-    path_symex_historyt &_path_symex_history):
-    var_map(_var_map),
-    locs(_locs),
-    inside_atomic_section(false),
-    history(_path_symex_history),
-    current_thread(0),
-    no_thread_interleavings(0),
-    no_branches(0),
-    depth(0)
+    path_symex_historyt &_path_symex_history)
+    : var_map(_var_map),
+      locs(_locs),
+      inside_atomic_section(false),
+      history(_path_symex_history),
+      current_thread(0),
+      no_thread_interleavings(0),
+      no_branches(0),
+      depth(0)
   {
   }
 
@@ -49,9 +49,7 @@ public:
     typedef std::set<exprt> index_sett;
     index_sett index_set;
 
-    var_statet():
-      value(nil_exprt()),
-      ssa_symbol(irep_idt())
+    var_statet() : value(nil_exprt()), ssa_symbol(irep_idt())
     {
     }
   };
@@ -82,10 +80,10 @@ public:
   public:
     loc_reft pc;
     call_stackt call_stack; // the call stack
-    var_valt local_vars; // thread-local variables
+    var_valt local_vars;    // thread-local variables
     bool active;
 
-    threadt():active(true)
+    threadt() : active(true)
     {
     }
   };
@@ -105,7 +103,7 @@ public:
 
   void set_current_thread(unsigned _thread)
   {
-    current_thread=_thread;
+    current_thread= _thread;
   }
 
   loc_reft get_pc() const;
@@ -117,8 +115,7 @@ public:
 
   bool is_executable() const
   {
-    return !threads.empty() &&
-           threads[current_thread].active;
+    return !threads.empty() && threads[current_thread].active;
   }
 
   // execution history
@@ -131,13 +128,13 @@ public:
 
   threadt &add_thread()
   {
-    threads.resize(threads.size()+1);
+    threads.resize(threads.size() + 1);
     return threads.back();
   }
 
   void disable_current_thread()
   {
-    threads[current_thread].active=false;
+    threads[current_thread].active= false;
   }
 
   loc_reft pc() const
@@ -152,7 +149,7 @@ public:
 
   void set_pc(loc_reft new_pc)
   {
-    threads[current_thread].pc=new_pc;
+    threads[current_thread].pc= new_pc;
   }
 
   // output
@@ -213,31 +210,21 @@ protected:
   unsigned no_branches;
   unsigned depth;
 
-  exprt read(
-    const exprt &src,
-    bool propagate);
+  exprt read(const exprt &src, bool propagate);
 
-  exprt instantiate_rec(
-    const exprt &src,
-    bool propagate);
+  exprt instantiate_rec(const exprt &src, bool propagate);
 
   exprt expand_structs_and_arrays(const exprt &src);
   exprt array_theory(const exprt &src, bool propagate);
 
-  exprt instantiate_rec_address(
-    const exprt &src,
-    bool propagate);
+  exprt instantiate_rec_address(const exprt &src, bool propagate);
 
-  exprt read_symbol_member_index(
-    const exprt &src,
-    bool propagate);
+  exprt read_symbol_member_index(const exprt &src, bool propagate);
 
   bool is_symbol_member_index(const exprt &src) const;
 };
 
-path_symex_statet initial_state(
-  var_mapt &var_map,
-  const locst &locs,
-  path_symex_historyt &);
+path_symex_statet
+initial_state(var_mapt &var_map, const locst &locs, path_symex_historyt &);
 
 #endif // CPROVER_PATH_SYMEX_PATH_SYMEX_STATE_H

@@ -26,8 +26,8 @@ const T *as_const(T *t)
 template <
   class keyT,
   class valueT,
-  class predT=std::equal_to<keyT>,
-  bool no_sharing=false>
+  class predT= std::equal_to<keyT>,
+  bool no_sharing= false>
 class sharing_nodet
 {
 public:
@@ -48,34 +48,34 @@ public:
 
   sharing_nodet() : data(empty_data)
   {
-    _sn_assert(data.use_count()>=2);
+    _sn_assert(data.use_count() >= 2);
   }
 
   sharing_nodet(const key_type &k, const mapped_type &m) : data(empty_data)
   {
-    _sn_assert(data.use_count()>=2);
+    _sn_assert(data.use_count() >= 2);
 
-    dt &d=write();
+    dt &d= write();
 
-    _sn_assert(d.k==nullptr);
-    d.k=std::make_shared<key_type>(k);
+    _sn_assert(d.k == nullptr);
+    d.k= std::make_shared<key_type>(k);
 
-    _sn_assert(d.m==nullptr);
+    _sn_assert(d.m == nullptr);
     d.m.reset(new mapped_type(m));
   }
 
   sharing_nodet(const self_type &other)
   {
 #ifdef SM_NO_SHARING
-    data=std::make_shared<dt>(*other.data);
+    data= std::make_shared<dt>(*other.data);
 #else
     if(no_sharing)
     {
-      data=std::make_shared<dt>(*other.data);
+      data= std::make_shared<dt>(*other.data);
     }
     else
     {
-      data=other.data;
+      data= other.data;
     }
 #endif
   }
@@ -85,7 +85,7 @@ public:
   bool is_empty() const
   {
     _sn_assert(is_well_formed());
-    return data==empty_data;
+    return data == empty_data;
   }
 
   bool is_internal() const
@@ -153,10 +153,10 @@ public:
 
   const self_type *find_child(const unsigned n) const
   {
-    const subt &s=get_sub();
-    typename subt::const_iterator it=s.find(n);
+    const subt &s= get_sub();
+    typename subt::const_iterator it= s.find(n);
 
-    if(it!=s.end())
+    if(it != s.end())
       return &it->second;
 
     return nullptr;
@@ -164,23 +164,23 @@ public:
 
   self_type *add_child(const unsigned n)
   {
-    subt &s=get_sub();
+    subt &s= get_sub();
     return &s[n];
   }
 
   void remove_child(const unsigned n)
   {
-    subt &s=get_sub();
-    size_t r=s.erase(n);
+    subt &s= get_sub();
+    size_t r= s.erase(n);
 
-    _sn_assert(r==1);
+    _sn_assert(r == 1);
   }
 
   // container nodes
 
   const self_type *find_leaf(const key_type &k) const
   {
-    const containert &c=get_container();
+    const containert &c= get_container();
 
     for(const auto &n : c)
     {
@@ -193,7 +193,7 @@ public:
 
   self_type *find_leaf(const key_type &k)
   {
-    containert &c=get_container();
+    containert &c= get_container();
 
     for(auto &n : c)
     {
@@ -207,9 +207,9 @@ public:
   // add leaf, key must not exist yet
   self_type *place_leaf(const key_type &k, const mapped_type &m)
   {
-    _sn_assert(as_const(this)->find_leaf(k)==nullptr);
+    _sn_assert(as_const(this)->find_leaf(k) == nullptr);
 
-    containert &c=get_container();
+    containert &c= get_container();
     c.push_back(self_type(k, m));
 
     return &c.back();
@@ -218,12 +218,11 @@ public:
   // remove leaf, key must exist
   void remove_leaf(const key_type &k)
   {
-    containert &c=get_container();
+    containert &c= get_container();
 
-    for(typename containert::const_iterator it=c.begin();
-        it!=c.end(); it++)
+    for(typename containert::const_iterator it= c.begin(); it != c.end(); it++)
     {
-      const self_type &n=*it;
+      const self_type &n= *it;
 
       if(key_equal()(n.get_key(), k))
       {
@@ -239,12 +238,12 @@ public:
 
   void clear()
   {
-    *this=self_type();
+    *this= self_type();
   }
 
   bool shares_with(const self_type &other) const
   {
-    return data==other.data;
+    return data == other.data;
   }
 
   void swap(self_type &other)
@@ -256,21 +255,23 @@ protected:
   class dt
   {
   public:
-    dt() {}
+    dt()
+    {
+    }
 
     dt(const dt &d) : k(d.k), sub(d.sub), con(d.con)
     {
       if(d.is_leaf())
       {
-        _sn_assert(m==nullptr);
+        _sn_assert(m == nullptr);
         m.reset(new mapped_type(*d.m));
       }
     }
 
     bool is_leaf() const
     {
-      _sn_assert(k==nullptr || m!=nullptr);
-      return k!=nullptr;
+      _sn_assert(k == nullptr || m != nullptr);
+      return k != nullptr;
     }
 
     std::shared_ptr<key_type> k;
@@ -293,36 +294,36 @@ protected:
 
   void detach()
   {
-    _sn_assert(data.use_count()>0);
+    _sn_assert(data.use_count() > 0);
 
-    if(data==empty_data)
-      data=std::make_shared<dt>();
-    else if(data.use_count()>1)
-      data=std::make_shared<dt>(*data);
+    if(data == empty_data)
+      data= std::make_shared<dt>();
+    else if(data.use_count() > 1)
+      data= std::make_shared<dt>(*data);
 
-    _sn_assert(data.use_count()==1);
+    _sn_assert(data.use_count() == 1);
   }
 
   bool is_well_formed() const
   {
-    if(data==nullptr)
+    if(data == nullptr)
       return false;
 
-    const dt &d=*data;
+    const dt &d= *data;
 
     bool b;
 
     // empty node
-    b=data==empty_data;
+    b= data == empty_data;
     // internal node
-    b|=d.k==nullptr && d.m==nullptr && get_container().empty() &&
-       !get_sub().empty();
+    b|= d.k == nullptr && d.m == nullptr && get_container().empty() &&
+        !get_sub().empty();
     // container node
-    b|=d.k==nullptr && d.m==nullptr && !get_container().empty() &&
-       get_sub().empty();
+    b|= d.k == nullptr && d.m == nullptr && !get_container().empty() &&
+        get_sub().empty();
     // leaf node
-    b|=d.k!=nullptr && d.m!=nullptr && get_container().empty() &&
-       get_sub().empty();
+    b|= d.k != nullptr && d.m != nullptr && get_container().empty() &&
+        get_sub().empty();
 
     return b;
   }

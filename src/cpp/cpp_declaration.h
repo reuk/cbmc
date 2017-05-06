@@ -17,12 +17,12 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 #include "cpp_template_type.h"
 #include "cpp_template_args.h"
 
-class cpp_declarationt:public exprt
+class cpp_declarationt : public exprt
 {
 public:
   typedef std::vector<cpp_declaratort> declaratorst;
 
-  cpp_declarationt():exprt(ID_cpp_declaration)
+  cpp_declarationt() : exprt(ID_cpp_declaration)
   {
   }
 
@@ -33,7 +33,7 @@ public:
 
   bool is_constructor() const
   {
-    return type().id()==ID_constructor;
+    return type().id() == ID_constructor;
   }
 
   bool is_static_assert() const
@@ -43,7 +43,7 @@ public:
 
   bool is_destructor() const
   {
-    return type().id()==ID_destructor;
+    return type().id() == ID_destructor;
   }
 
   bool is_template() const
@@ -53,9 +53,7 @@ public:
 
   bool is_class_template() const
   {
-    return is_template() &&
-           type().id()==ID_struct &&
-           declarators().empty();
+    return is_template() && type().id() == ID_struct && declarators().empty();
   }
 
   const declaratorst &declarators() const
@@ -70,26 +68,22 @@ public:
 
   const cpp_storage_spect &storage_spec() const
   {
-    return static_cast<const cpp_storage_spect &>(
-      find(ID_storage_spec));
+    return static_cast<const cpp_storage_spect &>(find(ID_storage_spec));
   }
 
   cpp_storage_spect &storage_spec()
   {
-    return static_cast<cpp_storage_spect &>(
-      add(ID_storage_spec));
+    return static_cast<cpp_storage_spect &>(add(ID_storage_spec));
   }
 
   const cpp_member_spect &member_spec() const
   {
-    return static_cast<const cpp_member_spect &>(
-      find(ID_member_spec));
+    return static_cast<const cpp_member_spect &>(find(ID_member_spec));
   }
 
   cpp_member_spect &member_spec()
   {
-    return static_cast<cpp_member_spect &>(
-      add(ID_member_spec));
+    return static_cast<cpp_member_spect &>(add(ID_member_spec));
   }
 
   template_typet &template_type()
@@ -138,19 +132,22 @@ public:
 
   // for assigning a tag for struct/union in the type based on
   // the name of the first declarator
-  void name_anon_struct_union() { name_anon_struct_union(type()); }
+  void name_anon_struct_union()
+  {
+    name_anon_struct_union(type());
+  }
   void name_anon_struct_union(typet &dest);
 };
 
 inline cpp_declarationt &to_cpp_declaration(irept &irep)
 {
-  assert(irep.id()==ID_cpp_declaration);
+  assert(irep.id() == ID_cpp_declaration);
   return static_cast<cpp_declarationt &>(irep);
 }
 
 inline const cpp_declarationt &to_cpp_declaration(const irept &irep)
 {
-  assert(irep.id()==ID_cpp_declaration);
+  assert(irep.id() == ID_cpp_declaration);
   return static_cast<const cpp_declarationt &>(irep);
 }
 

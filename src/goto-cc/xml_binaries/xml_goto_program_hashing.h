@@ -23,13 +23,13 @@ private:
   xml_irep_convertt irepconverter;
 
 public:
-  explicit xml_goto_program_convertt(xml_irep_convertt::ireps_containert &ic):
-    irepconverter(ic)
+  explicit xml_goto_program_convertt(xml_irep_convertt::ireps_containert &ic)
+    : irepconverter(ic)
   {
   }
 
-  void convert(const goto_programt&, xmlt&);
-  void convert(const xmlt&, goto_programt&);
+  void convert(const goto_programt &, xmlt &);
+  void convert(const xmlt &, goto_programt &);
 
   goto_programt::targett find_instruction(
     const xmlt &,

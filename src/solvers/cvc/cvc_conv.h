@@ -9,22 +9,20 @@ Author: Daniel Kroening, kroening@kroening.com
 #ifndef CPROVER_SOLVERS_CVC_CVC_CONV_H
 #define CPROVER_SOLVERS_CVC_CVC_CONV_H
 
-
 #include <solvers/prop/prop_conv.h>
 #include <solvers/flattening/pointer_logic.h>
 
-class cvc_convt:public prop_convt
+class cvc_convt : public prop_convt
 {
 public:
-  cvc_convt(const namespacet &_ns, std::ostream &_out):
-    prop_convt(_ns),
-    out(_out),
-    pointer_logic(_ns),
-    no_boolean_variables(0)
+  cvc_convt(const namespacet &_ns, std::ostream &_out)
+    : prop_convt(_ns), out(_out), pointer_logic(_ns), no_boolean_variables(0)
   {
   }
 
-  virtual ~cvc_convt() { }
+  virtual ~cvc_convt()
+  {
+  }
 
   // API methods
   virtual void set_to(const exprt &expr, bool value);

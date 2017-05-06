@@ -26,10 +26,7 @@ public:
     return language->from_type(type, code, ns);
   }
 
-  bool to_expr(
-    const std::string &code,
-    const std::string &module,
-    exprt &expr)
+  bool to_expr(const std::string &code, const std::string &module, exprt &expr)
   {
     return language->to_expr(code, module, expr, ns);
   }

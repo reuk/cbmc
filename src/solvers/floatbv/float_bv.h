@@ -50,26 +50,18 @@ public:
     const ieee_float_spect &);
 
   // mul/div
-  exprt mul(
-    const exprt &,
-    const exprt &,
-    const exprt &rm,
-    const ieee_float_spect &);
-  exprt div(
-    const exprt &,
-    const exprt &,
-    const exprt &rm,
-    const ieee_float_spect &);
+  exprt
+  mul(const exprt &, const exprt &, const exprt &rm, const ieee_float_spect &);
+  exprt
+  div(const exprt &, const exprt &, const exprt &rm, const ieee_float_spect &);
 
   // conversion
   exprt from_unsigned_integer(
     const exprt &,
     const exprt &rm,
     const ieee_float_spect &);
-  exprt from_signed_integer(
-    const exprt &,
-    const exprt &rm,
-    const ieee_float_spect &);
+  exprt
+  from_signed_integer(const exprt &, const exprt &rm, const ieee_float_spect &);
   exprt to_signed_integer(
     const exprt &src,
     std::size_t dest_width,
@@ -94,11 +86,8 @@ public:
 
   // relations
   typedef enum { LT, LE, EQ, GT, GE } relt;
-  exprt relation(
-    const exprt &,
-    relt rel,
-    const exprt &,
-    const ieee_float_spect &);
+  exprt
+  relation(const exprt &, relt rel, const exprt &, const ieee_float_spect &);
 
 protected:
   // helpers
@@ -123,7 +112,10 @@ protected:
     exprt round_to_minus_inf;
 
     void get(const exprt &rm);
-    explicit rounding_mode_bitst(const exprt &rm) { get(rm); }
+    explicit rounding_mode_bitst(const exprt &rm)
+    {
+      get(rm);
+    }
   };
 
   // unpacked
@@ -143,34 +135,32 @@ protected:
     exprt sign, infinity, zero, NaN;
     exprt fraction, exponent;
 
-    unpacked_floatt():
-      sign(false_exprt()),
-      infinity(false_exprt()),
-      zero(false_exprt()),
-      NaN(false_exprt())
+    unpacked_floatt()
+      : sign(false_exprt()),
+        infinity(false_exprt()),
+        zero(false_exprt()),
+        NaN(false_exprt())
     {
     }
   };
 
   // This has a biased exponent (unsigned)
   // and an _implicit_ hidden bit.
-  struct biased_floatt:public unpacked_floatt
+  struct biased_floatt : public unpacked_floatt
   {
   };
 
   // The hidden bit is explicit,
   // and the exponent is not biased (signed)
-  struct unbiased_floatt:public unpacked_floatt
+  struct unbiased_floatt : public unpacked_floatt
   {
   };
 
   biased_floatt bias(const unbiased_floatt &, const ieee_float_spect &);
 
   // this takes unpacked format, and returns packed
-  virtual exprt rounder(
-    const unbiased_floatt &,
-    const exprt &rm,
-    const ieee_float_spect &);
+  virtual exprt
+  rounder(const unbiased_floatt &, const exprt &rm, const ieee_float_spect &);
   exprt pack(const biased_floatt &, const ieee_float_spect &);
   unbiased_floatt unpack(const exprt &, const ieee_float_spect &);
 
@@ -193,15 +183,11 @@ protected:
   // helpers for adder
 
   // computes src1.exponent-src2.exponent with extension
-  exprt subtract_exponents(
-    const unbiased_floatt &src1,
-    const unbiased_floatt &src2);
+  exprt
+  subtract_exponents(const unbiased_floatt &src1, const unbiased_floatt &src2);
 
   // computes the "sticky-bit"
-  exprt sticky_right_shift(
-    const exprt &op,
-    const exprt &dist,
-    exprt &sticky);
+  exprt sticky_right_shift(const exprt &op, const exprt &dist, exprt &sticky);
 };
 
 inline exprt float_bv(const exprt &src)

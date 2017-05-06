@@ -31,11 +31,8 @@ class local_may_aliast
 public:
   typedef goto_functionst::goto_functiont goto_functiont;
 
-  explicit local_may_aliast(
-    const goto_functiont &_goto_function):
-    dirty(_goto_function),
-    locals(_goto_function),
-    cfg(_goto_function.body)
+  explicit local_may_aliast(const goto_functiont &_goto_function)
+    : dirty(_goto_function), locals(_goto_function), cfg(_goto_function.body)
   {
     build(_goto_function);
   }
@@ -50,14 +47,14 @@ public:
   local_cfgt cfg;
 
   // given a pointer, returns possible aliases
-  std::set<exprt> get(
-    const goto_programt::const_targett t,
-    const exprt &src) const;
+  std::set<exprt>
+  get(const goto_programt::const_targett t, const exprt &src) const;
 
   // returns 'true' when pointers src1 and src2 may be aliases
   bool aliases(
     const goto_programt::const_targett t,
-    const exprt &src1, const exprt &src2) const;
+    const exprt &src1,
+    const exprt &src2) const;
 
 protected:
   void build(const goto_functiont &goto_function);
@@ -99,51 +96,50 @@ protected:
 class local_may_alias_factoryt
 {
 public:
-  local_may_alias_factoryt():goto_functions(NULL)
+  local_may_alias_factoryt() : goto_functions(NULL)
   {
   }
 
   void operator()(const goto_functionst &_goto_functions)
   {
-    goto_functions=&_goto_functions;
+    goto_functions= &_goto_functions;
 
     forall_goto_functions(f_it, _goto_functions)
       forall_goto_program_instructions(i_it, f_it->second.body)
-        target_map[i_it]=f_it->first;
+        target_map[i_it]= f_it->first;
   }
 
   local_may_aliast &operator()(const irep_idt &fkt)
   {
-    assert(goto_functions!=NULL);
-    fkt_mapt::iterator f_it=fkt_map.find(fkt);
-    if(f_it!=fkt_map.end())
+    assert(goto_functions != NULL);
+    fkt_mapt::iterator f_it= fkt_map.find(fkt);
+    if(f_it != fkt_map.end())
       return *f_it->second;
 
     goto_functionst::function_mapt::const_iterator f_it2=
       goto_functions->function_map.find(fkt);
-    assert(f_it2!=goto_functions->function_map.end());
-    return *(fkt_map[fkt]=std::unique_ptr<local_may_aliast>(
-              new local_may_aliast(f_it2->second)));
+    assert(f_it2 != goto_functions->function_map.end());
+    return *(
+      fkt_map[fkt]=
+        std::unique_ptr<local_may_aliast>(new local_may_aliast(f_it2->second)));
   }
 
   local_may_aliast &operator()(goto_programt::const_targett t)
   {
-    target_mapt::const_iterator t_it=
-      target_map.find(t);
-    assert(t_it!=target_map.end());
+    target_mapt::const_iterator t_it= target_map.find(t);
+    assert(t_it != target_map.end());
     return operator()(t_it->second);
   }
 
-  std::set<exprt> get(
-    const goto_programt::const_targett t,
-    const exprt &src) const;
+  std::set<exprt>
+  get(const goto_programt::const_targett t, const exprt &src) const;
 
 protected:
   const goto_functionst *goto_functions;
-  typedef std::map<irep_idt, std::unique_ptr<local_may_aliast> > fkt_mapt;
+  typedef std::map<irep_idt, std::unique_ptr<local_may_aliast>> fkt_mapt;
   fkt_mapt fkt_map;
 
-  typedef std::map<goto_programt::const_targett, irep_idt > target_mapt;
+  typedef std::map<goto_programt::const_targett, irep_idt> target_mapt;
   target_mapt target_map;
 };
 

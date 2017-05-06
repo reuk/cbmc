@@ -27,13 +27,13 @@ public:
             to be performed
    * \param _dereference_callback Callback object for error reporting
   */
-  explicit dereferencet(
-    const namespacet &_ns):
-    ns(_ns)
+  explicit dereferencet(const namespacet &_ns) : ns(_ns)
   {
   }
 
-  ~dereferencet() { }
+  ~dereferencet()
+  {
+  }
 
   /*!
    * The operator '()' dereferences the
@@ -48,38 +48,27 @@ public:
 private:
   const namespacet &ns;
 
-  exprt dereference_rec(
-    const exprt &address,
-    const exprt &offset,
-    const typet &type);
+  exprt
+  dereference_rec(const exprt &address, const exprt &offset, const typet &type);
 
-  exprt dereference_if(
-    const if_exprt &expr,
-    const exprt &offset,
-    const typet &type);
+  exprt
+  dereference_if(const if_exprt &expr, const exprt &offset, const typet &type);
 
-  exprt dereference_plus(
-    const exprt &expr,
-    const exprt &offset,
-    const typet &type);
+  exprt
+  dereference_plus(const exprt &expr, const exprt &offset, const typet &type);
 
   exprt dereference_typecast(
     const typecast_exprt &expr,
     const exprt &offset,
     const typet &type);
 
-  bool type_compatible(
-    const typet &object_type,
-    const typet &dereference_type) const;
+  bool type_compatible(const typet &object_type, const typet &dereference_type)
+    const;
 
-  void offset_sum(
-    exprt &dest,
-    const exprt &offset) const;
+  void offset_sum(exprt &dest, const exprt &offset) const;
 
-  exprt read_object(
-    const exprt &object,
-    const exprt &offset,
-    const typet &type);
+  exprt
+  read_object(const exprt &object, const exprt &offset, const typet &type);
 };
 
 inline exprt dereference(const exprt &pointer, const namespacet &ns)

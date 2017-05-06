@@ -30,7 +30,7 @@ public:
 
   void from_type(const typet &type);
 
-  bv_spect():width(0), is_signed(false)
+  bv_spect() : width(0), is_signed(false)
   {
   }
 
@@ -41,7 +41,7 @@ public:
 
   bool operator==(const bv_spect &other) const
   {
-    return width==other.width && is_signed==other.is_signed;
+    return width == other.width && is_signed == other.is_signed;
   }
 };
 
@@ -50,12 +50,11 @@ class bv_arithmetict
 public:
   bv_spect spec;
 
-  explicit bv_arithmetict(const bv_spect &_spec):
-    spec(_spec), value(0)
+  explicit bv_arithmetict(const bv_spect &_spec) : spec(_spec), value(0)
   {
   }
 
-  bv_arithmetict():value(0)
+  bv_arithmetict() : value(0)
   {
   }
 
@@ -68,17 +67,23 @@ public:
 
   void make_zero()
   {
-    value=0;
+    value= 0;
   }
 
-  bool is_zero() const { return value==0; }
+  bool is_zero() const
+  {
+    return value == 0;
+  }
 
   // performs conversion to bit-vector format
   void from_integer(const mp_integer &i);
 
   // performs conversion from ieee floating point format
   void change_spec(const bv_spect &dest_spec);
-  mp_integer to_integer() const { return value; }
+  mp_integer to_integer() const
+  {
+    return value;
+  }
 
   void print(std::ostream &out) const;
 
@@ -113,7 +118,11 @@ public:
   }
 
   // turn into natural number representation
-  void unpack(const mp_integer &i) { value=i; adjust(); }
+  void unpack(const mp_integer &i)
+  {
+    value= i;
+    adjust();
+  }
   mp_integer pack() const;
 
 protected:

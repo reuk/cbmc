@@ -21,22 +21,22 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <linking/zero_initializer.h>
 
-class java_bytecode_convert_classt:public messaget
+class java_bytecode_convert_classt : public messaget
 {
 public:
   java_bytecode_convert_classt(
     symbol_tablet &_symbol_table,
     message_handlert &_message_handler,
     size_t _max_array_length,
-    lazy_methodst& _lazy_methods,
+    lazy_methodst &_lazy_methods,
     lazy_methods_modet _lazy_methods_mode,
-    bool _string_refinement_enabled):
-    messaget(_message_handler),
-    symbol_table(_symbol_table),
-    max_array_length(_max_array_length),
-    lazy_methods(_lazy_methods),
-    lazy_methods_mode(_lazy_methods_mode),
-    string_refinement_enabled(_string_refinement_enabled)
+    bool _string_refinement_enabled)
+    : messaget(_message_handler),
+      symbol_table(_symbol_table),
+      max_array_length(_max_array_length),
+      lazy_methods(_lazy_methods),
+      lazy_methods_mode(_lazy_methods_mode),
+      string_refinement_enabled(_string_refinement_enabled)
   {
   }
 
@@ -46,8 +46,9 @@ public:
 
     if(parse_tree.loading_successful)
       convert(parse_tree.parsed_class);
-    else if(string_refinement_enabled &&
-            parse_tree.parsed_class.name=="java.lang.String")
+    else if(
+      string_refinement_enabled &&
+      parse_tree.parsed_class.name == "java.lang.String")
       add_string_type();
     else
       generate_class_stub(parse_tree.parsed_class.name);
@@ -86,7 +87,7 @@ Function: java_bytecode_convert_classt::convert
 
 void java_bytecode_convert_classt::convert(const classt &c)
 {
-  std::string qualified_classname="java::"+id2string(c.name);
+  std::string qualified_classname= "java::" + id2string(c.name);
   if(symbol_table.has_symbol(qualified_classname))
   {
     debug() << "Skip class " << c.name << " (already loaded)" << eom;
@@ -99,37 +100,36 @@ void java_bytecode_convert_classt::convert(const classt &c)
   class_type.set(ID_base_name, c.name);
   if(c.is_enum)
     class_type.set(
-      ID_java_enum_static_unwind,
-      std::to_string(c.enum_elements+1));
+      ID_java_enum_static_unwind, std::to_string(c.enum_elements + 1));
 
   if(!c.extends.empty())
   {
-    symbol_typet base("java::"+id2string(c.extends));
+    symbol_typet base("java::" + id2string(c.extends));
     class_type.add_base(base);
     class_typet::componentt base_class_field;
-    base_class_field.type()=base;
-    base_class_field.set_name("@"+id2string(c.extends));
-    base_class_field.set_base_name("@"+id2string(c.extends));
-    base_class_field.set_pretty_name("@"+id2string(c.extends));
+    base_class_field.type()= base;
+    base_class_field.set_name("@" + id2string(c.extends));
+    base_class_field.set_base_name("@" + id2string(c.extends));
+    base_class_field.set_pretty_name("@" + id2string(c.extends));
     class_type.components().push_back(base_class_field);
   }
 
   // interfaces are recorded as bases
   for(const auto &interface : c.implements)
   {
-    symbol_typet base("java::"+id2string(interface));
+    symbol_typet base("java::" + id2string(interface));
     class_type.add_base(base);
   }
 
   // produce class symbol
   symbolt new_symbol;
-  new_symbol.base_name=c.name;
-  new_symbol.pretty_name=c.name;
-  new_symbol.name=qualified_classname;
+  new_symbol.base_name= c.name;
+  new_symbol.pretty_name= c.name;
+  new_symbol.name= qualified_classname;
   class_type.set(ID_name, new_symbol.name);
-  new_symbol.type=class_type;
-  new_symbol.mode=ID_java;
-  new_symbol.is_type=true;
+  new_symbol.type= class_type;
+  new_symbol.mode= ID_java;
+  new_symbol.is_type= true;
 
   symbolt *class_symbol;
 
@@ -147,18 +147,14 @@ void java_bytecode_convert_classt::convert(const classt &c)
   // now do methods
   for(const auto &method : c.methods)
   {
-    const irep_idt method_identifier=
-      id2string(qualified_classname)+
-      "."+id2string(method.name)+
-      ":"+method.signature;
+    const irep_idt method_identifier= id2string(qualified_classname) + "." +
+                                      id2string(method.name) + ":" +
+                                      method.signature;
     // Always run the lazy pre-stage, as it symbol-table
     // registers the function.
     java_bytecode_convert_method_lazy(
-      *class_symbol,
-      method_identifier,
-      method,
-      symbol_table);
-    if(lazy_methods_mode==LAZY_METHODS_MODE_EAGER)
+      *class_symbol, method_identifier, method, symbol_table);
+    if(lazy_methods_mode == LAZY_METHODS_MODE_EAGER)
     {
       // Upgrade to a fully-realized symbol now:
       java_bytecode_convert_method(
@@ -171,7 +167,7 @@ void java_bytecode_convert_classt::convert(const classt &c)
     else
     {
       // Wait for our caller to decide what needs elaborating.
-      lazy_methods[method_identifier]=std::make_pair(class_symbol, &method);
+      lazy_methods[method_identifier]= std::make_pair(class_symbol, &method);
     }
   }
 
@@ -204,20 +200,20 @@ void java_bytecode_convert_classt::generate_class_stub(
 
   // produce class symbol
   symbolt new_symbol;
-  new_symbol.base_name=class_name;
-  new_symbol.pretty_name=class_name;
-  new_symbol.name="java::"+id2string(class_name);
+  new_symbol.base_name= class_name;
+  new_symbol.pretty_name= class_name;
+  new_symbol.name= "java::" + id2string(class_name);
   class_type.set(ID_name, new_symbol.name);
-  new_symbol.type=class_type;
-  new_symbol.mode=ID_java;
-  new_symbol.is_type=true;
+  new_symbol.type= class_type;
+  new_symbol.mode= ID_java;
+  new_symbol.is_type= true;
 
   symbolt *class_symbol;
 
   if(symbol_table.move(new_symbol, class_symbol))
   {
-    warning() << "stub class symbol " << new_symbol.name
-              << " already exists" << eom;
+    warning() << "stub class symbol " << new_symbol.name << " already exists"
+              << eom;
   }
   else
   {
@@ -242,7 +238,7 @@ void java_bytecode_convert_classt::convert(
   symbolt &class_symbol,
   const fieldt &f)
 {
-  typet field_type=java_type_from_string(f.signature);
+  typet field_type= java_type_from_string(f.signature);
 
   // is this a static field?
   if(f.is_static)
@@ -250,27 +246,23 @@ void java_bytecode_convert_classt::convert(
     // Create the symbol; we won't add to the struct type.
     symbolt new_symbol;
 
-    new_symbol.is_static_lifetime=true;
-    new_symbol.is_lvalue=true;
-    new_symbol.is_state_var=true;
-    new_symbol.name=id2string(class_symbol.name)+"."+id2string(f.name);
-    new_symbol.base_name=f.name;
-    new_symbol.type=field_type;
-    new_symbol.pretty_name=id2string(class_symbol.pretty_name)+
-      "."+id2string(f.name);
-    new_symbol.mode=ID_java;
-    new_symbol.is_type=false;
+    new_symbol.is_static_lifetime= true;
+    new_symbol.is_lvalue= true;
+    new_symbol.is_state_var= true;
+    new_symbol.name= id2string(class_symbol.name) + "." + id2string(f.name);
+    new_symbol.base_name= f.name;
+    new_symbol.type= field_type;
+    new_symbol.pretty_name=
+      id2string(class_symbol.pretty_name) + "." + id2string(f.name);
+    new_symbol.mode= ID_java;
+    new_symbol.is_type= false;
     const namespacet ns(symbol_table);
-    new_symbol.value=
-      zero_initializer(
-        field_type,
-        class_symbol.location,
-        ns,
-        get_message_handler());
+    new_symbol.value= zero_initializer(
+      field_type, class_symbol.location, ns, get_message_handler());
 
     // Do we have the static field symbol already?
-    const auto s_it=symbol_table.symbols.find(new_symbol.name);
-    if(s_it!=symbol_table.symbols.end())
+    const auto s_it= symbol_table.symbols.find(new_symbol.name);
+    if(s_it != symbol_table.symbols.end())
       symbol_table.symbols.erase(s_it); // erase, we stubbed it
 
     if(symbol_table.add(new_symbol))
@@ -278,15 +270,15 @@ void java_bytecode_convert_classt::convert(
   }
   else
   {
-    class_typet &class_type=to_class_type(class_symbol.type);
+    class_typet &class_type= to_class_type(class_symbol.type);
 
     class_type.components().push_back(class_typet::componentt());
-    class_typet::componentt &component=class_type.components().back();
+    class_typet::componentt &component= class_type.components().back();
 
     component.set_name(f.name);
     component.set_base_name(f.name);
     component.set_pretty_name(f.name);
-    component.type()=field_type;
+    component.type()= field_type;
 
     if(f.is_private)
       component.set_access(ID_private);
@@ -313,12 +305,11 @@ Function: java_bytecode_convert_classt::add_array_types
 
 void java_bytecode_convert_classt::add_array_types()
 {
-  const std::string letters="ijsbcfdza";
+  const std::string letters= "ijsbcfdza";
 
   for(const char l : letters)
   {
-    symbol_typet symbol_type=
-      to_symbol_type(java_array_type(l).subtype());
+    symbol_typet symbol_type= to_symbol_type(java_array_type(l).subtype());
 
     struct_typet struct_type;
     // we have the base class, java.lang.Object, length and data
@@ -326,22 +317,22 @@ void java_bytecode_convert_classt::add_array_types()
     struct_type.set_tag(symbol_type.get_identifier());
 
     struct_type.components().reserve(3);
-    struct_typet::componentt
-      comp0("@java.lang.Object", symbol_typet("java::java.lang.Object"));
+    struct_typet::componentt comp0(
+      "@java.lang.Object", symbol_typet("java::java.lang.Object"));
     struct_type.components().push_back(comp0);
 
     struct_typet::componentt comp1("length", java_int_type());
     struct_type.components().push_back(comp1);
 
-    struct_typet::componentt
-      comp2("data", pointer_typet(java_type_from_char(l)));
+    struct_typet::componentt comp2(
+      "data", pointer_typet(java_type_from_char(l)));
     struct_type.components().push_back(comp2);
 
     symbolt symbol;
-    symbol.name=symbol_type.get_identifier();
-    symbol.base_name=symbol_type.get(ID_C_base_name);
-    symbol.is_type=true;
-    symbol.type=struct_type;
+    symbol.name= symbol_type.get_identifier();
+    symbol.base_name= symbol_type.get(ID_C_base_name);
+    symbol.is_type= true;
+    symbol.type= struct_type;
     symbol_table.add(symbol);
   }
 }
@@ -414,24 +405,24 @@ void java_bytecode_convert_classt::add_string_type()
   string_type.components().resize(3);
   string_type.components()[0].set_name("@java.lang.Object");
   string_type.components()[0].set_pretty_name("@java.lang.Object");
-  string_type.components()[0].type()=symbol_typet("java::java.lang.Object");
+  string_type.components()[0].type()= symbol_typet("java::java.lang.Object");
   string_type.components()[1].set_name("length");
   string_type.components()[1].set_pretty_name("length");
-  string_type.components()[1].type()=java_int_type();
+  string_type.components()[1].type()= java_int_type();
   string_type.components()[2].set_name("data");
   string_type.components()[2].set_pretty_name("data");
   // Use a pointer-to-unbounded-array instead of a pointer-to-char.
   // Saves some casting in the string refinement algorithm but may
   // be unnecessary.
-  string_type.components()[2].type()=pointer_typet(
+  string_type.components()[2].type()= pointer_typet(
     array_typet(java_char_type(), infinity_exprt(java_int_type())));
   string_type.add_base(symbol_typet("java::java.lang.Object"));
 
   symbolt string_symbol;
-  string_symbol.name="java::java.lang.String";
-  string_symbol.base_name="java.lang.String";
-  string_symbol.type=string_type;
-  string_symbol.is_type=true;
+  string_symbol.name= "java::java.lang.String";
+  string_symbol.base_name= "java.lang.String";
+  string_symbol.type= string_type;
+  string_symbol.is_type= true;
 
   symbol_table.add(string_symbol);
 
@@ -441,20 +432,20 @@ void java_bytecode_convert_classt::add_string_type()
   symbolt string_equals_symbol;
   string_equals_symbol.name=
     "java::java.lang.String.equals:(Ljava/lang/Object;)Z";
-  string_equals_symbol.base_name="java.lang.String.equals";
-  string_equals_symbol.pretty_name="java.lang.String.equals";
-  string_equals_symbol.mode=ID_java;
+  string_equals_symbol.base_name= "java.lang.String.equals";
+  string_equals_symbol.pretty_name= "java.lang.String.equals";
+  string_equals_symbol.mode= ID_java;
 
   code_typet string_equals_type;
-  string_equals_type.return_type()=java_boolean_type();
+  string_equals_type.return_type()= java_boolean_type();
   code_typet::parametert thisparam;
   thisparam.set_this();
-  thisparam.type()=pointer_typet(symbol_typet(string_symbol.name));
+  thisparam.type()= pointer_typet(symbol_typet(string_symbol.name));
   code_typet::parametert otherparam;
-  otherparam.type()=pointer_typet(symbol_typet("java::java.lang.Object"));
+  otherparam.type()= pointer_typet(symbol_typet("java::java.lang.Object"));
   string_equals_type.parameters().push_back(thisparam);
   string_equals_type.parameters().push_back(otherparam);
-  string_equals_symbol.type=std::move(string_equals_type);
+  string_equals_symbol.type= std::move(string_equals_type);
 
   symbol_table.add(string_equals_symbol);
 }

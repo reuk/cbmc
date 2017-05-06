@@ -51,7 +51,7 @@ public:
 protected:
   struct cfg_nodet
   {
-    cfg_nodet():node_required(false)
+    cfg_nodet() : node_required(false)
     {
     }
 
@@ -87,10 +87,8 @@ protected:
     queuet &queue,
     const goto_functionst &goto_functions);
 
-  void add_decl_dead(
-    const cfgt::nodet &node,
-    queuet &queue,
-    decl_deadt &decl_dead);
+  void
+  add_decl_dead(const cfgt::nodet &node, queuet &queue, decl_deadt &decl_dead);
 
   void add_jumps(
     queuet &queue,
@@ -109,7 +107,7 @@ protected:
   }
 };
 
-class assert_criteriont:public slicing_criteriont
+class assert_criteriont : public slicing_criteriont
 {
 public:
   virtual bool operator()(goto_programt::const_targett target)
@@ -118,12 +116,11 @@ public:
   }
 };
 
-class properties_criteriont:public slicing_criteriont
+class properties_criteriont : public slicing_criteriont
 {
 public:
-  explicit properties_criteriont(
-    const std::list<std::string> &properties):
-    property_ids(properties)
+  explicit properties_criteriont(const std::list<std::string> &properties)
+    : property_ids(properties)
   {
   }
 
@@ -135,11 +132,10 @@ public:
     const std::string &p_id=
       id2string(target->source_location.get_property_id());
 
-    for(std::list<std::string>::const_iterator
-        it=property_ids.begin();
-        it!=property_ids.end();
+    for(std::list<std::string>::const_iterator it= property_ids.begin();
+        it != property_ids.end();
         ++it)
-      if(p_id==*it)
+      if(p_id == *it)
         return true;
 
     return false;

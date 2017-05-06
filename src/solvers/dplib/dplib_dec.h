@@ -24,11 +24,10 @@ protected:
   std::string temp_out_filename, temp_result_filename;
 };
 
-class dplib_dect:protected dplib_temp_filet, public dplib_convt
+class dplib_dect : protected dplib_temp_filet, public dplib_convt
 {
 public:
-  explicit dplib_dect(const namespacet &_ns):
-    dplib_convt(_ns, temp_out)
+  explicit dplib_dect(const namespacet &_ns) : dplib_convt(_ns, temp_out)
   {
   }
 

@@ -23,37 +23,37 @@ Function: get_destructor
 
 \*******************************************************************/
 
-code_function_callt get_destructor(
-  const namespacet &ns,
-  const typet &type)
+code_function_callt get_destructor(const namespacet &ns, const typet &type)
 {
-  if(type.id()==ID_symbol)
+  if(type.id() == ID_symbol)
   {
     return get_destructor(ns, ns.follow(type));
   }
-  else if(type.id()==ID_struct)
+  else if(type.id() == ID_struct)
   {
-    const exprt &methods=static_cast<const exprt&>(type.find(ID_methods));
+    const exprt &methods= static_cast<const exprt &>(type.find(ID_methods));
 
     forall_operands(it, methods)
     {
-      if(it->type().id()==ID_code)
+      if(it->type().id() == ID_code)
       {
-        const code_typet &code_type=to_code_type(it->type());
+        const code_typet &code_type= to_code_type(it->type());
 
-        if(code_type.return_type().id()==ID_destructor &&
-           code_type.parameters().size()==1)
+        if(
+          code_type.return_type().id() == ID_destructor &&
+          code_type.parameters().size() == 1)
         {
-          const typet &arg_type=code_type.parameters().front().type();
+          const typet &arg_type= code_type.parameters().front().type();
 
-          if(arg_type.id()==ID_pointer &&
-             ns.follow(arg_type.subtype())==type)
+          if(
+            arg_type.id() == ID_pointer &&
+            ns.follow(arg_type.subtype()) == type)
           {
             exprt symbol_expr(ID_symbol, it->type());
             symbol_expr.set(ID_identifier, it->get(ID_name));
 
             code_function_callt function_call;
-            function_call.function()=symbol_expr;
+            function_call.function()= symbol_expr;
 
             return function_call;
           }

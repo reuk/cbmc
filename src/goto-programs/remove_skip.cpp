@@ -36,16 +36,15 @@ static bool is_skip(goto_programt::instructionst::iterator it)
     if(it->guard.is_false())
       return true;
 
-    if(it->targets.size()!=1)
+    if(it->targets.size() != 1)
       return false;
 
-    goto_programt::instructionst::iterator next_it=it;
+    goto_programt::instructionst::iterator next_it= it;
     next_it++;
 
     // A branch to the next instruction is a skip
     // We also require the guard to be 'true'
-    return it->guard.is_true() &&
-           it->targets.front()==next_it;
+    return it->guard.is_true() && it->targets.front() == next_it;
   }
 
   if(it->is_other())
@@ -53,17 +52,17 @@ static bool is_skip(goto_programt::instructionst::iterator it)
     if(it->code.is_nil())
       return true;
 
-    const irep_idt &statement=it->code.get_statement();
+    const irep_idt &statement= it->code.get_statement();
 
-    if(statement==ID_skip)
+    if(statement == ID_skip)
       return true;
-    else if(statement==ID_expression)
+    else if(statement == ID_expression)
     {
-      const code_expressiont &code_expression=to_code_expression(it->code);
-      const exprt &expr=code_expression.expression();
-      if(expr.id()==ID_typecast &&
-         expr.type().id()==ID_empty &&
-         to_typecast_expr(expr).op().is_constant())
+      const code_expressiont &code_expression= to_code_expression(it->code);
+      const exprt &expr= code_expression.expression();
+      if(
+        expr.id() == ID_typecast && expr.type().id() == ID_empty &&
+        to_typecast_expr(expr).op().is_constant())
       {
         // something like (void)0
         return true;
@@ -96,7 +95,7 @@ void remove_skip(goto_programt &goto_program)
 
   do
   {
-    old_size=goto_program.instructions.size();
+    old_size= goto_program.instructions.size();
 
     // maps deleted instructions to their replacement
     typedef std::map<goto_programt::targett, goto_programt::targett>
@@ -105,11 +104,11 @@ void remove_skip(goto_programt &goto_program)
 
     // remove skip statements
 
-    for(goto_programt::instructionst::iterator
-        it=goto_program.instructions.begin();
-        it!=goto_program.instructions.end();)
+    for(goto_programt::instructionst::iterator it=
+          goto_program.instructions.begin();
+        it != goto_program.instructions.end();)
     {
-      goto_programt::targett old_target=it;
+      goto_programt::targett old_target= it;
 
       // for collecting labels
       std::list<irep_idt> labels;
@@ -118,7 +117,7 @@ void remove_skip(goto_programt &goto_program)
       {
         // don't remove the last skip statement,
         // it could be a target
-        if(it==--goto_program.instructions.end())
+        if(it == --goto_program.instructions.end())
           break;
 
         // save labels
@@ -126,15 +125,15 @@ void remove_skip(goto_programt &goto_program)
         it++;
       }
 
-      goto_programt::targett new_target=it;
+      goto_programt::targett new_target= it;
 
       // save labels
       it->labels.splice(it->labels.begin(), labels);
 
-      if(new_target!=old_target)
+      if(new_target != old_target)
       {
-        for(; old_target!=new_target; ++old_target)
-          new_targets[old_target]=new_target; // remember the old targets
+        for(; old_target != new_target; ++old_target)
+          new_targets[old_target]= new_target; // remember the old targets
       }
       else
         it++;
@@ -145,16 +144,15 @@ void remove_skip(goto_programt &goto_program)
     Forall_goto_program_instructions(i_it, goto_program)
       if(i_it->is_goto() || i_it->is_start_thread() || i_it->is_catch())
       {
-        for(goto_programt::instructiont::targetst::iterator
-            t_it=i_it->targets.begin();
-            t_it!=i_it->targets.end();
+        for(goto_programt::instructiont::targetst::iterator t_it=
+              i_it->targets.begin();
+            t_it != i_it->targets.end();
             t_it++)
         {
-          new_targetst::const_iterator
-            result=new_targets.find(*t_it);
+          new_targetst::const_iterator result= new_targets.find(*t_it);
 
-          if(result!=new_targets.end())
-            *t_it=result->second;
+          if(result != new_targets.end())
+            *t_it= result->second;
         }
       }
 
@@ -166,12 +164,12 @@ void remove_skip(goto_programt &goto_program)
     // remove the last skip statement unless it's a target
     goto_program.compute_incoming_edges();
 
-    if(!goto_program.instructions.empty() &&
-       is_skip(--goto_program.instructions.end()) &&
-       !goto_program.instructions.back().is_target())
+    if(
+      !goto_program.instructions.empty() &&
+      is_skip(--goto_program.instructions.end()) &&
+      !goto_program.instructions.back().is_target())
       goto_program.instructions.pop_back();
-  }
-  while(goto_program.instructions.size()<old_size);
+  } while(goto_program.instructions.size() < old_size);
 }
 
 /*******************************************************************\

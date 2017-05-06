@@ -33,9 +33,10 @@ Function: show_goto_functions_jsont::show_goto_functions_jsont
 
 \*******************************************************************/
 
-show_goto_functions_jsont::show_goto_functions_jsont(const namespacet &ns):
-  ns(ns)
-{}
+show_goto_functions_jsont::show_goto_functions_jsont(const namespacet &ns)
+  : ns(ns)
+{
+}
 
 /*******************************************************************\
 
@@ -51,33 +52,34 @@ Function: show_goto_functions_jsont::convert
 
 \*******************************************************************/
 
-json_objectt show_goto_functions_jsont::convert(
-  const goto_functionst &goto_functions)
+json_objectt
+show_goto_functions_jsont::convert(const goto_functionst &goto_functions)
 {
   json_arrayt json_functions;
   const json_irept no_comments_irep_converter(false);
   for(const auto &function_entry : goto_functions.function_map)
   {
-    const irep_idt &function_name=function_entry.first;
-    const goto_functionst::goto_functiont &function=function_entry.second;
+    const irep_idt &function_name= function_entry.first;
+    const goto_functionst::goto_functiont &function= function_entry.second;
 
     json_objectt &json_function=
       json_functions.push_back(jsont()).make_object();
-    json_function["name"]=json_stringt(id2string(function_name));
+    json_function["name"]= json_stringt(id2string(function_name));
     json_function["isBodyAvailable"]=
       jsont::json_boolean(function.body_available());
-    bool is_internal=(has_prefix(id2string(function_name), CPROVER_PREFIX) ||
-                      function_name==goto_functions.entry_point());
-    json_function["isInternal"]=jsont::json_boolean(is_internal);
+    bool is_internal=
+      (has_prefix(id2string(function_name), CPROVER_PREFIX) ||
+       function_name == goto_functions.entry_point());
+    json_function["isInternal"]= jsont::json_boolean(is_internal);
 
     if(function.body_available())
     {
-      json_arrayt json_instruction_array=json_arrayt();
+      json_arrayt json_instruction_array= json_arrayt();
 
       for(const goto_programt::instructiont &instruction :
-        function.body.instructions)
+          function.body.instructions)
       {
-        json_objectt instruction_entry=json_objectt();
+        json_objectt instruction_entry= json_objectt();
 
         instruction_entry["instructionId"]=
           json_stringt(instruction.to_string());
@@ -95,7 +97,7 @@ json_objectt show_goto_functions_jsont::convert(
         instruction_entry["instruction"]=
           json_stringt(instruction_builder.str());
 
-        if(instruction.code.operands().size()>0)
+        if(instruction.code.operands().size() > 0)
         {
           json_arrayt operand_array;
           for(const exprt &operand : instruction.code.operands())
@@ -105,27 +107,26 @@ json_objectt show_goto_functions_jsont::convert(
               operand, operand_object);
             operand_array.push_back(operand_object);
           }
-          instruction_entry["operands"]=operand_array;
+          instruction_entry["operands"]= operand_array;
         }
 
         if(!instruction.guard.is_true())
         {
           json_objectt guard_object;
           no_comments_irep_converter.convert_from_irep(
-            instruction.guard,
-            guard_object);
+            instruction.guard, guard_object);
 
-          instruction_entry["guard"]=guard_object;
+          instruction_entry["guard"]= guard_object;
         }
 
         json_instruction_array.push_back(instruction_entry);
       }
 
-      json_function["instructions"]=json_instruction_array;
+      json_function["instructions"]= json_instruction_array;
     }
   }
   json_objectt json_result;
-  json_result["functions"]=json_functions;
+  json_result["functions"]= json_functions;
   return json_result;
 }
 

@@ -25,16 +25,14 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-class bmc_all_propertiest:
-  public cover_goalst::observert,
-  public messaget
+class bmc_all_propertiest : public cover_goalst::observert, public messaget
 {
 public:
   bmc_all_propertiest(
     const goto_functionst &_goto_functions,
     prop_convt &_solver,
-    bmct &_bmc):
-    goto_functions(_goto_functions), solver(_solver), bmc(_bmc)
+    bmct &_bmc)
+    : goto_functions(_goto_functions), solver(_solver), bmc(_bmc)
   {
   }
 
@@ -51,17 +49,27 @@ public:
     std::string description;
 
     // if failed, we compute a goto_trace for the first failing instance
-    enum statust { UNKNOWN, FAILURE, SUCCESS, ERROR } status;
+    enum statust
+    {
+      UNKNOWN,
+      FAILURE,
+      SUCCESS,
+      ERROR
+    } status;
     goto_tracet goto_trace;
 
     std::string status_string() const
     {
       switch(status)
       {
-      case UNKNOWN: return "UNKNOWN";
-      case FAILURE: return "FAILURE";
-      case SUCCESS: return "SUCCESS";
-      case ERROR: return "ERROR";
+      case UNKNOWN:
+        return "UNKNOWN";
+      case FAILURE:
+        return "FAILURE";
+      case SUCCESS:
+        return "SUCCESS";
+      case ERROR:
+        return "ERROR";
       }
 
       // make some poor compilers happy
@@ -69,14 +77,13 @@ public:
       return "";
     }
 
-    explicit goalt(
-      const goto_programt::instructiont &instruction):
-      status(statust::UNKNOWN)
+    explicit goalt(const goto_programt::instructiont &instruction)
+      : status(statust::UNKNOWN)
     {
-      description=id2string(instruction.source_location.get_comment());
+      description= id2string(instruction.source_location.get_comment());
     }
 
-    goalt():status(statust::UNKNOWN)
+    goalt() : status(statust::UNKNOWN)
     {
     }
 
@@ -99,7 +106,9 @@ protected:
   bmct &bmc;
 
   virtual void report(const cover_goalst &cover_goals);
-  virtual void do_before_solving() {}
+  virtual void do_before_solving()
+  {
+  }
 };
 
 #endif // CPROVER_CBMC_ALL_PROPERTIES_CLASS_H

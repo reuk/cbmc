@@ -16,7 +16,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "cnf.h"
 
-class satcheck_smvsatt:public cnf_solvert
+class satcheck_smvsatt : public cnf_solvert
 {
 public:
   satcheck_smvsatt();
@@ -32,7 +32,7 @@ protected:
   struct sat_instance *satsolver;
 };
 
-class satcheck_smvsat_coret:public satcheck_smvsatt
+class satcheck_smvsat_coret : public satcheck_smvsatt
 {
 public:
   satcheck_smvsat_coret();
@@ -41,7 +41,7 @@ public:
 
   bool is_in_core(literalt l) const
   {
-    assert(l.var_no()<in_core.size());
+    assert(l.var_no() < in_core.size());
     return in_core[l.var_no()];
   }
 
@@ -49,16 +49,16 @@ protected:
   std::vector<bool> in_core;
 };
 
-class satcheck_smvsat_interpolatort:public satcheck_smvsatt
+class satcheck_smvsat_interpolatort : public satcheck_smvsatt
 {
 public:
-  satcheck_smvsat_interpolatort():partition_no(0)
+  satcheck_smvsat_interpolatort() : partition_no(0)
   {
   }
 
   void set_partition_no(short p)
   {
-    partition_no=p;
+    partition_no= p;
   }
 
   void interpolate(exprt &dest);
@@ -80,7 +80,7 @@ protected:
     int g;
     exprt *e;
 
-    entryt(int _g, exprt *_e):g(_g), e(_e)
+    entryt(int _g, exprt *_e) : g(_g), e(_e)
     {
     }
   };

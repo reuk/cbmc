@@ -26,8 +26,7 @@ Function: armcc_cmdlinet::parse
 // see
 // http://infocenter.arm.com/help/topic/com.arm.doc.dui0472c/Cchbggjb.html
 
-static const char *options_no_arg[]=
-{
+static const char *options_no_arg[]= {
   // goto-cc-specific
   "--show-symbol-table",
   "--show-function-table",
@@ -198,61 +197,56 @@ static const char *options_no_arg[]=
   "--translate_gcc",
   "--translate_gld",
   "-W",
-  NULL
-};
+  NULL};
 
-static const char *options_with_prefix[]=
-{
-  "--project=",
-  "--workdir=",
-  "--create_pch=",
-  "--pch_dir=",
-  "--use_pch=",
-  "--pending_instantiations=",
-  "--errors=",
-  "--default_extension=",
-  "--depend=",
-  "--depend_format=",
-  "--info=",
-  "--compatible=",
-  "--entry=",
-  "--scatter=",
-  "--fpu=",
-  "--fp16_format=",
-  "--fpmode=",
-  "--fpu=",
-  "--bss_threshold=",
-  "--keep=",
-  "--locale=",
-  "--message_locale=",
-  "--min_array_alignment=",
-  "--pointer_alignment=",
-  "--fpmode=",
-  "--library_interface=",
-  "--library_type=",
-  "--retain=",
-  "--diag_error=",
-  "--diag_remark=",
-  "--diag_style=",
-  "--diag_suppress=",
-  "--diag_warning=",
-  "--preinclude=",
-  "--via=",
-  "--feedback=",
-  "--profile=",
-  "--apcs=",
-  "--arm_linux_config_file=",
-  "--configure_gcc=",
-  "--configure_gld=",
-  "--configure_sysroot=",
-  "--configure_cpp_headers=",
-  "--configure_extra_includes=",
-  "--configure_extra_libraries=",
-  NULL
-};
+static const char *options_with_prefix[]= {"--project=",
+                                           "--workdir=",
+                                           "--create_pch=",
+                                           "--pch_dir=",
+                                           "--use_pch=",
+                                           "--pending_instantiations=",
+                                           "--errors=",
+                                           "--default_extension=",
+                                           "--depend=",
+                                           "--depend_format=",
+                                           "--info=",
+                                           "--compatible=",
+                                           "--entry=",
+                                           "--scatter=",
+                                           "--fpu=",
+                                           "--fp16_format=",
+                                           "--fpmode=",
+                                           "--fpu=",
+                                           "--bss_threshold=",
+                                           "--keep=",
+                                           "--locale=",
+                                           "--message_locale=",
+                                           "--min_array_alignment=",
+                                           "--pointer_alignment=",
+                                           "--fpmode=",
+                                           "--library_interface=",
+                                           "--library_type=",
+                                           "--retain=",
+                                           "--diag_error=",
+                                           "--diag_remark=",
+                                           "--diag_style=",
+                                           "--diag_suppress=",
+                                           "--diag_warning=",
+                                           "--preinclude=",
+                                           "--via=",
+                                           "--feedback=",
+                                           "--profile=",
+                                           "--apcs=",
+                                           "--arm_linux_config_file=",
+                                           "--configure_gcc=",
+                                           "--configure_gld=",
+                                           "--configure_sysroot=",
+                                           "--configure_cpp_headers=",
+                                           "--configure_extra_includes=",
+                                           "--configure_extra_libraries=",
+                                           NULL};
 
-static const char *options_with_arg[]=
-{
+static const char *options_with_arg[]= {
   // goto-cc specific
   "--verbosity",
   "--function",
@@ -268,15 +262,13 @@ static const char *options_with_arg[]=
   "-o",
   "--cpu",
   "--apcs",
-  NULL
-};
+  NULL};
 
 bool armcc_cmdlinet::parse(int argc, const char **argv)
 {
-  for(int i=1; i<argc; i++)
+  for(int i= 1; i < argc; i++)
   {
-    if(strcmp(argv[i], "-")==0 ||
-       argv[i][0]!='-')
+    if(strcmp(argv[i], "-") == 0 || argv[i][0] != '-')
     {
       args.push_back(argv[i]);
       continue;
@@ -294,14 +286,14 @@ bool armcc_cmdlinet::parse(int argc, const char **argv)
     else if(prefix_in_list(argv[i], options_with_arg, prefix))
     {
       // options that have a separated _or_ concatenated argument
-      if(strlen(argv[i])>prefix.size()) // concatenated?
+      if(strlen(argv[i]) > prefix.size()) // concatenated?
         set(prefix, std::string(argv[i], prefix.size(), std::string::npos));
       else
       {
         // Separated.
-        if(i!=argc-1) // Guard against end of command line.
+        if(i != argc - 1) // Guard against end of command line.
         {
-          set(prefix, argv[i+1]);
+          set(prefix, argv[i + 1]);
           i++;
         }
         else
@@ -315,8 +307,8 @@ bool armcc_cmdlinet::parse(int argc, const char **argv)
     }
     else
     { // unrecognized option
-      std::cout << "Warning: uninterpreted armcc option '"
-                << argv[i] << "'" << std::endl;
+      std::cout << "Warning: uninterpreted armcc option '" << argv[i] << "'"
+                << std::endl;
     }
   }
 

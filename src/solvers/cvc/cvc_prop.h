@@ -15,7 +15,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <solvers/prop/prop.h>
 
-class cvc_propt:virtual public propt
+class cvc_propt : virtual public propt
 {
 public:
   explicit cvc_propt(std::ostream &_out);
@@ -41,21 +41,29 @@ public:
   virtual literalt limplies(literalt a, literalt b);
   virtual literalt lselect(literalt a, literalt b, literalt c); // a?b:c
   virtual literalt new_variable();
-  virtual size_t no_variables() const { return _no_variables; }
-  virtual void set_no_variables(size_t no) { assert(false); }
+  virtual size_t no_variables() const
+  {
+    return _no_variables;
+  }
+  virtual void set_no_variables(size_t no)
+  {
+    assert(false);
+  }
 
   virtual void lcnf(const bvt &bv);
 
   virtual const std::string solver_text()
-  { return "CVC"; }
+  {
+    return "CVC";
+  }
 
   virtual tvt l_get(literalt literal) const
   {
-    unsigned v=literal.var_no();
-    if(v>=assignment.size())
+    unsigned v= literal.var_no();
+    if(v >= assignment.size())
       return tvt(tvt::tv_enumt::TV_UNKNOWN);
-    tvt r=assignment[v];
-    return literal.sign()?!r:r;
+    tvt r= assignment[v];
+    return literal.sign() ? !r : r;
   }
 
   virtual propt::resultt prop_solve();

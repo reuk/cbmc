@@ -11,18 +11,17 @@ Author: CM Wintersteiger
 
 #include <vector>
 
-
 #include "qdimacs_core.h"
 
 class Cudd; // NOLINT(*)
-class BDD; // NOLINT(*)
+class BDD;  // NOLINT(*)
 
-class qbf_bdd_certificatet:public qdimacs_coret
+class qbf_bdd_certificatet : public qdimacs_coret
 {
 protected:
   Cudd *bdd_manager;
 
-  typedef std::vector<BDD*> model_bddst;
+  typedef std::vector<BDD *> model_bddst;
   model_bddst model_bdds;
 
   typedef std::unordered_map<unsigned, exprt> function_cachet;
@@ -38,11 +37,10 @@ public:
   virtual const exprt f_get(literalt l);
 };
 
-
-class qbf_bdd_coret:public qbf_bdd_certificatet
+class qbf_bdd_coret : public qbf_bdd_certificatet
 {
 private:
-  typedef std::vector<BDD*> bdd_variable_mapt;
+  typedef std::vector<BDD *> bdd_variable_mapt;
   bdd_variable_mapt bdd_variable_map;
 
   BDD *matrix;

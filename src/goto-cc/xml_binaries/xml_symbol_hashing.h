@@ -23,8 +23,8 @@ private:
   std::list<irept> irepcache;
 
 public:
-  explicit xml_symbol_convertt(xml_irep_convertt::ireps_containert &ic):
-    irepconverter(ic)
+  explicit xml_symbol_convertt(xml_irep_convertt::ireps_containert &ic)
+    : irepconverter(ic)
   {
   }
 

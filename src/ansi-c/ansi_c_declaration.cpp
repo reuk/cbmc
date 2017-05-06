@@ -28,41 +28,40 @@ Function: ansi_c_declaratort::build
 
 void ansi_c_declaratort::build(irept &src)
 {
-  typet *p=static_cast<typet *>(&src);
+  typet *p= static_cast<typet *>(&src);
 
   // walk down subtype until we hit symbol or "abstract"
   while(true)
   {
-    typet &t=*p;
+    typet &t= *p;
 
-    if(t.id()==ID_symbol)
+    if(t.id() == ID_symbol)
     {
       set_base_name(t.get(ID_C_base_name));
-      add_source_location()=t.source_location();
+      add_source_location()= t.source_location();
       t.make_nil();
       break;
     }
-    else if(t.id()==irep_idt() ||
-            t.is_nil())
+    else if(t.id() == irep_idt() || t.is_nil())
     {
       assert(0);
     }
-    else if(t.id()==ID_abstract)
+    else if(t.id() == ID_abstract)
     {
       t.make_nil();
       break;
     }
-    else if(t.id()==ID_merged_type)
+    else if(t.id() == ID_merged_type)
     {
       // we always walk down the _last_ member of a merged type
       assert(!t.subtypes().empty());
-      p=&(t.subtypes().back());
+      p= &(t.subtypes().back());
     }
     else
-      p=&t.subtype();
+      p= &t.subtype();
   }
 
-  type()=static_cast<const typet &>(src);
+  type()= static_cast<const typet &>(src);
   value().make_nil();
 }
 
@@ -121,30 +120,30 @@ Function: ansi_c_declarationt::full_type
 
 \*******************************************************************/
 
-typet ansi_c_declarationt::full_type(
-  const ansi_c_declaratort &declarator) const
+typet ansi_c_declarationt::full_type(const ansi_c_declaratort &declarator) const
 {
-  typet result=declarator.type();
-  typet *p=&result;
+  typet result= declarator.type();
+  typet *p= &result;
 
   // this gets types that are still raw parse trees
   while(p->is_not_nil())
   {
-    if(p->id()==ID_pointer || p->id()==ID_array ||
-       p->id()==ID_vector || p->id()==ID_c_bit_field ||
-       p->id()==ID_block_pointer || p->id()==ID_code)
-      p=&p->subtype();
-    else if(p->id()==ID_merged_type)
+    if(
+      p->id() == ID_pointer || p->id() == ID_array || p->id() == ID_vector ||
+      p->id() == ID_c_bit_field || p->id() == ID_block_pointer ||
+      p->id() == ID_code)
+      p= &p->subtype();
+    else if(p->id() == ID_merged_type)
     {
       // we always go down on the right-most subtype
       assert(!p->subtypes().empty());
-      p=&(p->subtypes().back());
+      p= &(p->subtypes().back());
     }
     else
       assert(false);
   }
 
-  *p=type();
+  *p= type();
 
   // retain typedef for dump-c
   if(get_is_typedef())
@@ -170,32 +169,33 @@ void ansi_c_declarationt::to_symbol(
   symbolt &symbol) const
 {
   symbol.clear();
-  symbol.value=declarator.value();
-  symbol.type=full_type(declarator);
-  symbol.name=declarator.get_name();
-  symbol.base_name=declarator.get_base_name();
-  symbol.is_type=get_is_typedef();
-  symbol.location=declarator.source_location();
-  symbol.is_extern=get_is_extern();
-  symbol.is_macro=get_is_typedef() || get_is_enum_constant();
-  symbol.is_parameter=get_is_parameter();
-  symbol.is_weak=get_is_weak();
+  symbol.value= declarator.value();
+  symbol.type= full_type(declarator);
+  symbol.name= declarator.get_name();
+  symbol.base_name= declarator.get_base_name();
+  symbol.is_type= get_is_typedef();
+  symbol.location= declarator.source_location();
+  symbol.is_extern= get_is_extern();
+  symbol.is_macro= get_is_typedef() || get_is_enum_constant();
+  symbol.is_parameter= get_is_parameter();
+  symbol.is_weak= get_is_weak();
 
   // is it a function?
 
-  if(symbol.type.id()==ID_code && !symbol.is_type)
+  if(symbol.type.id() == ID_code && !symbol.is_type)
   {
-    symbol.is_static_lifetime=false;
-    symbol.is_thread_local=false;
+    symbol.is_static_lifetime= false;
+    symbol.is_thread_local= false;
 
-    symbol.is_file_local=get_is_static();
+    symbol.is_file_local= get_is_static();
 
     if(get_is_inline())
       symbol.type.set(ID_C_inlined, true);
 
-    if(config.ansi_c.mode==configt::ansi_ct::flavourt::GCC ||
-       config.ansi_c.mode==configt::ansi_ct::flavourt::APPLE ||
-       config.ansi_c.mode==configt::ansi_ct::flavourt::ARM)
+    if(
+      config.ansi_c.mode == configt::ansi_ct::flavourt::GCC ||
+      config.ansi_c.mode == configt::ansi_ct::flavourt::APPLE ||
+      config.ansi_c.mode == configt::ansi_ct::flavourt::ARM)
     {
       // GCC extern inline cleanup, to enable remove_internal_symbols
       // do its full job
@@ -204,27 +204,22 @@ void ansi_c_declarationt::to_symbol(
       if(get_is_inline())
       {
         if(get_is_static()) // C99 and above
-          symbol.is_extern=false;
-        else  if(get_is_extern()) // traditional GCC
-          symbol.is_file_local=true;
+          symbol.is_extern= false;
+        else if(get_is_extern()) // traditional GCC
+          symbol.is_file_local= true;
       }
     }
   }
   else // non-function
   {
-    symbol.is_static_lifetime=
-      !symbol.is_macro &&
-      !symbol.is_type &&
-      (get_is_global() || get_is_static());
+    symbol.is_static_lifetime= !symbol.is_macro && !symbol.is_type &&
+                               (get_is_global() || get_is_static());
 
     symbol.is_thread_local=
-      (!symbol.is_static_lifetime && !get_is_extern()) ||
-      get_is_thread_local();
+      (!symbol.is_static_lifetime && !get_is_extern()) || get_is_thread_local();
 
     symbol.is_file_local=
-      symbol.is_macro ||
-      (!get_is_global() && !get_is_extern()) ||
-      (get_is_global() && get_is_static()) ||
-      symbol.is_parameter;
+      symbol.is_macro || (!get_is_global() && !get_is_extern()) ||
+      (get_is_global() && get_is_static()) || symbol.is_parameter;
   }
 }

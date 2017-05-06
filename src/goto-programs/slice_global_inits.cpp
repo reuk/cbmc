@@ -34,61 +34,58 @@ Function: slice_global_inits
 
 \*******************************************************************/
 
-void slice_global_inits(
-  const namespacet &ns,
-  goto_functionst &goto_functions)
+void slice_global_inits(const namespacet &ns, goto_functionst &goto_functions)
 {
   // gather all functions reachable from the entry point
 
   call_grapht call_graph(goto_functions);
-  const call_grapht::grapht &graph=call_graph.graph;
+  const call_grapht::grapht &graph= call_graph.graph;
 
   std::list<irep_idt> worklist;
   std::unordered_set<irep_idt, irep_id_hash> functions_reached;
 
-  const irep_idt entry_point=goto_functionst::entry_point();
+  const irep_idt entry_point= goto_functionst::entry_point();
 
   goto_functionst::function_mapt::const_iterator e_it;
-  e_it=goto_functions.function_map.find(entry_point);
+  e_it= goto_functions.function_map.find(entry_point);
 
-  if(e_it==goto_functions.function_map.end())
+  if(e_it == goto_functions.function_map.end())
     throw "entry point not found";
 
   worklist.push_back(entry_point);
 
   do
   {
-    const irep_idt id=worklist.front();
+    const irep_idt id= worklist.front();
     worklist.pop_front();
 
     functions_reached.insert(id);
 
-    const auto &p=graph.equal_range(id);
+    const auto &p= graph.equal_range(id);
 
-    for(auto it=p.first; it!=p.second; it++)
+    for(auto it= p.first; it != p.second; it++)
     {
-      const irep_idt callee=it->second;
+      const irep_idt callee= it->second;
 
-      if(functions_reached.find(callee)==functions_reached.end())
+      if(functions_reached.find(callee) == functions_reached.end())
         worklist.push_back(callee);
     }
-  }
-  while(!worklist.empty());
+  } while(!worklist.empty());
 
-  const irep_idt initialize=CPROVER_PREFIX "initialize";
+  const irep_idt initialize= CPROVER_PREFIX "initialize";
   functions_reached.erase(initialize);
 
   // gather all symbols used by reachable functions
 
-  class symbol_collectort:public const_expr_visitort
+  class symbol_collectort : public const_expr_visitort
   {
   public:
     virtual void operator()(const exprt &expr)
     {
-      if(expr.id()==ID_symbol)
+      if(expr.id() == ID_symbol)
       {
-        const symbol_exprt &symbol_expr=to_symbol_expr(expr);
-        const irep_idt id=symbol_expr.get_identifier();
+        const symbol_exprt &symbol_expr= to_symbol_expr(expr);
+        const irep_idt id= symbol_expr.get_identifier();
         symbols.insert(id);
       }
     }
@@ -102,37 +99,38 @@ void slice_global_inits(
 
   for(const irep_idt &id : functions_reached)
   {
-    const goto_functionst::goto_functiont &goto_function
-      =goto_functions.function_map.at(id);
-    const goto_programt &goto_program=goto_function.body;
+    const goto_functionst::goto_functiont &goto_function=
+      goto_functions.function_map.at(id);
+    const goto_programt &goto_program= goto_function.body;
 
     forall_goto_program_instructions(i_it, goto_program)
     {
-      const codet &code=i_it->code;
+      const codet &code= i_it->code;
       code.visit(visitor);
     }
   }
 
-  const std::unordered_set<irep_idt, irep_id_hash> &symbols=visitor.symbols;
+  const std::unordered_set<irep_idt, irep_id_hash> &symbols= visitor.symbols;
 
   // now remove unnecessary initializations
 
   goto_functionst::function_mapt::iterator f_it;
-  f_it=goto_functions.function_map.find(initialize);
-  assert(f_it!=goto_functions.function_map.end());
+  f_it= goto_functions.function_map.find(initialize);
+  assert(f_it != goto_functions.function_map.end());
 
-  goto_programt &goto_program=f_it->second.body;
+  goto_programt &goto_program= f_it->second.body;
 
   Forall_goto_program_instructions(i_it, goto_program)
   {
     if(i_it->is_assign())
     {
-      const code_assignt &code_assign=to_code_assign(i_it->code);
-      const symbol_exprt &symbol_expr=to_symbol_expr(code_assign.lhs());
-      const irep_idt id=symbol_expr.get_identifier();
+      const code_assignt &code_assign= to_code_assign(i_it->code);
+      const symbol_exprt &symbol_expr= to_symbol_expr(code_assign.lhs());
+      const irep_idt id= symbol_expr.get_identifier();
 
-      if(!has_prefix(id2string(id), CPROVER_PREFIX) &&
-         symbols.find(id)==symbols.end())
+      if(
+        !has_prefix(id2string(id), CPROVER_PREFIX) &&
+        symbols.find(id) == symbols.end())
         i_it->make_skip();
     }
   }

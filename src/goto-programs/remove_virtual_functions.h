@@ -15,8 +15,7 @@ Date: April 2016
 
 // remove virtual function calls
 // and replace by case-split
-void remove_virtual_functions(
-  goto_modelt &goto_model);
+void remove_virtual_functions(goto_modelt &goto_model);
 
 void remove_virtual_functions(
   const symbol_tablet &symbol_table,

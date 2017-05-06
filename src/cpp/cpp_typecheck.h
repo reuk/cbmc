@@ -38,19 +38,19 @@ bool cpp_typecheck(
   message_handlert &message_handler,
   const namespacet &ns);
 
-class cpp_typecheckt:public c_typecheck_baset
+class cpp_typecheckt : public c_typecheck_baset
 {
 public:
   cpp_typecheckt(
     cpp_parse_treet &_cpp_parse_tree,
     symbol_tablet &_symbol_table,
     const std::string &_module,
-    message_handlert &message_handler):
-    c_typecheck_baset(_symbol_table, _module, message_handler),
-    cpp_parse_tree(_cpp_parse_tree),
-    template_counter(0),
-    anon_counter(0),
-    disable_access_control(false)
+    message_handlert &message_handler)
+    : c_typecheck_baset(_symbol_table, _module, message_handler),
+      cpp_parse_tree(_cpp_parse_tree),
+      template_counter(0),
+      anon_counter(0),
+      disable_access_control(false)
   {
   }
 
@@ -59,17 +59,22 @@ public:
     symbol_tablet &_symbol_table1,
     const symbol_tablet &_symbol_table2,
     const std::string &_module,
-    message_handlert &message_handler):
-    c_typecheck_baset(_symbol_table1, _symbol_table2,
-                      _module, message_handler),
-    cpp_parse_tree(_cpp_parse_tree),
-    template_counter(0),
-    anon_counter(0),
-    disable_access_control(false)
+    message_handlert &message_handler)
+    : c_typecheck_baset(
+        _symbol_table1,
+        _symbol_table2,
+        _module,
+        message_handler),
+      cpp_parse_tree(_cpp_parse_tree),
+      template_counter(0),
+      anon_counter(0),
+      disable_access_control(false)
   {
   }
 
-  virtual ~cpp_typecheckt() { }
+  virtual ~cpp_typecheckt()
+  {
+  }
 
   virtual void typecheck();
 
@@ -85,7 +90,7 @@ public:
     const cpp_namet &cpp_name,
     const cpp_typecheck_resolvet::wantt want,
     const cpp_typecheck_fargst &fargs,
-    bool fail_with_exception=true)
+    bool fail_with_exception= true)
   {
     cpp_typecheck_resolvet cpp_typecheck_resolve(*this);
     return cpp_typecheck_resolve.resolve(
@@ -120,9 +125,7 @@ protected:
 
   void convert_pmop(exprt &expr);
 
-  void convert_anonymous_union(
-    cpp_declarationt &declaration,
-    codet &new_code);
+  void convert_anonymous_union(cpp_declarationt &declaration, codet &new_code);
 
   void convert_anon_struct_union_member(
     const cpp_declarationt &declaration,
@@ -143,8 +146,7 @@ protected:
   void convert_template_function_or_member_specialization(
     cpp_declarationt &declaration);
 
-  void convert_class_template_specialization(
-    cpp_declarationt &declaration);
+  void convert_class_template_specialization(cpp_declarationt &declaration);
 
   void typecheck_class_template(cpp_declarationt &declaration);
 
@@ -184,9 +186,8 @@ protected:
   class instantiation_levelt
   {
   public:
-    instantiation_levelt(
-      instantiation_stackt &_instantiation_stack):
-      instantiation_stack(_instantiation_stack)
+    instantiation_levelt(instantiation_stackt &_instantiation_stack)
+      : instantiation_stack(_instantiation_stack)
     {
       instantiation_stack.push_back(instantiationt());
     }
@@ -206,15 +207,14 @@ protected:
     const cpp_template_args_tct &specialization_template_args,
     const cpp_template_args_tct &full_template_args);
 
-  void elaborate_class_template(
-    const typet &type);
+  void elaborate_class_template(const typet &type);
 
   const symbolt &instantiate_template(
     const source_locationt &source_location,
     const symbolt &symbol,
     const cpp_template_args_tct &specialization_template_args,
     const cpp_template_args_tct &full_template_args,
-    const typet &specialization=typet(ID_nil));
+    const typet &specialization= typet(ID_nil));
 
   void elaborate_class_template(
     const source_locationt &source_location,
@@ -225,16 +225,12 @@ protected:
 
   template_mapt template_map;
 
-  std::string template_suffix(
-    const cpp_template_args_tct &template_args);
+  std::string template_suffix(const cpp_template_args_tct &template_args);
 
-  void convert_parameters(
-    const irep_idt &mode,
-    code_typet &function_type);
+  void convert_parameters(const irep_idt &mode, code_typet &function_type);
 
-  void convert_parameter(
-    const irep_idt &mode,
-    code_typet::parametert &parameter);
+  void
+  convert_parameter(const irep_idt &mode, code_typet::parametert &parameter);
 
   //
   // Misc
@@ -245,14 +241,12 @@ protected:
     const irep_idt &base_name,
     cpp_declarationt &ctor) const;
 
-  void default_cpctor(
-    const symbolt&, cpp_declarationt &cpctor) const;
+  void default_cpctor(const symbolt &, cpp_declarationt &cpctor) const;
 
-  void default_assignop(
-      const symbolt &symbol, cpp_declarationt &cpctor);
+  void default_assignop(const symbolt &symbol, cpp_declarationt &cpctor);
 
-  void default_assignop_value(
-      const symbolt &symbol, cpp_declaratort &declarator);
+  void
+  default_assignop_value(const symbolt &symbol, cpp_declaratort &declarator);
 
   void default_dtor(const symbolt &symb, cpp_declarationt &dtor);
 
@@ -271,9 +265,9 @@ protected:
     const struct_union_typet &struct_union_type,
     irept &initializers);
 
-  bool find_cpctor(const symbolt &symbol)const;
-  bool find_assignop(const symbolt &symbol)const;
-  bool find_dtor(const symbolt &symbol)const;
+  bool find_cpctor(const symbolt &symbol) const;
+  bool find_assignop(const symbolt &symbol) const;
+  bool find_dtor(const symbolt &symbol) const;
 
   bool find_parent(
     const symbolt &symb,
@@ -286,30 +280,31 @@ protected:
     const irep_idt &component_name,
     exprt &member);
 
-  void new_temporary(const source_locationt &source_location,
-                     const typet &,
-                     const exprt::operandst &ops,
-                     exprt &temporary);
+  void new_temporary(
+    const source_locationt &source_location,
+    const typet &,
+    const exprt::operandst &ops,
+    exprt &temporary);
 
-  void new_temporary(const source_locationt &source_location,
-                     const typet &,
-                     const exprt &op,
-                     exprt &temporary);
+  void new_temporary(
+    const source_locationt &source_location,
+    const typet &,
+    const exprt &op,
+    exprt &temporary);
 
   void static_and_dynamic_initialization();
   void do_not_typechecked();
   void clean_up();
 
   void add_base_components(
-        const struct_typet &from,
-        const irep_idt &access,
-        struct_typet &to,
-        std::set<irep_idt> &bases,
-        std::set<irep_idt> &vbases,
-        bool is_virtual);
+    const struct_typet &from,
+    const irep_idt &access,
+    struct_typet &to,
+    std::set<irep_idt> &bases,
+    std::set<irep_idt> &vbases,
+    bool is_virtual);
 
-  bool cast_away_constness(const typet &t1,
-                           const typet &t2) const;
+  bool cast_away_constness(const typet &t1, const typet &t2) const;
 
   void do_virtual_table(const symbolt &symbol);
 
@@ -322,10 +317,10 @@ protected:
     method_bodyt(
       symbolt *_method_symbol,
       const template_mapt &_template_map,
-      const instantiation_stackt &_instantiation_stack):
-      method_symbol(_method_symbol),
-      template_map(_template_map),
-      instantiation_stack(_instantiation_stack)
+      const instantiation_stackt &_instantiation_stack)
+      : method_symbol(_method_symbol),
+        template_map(_template_map),
+        instantiation_stack(_instantiation_stack)
     {
     }
 
@@ -339,16 +334,15 @@ protected:
 
   void add_method_body(symbolt *_method_symbol)
   {
-    method_bodies.push_back(method_bodyt(
-      _method_symbol, template_map, instantiation_stack));
+    method_bodies.push_back(
+      method_bodyt(_method_symbol, template_map, instantiation_stack));
   }
 
   // types
 
   void typecheck_type(typet &type);
 
-  cpp_scopet &typecheck_template_parameters(
-    template_typet &type);
+  cpp_scopet &typecheck_template_parameters(template_typet &type);
 
   void typecheck_compound_type(struct_union_typet &type);
   void check_fixed_size_array(typet &type);
@@ -377,7 +371,10 @@ protected:
 
   void put_compound_into_scope(const struct_union_typet::componentt &component);
   void typecheck_compound_body(symbolt &symbol);
-  void typecheck_compound_body(struct_union_typet &type) { assert(false); }
+  void typecheck_compound_body(struct_union_typet &type)
+  {
+    assert(false);
+  }
   void typecheck_enum_body(symbolt &symbol);
   void typecheck_method_bodies(method_bodiest &);
   void typecheck_compound_bases(struct_typet &type);
@@ -425,9 +422,9 @@ protected:
   const struct_typet &this_struct_type();
 
   codet cpp_destructor(
-      const source_locationt &source_location,
-      const typet &type,
-      const exprt &object);
+    const source_locationt &source_location,
+    const typet &type,
+    const exprt &object);
 
   // expressions
   void explicit_typecast_ambiguity(exprt &expr);
@@ -435,14 +432,10 @@ protected:
   void typecheck_expr_member(exprt &expr);
   void typecheck_expr_ptrmember(exprt &expr);
   void typecheck_expr_throw(exprt &expr);
-  void typecheck_function_expr(exprt &expr,
-                      const cpp_typecheck_fargst &fargs);
-  void typecheck_expr_cpp_name(exprt &expr,
-                      const cpp_typecheck_fargst &fargs);
-  void typecheck_expr_member(exprt &expr,
-                      const cpp_typecheck_fargst &fargs);
-  void typecheck_expr_ptrmember(exprt &expr,
-                      const cpp_typecheck_fargst &fargs);
+  void typecheck_function_expr(exprt &expr, const cpp_typecheck_fargst &fargs);
+  void typecheck_expr_cpp_name(exprt &expr, const cpp_typecheck_fargst &fargs);
+  void typecheck_expr_member(exprt &expr, const cpp_typecheck_fargst &fargs);
+  void typecheck_expr_ptrmember(exprt &expr, const cpp_typecheck_fargst &fargs);
   void typecheck_cast_expr(exprt &expr);
   void typecheck_expr_trinary(if_exprt &expr);
   void typecheck_expr_binary_arithmetic(exprt &expr);
@@ -464,19 +457,17 @@ protected:
   void typecheck_expr_rel(binary_relation_exprt &expr);
   void typecheck_expr_comma(exprt &expr);
 
-  void typecheck_function_call_arguments(
-    side_effect_expr_function_callt &expr);
+  void typecheck_function_call_arguments(side_effect_expr_function_callt &expr);
 
   bool operator_is_overloaded(exprt &expr);
   bool overloadable(const exprt &expr);
 
   void add_implicit_dereference(exprt &expr);
 
-  void typecheck_side_effect_function_call(
-                     side_effect_expr_function_callt &expr);
+  void
+  typecheck_side_effect_function_call(side_effect_expr_function_callt &expr);
 
-  void typecheck_method_application(
-                    side_effect_expr_function_callt &expr);
+  void typecheck_method_application(side_effect_expr_function_callt &expr);
 
   void typecheck_assign(codet &code);
 
@@ -485,112 +476,132 @@ public:
   // Type Conversions
   //
 
-  bool standard_conversion_lvalue_to_rvalue(
-    const exprt &expr, exprt &new_expr) const;
+  bool standard_conversion_lvalue_to_rvalue(const exprt &expr, exprt &new_expr)
+    const;
 
-  bool standard_conversion_array_to_pointer(
-    const exprt &expr, exprt &new_expr) const;
+  bool standard_conversion_array_to_pointer(const exprt &expr, exprt &new_expr)
+    const;
 
   bool standard_conversion_function_to_pointer(
-    const exprt &expr, exprt &new_expr) const;
+    const exprt &expr,
+    exprt &new_expr) const;
 
   bool standard_conversion_qualification(
-    const exprt &expr, const typet&, exprt &new_expr) const;
+    const exprt &expr,
+    const typet &,
+    exprt &new_expr) const;
 
   bool standard_conversion_integral_promotion(
-    const exprt &expr, exprt &new_expr) const;
+    const exprt &expr,
+    exprt &new_expr) const;
 
   bool standard_conversion_floating_point_promotion(
-    const exprt &expr, exprt &new_expr) const;
+    const exprt &expr,
+    exprt &new_expr) const;
 
   bool standard_conversion_integral_conversion(
-    const exprt &expr, const typet &type, exprt &new_expr) const;
+    const exprt &expr,
+    const typet &type,
+    exprt &new_expr) const;
 
   bool standard_conversion_floating_integral_conversion(
-    const exprt &expr, const typet &type, exprt &new_expr) const;
+    const exprt &expr,
+    const typet &type,
+    exprt &new_expr) const;
 
   bool standard_conversion_floating_point_conversion(
-    const exprt &expr, const typet &type, exprt &new_expr) const;
+    const exprt &expr,
+    const typet &type,
+    exprt &new_expr) const;
 
   bool standard_conversion_pointer(
-    const exprt &expr, const typet &type, exprt &new_expr);
+    const exprt &expr,
+    const typet &type,
+    exprt &new_expr);
 
   bool standard_conversion_pointer_to_member(
-    const exprt &expr, const typet &type, exprt &new_expr);
+    const exprt &expr,
+    const typet &type,
+    exprt &new_expr);
 
-  bool standard_conversion_boolean(
-    const exprt &expr, exprt &new_expr) const;
+  bool standard_conversion_boolean(const exprt &expr, exprt &new_expr) const;
 
   bool standard_conversion_sequence(
-    const exprt &expr, const typet &type, exprt &new_expr, unsigned &rank);
+    const exprt &expr,
+    const typet &type,
+    exprt &new_expr,
+    unsigned &rank);
 
   bool user_defined_conversion_sequence(
-    const exprt &expr, const typet &type, exprt &new_expr, unsigned &rank);
+    const exprt &expr,
+    const typet &type,
+    exprt &new_expr,
+    unsigned &rank);
 
-  bool reference_related(
-    const exprt &expr, const typet &type) const;
+  bool reference_related(const exprt &expr, const typet &type) const;
 
   bool reference_compatible(
-    const exprt &expr, const typet &type, unsigned &rank) const;
+    const exprt &expr,
+    const typet &type,
+    unsigned &rank) const;
 
   bool reference_binding(
-    exprt expr, const typet &type, exprt &new_expr, unsigned &rank);
+    exprt expr,
+    const typet &type,
+    exprt &new_expr,
+    unsigned &rank);
 
   bool implicit_conversion_sequence(
-    const exprt &expr, const typet &type, exprt &new_expr, unsigned &rank);
+    const exprt &expr,
+    const typet &type,
+    exprt &new_expr,
+    unsigned &rank);
 
   bool implicit_conversion_sequence(
-    const exprt &expr, const typet &type, unsigned &rank);
+    const exprt &expr,
+    const typet &type,
+    unsigned &rank);
 
   bool implicit_conversion_sequence(
-    const exprt &expr, const typet &type, exprt &new_expr);
+    const exprt &expr,
+    const typet &type,
+    exprt &new_expr);
 
   void reference_initializer(exprt &expr, const typet &type);
 
   virtual void implicit_typecast(exprt &expr, const typet &type);
 
-  void get_bases(const struct_typet &type,
-     std::set<irep_idt> &set_bases) const;
+  void get_bases(const struct_typet &type, std::set<irep_idt> &set_bases) const;
 
-  void get_virtual_bases(const struct_typet &type,
-     std::list<irep_idt> &vbases) const;
+  void get_virtual_bases(const struct_typet &type, std::list<irep_idt> &vbases)
+    const;
 
-  bool subtype_typecast(
-    const struct_typet &from,
-    const struct_typet &to) const;
+  bool subtype_typecast(const struct_typet &from, const struct_typet &to) const;
 
-  void make_ptr_typecast(
-    exprt &expr,
-    const typet &dest_type);
+  void make_ptr_typecast(exprt &expr, const typet &dest_type);
 
   // the C++ typecasts
 
-  bool const_typecast(
-    const exprt &expr,
-    const typet &type,
-    exprt &new_expr);
+  bool const_typecast(const exprt &expr, const typet &type, exprt &new_expr);
 
-  bool dynamic_typecast(
-    const exprt &expr,
-    const typet &type,
-    exprt &new_expr);
+  bool dynamic_typecast(const exprt &expr, const typet &type, exprt &new_expr);
 
   bool reinterpret_typecast(
     const exprt &expr,
     const typet &type,
     exprt &new_expr,
-    bool check_constantness=true);
+    bool check_constantness= true);
 
   bool static_typecast(
     const exprt &expr,
     const typet &type,
     exprt &new_expr,
-    bool check_constantness=true);
+    bool check_constantness= true);
 
 private:
   typedef std::list<irep_idt> dynamic_initializationst;
   dynamic_initializationst dynamic_initializations;
-  bool disable_access_control;           // Disable protect and private
+  bool disable_access_control; // Disable protect and private
 };
 
 #endif // CPROVER_CPP_CPP_TYPECHECK_H

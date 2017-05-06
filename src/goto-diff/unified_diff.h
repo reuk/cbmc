@@ -25,9 +25,7 @@ class goto_programt;
 class unified_difft
 {
 public:
-  unified_difft(
-    const goto_modelt &model_old,
-    const goto_modelt &model_new);
+  unified_difft(const goto_modelt &model_old, const goto_modelt &model_new);
 
   bool operator()();
 
@@ -40,13 +38,10 @@ public:
     NEW
   };
 
-  typedef std::list<std::pair<goto_programt::const_targett,
-                              differencet> >
+  typedef std::list<std::pair<goto_programt::const_targett, differencet>>
     goto_program_difft;
 
-  void get_diff(
-    const irep_idt &function,
-    goto_program_difft &dest) const;
+  void get_diff(const irep_idt &function, goto_program_difft &dest) const;
 
 protected:
   const goto_functionst &old_goto_functions;
@@ -87,19 +82,13 @@ protected:
   bool instructions_equal(
     const goto_programt::instructiont &ins1,
     const goto_programt::instructiont &ins2,
-    bool recurse=true) const
+    bool recurse= true) const
   {
-    return
-      ins1.code==ins2.code &&
-      ins1.function==ins2.function &&
-      ins1.type==ins2.type &&
-      ins1.guard==ins2.guard &&
-      ins1.targets.size()==ins2.targets.size() &&
-      (ins1.targets.empty() ||
-       instructions_equal(
-         *ins1.get_target(),
-         *ins2.get_target(),
-         false));
+    return ins1.code == ins2.code && ins1.function == ins2.function &&
+           ins1.type == ins2.type && ins1.guard == ins2.guard &&
+           ins1.targets.size() == ins2.targets.size() &&
+           (ins1.targets.empty() ||
+            instructions_equal(*ins1.get_target(), *ins2.get_target(), false));
   }
 };
 

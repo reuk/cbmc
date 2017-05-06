@@ -98,17 +98,16 @@ propt::resultt satcheck_zcoret::prop_solve()
 {
   // We start counting at 1, thus there is one variable fewer.
   {
-    std::string msg=
-      std::to_string(no_variables()-1)+" variables, "+
-      std::to_string(no_clauses())+" clauses";
+    std::string msg= std::to_string(no_variables() - 1) + " variables, " +
+                     std::to_string(no_clauses()) + " clauses";
     messaget::status() << msg << messaget::eom;
   }
 
   // get the core
-  std::string cnf_file="cnf.dimacs";
-  std::string core_file="unsat_core.cnf";
-  std::string trace_file="resolve_trace";
-  std::string output_file="cnf.out";
+  std::string cnf_file= "cnf.dimacs";
+  std::string core_file= "unsat_core.cnf";
+  std::string trace_file= "resolve_trace";
+  std::string output_file= "cnf.out";
 
   {
     std::ofstream out(cnf_file.c_str(), std::ios::out);
@@ -116,11 +115,13 @@ propt::resultt satcheck_zcoret::prop_solve()
   }
 
   // generate resolve_trace
-  system(std::string("zchaff_verify "+cnf_file+" > "+output_file).c_str());
+  system(
+    std::string("zchaff_verify " + cnf_file + " > " + output_file).c_str());
 
   // get core
   system(
-    std::string("zcore "+cnf_file+" "+trace_file+" >> "+output_file).c_str());
+    std::string("zcore " + cnf_file + " " + trace_file + " >> " + output_file)
+      .c_str());
 
   in_core.clear();
 
@@ -134,27 +135,28 @@ propt::resultt satcheck_zcoret::prop_solve()
       if(!std::getline(in, line))
         break;
 
-      if(!(line.substr(0, 1)=="c" || line.substr(0, 1)=="p"))
+      if(!(line.substr(0, 1) == "c" || line.substr(0, 1) == "p"))
       {
-        const char *p=line.c_str();
+        const char *p= line.c_str();
 
         while(true)
         {
-          int l=unsafe_str2int(p);
-          if(l==0)
+          int l= unsafe_str2int(p);
+          if(l == 0)
             break;
 
-          if(l<0)
-            l=-l;
+          if(l < 0)
+            l= -l;
 
           in_core.insert(l);
 
           // next one
-          const char *q=strchr(p, ' ');
-          while(*q==' ') q++;
-          if(q==NULL)
+          const char *q= strchr(p, ' ');
+          while(*q == ' ')
+            q++;
+          if(q == NULL)
             break;
-          p=q;
+          p= q;
         }
       }
     }

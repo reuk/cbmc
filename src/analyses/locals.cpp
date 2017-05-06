@@ -29,7 +29,7 @@ void localst::build(const goto_functiont &goto_function)
   forall_goto_program_instructions(it, goto_function.body)
     if(it->is_decl())
     {
-      const code_declt &code_decl=to_code_decl(it->code);
+      const code_declt &code_decl= to_code_decl(it->code);
       locals_map[code_decl.get_identifier()]=
         to_symbol_expr(code_decl.symbol());
     }

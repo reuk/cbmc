@@ -11,12 +11,10 @@ Author: Chris Smowton, chris.smowton@diffblue.com
 
 #include <string>
 
-inline bool has_infix(
-  const std::string &s,
-  const std::string &infix,
-  size_t offset)
+inline bool
+has_infix(const std::string &s, const std::string &infix, size_t offset)
 {
-  return s.compare(offset, infix.size(), infix)==0;
+  return s.compare(offset, infix.size(), infix) == 0;
 }
 
 #endif

@@ -27,8 +27,7 @@ Function: value_set_analysist::initialize
 
 \*******************************************************************/
 
-void value_set_analysist::initialize(
-  const goto_programt &goto_program)
+void value_set_analysist::initialize(const goto_programt &goto_program)
 {
   baset::initialize(goto_program);
 }
@@ -45,8 +44,7 @@ Function: value_set_analysist::initialize
 
 \*******************************************************************/
 
-void value_set_analysist::initialize(
-  const goto_functionst &goto_functions)
+void value_set_analysist::initialize(const goto_functionst &goto_functions)
 {
   baset::initialize(goto_functions);
 }
@@ -72,30 +70,28 @@ void value_set_analysist::convert(
 
   forall_goto_program_instructions(i_it, goto_program)
   {
-    const source_locationt &location=i_it->source_location;
+    const source_locationt &location= i_it->source_location;
 
-    if(location==previous_location)
+    if(location == previous_location)
       continue;
 
-    if(location.is_nil() || location.get_file()==irep_idt())
+    if(location.is_nil() || location.get_file() == irep_idt())
       continue;
 
     // find value set
-    const value_sett &value_set=(*this)[i_it].value_set;
+    const value_sett &value_set= (*this)[i_it].value_set;
 
-    xmlt &i=dest.new_element("instruction");
-    i.new_element()=::xml(location);
+    xmlt &i= dest.new_element("instruction");
+    i.new_element()= ::xml(location);
 
-    for(value_sett::valuest::const_iterator
-        v_it=value_set.values.begin();
-        v_it!=value_set.values.end();
+    for(value_sett::valuest::const_iterator v_it= value_set.values.begin();
+        v_it != value_set.values.end();
         v_it++)
     {
-      xmlt &var=i.new_element("variable");
-      var.new_element("identifier").data=
-        id2string(v_it->first);
+      xmlt &var= i.new_element("variable");
+      var.new_element("identifier").data= id2string(v_it->first);
 
-      #if 0
+#if 0
       const value_sett::expr_sett &expr_set=
         v_it->second.expr_set();
 
@@ -110,7 +106,7 @@ void value_set_analysist::convert(
         var.new_element("value").data=
           xmlt::escape(value_str);
       }
-      #endif
+#endif
     }
   }
 }
@@ -131,15 +127,15 @@ void convert(
   const value_set_analysist &value_set_analysis,
   xmlt &dest)
 {
-  dest=xmlt("value_set_analysis");
+  dest= xmlt("value_set_analysis");
 
-  for(goto_functionst::function_mapt::const_iterator
-      f_it=goto_functions.function_map.begin();
-      f_it!=goto_functions.function_map.end();
+  for(goto_functionst::function_mapt::const_iterator f_it=
+        goto_functions.function_map.begin();
+      f_it != goto_functions.function_map.end();
       f_it++)
   {
-    xmlt &f=dest.new_element("function");
-    f.new_element("identifier").data=id2string(f_it->first);
+    xmlt &f= dest.new_element("function");
+    f.new_element("identifier").data= id2string(f_it->first);
     value_set_analysis.convert(f_it->second.body, f_it->first, f);
   }
 }
@@ -161,10 +157,7 @@ void convert(
   const value_set_analysist &value_set_analysis,
   xmlt &dest)
 {
-  dest=xmlt("value_set_analysis");
+  dest= xmlt("value_set_analysis");
 
-  value_set_analysis.convert(
-    goto_program,
-    "",
-    dest.new_element("program"));
+  value_set_analysis.convert(goto_program, "", dest.new_element("program"));
 }

@@ -30,19 +30,19 @@ void convert(const goto_programt::instructiont &instruction, irept &irep)
 {
   irep.set(ID_code, instruction.code);
 
-  if(instruction.function!="")
+  if(instruction.function != "")
     irep.set(ID_function, instruction.function);
 
   if(instruction.source_location.is_not_nil())
     irep.set(ID_location, instruction.source_location);
 
-  irep.set(ID_type, (long) instruction.type);
+  irep.set(ID_type, (long)instruction.type);
 
   irep.set(ID_guard, instruction.guard);
 
   if(!instruction.targets.empty())
   {
-    irept &tgts=irep.add(ID_targets);
+    irept &tgts= irep.add(ID_targets);
     for(const auto &target : instruction.targets)
     {
       irept t(std::to_string(target->location_number));
@@ -52,8 +52,8 @@ void convert(const goto_programt::instructiont &instruction, irept &irep)
 
   if(!instruction.labels.empty())
   {
-    irept &lbls = irep.add(ID_labels);
-    irept::subt &subs = lbls.get_sub();
+    irept &lbls= irep.add(ID_labels);
+    irept::subt &subs= lbls.get_sub();
     subs.reserve(instruction.labels.size());
     for(const auto &label : instruction.labels)
     {
@@ -74,22 +74,20 @@ Function: convert
 
 \*******************************************************************/
 
-void convert(
-  const irept &irep,
-  goto_programt::instructiont &instruction)
+void convert(const irept &irep, goto_programt::instructiont &instruction)
 {
-  instruction.code=static_cast<const codet &>(irep.find(ID_code));
-  instruction.function = irep.find(ID_function).id();
+  instruction.code= static_cast<const codet &>(irep.find(ID_code));
+  instruction.function= irep.find(ID_function).id();
   instruction.source_location=
     static_cast<const source_locationt &>(irep.find(ID_location));
-  instruction.type = static_cast<goto_program_instruction_typet>(
-                  unsafe_string2unsigned(irep.find(ID_type).id_string()));
-  instruction.guard = static_cast<const exprt&>(irep.find(ID_guard));
+  instruction.type= static_cast<goto_program_instruction_typet>(
+    unsafe_string2unsigned(irep.find(ID_type).id_string()));
+  instruction.guard= static_cast<const exprt &>(irep.find(ID_guard));
 
   // don't touch the targets, the goto_programt conversion does that
 
-  const irept &lbls=irep.find(ID_labels);
-  const irept::subt &lsubs=lbls.get_sub();
+  const irept &lbls= irep.find(ID_labels);
+  const irept::subt &lsubs= lbls.get_sub();
   for(const auto &lsub : lsubs)
     instruction.labels.push_back(lsub.id());
 }
@@ -131,52 +129,48 @@ Function: convert
 
 void convert(const irept &irep, goto_programt &program)
 {
-  assert(irep.id()=="goto-program");
+  assert(irep.id() == "goto-program");
 
   program.instructions.clear();
 
-  std::list< std::list<unsigned> > number_targets_list;
+  std::list<std::list<unsigned>> number_targets_list;
 
   // convert instructions back
-  const irept::subt &subs = irep.get_sub();
-  for(irept::subt::const_iterator it=subs.begin();
-       it!=subs.end();
-       it++)
+  const irept::subt &subs= irep.get_sub();
+  for(irept::subt::const_iterator it= subs.begin(); it != subs.end(); it++)
   {
     program.instructions.push_back(goto_programt::instructiont());
     convert(*it, program.instructions.back());
 
     number_targets_list.push_back(std::list<unsigned>());
-    const irept &targets=it->find(ID_targets);
-    const irept::subt &tsubs=targets.get_sub();
+    const irept &targets= it->find(ID_targets);
+    const irept::subt &tsubs= targets.get_sub();
     for(const auto &tsub : tsubs)
       number_targets_list.back().push_back(
-          unsafe_string2unsigned(tsub.id_string()));
+        unsafe_string2unsigned(tsub.id_string()));
   }
 
   program.compute_location_numbers();
 
   // resolve targets
-  std::list< std::list<unsigned> >::iterator nit=
-        number_targets_list.begin();
-  for(goto_programt::instructionst::iterator lit=
-        program.instructions.begin();
-      lit!=program.instructions.end() && nit!=number_targets_list.end();
+  std::list<std::list<unsigned>>::iterator nit= number_targets_list.begin();
+  for(goto_programt::instructionst::iterator lit= program.instructions.begin();
+      lit != program.instructions.end() && nit != number_targets_list.end();
       lit++, nit++)
   {
     for(const unsigned t : *nit)
     {
-      goto_programt::targett fit=program.instructions.begin();
-      for( ; fit!=program.instructions.end(); fit++)
+      goto_programt::targett fit= program.instructions.begin();
+      for(; fit != program.instructions.end(); fit++)
       {
-        if(fit->location_number==t)
+        if(fit->location_number == t)
         {
           lit->targets.push_back(fit);
           break;
         }
       }
 
-      if(fit==program.instructions.end())
+      if(fit == program.instructions.end())
       {
         std::cout << "Warning: could not resolve target link "
                   << "during irep->goto_program translation." << std::endl;

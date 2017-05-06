@@ -29,51 +29,46 @@ Function: have_to_adjust_float_expressions
 
 \*******************************************************************/
 
-static bool have_to_adjust_float_expressions(
-  const exprt &expr,
-  const namespacet &ns)
+static bool
+have_to_adjust_float_expressions(const exprt &expr, const namespacet &ns)
 {
-  if(expr.id()==ID_floatbv_plus ||
-     expr.id()==ID_floatbv_minus ||
-     expr.id()==ID_floatbv_mult ||
-     expr.id()==ID_floatbv_div ||
-     expr.id()==ID_floatbv_div ||
-     expr.id()==ID_floatbv_rem ||
-     expr.id()==ID_floatbv_typecast)
+  if(
+    expr.id() == ID_floatbv_plus || expr.id() == ID_floatbv_minus ||
+    expr.id() == ID_floatbv_mult || expr.id() == ID_floatbv_div ||
+    expr.id() == ID_floatbv_div || expr.id() == ID_floatbv_rem ||
+    expr.id() == ID_floatbv_typecast)
     return false;
 
-  const typet &type=ns.follow(expr.type());
+  const typet &type= ns.follow(expr.type());
 
-  if(type.id()==ID_floatbv ||
-     (type.id()==ID_complex &&
-      ns.follow(type.subtype()).id()==ID_floatbv))
+  if(
+    type.id() == ID_floatbv ||
+    (type.id() == ID_complex && ns.follow(type.subtype()).id() == ID_floatbv))
   {
-    if(expr.id()==ID_plus || expr.id()==ID_minus ||
-       expr.id()==ID_mult || expr.id()==ID_div ||
-       expr.id()==ID_rem)
+    if(
+      expr.id() == ID_plus || expr.id() == ID_minus || expr.id() == ID_mult ||
+      expr.id() == ID_div || expr.id() == ID_rem)
       return true;
   }
 
-  if(expr.id()==ID_typecast)
+  if(expr.id() == ID_typecast)
   {
-    const typecast_exprt &typecast_expr=to_typecast_expr(expr);
+    const typecast_exprt &typecast_expr= to_typecast_expr(expr);
 
-    const typet &src_type=typecast_expr.op().type();
-    const typet &dest_type=typecast_expr.type();
+    const typet &src_type= typecast_expr.op().type();
+    const typet &dest_type= typecast_expr.type();
 
-    if(dest_type.id()==ID_floatbv &&
-       src_type.id()==ID_floatbv)
+    if(dest_type.id() == ID_floatbv && src_type.id() == ID_floatbv)
       return true;
-    else if(dest_type.id()==ID_floatbv &&
-            (src_type.id()==ID_c_bool ||
-             src_type.id()==ID_signedbv ||
-             src_type.id()==ID_unsignedbv ||
-             src_type.id()==ID_c_enum_tag))
+    else if(
+      dest_type.id() == ID_floatbv &&
+      (src_type.id() == ID_c_bool || src_type.id() == ID_signedbv ||
+       src_type.id() == ID_unsignedbv || src_type.id() == ID_c_enum_tag))
       return true;
-    else if((dest_type.id()==ID_signedbv ||
-             dest_type.id()==ID_unsignedbv ||
-             dest_type.id()==ID_c_enum_tag) &&
-             src_type.id()==ID_floatbv)
+    else if(
+      (dest_type.id() == ID_signedbv || dest_type.id() == ID_unsignedbv ||
+       dest_type.id() == ID_c_enum_tag) &&
+      src_type.id() == ID_floatbv)
       return true;
   }
 
@@ -97,9 +92,7 @@ Function: adjust_float_expressions
 
 \*******************************************************************/
 
-void adjust_float_expressions(
-  exprt &expr,
-  const namespacet &ns)
+void adjust_float_expressions(exprt &expr, const namespacet &ns)
 {
   if(!have_to_adjust_float_expressions(expr, ns))
     return;
@@ -107,54 +100,57 @@ void adjust_float_expressions(
   Forall_operands(it, expr)
     adjust_float_expressions(*it, ns);
 
-  const typet &type=ns.follow(expr.type());
+  const typet &type= ns.follow(expr.type());
 
-  if(type.id()==ID_floatbv ||
-     (type.id()==ID_complex &&
-      ns.follow(type.subtype()).id()==ID_floatbv))
+  if(
+    type.id() == ID_floatbv ||
+    (type.id() == ID_complex && ns.follow(type.subtype()).id() == ID_floatbv))
   {
     symbol_exprt rounding_mode=
       ns.lookup(CPROVER_PREFIX "rounding_mode").symbol_expr();
 
-    rounding_mode.add_source_location()=expr.source_location();
+    rounding_mode.add_source_location()= expr.source_location();
 
-    if(expr.id()==ID_plus || expr.id()==ID_minus ||
-       expr.id()==ID_mult || expr.id()==ID_div ||
-       expr.id()==ID_rem)
+    if(
+      expr.id() == ID_plus || expr.id() == ID_minus || expr.id() == ID_mult ||
+      expr.id() == ID_div || expr.id() == ID_rem)
     {
       // make sure we have binary expressions
-      if(expr.operands().size()>2)
-        expr=make_binary(expr);
+      if(expr.operands().size() > 2)
+        expr= make_binary(expr);
 
-      assert(expr.operands().size()==2);
+      assert(expr.operands().size() == 2);
 
       // now add rounding mode
-      expr.id(expr.id()==ID_plus?ID_floatbv_plus:
-              expr.id()==ID_minus?ID_floatbv_minus:
-              expr.id()==ID_mult?ID_floatbv_mult:
-              expr.id()==ID_div?ID_floatbv_div:
-              expr.id()==ID_rem?ID_floatbv_rem:
-                                irep_idt());
+      expr.id(
+        expr.id() == ID_plus
+          ? ID_floatbv_plus
+          : expr.id() == ID_minus
+              ? ID_floatbv_minus
+              : expr.id() == ID_mult
+                  ? ID_floatbv_mult
+                  : expr.id() == ID_div
+                      ? ID_floatbv_div
+                      : expr.id() == ID_rem ? ID_floatbv_rem : irep_idt());
 
       expr.operands().resize(3);
-      expr.op2()=rounding_mode;
+      expr.op2()= rounding_mode;
     }
   }
 
-  if(expr.id()==ID_typecast)
+  if(expr.id() == ID_typecast)
   {
-    const typecast_exprt &typecast_expr=to_typecast_expr(expr);
+    const typecast_exprt &typecast_expr= to_typecast_expr(expr);
 
-    const typet &src_type=typecast_expr.op().type();
-    const typet &dest_type=typecast_expr.type();
+    const typet &src_type= typecast_expr.op().type();
+    const typet &dest_type= typecast_expr.type();
 
     symbol_exprt rounding_mode=
       ns.lookup(CPROVER_PREFIX "rounding_mode").symbol_expr();
 
-    rounding_mode.add_source_location()=expr.source_location();
+    rounding_mode.add_source_location()= expr.source_location();
 
-    if(dest_type.id()==ID_floatbv &&
-       src_type.id()==ID_floatbv)
+    if(dest_type.id() == ID_floatbv && src_type.id() == ID_floatbv)
     {
       // Casts from bigger to smaller float-type might round.
       // For smaller to bigger it is strictly redundant but
@@ -162,23 +158,22 @@ void adjust_float_expressions(
       // the representation.
       expr.id(ID_floatbv_typecast);
       expr.operands().resize(2);
-      expr.op1()=rounding_mode;
+      expr.op1()= rounding_mode;
     }
-    else if(dest_type.id()==ID_floatbv &&
-            (src_type.id()==ID_c_bool ||
-             src_type.id()==ID_signedbv ||
-             src_type.id()==ID_unsignedbv ||
-             src_type.id()==ID_c_enum_tag))
+    else if(
+      dest_type.id() == ID_floatbv &&
+      (src_type.id() == ID_c_bool || src_type.id() == ID_signedbv ||
+       src_type.id() == ID_unsignedbv || src_type.id() == ID_c_enum_tag))
     {
       // casts from integer to float-type might round
       expr.id(ID_floatbv_typecast);
       expr.operands().resize(2);
-      expr.op1()=rounding_mode;
+      expr.op1()= rounding_mode;
     }
-    else if((dest_type.id()==ID_signedbv ||
-             dest_type.id()==ID_unsignedbv ||
-             dest_type.id()==ID_c_enum_tag) &&
-             src_type.id()==ID_floatbv)
+    else if(
+      (dest_type.id() == ID_signedbv || dest_type.id() == ID_unsignedbv ||
+       dest_type.id() == ID_c_enum_tag) &&
+      src_type.id() == ID_floatbv)
     {
       // In C, casts from float to integer always round to zero,
       // irrespectively of the rounding mode that is currently set.

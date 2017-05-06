@@ -40,14 +40,12 @@ Function: pipe_streamt::pipe_streamt
 
 pipe_streamt::pipe_streamt(
   const std::string &_executable,
-  const std::list<std::string> &_args):
-  std::iostream(&buffer),
-  executable(_executable),
-  args(_args)
+  const std::list<std::string> &_args)
+  : std::iostream(&buffer), executable(_executable), args(_args)
 {
-  #ifdef _WIN32
-  pi.hProcess = 0;
-  #endif
+#ifdef _WIN32
+  pi.hProcess= 0;
+#endif
 }
 
 /*******************************************************************\
@@ -72,18 +70,23 @@ int pipe_streamt::run()
   HANDLE hErrorWrite;
   SECURITY_ATTRIBUTES sa;
 
-  sa.nLength=sizeof(SECURITY_ATTRIBUTES);
-  sa.lpSecurityDescriptor=NULL;
-  sa.bInheritHandle=TRUE;
+  sa.nLength= sizeof(SECURITY_ATTRIBUTES);
+  sa.lpSecurityDescriptor= NULL;
+  sa.bInheritHandle= TRUE;
 
   // Create the child output pipe
   if(!CreatePipe(&hOutputReadTmp, &hOutputWrite, &sa, 0))
     return -1;
 
   // Create duplicate of output write handle for the std error handle
-  if(!DuplicateHandle(GetCurrentProcess(), hOutputWrite,
-                      GetCurrentProcess(), &hErrorWrite, 0,
-                      TRUE, DUPLICATE_SAME_ACCESS))
+  if(!DuplicateHandle(
+       GetCurrentProcess(),
+       hOutputWrite,
+       GetCurrentProcess(),
+       &hErrorWrite,
+       0,
+       TRUE,
+       DUPLICATE_SAME_ACCESS))
     return -1;
 
   // Create child input pipe
@@ -91,18 +94,24 @@ int pipe_streamt::run()
     return -1;
 
   // Create new output read handle and the input write handles
-  if(!DuplicateHandle(GetCurrentProcess(), hOutputReadTmp,
-                       GetCurrentProcess(),
-                       &hOutputRead,
-                       0, FALSE, // uninheritable.
-                       DUPLICATE_SAME_ACCESS))
+  if(!DuplicateHandle(
+       GetCurrentProcess(),
+       hOutputReadTmp,
+       GetCurrentProcess(),
+       &hOutputRead,
+       0,
+       FALSE, // uninheritable.
+       DUPLICATE_SAME_ACCESS))
     return -1;
 
-  if(!DuplicateHandle(GetCurrentProcess(), hInputWriteTmp,
-                       GetCurrentProcess(),
-                       &hInputWrite,
-                       0, FALSE, //  uninheritable.
-                       DUPLICATE_SAME_ACCESS))
+  if(!DuplicateHandle(
+       GetCurrentProcess(),
+       hInputWriteTmp,
+       GetCurrentProcess(),
+       &hInputWrite,
+       0,
+       FALSE, //  uninheritable.
+       DUPLICATE_SAME_ACCESS))
     return -1;
 
   if(!CloseHandle(hOutputReadTmp) || !CloseHandle(hInputWriteTmp))
@@ -112,27 +121,36 @@ int pipe_streamt::run()
   STARTUPINFOW si;
 
   ZeroMemory(&si, sizeof(STARTUPINFO));
-  si.cb=sizeof(STARTUPINFO);
-  si.dwFlags=STARTF_USESTDHANDLES;
-  si.hStdOutput=hOutputWrite;
-  si.hStdInput=hInputRead;
-  si.hStdError=hErrorWrite;
+  si.cb= sizeof(STARTUPINFO);
+  si.dwFlags= STARTF_USESTDHANDLES;
+  si.hStdOutput= hOutputWrite;
+  si.hStdInput= hInputRead;
+  si.hStdError= hErrorWrite;
 
-  std::wstring command = ::widen(executable);
+  std::wstring command= ::widen(executable);
 
   for(const auto &s : args)
-        command += L" " + ::widen(s);
+    command+= L" " + ::widen(s);
 
-  LPWSTR lpCommandLine = new wchar_t[command.length()+1];
+  LPWSTR lpCommandLine= new wchar_t[command.length() + 1];
 
-  #ifdef _MSC_VER
-  wcscpy_s(lpCommandLine, command.length()+1, command.c_str());
-  #else
-  wcsncpy(lpCommandLine, command.c_str(), command.length()+1);
-  #endif
+#ifdef _MSC_VER
+  wcscpy_s(lpCommandLine, command.length() + 1, command.c_str());
+#else
+  wcsncpy(lpCommandLine, command.c_str(), command.length() + 1);
+#endif
 
-  BOOL ret=CreateProcessW(NULL, lpCommandLine, NULL, NULL, TRUE,
-                          CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
+  BOOL ret= CreateProcessW(
+    NULL,
+    lpCommandLine,
+    NULL,
+    NULL,
+    TRUE,
+    CREATE_NO_WINDOW,
+    NULL,
+    NULL,
+    &si,
+    &pi);
 
   delete lpCommandLine; // clean up
 
@@ -151,12 +169,12 @@ int pipe_streamt::run()
 {
   filedescriptor_streambuft::HANDLE in[2], out[2];
 
-  if(pipe(in)==-1 || pipe(out)==-1)
+  if(pipe(in) == -1 || pipe(out) == -1)
     return -1;
 
-  pid=fork();
+  pid= fork();
 
-  if(pid==0)
+  if(pid == 0)
   {
     // child
     close(in[1]);
@@ -164,28 +182,27 @@ int pipe_streamt::run()
     dup2(in[0], STDIN_FILENO);
     dup2(out[1], STDOUT_FILENO);
 
-    char **_argv=new char * [args.size()+2];
+    char **_argv= new char *[args.size() + 2];
 
-    _argv[0]=strdup(executable.c_str());
+    _argv[0]= strdup(executable.c_str());
 
-    unsigned i=1;
+    unsigned i= 1;
 
-    for(std::list<std::string>::const_iterator
-        a_it=args.begin();
-        a_it!=args.end();
+    for(std::list<std::string>::const_iterator a_it= args.begin();
+        a_it != args.end();
         a_it++, i++)
-       _argv[i]=strdup(a_it->c_str());
+      _argv[i]= strdup(a_it->c_str());
 
-    _argv[args.size()+1]=NULL;
+    _argv[args.size() + 1]= NULL;
 
-    int result=execvp(executable.c_str(), _argv);
+    int result= execvp(executable.c_str(), _argv);
 
-    if(result==-1)
+    if(result == -1)
       perror(0);
 
     return result;
   }
-  else if(pid==-1)
+  else if(pid == -1)
   {
     // error on parent
     return -1;
@@ -218,28 +235,28 @@ Function: pipe_streamt::wait
 
 int pipe_streamt::wait()
 {
-  #ifdef _WIN32
+#ifdef _WIN32
   DWORD status;
 
-  if(pi.hProcess==0)
+  if(pi.hProcess == 0)
     return -1;
 
-  if(WaitForSingleObject(pi.hProcess, INFINITE)==WAIT_FAILED)
+  if(WaitForSingleObject(pi.hProcess, INFINITE) == WAIT_FAILED)
     return -1;
 
   GetExitCodeProcess(pi.hProcess, &status);
   return status;
-  #else
-  if(pid<=0)
+#else
+  if(pid <= 0)
     return -1;
 
   int result, status;
-  result=waitpid(pid, &status, WUNTRACED);
-  if(result<=0)
+  result= waitpid(pid, &status, WUNTRACED);
+  if(result <= 0)
     return -1;
 
   return WEXITSTATUS(status);
-  #endif
+#endif
 }
 
 /*******************************************************************\
@@ -254,16 +271,17 @@ Function: filedescriptor_streambuft::filedescriptor_streambuft
 
 \*******************************************************************/
 
-filedescriptor_streambuft::filedescriptor_streambuft():
-  #ifdef _WIN32
-  proc_in(INVALID_HANDLE_VALUE),
-  proc_out(INVALID_HANDLE_VALUE)
-  #else
-  proc_in(STDOUT_FILENO),
-  proc_out(STDIN_FILENO)
-  #endif
+filedescriptor_streambuft::filedescriptor_streambuft()
+  :
+#ifdef _WIN32
+    proc_in(INVALID_HANDLE_VALUE),
+    proc_out(INVALID_HANDLE_VALUE)
+#else
+    proc_in(STDOUT_FILENO),
+    proc_out(STDIN_FILENO)
+#endif
 {
-  in_buffer=new char[READ_BUFFER_SIZE];
+  in_buffer= new char[READ_BUFFER_SIZE];
   setg(in_buffer, in_buffer, in_buffer);
 }
 
@@ -281,23 +299,23 @@ Function: filedescriptor_streambuft::~filedescriptor_streambuft
 
 filedescriptor_streambuft::~filedescriptor_streambuft()
 {
-  #ifdef _WIN32
+#ifdef _WIN32
 
-  if(proc_in!=INVALID_HANDLE_VALUE)
+  if(proc_in != INVALID_HANDLE_VALUE)
     CloseHandle(proc_in);
 
-  if(proc_out!=INVALID_HANDLE_VALUE)
+  if(proc_out != INVALID_HANDLE_VALUE)
     CloseHandle(proc_out);
 
-  #else
+#else
 
-  if(proc_in!=STDOUT_FILENO)
+  if(proc_in != STDOUT_FILENO)
     close(proc_in);
 
-  if(proc_out!=STDIN_FILENO)
+  if(proc_out != STDIN_FILENO)
     close(proc_out);
 
-  #endif
+#endif
 
   delete in_buffer;
 }
@@ -314,19 +332,19 @@ Function: filedescriptor_streambuft::overflow
 
 \*******************************************************************/
 
-std::streambuf::int_type filedescriptor_streambuft::overflow(
-  std::streambuf::int_type character)
+std::streambuf::int_type
+filedescriptor_streambuft::overflow(std::streambuf::int_type character)
 {
-  if(character!=EOF)
+  if(character != EOF)
   {
-    char buf=character;
+    char buf= character;
 #ifdef _WIN32
     DWORD len;
     WriteFile(proc_in, &buf, 1, &len, NULL);
 #else
-    int len=write(proc_in, &buf, 1);
+    int len= write(proc_in, &buf, 1);
 #endif
-    if(len!=1)
+    if(len != 1)
     {
       return EOF;
     }
@@ -346,8 +364,8 @@ Function: filedescriptor_streambuft::xsputn
 
 \*******************************************************************/
 
-std::streamsize filedescriptor_streambuft::xsputn(
-  const char* str, std::streamsize count)
+std::streamsize
+filedescriptor_streambuft::xsputn(const char *str, std::streamsize count)
 {
 #ifdef _WIN32
   DWORD len;
@@ -372,25 +390,25 @@ Function: filedescriptor_streambuft::underflow
 
 std::streambuf::int_type filedescriptor_streambuft::underflow()
 {
-  if(gptr()==0)
+  if(gptr() == 0)
     return traits_type::eof();
 
-  if(gptr()<egptr())
+  if(gptr() < egptr())
     return traits_type::to_int_type(*gptr());
 
-  #ifdef _WIN32
+#ifdef _WIN32
   DWORD len;
   if(!ReadFile(proc_out, eback(), READ_BUFFER_SIZE, &len, NULL))
     return traits_type::eof();
-  #else
-  ssize_t len=read(proc_out, eback(), READ_BUFFER_SIZE);
-  if(len==-1)
+#else
+  ssize_t len= read(proc_out, eback(), READ_BUFFER_SIZE);
+  if(len == -1)
     return traits_type::eof();
-  #endif
+#endif
 
-  setg(eback(), eback(), eback()+(sizeof(char_type)*len));
+  setg(eback(), eback(), eback() + (sizeof(char_type) * len));
 
-  if(len==0)
+  if(len == 0)
     return traits_type::eof();
 
   return traits_type::to_int_type(*gptr());
@@ -408,10 +426,10 @@ Function: filedescriptor_streambuft::xsgetn
 
 \*******************************************************************/
 
-std::streamsize filedescriptor_streambuft::xsgetn(
-  char *target, std::streamsize count)
+std::streamsize
+filedescriptor_streambuft::xsgetn(char *target, std::streamsize count)
 {
-  std::streamsize available = showmanyc();
+  std::streamsize available= showmanyc();
 
   if(count <= available)
   {
@@ -427,7 +445,7 @@ std::streamsize filedescriptor_streambuft::xsgetn(
   if(traits_type::eof() == underflow())
     return available;
 
-  return (available + xsgetn(target+available, count-available));
+  return (available + xsgetn(target + available, count - available));
 }
 
 /*******************************************************************\
@@ -444,11 +462,11 @@ Function: filedescriptor_streambuft::showmanyc
 
 std::streamsize filedescriptor_streambuft::showmanyc()
 {
-  if(gptr()==0)
+  if(gptr() == 0)
     return 0;
 
-  if(gptr()<egptr())
-    return egptr()-gptr();
+  if(gptr() < egptr())
+    return egptr() - gptr();
 
   return 0;
 }
@@ -463,7 +481,7 @@ std::streamsize filedescriptor_streambuft::showmanyc()
 
 #include <iostream>
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
   std::string command("cat");
   std::list<std::string> arguments;
@@ -475,7 +493,7 @@ int main(int argc, char** argv)
   process << "xxx\n" << std::endl;
 
   char token;
-  for(int i=0; i<3; ++i)
+  for(int i= 0; i < 3; ++i)
   {
     process >> token;
     std::cout << "Answer: " << token << std::endl;

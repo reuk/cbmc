@@ -18,39 +18,32 @@ Author: Daniel Kroening, kroening@kroening.com
 typedef interval_template<mp_integer> integer_intervalt;
 typedef interval_template<ieee_floatt> ieee_float_intervalt;
 
-class interval_domaint:public ai_domain_baset
+class interval_domaint : public ai_domain_baset
 {
 public:
   // Trivial, conjunctive interval domain for both float
   // and integers. The categorization 'float' and 'integers'
   // is done by is_int and is_float.
 
-  interval_domaint():bottom(true)
+  interval_domaint() : bottom(true)
   {
   }
 
-  void transform(
-    locationt from,
-    locationt to,
-    ai_baset &ai,
-    const namespacet &ns) final;
+  void
+  transform(locationt from, locationt to, ai_baset &ai, const namespacet &ns)
+    final;
 
-  void output(
-    std::ostream &out,
-    const ai_baset &ai,
-    const namespacet &ns) const final;
+  void output(std::ostream &out, const ai_baset &ai, const namespacet &ns)
+    const final;
 
-  bool merge(
-    const interval_domaint &b,
-    locationt from,
-    locationt to);
+  bool merge(const interval_domaint &b, locationt from, locationt to);
 
   // no states
   void make_bottom() final
   {
     int_map.clear();
     float_map.clear();
-    bottom=true;
+    bottom= true;
   }
 
   // all states
@@ -58,7 +51,7 @@ public:
   {
     int_map.clear();
     float_map.clear();
-    bottom=false;
+    bottom= false;
   }
 
   void make_entry() final
@@ -72,12 +65,12 @@ public:
 
   static bool is_int(const typet &src)
   {
-    return src.id()==ID_signedbv || src.id()==ID_unsignedbv;
+    return src.id() == ID_signedbv || src.id() == ID_unsignedbv;
   }
 
   static bool is_float(const typet &src)
   {
-    return src.id()==ID_floatbv;
+    return src.id() == ID_floatbv;
   }
 
   bool is_bottom() const
@@ -95,7 +88,7 @@ private:
   float_mapt float_map;
 
   void havoc_rec(const exprt &);
-  void assume_rec(const exprt &, bool negation=false);
+  void assume_rec(const exprt &, bool negation= false);
   void assume_rec(const exprt &lhs, irep_idt id, const exprt &rhs);
   void assign(const class code_assignt &assignment);
   integer_intervalt get_int_rec(const exprt &);

@@ -15,7 +15,6 @@ Author: Michael Tautschnig, tautschn@amazon.com
 #include <util/namespace.h>
 #include <util/std_code.h>
 
-
 class codet;
 
 bool jsil_typecheck(
@@ -27,20 +26,22 @@ bool jsil_typecheck(
   message_handlert &message_handler,
   const namespacet &ns);
 
-class jsil_typecheckt:public typecheckt
+class jsil_typecheckt : public typecheckt
 {
 public:
   jsil_typecheckt(
     symbol_tablet &_symbol_table,
-    message_handlert &_message_handler):
-    typecheckt(_message_handler),
-    symbol_table(_symbol_table),
-    ns(symbol_table),
-    proc_name()
+    message_handlert &_message_handler)
+    : typecheckt(_message_handler),
+      symbol_table(_symbol_table),
+      ns(symbol_table),
+      proc_name()
   {
   }
 
-  virtual ~jsil_typecheckt() { }
+  virtual ~jsil_typecheckt()
+  {
+  }
 
   virtual void typecheck();
   virtual void typecheck_expr(exprt &expr);
@@ -53,7 +54,9 @@ protected:
 
   void update_expr_type(exprt &expr, const typet &type);
   void make_type_compatible(exprt &expr, const typet &type, bool must);
-  void typecheck_type_symbol(symbolt &symbol) {}
+  void typecheck_type_symbol(symbolt &symbol)
+  {
+  }
   void typecheck_non_type_symbol(symbolt &symbol);
   void typecheck_symbol_expr(symbol_exprt &symbol_expr);
   void typecheck_expr_side_effect_throw(side_effect_expr_throwt &expr);

@@ -1,5 +1,5 @@
-typedef void ** __builtin_va_list;
-typedef void ** __builtin_ms_va_list;
+typedef void **__builtin_va_list;
+typedef void **__builtin_ms_va_list;
 
 void __builtin_va_start(void *ap, ...);
 void __builtin_va_end(void *ap);
@@ -32,8 +32,16 @@ double __builtin_fabs(double);
 float __builtin_fabsf(float);
 int __builtin_memcmp(const void *s1, const void *s2, __CPROVER_size_t n);
 void *__builtin_memcpy(void *dest, const void *src, __CPROVER_size_t n);
-void *__builtin___memcpy_chk(void *dest, const void *src, __CPROVER_size_t n, __CPROVER_size_t size);
-char *__builtin___memmove_chk(void *dest, const void *src, __CPROVER_size_t n, __CPROVER_size_t size);
+void *__builtin___memcpy_chk(
+  void *dest,
+  const void *src,
+  __CPROVER_size_t n,
+  __CPROVER_size_t size);
+char *__builtin___memmove_chk(
+  void *dest,
+  const void *src,
+  __CPROVER_size_t n,
+  __CPROVER_size_t size);
 double __builtin_sin(double);
 float __builtin_sinf(float);
 double __builtin_sqrt(double);
@@ -48,27 +56,71 @@ int __builtin_fprintf(void *stream, const char *fmt, ...);
 int __builtin_fscanf(void *stream, const char *fmt, ...);
 int __builtin_scanf(const char *str, const char *fmt, ...);
 int __builtin_fputs(const char *s, void *stream);
-int __builtin_vsnprintf(char * restrict str, __CPROVER_size_t size, const char * restrict format, __builtin_va_list ap);
+int __builtin_vsnprintf(
+  char *restrict str,
+  __CPROVER_size_t size,
+  const char *restrict format,
+  __builtin_va_list ap);
 long __builtin_expect(long, long);
 void *__builtin_memset(void *s, int c, __CPROVER_size_t n);
-void *__builtin___memset_chk(void *s, int c, __CPROVER_size_t n, __CPROVER_size_t size);
+void *__builtin___memset_chk(
+  void *s,
+  int c,
+  __CPROVER_size_t n,
+  __CPROVER_size_t size);
 void *__builtin_memchr(const void *s, int c, __CPROVER_size_t n);
 void *__builtin_memmove(void *s1, const void *s2, __CPROVER_size_t n);
 void *__builtin_mempcpy(void *, const void *, __CPROVER_size_t);
-void *__builtin___mempcpy_chk(void *dest, const void *src,  __CPROVER_size_t n, __CPROVER_size_t size);
+void *__builtin___mempcpy_chk(
+  void *dest,
+  const void *src,
+  __CPROVER_size_t n,
+  __CPROVER_size_t size);
 char *__builtin_strcat(char *dest, const char *src);
-char *__builtin___strcat_chk(char *dest, const char *src, __CPROVER_size_t size);
+char *
+__builtin___strcat_chk(char *dest, const char *src, __CPROVER_size_t size);
 char *__builtin_strcpy(char *dest, const char *src);
-char *__builtin___strcpy_chk(char *dest, const char *src, __CPROVER_size_t size);
+char *
+__builtin___strcpy_chk(char *dest, const char *src, __CPROVER_size_t size);
 char *__builtin_strncpy(char *dest, const char *src, __CPROVER_size_t n);
-char *__builtin___strncpy_chk(char *dest, const char *src, __CPROVER_size_t n, __CPROVER_size_t size);
+char *__builtin___strncpy_chk(
+  char *dest,
+  const char *src,
+  __CPROVER_size_t n,
+  __CPROVER_size_t size);
 char *__builtin_stpcpy(char *dest, const char *src);
 char *__builtin___stpcpy(char *s1, const char *s2);
-char *__builtin___stpncpy_chk(char *s1, const char *s2, __CPROVER_size_t n, __CPROVER_size_t size);
-int __builtin___sprintf_chk(char *s, int flag, __CPROVER_size_t os, const char *fmt, ...);
-int __builtin___snprintf_chk(char *s, __CPROVER_size_t maxlen, int flag, __CPROVER_size_t os, const char *fmt, ...);
-int __builtin___vsprintf_chk(char *s, int flag, __CPROVER_size_t os, const char *fmt, __builtin_va_list ap);
-int __builtin___vsnprintf_chk (char *s, __CPROVER_size_t maxlen, int flag, __CPROVER_size_t os, const char *fmt, __builtin_va_list ap);
+char *__builtin___stpncpy_chk(
+  char *s1,
+  const char *s2,
+  __CPROVER_size_t n,
+  __CPROVER_size_t size);
+int __builtin___sprintf_chk(
+  char *s,
+  int flag,
+  __CPROVER_size_t os,
+  const char *fmt,
+  ...);
+int __builtin___snprintf_chk(
+  char *s,
+  __CPROVER_size_t maxlen,
+  int flag,
+  __CPROVER_size_t os,
+  const char *fmt,
+  ...);
+int __builtin___vsprintf_chk(
+  char *s,
+  int flag,
+  __CPROVER_size_t os,
+  const char *fmt,
+  __builtin_va_list ap);
+int __builtin___vsnprintf_chk(
+  char *s,
+  __CPROVER_size_t maxlen,
+  int flag,
+  __CPROVER_size_t os,
+  const char *fmt,
+  __builtin_va_list ap);
 void __builtin_exit(int status);
 char *__builtin_strchr(const char *s, int c);
 __CPROVER_size_t __builtin_strspn(const char *s, const char *accept);
@@ -77,8 +129,13 @@ char *__builtin_strstr(const char *a, const char *b);
 char *__builtin_strpbrk(const char *s, const char *accept);
 char *__builtin_strrchr(const char *s, int c);
 char *__builtin_strncat(char *dest, const char *src, __CPROVER_size_t n);
-char *__builtin___strncat_chk(char *dest, const char *src, __CPROVER_size_t n, __CPROVER_size_t size);
-char *__builtin___stpcpy_chk(char *dest, const char *src, __CPROVER_size_t size);
+char *__builtin___strncat_chk(
+  char *dest,
+  const char *src,
+  __CPROVER_size_t n,
+  __CPROVER_size_t size);
+char *
+__builtin___stpcpy_chk(char *dest, const char *src, __CPROVER_size_t size);
 void *__builtin_alloca(__CPROVER_size_t s);
 int __builtin_ffs(int i);
 char *__builtin_index(const char *s, int c);
@@ -139,9 +196,9 @@ float __builtin_floorf(float);
 long double __builtin_floorl(long double);
 float __builtin_fmodf(float, float);
 long double __builtin_fmodl(long double, long double);
-float __builtin_frexpf(float, int*);
-long double __builtin_frexpl(long double, int*);
-float __builtin_ldexpf(float , int exp);
+float __builtin_frexpf(float, int *);
+long double __builtin_frexpl(long double, int *);
+float __builtin_ldexpf(float, int exp);
 long double __builtin_ldexpl(long double, int);
 float __builtin_logf(float);
 long double __builtin_logl(long double);
@@ -151,8 +208,8 @@ long double __builtin_log10l(long double);
 float __builtin_log2f(float);
 double __builtin_log2(double);
 long double __builtin_log2l(float);
-float __builtin_modff(float, float*);
-long double __builtin_modfl(long double, long double*);
+float __builtin_modff(float, float *);
+long double __builtin_modfl(long double, long double *);
 float __builtin_powf(float, float);
 long double __builtin_powl(long double, long double);
 double __builtin_powi(double, int);
@@ -191,32 +248,38 @@ int __builtin_signbitl(long double);
 
 void __builtin_unreachable(void);
 
-typedef int    __gcc_m64   __attribute__ ((__vector_size__ (8), __may_alias__));
+typedef int __gcc_m64 __attribute__((__vector_size__(8), __may_alias__));
 
-typedef char   __gcc_v8qi  __attribute__ ((__vector_size__ (8)));
-typedef char   __gcc_v16qi __attribute__ ((__vector_size__ (16)));
-typedef char   __gcc_v32qi __attribute__ ((__vector_size__ (32)));
-typedef int    __gcc_v2si  __attribute__ ((__vector_size__ (8)));
-typedef int    __gcc_v4si  __attribute__ ((__vector_size__ (16)));
-typedef int    __gcc_v8si  __attribute__ ((__vector_size__ (32)));
-typedef int    __gcc_v16si  __attribute__ ((__vector_size__ (64)));
-typedef short  __gcc_v4hi  __attribute__ ((__vector_size__ (8)));
-typedef short  __gcc_v8hi  __attribute__ ((__vector_size__ (16)));
-typedef short  __gcc_v16hi __attribute__ ((__vector_size__ (32)));
-typedef short  __gcc_v32hi __attribute__ ((__vector_size__ (64)));
-typedef float  __gcc_v2sf  __attribute__ ((__vector_size__ (8)));
-typedef float  __gcc_v4sf  __attribute__ ((__vector_size__ (16)));
-typedef float  __gcc_v8sf  __attribute__ ((__vector_size__ (32)));
-typedef float  __gcc_v16sf  __attribute__ ((__vector_size__ (64)));
-typedef double __gcc_v2df  __attribute__ ((__vector_size__ (16)));
-typedef double __gcc_v4df  __attribute__ ((__vector_size__ (32)));
-typedef double __gcc_v8df  __attribute__ ((__vector_size__ (64)));
-typedef long long __gcc_v1di __attribute__ ((__vector_size__ (8)));
-typedef long long __gcc_v2di __attribute__ ((__vector_size__ (16)));
-typedef long long __gcc_v4di __attribute__ ((__vector_size__ (32)));
-typedef long long __gcc_v8di __attribute__ ((__vector_size__ (64)));
+typedef char __gcc_v8qi __attribute__((__vector_size__(8)));
+typedef char __gcc_v16qi __attribute__((__vector_size__(16)));
+typedef char __gcc_v32qi __attribute__((__vector_size__(32)));
+typedef int __gcc_v2si __attribute__((__vector_size__(8)));
+typedef int __gcc_v4si __attribute__((__vector_size__(16)));
+typedef int __gcc_v8si __attribute__((__vector_size__(32)));
+typedef int __gcc_v16si __attribute__((__vector_size__(64)));
+typedef short __gcc_v4hi __attribute__((__vector_size__(8)));
+typedef short __gcc_v8hi __attribute__((__vector_size__(16)));
+typedef short __gcc_v16hi __attribute__((__vector_size__(32)));
+typedef short __gcc_v32hi __attribute__((__vector_size__(64)));
+typedef float __gcc_v2sf __attribute__((__vector_size__(8)));
+typedef float __gcc_v4sf __attribute__((__vector_size__(16)));
+typedef float __gcc_v8sf __attribute__((__vector_size__(32)));
+typedef float __gcc_v16sf __attribute__((__vector_size__(64)));
+typedef double __gcc_v2df __attribute__((__vector_size__(16)));
+typedef double __gcc_v4df __attribute__((__vector_size__(32)));
+typedef double __gcc_v8df __attribute__((__vector_size__(64)));
+typedef long long __gcc_v1di __attribute__((__vector_size__(8)));
+typedef long long __gcc_v2di __attribute__((__vector_size__(16)));
+typedef long long __gcc_v4di __attribute__((__vector_size__(32)));
+typedef long long __gcc_v8di __attribute__((__vector_size__(64)));
 typedef unsigned long long __gcc_di;
 
-enum __gcc_atomic_memmodels {
-  __ATOMIC_RELAXED, __ATOMIC_CONSUME, __ATOMIC_ACQUIRE, __ATOMIC_RELEASE, __ATOMIC_ACQ_REL, __ATOMIC_SEQ_CST
+enum __gcc_atomic_memmodels
+{
+  __ATOMIC_RELAXED,
+  __ATOMIC_CONSUME,
+  __ATOMIC_ACQUIRE,
+  __ATOMIC_RELEASE,
+  __ATOMIC_ACQ_REL,
+  __ATOMIC_SEQ_CST
 };

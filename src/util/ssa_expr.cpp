@@ -33,17 +33,17 @@ static void build_ssa_identifier_rec(
   std::ostream &os,
   std::ostream &l1_object_os)
 {
-  if(expr.id()==ID_member)
+  if(expr.id() == ID_member)
   {
-    const member_exprt &member=to_member_expr(expr);
+    const member_exprt &member= to_member_expr(expr);
 
     build_ssa_identifier_rec(member.struct_op(), l0, l1, l2, os, l1_object_os);
 
     os << '.' << member.get_component_name();
   }
-  else if(expr.id()==ID_index)
+  else if(expr.id() == ID_index)
   {
-    const index_exprt &index=to_index_expr(expr);
+    const index_exprt &index= to_index_expr(expr);
 
     build_ssa_identifier_rec(index.array(), l0, l1, l2, os, l1_object_os);
 
@@ -53,9 +53,9 @@ static void build_ssa_identifier_rec(
 
     os << '[' << idx << ']';
   }
-  else if(expr.id()==ID_symbol)
+  else if(expr.id() == ID_symbol)
   {
-    auto symid=to_symbol_expr(expr).get_identifier();
+    auto symid= to_symbol_expr(expr).get_identifier();
     os << symid;
     l1_object_os << symid;
 

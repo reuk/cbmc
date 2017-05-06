@@ -21,7 +21,9 @@ public:
 
   json_objectt convert(const goto_functionst &goto_functions);
   void operator()(
-    const goto_functionst &goto_functions, std::ostream &out, bool append=true);
+    const goto_functionst &goto_functions,
+    std::ostream &out,
+    bool append= true);
 
 private:
   const namespacet &ns;

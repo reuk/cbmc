@@ -32,12 +32,12 @@ void cnft::gate_and(literalt a, literalt b, literalt o)
   // a*b=c <==> (a + o')( b + o')(a'+b'+o)
   bvt lits(2);
 
-  lits[0]=pos(a);
-  lits[1]=neg(o);
+  lits[0]= pos(a);
+  lits[1]= neg(o);
   lcnf(lits);
 
-  lits[0]=pos(b);
-  lits[1]=neg(o);
+  lits[0]= pos(b);
+  lits[1]= neg(o);
   lcnf(lits);
 
   lits.clear();
@@ -65,18 +65,18 @@ void cnft::gate_or(literalt a, literalt b, literalt o)
   // a+b=c <==> (a' + c)( b' + c)(a + b + c')
   bvt lits(2);
 
-  lits[0]=neg(a);
-  lits[1]=pos(o);
+  lits[0]= neg(a);
+  lits[1]= pos(o);
   lcnf(lits);
 
-  lits[0]=neg(b);
-  lits[1]=pos(o);
+  lits[0]= neg(b);
+  lits[1]= pos(o);
   lcnf(lits);
 
   lits.resize(3);
-  lits[0]=pos(a);
-  lits[1]=pos(b);
-  lits[2]=neg(o);
+  lits[0]= pos(a);
+  lits[1]= pos(b);
+  lits[2]= neg(o);
   lcnf(lits);
 }
 
@@ -100,24 +100,24 @@ void cnft::gate_xor(literalt a, literalt b, literalt o)
   //                  (a + b' + o)
   bvt lits(3);
 
-  lits[0]=neg(a);
-  lits[1]=neg(b);
-  lits[2]=neg(o);
+  lits[0]= neg(a);
+  lits[1]= neg(b);
+  lits[2]= neg(o);
   lcnf(lits);
 
-  lits[0]=pos(a);
-  lits[1]=pos(b);
-  lits[2]=neg(o);
+  lits[0]= pos(a);
+  lits[1]= pos(b);
+  lits[2]= neg(o);
   lcnf(lits);
 
-  lits[0]=neg(a);
-  lits[1]=pos(b);
-  lits[2]=pos(o);
+  lits[0]= neg(a);
+  lits[1]= pos(b);
+  lits[2]= pos(o);
   lcnf(lits);
 
-  lits[0]=pos(a);
-  lits[1]=neg(b);
-  lits[2]=pos(o);
+  lits[0]= pos(a);
+  lits[1]= neg(b);
+  lits[2]= pos(o);
   lcnf(lits);
 }
 
@@ -138,18 +138,18 @@ void cnft::gate_nand(literalt a, literalt b, literalt o)
   // a Nand b = o <==> (a + o)( b + o)(a' + b' + o')
   bvt lits(2);
 
-  lits[0]=pos(a);
-  lits[1]=pos(o);
+  lits[0]= pos(a);
+  lits[1]= pos(o);
   lcnf(lits);
 
-  lits[0]=pos(b);
-  lits[1]=pos(o);
+  lits[0]= pos(b);
+  lits[1]= pos(o);
   lcnf(lits);
 
   lits.resize(3);
-  lits[0]=neg(a);
-  lits[1]=neg(b);
-  lits[2]=neg(o);
+  lits[0]= neg(a);
+  lits[1]= neg(b);
+  lits[2]= neg(o);
   lcnf(lits);
 }
 
@@ -170,18 +170,18 @@ void cnft::gate_nor(literalt a, literalt b, literalt o)
   // a Nor b = o <==> (a' + o')( b' + o')(a + b + o)
   bvt lits(2);
 
-  lits[0]=neg(a);
-  lits[1]=neg(o);
+  lits[0]= neg(a);
+  lits[1]= neg(o);
   lcnf(lits);
 
-  lits[0]=neg(b);
-  lits[1]=neg(o);
+  lits[0]= neg(b);
+  lits[1]= neg(o);
   lcnf(lits);
 
   lits.resize(3);
-  lits[0]=pos(a);
-  lits[1]=pos(b);
-  lits[2]=pos(o);
+  lits[0]= pos(a);
+  lits[1]= pos(b);
+  lits[2]= pos(o);
   lcnf(lits);
 }
 
@@ -235,9 +235,9 @@ literalt cnft::land(const bvt &bv)
 {
   if(bv.empty())
     return const_literal(true);
-  if(bv.size()==1)
+  if(bv.size() == 1)
     return bv[0];
-  if(bv.size()==2)
+  if(bv.size() == 2)
     return land(bv[0], bv[1]);
 
   for(const auto l : bv)
@@ -247,20 +247,20 @@ literalt cnft::land(const bvt &bv)
   if(is_all(bv, const_literal(true)))
     return const_literal(true);
 
-  bvt new_bv=eliminate_duplicates(bv);
+  bvt new_bv= eliminate_duplicates(bv);
 
   bvt lits(2);
-  literalt literal=new_variable();
-  lits[1]=neg(literal);
+  literalt literal= new_variable();
+  lits[1]= neg(literal);
 
   for(const auto l : new_bv)
   {
-    lits[0]=pos(l);
+    lits[0]= pos(l);
     lcnf(lits);
   }
 
   lits.clear();
-  lits.reserve(new_bv.size()+1);
+  lits.reserve(new_bv.size() + 1);
 
   for(const auto l : new_bv)
     lits.push_back(neg(l));
@@ -287,9 +287,9 @@ literalt cnft::lor(const bvt &bv)
 {
   if(bv.empty())
     return const_literal(false);
-  if(bv.size()==1)
+  if(bv.size() == 1)
     return bv[0];
-  if(bv.size()==2)
+  if(bv.size() == 2)
     return lor(bv[0], bv[1]);
 
   for(const auto l : bv)
@@ -299,20 +299,20 @@ literalt cnft::lor(const bvt &bv)
   if(is_all(bv, const_literal(false)))
     return const_literal(false);
 
-  bvt new_bv=eliminate_duplicates(bv);
+  bvt new_bv= eliminate_duplicates(bv);
 
   bvt lits(2);
-  literalt literal=new_variable();
-  lits[1]=pos(literal);
+  literalt literal= new_variable();
+  lits[1]= pos(literal);
 
   for(const auto l : new_bv)
   {
-    lits[0]=neg(l);
+    lits[0]= neg(l);
     lcnf(lits);
   }
 
   lits.clear();
-  lits.reserve(new_bv.size()+1);
+  lits.reserve(new_bv.size() + 1);
 
   for(const auto l : new_bv)
     lits.push_back(pos(l));
@@ -339,15 +339,15 @@ literalt cnft::lxor(const bvt &bv)
 {
   if(bv.empty())
     return const_literal(false);
-  if(bv.size()==1)
+  if(bv.size() == 1)
     return bv[0];
-  if(bv.size()==2)
+  if(bv.size() == 2)
     return lxor(bv[0], bv[1]);
 
-  literalt literal=const_literal(false);
+  literalt literal= const_literal(false);
 
   for(const auto l : bv)
-    literal=lxor(l, literal);
+    literal= lxor(l, literal);
 
   return literal;
 }
@@ -370,10 +370,10 @@ literalt cnft::land(literalt a, literalt b)
     return b;
   if(b.is_true() || a.is_false())
     return a;
-  if(a==b)
+  if(a == b)
     return a;
 
-  literalt o=new_variable();
+  literalt o= new_variable();
   gate_and(a, b, o);
   return o;
 }
@@ -396,10 +396,10 @@ literalt cnft::lor(literalt a, literalt b)
     return b;
   if(b.is_false() || a.is_true())
     return a;
-  if(a==b)
+  if(a == b)
     return a;
 
-  literalt o=new_variable();
+  literalt o= new_variable();
   gate_or(a, b, o);
   return o;
 }
@@ -426,12 +426,12 @@ literalt cnft::lxor(literalt a, literalt b)
     return !b;
   if(b.is_true())
     return !a;
-  if(a==b)
+  if(a == b)
     return const_literal(false);
-  if(a==!b)
+  if(a == !b)
     return const_literal(true);
 
-  literalt o=new_variable();
+  literalt o= new_variable();
   gate_xor(a, b, o);
   return o;
 }
@@ -526,7 +526,7 @@ literalt cnft::lselect(literalt a, literalt b, literalt c)
   // a?b:c = (a AND b) OR (/a AND c)
   if(a.is_constant())
     return a.sign() ? b : c;
-  if(b==c)
+  if(b == c)
     return b;
 
   if(b.is_constant())
@@ -534,30 +534,30 @@ literalt cnft::lselect(literalt a, literalt b, literalt c)
   if(c.is_constant())
     return c.sign() ? lor(!a, b) : land(a, b);
 
-  #ifdef COMPACT_ITE
+#ifdef COMPACT_ITE
 
   // (a+c'+o) (a+c+o') (a'+b'+o) (a'+b+o')
 
-  literalt o=new_variable();
+  literalt o= new_variable();
 
   bvt lits;
 
-  lcnf(a, !c,  o);
-  lcnf(a,  c, !o);
-  lcnf(!a, !b,  o);
-  lcnf(!a,  b, !o);
+  lcnf(a, !c, o);
+  lcnf(a, c, !o);
+  lcnf(!a, !b, o);
+  lcnf(!a, b, !o);
 
-  #ifdef OPTIMAL_COMPACT_ITE
+#ifdef OPTIMAL_COMPACT_ITE
   // additional clauses to enable better propagation
-  lcnf(b,  c, !o);
-  lcnf(!b, !c,  o);
-  #endif
+  lcnf(b, c, !o);
+  lcnf(!b, !c, o);
+#endif
 
   return o;
 
-  #else
+#else
   return lor(land(a, b), land(!a, c));
-  #endif
+#endif
 }
 
 /*******************************************************************\
@@ -577,7 +577,7 @@ literalt cnft::new_variable()
   literalt l;
   l.set(_no_variables, false);
 
-  set_no_variables(_no_variables+1);
+  set_no_variables(_no_variables + 1);
 
   return l;
 }
@@ -634,10 +634,10 @@ bool cnft::process_clause(const bvt &bv, bvt &dest)
   for(const auto l : bv)
   {
     // we never use index 0
-    assert(l.var_no()!=0);
+    assert(l.var_no() != 0);
 
     // we never use 'unused_var_no'
-    assert(l.var_no()!=literalt::unused_var_no());
+    assert(l.var_no() != literalt::unused_var_no());
 
     if(l.is_true())
       return true; // clause satisfied
@@ -645,11 +645,11 @@ bool cnft::process_clause(const bvt &bv, bvt &dest)
     if(l.is_false())
       continue; // will remove later
 
-    if(l.var_no()>=_no_variables)
+    if(l.var_no() >= _no_variables)
       std::cout << "l.var_no()=" << l.var_no()
                 << " _no_variables=" << _no_variables << std::endl;
 
-    assert(l.var_no()<_no_variables);
+    assert(l.var_no() < _no_variables);
   }
 
   // now copy
@@ -670,25 +670,23 @@ bool cnft::process_clause(const bvt &bv, bvt &dest)
   // eliminate duplicates and find occurrences of a variable
   // and its negation
 
-  if(dest.size()>=2)
+  if(dest.size() >= 2)
   {
-    bvt::iterator it=dest.begin();
-    literalt previous=*it;
+    bvt::iterator it= dest.begin();
+    literalt previous= *it;
 
-    for(it++;
-        it!=dest.end();
-        ) // no it++
+    for(it++; it != dest.end();) // no it++
     {
-      literalt l=*it;
+      literalt l= *it;
 
       // prevent duplicate literals
-      if(l==previous)
-        it=dest.erase(it);
-      else if(previous==!l)
+      if(l == previous)
+        it= dest.erase(it);
+      else if(previous == !l)
         return true; // clause satisfied trivially
       else
       {
-        previous=l;
+        previous= l;
         it++;
       }
     }

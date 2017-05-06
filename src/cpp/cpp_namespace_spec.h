@@ -13,10 +13,10 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 #include "cpp_name.h"
 
-class cpp_namespace_spect:public exprt
+class cpp_namespace_spect : public exprt
 {
 public:
-  cpp_namespace_spect():exprt(ID_cpp_namespace_spec)
+  cpp_namespace_spect() : exprt(ID_cpp_namespace_spec)
   {
     add("alias").make_nil();
   }

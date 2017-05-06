@@ -23,10 +23,10 @@ Function: language_filet::language_filet
 
 \*******************************************************************/
 
-language_filet::language_filet(const language_filet &rhs):
-  modules(rhs.modules),
-  language(rhs.language==NULL?NULL:rhs.language->new_language()),
-  filename(rhs.filename)
+language_filet::language_filet(const language_filet &rhs)
+  : modules(rhs.modules),
+    language(rhs.language == NULL ? NULL : rhs.language->new_language()),
+    filename(rhs.filename)
 {
 }
 
@@ -44,7 +44,7 @@ Function: language_filet::~language_filet
 
 language_filet::~language_filet()
 {
-  if(language!=NULL)
+  if(language != NULL)
     delete language;
 }
 
@@ -86,8 +86,7 @@ Function: language_filest::show_parse
 
 void language_filest::show_parse(std::ostream &out)
 {
-  for(file_mapt::iterator it=file_map.begin();
-      it!=file_map.end(); it++)
+  for(file_mapt::iterator it= file_map.begin(); it != file_map.end(); it++)
     it->second.language->show_parse(out);
 }
 
@@ -105,8 +104,7 @@ Function: language_filest::parse
 
 bool language_filest::parse()
 {
-  for(file_mapt::iterator it=file_map.begin();
-      it!=file_map.end(); it++)
+  for(file_mapt::iterator it= file_map.begin(); it != file_map.end(); it++)
   {
     // open file
 
@@ -120,7 +118,7 @@ bool language_filest::parse()
 
     // parse it
 
-    languaget &language=*(it->second.language);
+    languaget &language= *(it->second.language);
 
     if(language.parse(infile, it->first))
     {
@@ -152,8 +150,7 @@ bool language_filest::typecheck(symbol_tablet &symbol_table)
 {
   // typecheck interfaces
 
-  for(file_mapt::iterator it=file_map.begin();
-      it!=file_map.end(); it++)
+  for(file_mapt::iterator it= file_map.begin(); it != file_map.end(); it++)
   {
     if(it->second.language->interfaces(symbol_table))
       return true;
@@ -161,31 +158,29 @@ bool language_filest::typecheck(symbol_tablet &symbol_table)
 
   // build module map
 
-  unsigned collision_counter=0;
+  unsigned collision_counter= 0;
 
-  for(file_mapt::iterator fm_it=file_map.begin();
-      fm_it!=file_map.end(); fm_it++)
+  for(file_mapt::iterator fm_it= file_map.begin(); fm_it != file_map.end();
+      fm_it++)
   {
-    const language_filet::modulest &modules=
-      fm_it->second.modules;
+    const language_filet::modulest &modules= fm_it->second.modules;
 
-    for(language_filet::modulest::const_iterator
-        mo_it=modules.begin();
-        mo_it!=modules.end();
+    for(language_filet::modulest::const_iterator mo_it= modules.begin();
+        mo_it != modules.end();
         mo_it++)
     {
       // these may collide, and then get renamed
-      std::string module_name=*mo_it;
+      std::string module_name= *mo_it;
 
-      while(module_map.find(module_name)!=module_map.end())
+      while(module_map.find(module_name) != module_map.end())
       {
-        module_name=*mo_it+"#"+std::to_string(collision_counter);
+        module_name= *mo_it + "#" + std::to_string(collision_counter);
         collision_counter++;
       }
 
       language_modulet module;
-      module.file=&fm_it->second;
-      module.name=module_name;
+      module.file= &fm_it->second;
+      module.name= module_name;
       module_map.insert(
         std::pair<std::string, language_modulet>(module.name, module));
     }
@@ -193,8 +188,7 @@ bool language_filest::typecheck(symbol_tablet &symbol_table)
 
   // typecheck files
 
-  for(file_mapt::iterator it=file_map.begin();
-      it!=file_map.end(); it++)
+  for(file_mapt::iterator it= file_map.begin(); it != file_map.end(); it++)
   {
     if(it->second.modules.empty())
     {
@@ -206,14 +200,14 @@ bool language_filest::typecheck(symbol_tablet &symbol_table)
       std::set<irep_idt> lazy_method_ids;
       it->second.language->lazy_methods_provided(lazy_method_ids);
       for(const auto &id : lazy_method_ids)
-        lazy_method_map[id]=&it->second;
+        lazy_method_map[id]= &it->second;
     }
   }
 
   // typecheck modules
 
-  for(module_mapt::iterator it=module_map.begin();
-      it!=module_map.end(); it++)
+  for(module_mapt::iterator it= module_map.begin(); it != module_map.end();
+      it++)
   {
     if(typecheck_module(symbol_table, it->second))
       return true;
@@ -234,13 +228,11 @@ Function: language_filest::final
 
 \*******************************************************************/
 
-bool language_filest::final(
-  symbol_tablet &symbol_table)
+bool language_filest::final(symbol_tablet &symbol_table)
 {
   std::set<std::string> languages;
 
-  for(file_mapt::iterator it=file_map.begin();
-      it!=file_map.end(); it++)
+  for(file_mapt::iterator it= file_map.begin(); it != file_map.end(); it++)
   {
     if(languages.insert(it->second.language->id()).second)
       if(it->second.language->final(symbol_table))
@@ -262,11 +254,9 @@ Function: language_filest::interfaces
 
 \*******************************************************************/
 
-bool language_filest::interfaces(
-  symbol_tablet &symbol_table)
+bool language_filest::interfaces(symbol_tablet &symbol_table)
 {
-  for(file_mapt::iterator it=file_map.begin();
-      it!=file_map.end(); it++)
+  for(file_mapt::iterator it= file_map.begin(); it != file_map.end(); it++)
   {
     if(it->second.language->interfaces(symbol_table))
       return true;
@@ -293,9 +283,9 @@ bool language_filest::typecheck_module(
 {
   // check module map
 
-  module_mapt::iterator it=module_map.find(module);
+  module_mapt::iterator it= module_map.find(module);
 
-  if(it==module_map.end())
+  if(it == module_map.end())
   {
     error() << "found no file that provides module " << module << eom;
     return true;
@@ -333,7 +323,7 @@ bool language_filest::typecheck_module(
     return true;
   }
 
-  module.in_progress=true;
+  module.in_progress= true;
 
   // first get dependencies of current module
 
@@ -341,14 +331,13 @@ bool language_filest::typecheck_module(
 
   module.file->language->dependencies(module.name, dependency_set);
 
-  for(std::set<std::string>::const_iterator it=
-      dependency_set.begin();
-      it!=dependency_set.end();
+  for(std::set<std::string>::const_iterator it= dependency_set.begin();
+      it != dependency_set.end();
       it++)
   {
     if(typecheck_module(symbol_table, *it))
     {
-      module.in_progress=false;
+      module.in_progress= false;
       return true;
     }
   }
@@ -359,12 +348,12 @@ bool language_filest::typecheck_module(
 
   if(module.file->language->typecheck(symbol_table, module.name))
   {
-    module.in_progress=false;
+    module.in_progress= false;
     return true;
   }
 
-  module.type_checked=true;
-  module.in_progress=false;
+  module.type_checked= true;
+  module.in_progress= false;
 
   return false;
 }

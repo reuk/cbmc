@@ -13,7 +13,7 @@ Author: CM Wintersteiger
 
 #include "qdimacs_core.h"
 
-class qbf_squolem_coret:public qdimacs_coret
+class qbf_squolem_coret : public qdimacs_coret
 {
 protected:
   Squolem2 *squolem;
@@ -35,7 +35,10 @@ public:
   virtual void add_quantifier(const quantifiert &quantifier);
   virtual void set_quantifier(const quantifiert::typet type, const literalt l);
   virtual void set_no_variables(size_t no);
-  virtual size_t no_clauses() const { return squolem->clauses(); }
+  virtual size_t no_clauses() const
+  {
+    return squolem->clauses();
+  }
 
   virtual modeltypet m_get(literalt a) const;
 
@@ -47,7 +50,7 @@ public:
 
 private:
   typedef std::unordered_map<unsigned, exprt> function_cachet;
-    function_cachet function_cache;
+  function_cachet function_cache;
 
   const exprt f_get_cnf(WitnessStack *wsp);
   const exprt f_get_dnf(WitnessStack *wsp);

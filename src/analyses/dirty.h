@@ -37,7 +37,7 @@ public:
 
   bool operator()(const irep_idt &id) const
   {
-    return dirty.find(id)!=dirty.end();
+    return dirty.find(id) != dirty.end();
   }
 
   bool operator()(const symbol_exprt &expr) const
@@ -60,9 +60,7 @@ protected:
   void find_dirty_address_of(const exprt &expr);
 };
 
-inline std::ostream &operator<<(
-  std::ostream &out,
-  const dirtyt &dirty)
+inline std::ostream &operator<<(std::ostream &out, const dirtyt &dirty)
 {
   dirty.output(out);
   return out;

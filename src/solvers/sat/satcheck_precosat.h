@@ -16,7 +16,7 @@ namespace PrecoSat // NOLINT(readability/namespace)
 class Solver; // NOLINT(readability/identifiers)
 }
 
-class satcheck_precosatt:public cnf_solvert
+class satcheck_precosatt : public cnf_solvert
 {
 public:
   satcheck_precosatt();
@@ -32,8 +32,14 @@ public:
   // PicoSAT has this, PrecoSAT doesn't
   // virtual bool is_in_conflict(literalt a) const;
   // virtual void set_assumptions(const bvt &_assumptions);
-  virtual bool has_set_assumptions() const { return false; }
-  virtual bool has_is_in_conflict() const { return false; }
+  virtual bool has_set_assumptions() const
+  {
+    return false;
+  }
+  virtual bool has_is_in_conflict() const
+  {
+    return false;
+  }
 
 protected:
   PrecoSat::Solver *solver;

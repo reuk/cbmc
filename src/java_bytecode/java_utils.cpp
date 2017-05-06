@@ -13,9 +13,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 bool java_is_array_type(const typet &type)
 {
-  if(type.id()!=ID_struct)
+  if(type.id() != ID_struct)
     return false;
-  return has_prefix(id2string(
-    to_struct_type(type).get_tag()),
-                    "java::array[");
+  return has_prefix(id2string(to_struct_type(type).get_tag()), "java::array[");
 }

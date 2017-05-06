@@ -15,9 +15,6 @@ Date: November 2005
 
 #include "goto_trace.h"
 
-void convert(
-  const namespacet &,
-  const goto_tracet &,
-  jsont &);
+void convert(const namespacet &, const goto_tracet &, jsont &);
 
 #endif // CPROVER_GOTO_PROGRAMS_JSON_GOTO_TRACE_H

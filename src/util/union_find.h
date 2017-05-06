@@ -31,7 +31,7 @@ protected:
     size_type parent;
 
     // constructs a root node
-    explicit nodet(size_type index):count(1), parent(index)
+    explicit nodet(size_type index) : count(1), parent(index)
     {
     }
   };
@@ -63,9 +63,9 @@ public:
   void resize(size_type size)
   {
     // We only enlarge. Shrinking is yet to be implemented.
-    assert(nodes.size()<=size);
+    assert(nodes.size() <= size);
     nodes.reserve(size);
-    while(nodes.size()<size)
+    while(nodes.size() < size)
       nodes.push_back(nodet(nodes.size()));
   }
 
@@ -77,16 +77,16 @@ public:
   // is 'a' a root?
   bool is_root(size_type a) const
   {
-    if(a>=size())
+    if(a >= size())
       return true;
     // a root is its own parent
-    return nodes[a].parent==a;
+    return nodes[a].parent == a;
   }
 
   // are 'a' and 'b' in the same set?
   bool same_set(size_type a, size_type b) const
   {
-    return find(a)==find(b);
+    return find(a) == find(b);
   }
 
   // total number of elements
@@ -98,7 +98,7 @@ public:
   // size of the set that 'a' is in
   size_type count(size_type a) const
   {
-    if(a>=size())
+    if(a >= size())
       return 1;
     return nodes[find(a)].count;
   }
@@ -106,15 +106,15 @@ public:
   // make the array large enough to contain 'a'
   void check_index(size_type a)
   {
-    if(a>=size())
-      resize(a+1);
+    if(a >= size())
+      resize(a + 1);
   }
 
   // number of disjoint sets
   size_type count_roots() const
   {
-    size_type c=0;
-    for(size_type i=0; i<nodes.size(); i++)
+    size_type c= 0;
+    for(size_type i= 0; i < nodes.size(); i++)
       if(is_root(i))
         c++;
     return c;
@@ -129,7 +129,7 @@ public:
 
 template <typename T>
 // NOLINTNEXTLINE(readability/identifiers)
-class union_find:public numbering<T>
+class union_find : public numbering<T>
 {
 public:
   // NOLINTNEXTLINE(readability/identifiers)
@@ -138,18 +138,20 @@ public:
   // true == already in same set
   bool make_union(const T &a, const T &b)
   {
-    size_type na=number(a), nb=number(b);
-    bool is_union=find_number(na)==find_number(nb);
+    size_type na= number(a), nb= number(b);
+    bool is_union= find_number(na) == find_number(nb);
     uuf.make_union(na, nb);
     return is_union;
   }
 
   // true == already in same set
-  bool make_union(typename numbering<T>::const_iterator it_a,
-                  typename numbering<T>::const_iterator it_b)
+  bool make_union(
+    typename numbering<T>::const_iterator it_a,
+    typename numbering<T>::const_iterator it_b)
   {
-    size_type na=it_a-numbering<T>::begin(), nb=it_b-numbering<T>::begin();
-    bool is_union=find_number(na)==find_number(nb);
+    size_type na= it_a - numbering<T>::begin(),
+              nb= it_b - numbering<T>::begin();
+    bool is_union= find_number(na) == find_number(nb);
     uuf.make_union(na, nb);
     return is_union;
   }
@@ -158,28 +160,29 @@ public:
   bool same_set(const T &a, const T &b) const
   {
     typedef typename subt::number_type subt_number_typet;
-    subt_number_typet na=subt_number_typet(), nb=subt_number_typet();
-    bool have_na=!subt::get_number(a, na),
-         have_nb=!subt::get_number(b, nb);
+    subt_number_typet na= subt_number_typet(), nb= subt_number_typet();
+    bool have_na= !subt::get_number(a, na), have_nb= !subt::get_number(b, nb);
 
     if(have_na && have_nb)
       return uuf.same_set(na, nb);
     else if(!have_na && !have_nb)
-      return a==b;
+      return a == b;
     else
       return false;
   }
 
   // are 'a' and 'b' in the same set?
-  bool same_set(typename numbering<T>::const_iterator it_a,
-                typename numbering<T>::const_iterator it_b) const
+  bool same_set(
+    typename numbering<T>::const_iterator it_a,
+    typename numbering<T>::const_iterator it_b) const
   {
-    return uuf.same_set(it_a-numbering<T>::begin(), it_b-numbering<T>::begin());
+    return uuf.same_set(
+      it_a - numbering<T>::begin(), it_b - numbering<T>::begin());
   }
 
   const T &find(typename numbering<T>::const_iterator it) const
   {
-    return numbering<T>::operator[](find_number(it-numbering<T>::begin()));
+    return numbering<T>::operator[](find_number(it - numbering<T>::begin()));
   }
 
   const T &find(const T &a)
@@ -189,7 +192,7 @@ public:
 
   size_type find_number(typename numbering<T>::const_iterator it) const
   {
-    return find_number(it-numbering<T>::begin());
+    return find_number(it - numbering<T>::begin());
   }
 
   size_type find_number(size_type a) const
@@ -219,17 +222,17 @@ public:
 
   bool is_root(typename numbering<T>::const_iterator it) const
   {
-    return uuf.is_root(it-numbering<T>::begin());
+    return uuf.is_root(it - numbering<T>::begin());
   }
 
   size_type number(const T &a)
   {
-    size_type n=subt::number(a);
+    size_type n= subt::number(a);
 
-    if(n>=uuf.size())
+    if(n >= uuf.size())
       uuf.resize(this->size());
 
-    assert(uuf.size()==this->size());
+    assert(uuf.size() == this->size());
 
     return n;
   }
@@ -242,7 +245,7 @@ public:
 
   void isolate(typename numbering<T>::const_iterator it)
   {
-    uuf.isolate(it-numbering<T>::begin());
+    uuf.isolate(it - numbering<T>::begin());
   }
 
   void isolate(const T &a)

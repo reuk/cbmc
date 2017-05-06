@@ -20,12 +20,12 @@ class fixedbv_spect
 public:
   std::size_t integer_bits, width;
 
-  fixedbv_spect():integer_bits(0), width(0)
+  fixedbv_spect() : integer_bits(0), width(0)
   {
   }
 
-  fixedbv_spect(std::size_t _width, std::size_t _integer_bits):
-    integer_bits(_integer_bits), width(_width)
+  fixedbv_spect(std::size_t _width, std::size_t _integer_bits)
+    : integer_bits(_integer_bits), width(_width)
   {
   }
 
@@ -33,7 +33,7 @@ public:
 
   std::size_t get_fraction_bits() const
   {
-    return width-integer_bits;
+    return width - integer_bits;
   }
 };
 
@@ -42,11 +42,11 @@ class fixedbvt
 public:
   fixedbv_spect spec;
 
-  fixedbvt():v(0)
+  fixedbvt() : v(0)
   {
   }
 
-  explicit fixedbvt(const fixedbv_spect &_spec):spec(_spec), v(0)
+  explicit fixedbvt(const fixedbv_spect &_spec) : spec(_spec), v(0)
   {
   }
 
@@ -69,7 +69,7 @@ public:
 
   bool is_zero() const
   {
-    return v==0;
+    return v == 0;
   }
 
   static fixedbvt zero(const fixedbv_typet &type)
@@ -84,15 +84,39 @@ public:
   fixedbvt &operator+=(const fixedbvt &other);
   fixedbvt &operator-=(const fixedbvt &other);
 
-  bool operator<(const fixedbvt &other) const { return v<other.v; }
-  bool operator<=(const fixedbvt &other) const { return v<=other.v; }
-  bool operator>(const fixedbvt &other) const { return v>other.v; }
-  bool operator>=(const fixedbvt &other) const { return v>=other.v; }
-  bool operator==(const fixedbvt &other) const { return v==other.v; }
-  bool operator!=(const fixedbvt &other) const { return v!=other.v; }
+  bool operator<(const fixedbvt &other) const
+  {
+    return v < other.v;
+  }
+  bool operator<=(const fixedbvt &other) const
+  {
+    return v <= other.v;
+  }
+  bool operator>(const fixedbvt &other) const
+  {
+    return v > other.v;
+  }
+  bool operator>=(const fixedbvt &other) const
+  {
+    return v >= other.v;
+  }
+  bool operator==(const fixedbvt &other) const
+  {
+    return v == other.v;
+  }
+  bool operator!=(const fixedbvt &other) const
+  {
+    return v != other.v;
+  }
 
-  const mp_integer &get_value() const { return v; }
-  void set_value(const mp_integer &_v) { v=_v; }
+  const mp_integer &get_value() const
+  {
+    return v;
+  }
+  void set_value(const mp_integer &_v)
+  {
+    v= _v;
+  }
 
 protected:
   // negative values stored as such

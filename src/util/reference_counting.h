@@ -11,30 +11,30 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <cassert>
 
-template<typename T>
+template <typename T>
 // NOLINTNEXTLINE(readability/identifiers)
 class reference_counting
 {
 public:
-  reference_counting():d(NULL)
+  reference_counting() : d(NULL)
   {
   }
 
-  explicit reference_counting(const T &other):d(NULL)
+  explicit reference_counting(const T &other) : d(NULL)
   {
-    write()=other;
+    write()= other;
   }
 
   // copy constructor
-  reference_counting(const reference_counting &other):d(other.d)
+  reference_counting(const reference_counting &other) : d(other.d)
   {
-    if(d!=NULL)
+    if(d != NULL)
     {
-      assert(d->ref_count!=0);
+      assert(d->ref_count != 0);
       d->ref_count++;
-      #ifdef REFERENCE_COUNTING_DEBUG
+#ifdef REFERENCE_COUNTING_DEBUG
       std::cout << "COPY " << d << " " << d->ref_count << std::endl;
-      #endif
+#endif
     }
   }
 
@@ -47,7 +47,7 @@ public:
   ~reference_counting()
   {
     remove_ref(d);
-    d=NULL;
+    d= NULL;
   }
 
   void swap(reference_counting &other)
@@ -58,12 +58,12 @@ public:
   void clear()
   {
     remove_ref(d);
-    d=NULL;
+    d= NULL;
   }
 
   const T &read() const
   {
-    if(d==NULL)
+    if(d == NULL)
       return T::blank;
     return *d;
   }
@@ -75,12 +75,12 @@ public:
   }
 
 protected:
-  class dt:public T
+  class dt : public T
   {
   public:
     unsigned ref_count;
 
-    dt():ref_count(1)
+    dt() : ref_count(1)
     {
     }
   };
@@ -93,15 +93,15 @@ protected:
 
   void copy_from(const reference_counting &other)
   {
-    assert(&other!=this); // check if we assign to ourselves
+    assert(&other != this); // check if we assign to ourselves
 
-    #ifdef REFERENCE_COUNTING_DEBUG
+#ifdef REFERENCE_COUNTING_DEBUG
     std::cout << "COPY " << (&other) << "\n";
-    #endif
+#endif
 
     remove_ref(d);
-    d=other.d;
-    if(d!=NULL)
+    d= other.d;
+    if(d != NULL)
       d->ref_count++;
   }
 
@@ -112,84 +112,85 @@ public:
   }
 };
 
-template<class T>
+template <class T>
 void reference_counting<T>::remove_ref(dt *old_d)
 {
-  if(old_d==NULL)
+  if(old_d == NULL)
     return;
 
-  assert(old_d->ref_count!=0);
+  assert(old_d->ref_count != 0);
 
-  #ifdef REFERENCE_COUNTING_DEBUG
+#ifdef REFERENCE_COUNTING_DEBUG
   std::cout << "R: " << old_d << " " << old_d->ref_count << std::endl;
-  #endif
+#endif
 
   old_d->ref_count--;
-  if(old_d->ref_count==0)
+  if(old_d->ref_count == 0)
   {
-    #ifdef REFERENCE_COUNTING_DEBUG
+#ifdef REFERENCE_COUNTING_DEBUG
     std::cout << "DELETING " << old_d << std::endl;
     old_d->clear();
     std::cout << "DEALLOCATING " << old_d << "\n";
-    #endif
+#endif
 
     delete old_d;
 
-    #ifdef REFERENCE_COUNTING_DEBUG
+#ifdef REFERENCE_COUNTING_DEBUG
     std::cout << "DONE\n";
-    #endif
+#endif
   }
 }
 
-template<class T>
+template <class T>
 void reference_counting<T>::detatch()
 {
-  #ifdef REFERENCE_COUNTING_DEBUG
+#ifdef REFERENCE_COUNTING_DEBUG
   std::cout << "DETATCH1: " << d << std::endl;
-  #endif
+#endif
 
-  if(d==NULL)
+  if(d == NULL)
   {
-    d=new dt;
+    d= new dt;
 
-    #ifdef REFERENCE_COUNTING_DEBUG
+#ifdef REFERENCE_COUNTING_DEBUG
     std::cout << "ALLOCATED " << d << std::endl;
-    #endif
+#endif
   }
-  else if(d->ref_count>1)
+  else if(d->ref_count > 1)
   {
     dt *old_d(d);
-    d=new dt(*old_d);
+    d= new dt(*old_d);
 
-    #ifdef REFERENCE_COUNTING_DEBUG
+#ifdef REFERENCE_COUNTING_DEBUG
     std::cout << "ALLOCATED " << d << std::endl;
-    #endif
+#endif
 
-    d->ref_count=1;
+    d->ref_count= 1;
     remove_ref(old_d);
   }
 
-  assert(d->ref_count==1);
+  assert(d->ref_count == 1);
 
-  #ifdef REFERENCE_COUNTING_DEBUG
+#ifdef REFERENCE_COUNTING_DEBUG
   std::cout << "DETATCH2: " << d << std::endl;
-  #endif
+#endif
 }
 
-template<class T>
+template <class T>
 bool operator==(
   const reference_counting<T> &o1,
   const reference_counting<T> &o2)
 {
-  if(o1.get_d()==o2.get_d())
+  if(o1.get_d() == o2.get_d())
     return true;
-  return o1.read()==o2.read();
+  return o1.read() == o2.read();
 }
 
-template<class T>
-inline bool operator!=(
-  const reference_counting<T> &i1,
-  const reference_counting<T> &i2)
-{ return !(i1==i2); }
+template <class T>
+inline bool
+operator!=(const reference_counting<T> &i1, const reference_counting<T> &i2)
+{
+  return !(i1 == i2);
+}
 
 #endif // CPROVER_UTIL_REFERENCE_COUNTING_H

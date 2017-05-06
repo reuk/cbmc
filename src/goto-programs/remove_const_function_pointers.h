@@ -16,8 +16,7 @@ Author: Thomas Kiley, thomas.kiley@diffblue.com
 #include <util/expr.h>
 #include <util/namespace.h>
 
-
-class remove_const_function_pointerst:public messaget
+class remove_const_function_pointerst : public messaget
 {
 public:
   typedef std::unordered_set<exprt, irep_hash> functionst;
@@ -38,22 +37,28 @@ private:
   bool try_resolve_function_call(const exprt &expr, functionst &out_functions);
 
   bool try_resolve_function_calls(
-    const expressionst &exprs, functionst &out_functions);
+    const expressionst &exprs,
+    functionst &out_functions);
 
   bool try_resolve_index_of_function_call(
-    const index_exprt &index_expr, functionst &out_functions);
+    const index_exprt &index_expr,
+    functionst &out_functions);
 
   bool try_resolve_member_function_call(
-    const member_exprt &member_expr, functionst &out_functions);
+    const member_exprt &member_expr,
+    functionst &out_functions);
 
   bool try_resolve_address_of_function_call(
-    const address_of_exprt &address_expr, functionst &out_functions);
+    const address_of_exprt &address_expr,
+    functionst &out_functions);
 
   bool try_resolve_dereference_function_call(
-    const dereference_exprt &deref_expr, functionst &out_functions);
+    const dereference_exprt &deref_expr,
+    functionst &out_functions);
 
   bool try_resolve_typecast_function_call(
-    const typecast_exprt &typecast_expr, functionst &out_functions);
+    const typecast_exprt &typecast_expr,
+    functionst &out_functions);
 
   // recursive functions for dealing with the auxiliary elements
   bool try_resolve_expression(
@@ -85,21 +90,22 @@ private:
   bool is_const_type(const typet &type) const;
 
   bool try_resolve_index_value(
-    const exprt &index_value_expr, mp_integer &out_array_index);
+    const exprt &index_value_expr,
+    mp_integer &out_array_index);
 
   exprt get_component_value(
-    const struct_exprt &struct_expr, const member_exprt &member_expr);
+    const struct_exprt &struct_expr,
+    const member_exprt &member_expr);
 
   const exprt original_expression;
   const namespacet &ns;
   const symbol_tablet &symbol_table;
 };
 
-#define OPT_REMOVE_CONST_FUNCTION_POINTERS \
-  "(remove-const-function-pointers)"
+#define OPT_REMOVE_CONST_FUNCTION_POINTERS "(remove-const-function-pointers)"
 
-#define HELP_REMOVE_CONST_FUNCTION_POINTERS \
-  " --remove-const-function-pointers    Remove function pointers that are constant or constant part of an array\n" // NOLINT(*)
-
+#define HELP_REMOVE_CONST_FUNCTION_POINTERS                                    \
+  " --remove-const-function-pointers    Remove function pointers that are "    \
+  "constant or constant part of an array\n" // NOLINT(*)
 
 #endif // CPROVER_GOTO_PROGRAMS_REMOVE_CONST_FUNCTION_POINTERS_H

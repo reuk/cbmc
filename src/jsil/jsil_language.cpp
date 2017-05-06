@@ -32,7 +32,7 @@ Function: jsil_languaget::extensions
 
 std::set<std::string> jsil_languaget::extensions() const
 {
-  return { "jsil" };
+  return {"jsil"};
 }
 
 /*******************************************************************\
@@ -106,21 +106,19 @@ Function: jsil_languaget::parse
 
 \*******************************************************************/
 
-bool jsil_languaget::parse(
-  std::istream &instream,
-  const std::string &path)
+bool jsil_languaget::parse(std::istream &instream, const std::string &path)
 {
   // store the path
-  parse_path=path;
+  parse_path= path;
 
   // parsing
   jsil_parser.clear();
   jsil_parser.set_file(path);
-  jsil_parser.in=&instream;
+  jsil_parser.in= &instream;
   jsil_parser.set_message_handler(get_message_handler());
 
   jsil_scanner_init();
-  bool result=jsil_parser.parse();
+  bool result= jsil_parser.parse();
 
   // save result
   parse_tree.swap(jsil_parser.parse_tree);
@@ -167,9 +165,7 @@ Function: jsil_languaget::final
 
 bool jsil_languaget::final(symbol_tablet &symbol_table)
 {
-  if(jsil_entry_point(
-      symbol_table,
-      get_message_handler()))
+  if(jsil_entry_point(symbol_table, get_message_handler()))
     return true;
 
   return false;
@@ -226,7 +222,7 @@ bool jsil_languaget::from_expr(
   std::string &code,
   const namespacet &ns)
 {
-  code=expr2jsil(expr, ns);
+  code= expr2jsil(expr, ns);
   return false;
 }
 
@@ -247,7 +243,7 @@ bool jsil_languaget::from_type(
   std::string &code,
   const namespacet &ns)
 {
-  code=type2jsil(type, ns);
+  code= type2jsil(type, ns);
   return false;
 }
 
@@ -276,29 +272,28 @@ bool jsil_languaget::to_expr(
 
   jsil_parser.clear();
   jsil_parser.set_file("");
-  jsil_parser.in=&instream;
+  jsil_parser.in= &instream;
   jsil_parser.set_message_handler(get_message_handler());
   jsil_scanner_init();
 
-  bool result=jsil_parser.parse();
+  bool result= jsil_parser.parse();
 
-  if(jsil_parser.parse_tree.items.size()!=1)
-    result=true;
+  if(jsil_parser.parse_tree.items.size() != 1)
+    result= true;
   else
   {
     symbol_tablet symbol_table;
-    result=
-      jsil_convert(parse_tree, symbol_table, get_message_handler());
+    result= jsil_convert(parse_tree, symbol_table, get_message_handler());
 
-    if(symbol_table.symbols.size()!=1)
-      result=true;
+    if(symbol_table.symbols.size() != 1)
+      result= true;
 
     if(!result)
-      expr=symbol_table.symbols.begin()->second.value;
+      expr= symbol_table.symbols.begin()->second.value;
 
     // typecheck it
     if(!result)
-      result=jsil_typecheck(expr, get_message_handler(), ns);
+      result= jsil_typecheck(expr, get_message_handler(), ns);
   }
 
   // save some memory

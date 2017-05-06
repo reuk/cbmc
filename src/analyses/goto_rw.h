@@ -19,33 +19,36 @@ Date: April 2010
 
 #include <goto-programs/goto_program.h>
 
-#define forall_rw_range_set_r_objects(it, rw_set) \
-  for(rw_range_sett::objectst::const_iterator it=(rw_set).get_r_set().begin(); \
-      it!=(rw_set).get_r_set().end(); ++it)
+#define forall_rw_range_set_r_objects(it, rw_set)                              \
+  for(rw_range_sett::objectst::const_iterator it=                              \
+        (rw_set).get_r_set().begin();                                          \
+      it != (rw_set).get_r_set().end();                                        \
+      ++it)
 
-#define forall_rw_range_set_w_objects(it, rw_set) \
-  for(rw_range_sett::objectst::const_iterator it=(rw_set).get_w_set().begin(); \
-      it!=(rw_set).get_w_set().end(); ++it)
+#define forall_rw_range_set_w_objects(it, rw_set)                              \
+  for(rw_range_sett::objectst::const_iterator it=                              \
+        (rw_set).get_w_set().begin();                                          \
+      it != (rw_set).get_w_set().end();                                        \
+      ++it)
 
 class rw_range_sett;
 class goto_functionst;
 
-void goto_rw(goto_programt::const_targett target,
-             rw_range_sett &rw_set);
+void goto_rw(goto_programt::const_targett target, rw_range_sett &rw_set);
 
-void goto_rw(const goto_programt &goto_program,
-             rw_range_sett &rw_set);
+void goto_rw(const goto_programt &goto_program, rw_range_sett &rw_set);
 
-void goto_rw(const goto_functionst &goto_functions,
-             const irep_idt &function,
-             rw_range_sett &rw_set);
+void goto_rw(
+  const goto_functionst &goto_functions,
+  const irep_idt &function,
+  rw_range_sett &rw_set);
 
 class range_domain_baset
 {
 public:
   virtual ~range_domain_baset();
 
-  virtual void output(const namespacet &ns, std::ostream &out) const=0;
+  virtual void output(const namespacet &ns, std::ostream &out) const= 0;
 };
 
 typedef int range_spect;
@@ -53,16 +56,15 @@ typedef int range_spect;
 inline range_spect to_range_spect(const mp_integer &size)
 {
   assert(size.is_long());
-  mp_integer::llong_t ll=size.to_long();
-  assert(ll<=std::numeric_limits<range_spect>::max());
-  assert(ll>=std::numeric_limits<range_spect>::min());
+  mp_integer::llong_t ll= size.to_long();
+  assert(ll <= std::numeric_limits<range_spect>::max());
+  assert(ll >= std::numeric_limits<range_spect>::min());
   return (range_spect)ll;
 }
 
 // each element x represents a range of bits [x.first, x.second.first)
-class range_domaint:
-  public range_domain_baset,
-  public std::list<std::pair<range_spect, range_spect> >
+class range_domaint : public range_domain_baset,
+                      public std::list<std::pair<range_spect, range_spect>>
 {
 public:
   virtual void output(const namespacet &ns, std::ostream &out) const;
@@ -81,17 +83,16 @@ class typecast_exprt;
 class rw_range_sett
 {
 public:
-  #ifdef USE_DSTRING
-  typedef std::map<irep_idt, range_domain_baset*> objectst;
-  #else
-  typedef std::unordered_map<irep_idt, range_domain_baset*, string_hash>
+#ifdef USE_DSTRING
+  typedef std::map<irep_idt, range_domain_baset *> objectst;
+#else
+  typedef std::unordered_map<irep_idt, range_domain_baset *, string_hash>
     objectst;
-  #endif
+#endif
 
   virtual ~rw_range_sett();
 
-  explicit rw_range_sett(const namespacet &_ns):
-    ns(_ns)
+  explicit rw_range_sett(const namespacet &_ns) : ns(_ns)
   {
   }
 
@@ -107,8 +108,8 @@ public:
 
   const range_domaint &get_ranges(objectst::const_iterator it) const
   {
-    assert(dynamic_cast<range_domaint*>(it->second)!=0);
-    return *static_cast<range_domaint*>(it->second);
+    assert(dynamic_cast<range_domaint *>(it->second) != 0);
+    return *static_cast<range_domaint *>(it->second);
   }
 
   typedef enum { LHS_W, READ } get_modet;
@@ -130,9 +131,7 @@ protected:
 
   objectst r_range_set, w_range_set;
 
-  virtual void get_objects_rec(
-    get_modet mode,
-    const exprt &expr);
+  virtual void get_objects_rec(get_modet mode, const exprt &expr);
 
   virtual void get_objects_complex(
     get_modet mode,
@@ -211,9 +210,7 @@ protected:
     const range_spect &range_end);
 };
 
-inline std::ostream &operator << (
-  std::ostream &out,
-  const rw_range_sett &rw_set)
+inline std::ostream &operator<<(std::ostream &out, const rw_range_sett &rw_set)
 {
   rw_set.output(out);
   return out;
@@ -221,14 +218,11 @@ inline std::ostream &operator << (
 
 class value_setst;
 
-class rw_range_set_value_sett:public rw_range_sett
+class rw_range_set_value_sett : public rw_range_sett
 {
 public:
-  rw_range_set_value_sett(
-    const namespacet &_ns,
-    value_setst &_value_sets):
-    rw_range_sett(_ns),
-    value_sets(_value_sets)
+  rw_range_set_value_sett(const namespacet &_ns, value_setst &_value_sets)
+    : rw_range_sett(_ns), value_sets(_value_sets)
   {
   }
 
@@ -239,7 +233,7 @@ public:
     get_modet mode,
     const exprt &expr)
   {
-    target=_target;
+    target= _target;
 
     rw_range_sett::get_objects_rec(mode, expr);
   }
@@ -256,28 +250,28 @@ protected:
     const range_spect &size);
 };
 
-class guarded_range_domaint:
-  public range_domain_baset,
-  public std::multimap<range_spect, std::pair<range_spect, exprt> >
+class guarded_range_domaint
+  : public range_domain_baset,
+    public std::multimap<range_spect, std::pair<range_spect, exprt>>
 {
 public:
   virtual void output(const namespacet &ns, std::ostream &out) const;
 };
 
-class rw_guarded_range_set_value_sett:public rw_range_set_value_sett
+class rw_guarded_range_set_value_sett : public rw_range_set_value_sett
 {
 public:
   rw_guarded_range_set_value_sett(
     const namespacet &_ns,
-    value_setst &_value_sets):
-    rw_range_set_value_sett(_ns, _value_sets)
+    value_setst &_value_sets)
+    : rw_range_set_value_sett(_ns, _value_sets)
   {
   }
 
   const guarded_range_domaint &get_ranges(objectst::const_iterator it) const
   {
-    assert(dynamic_cast<guarded_range_domaint*>(it->second)!=0);
-    return *static_cast<guarded_range_domaint*>(it->second);
+    assert(dynamic_cast<guarded_range_domaint *>(it->second) != 0);
+    return *static_cast<guarded_range_domaint *>(it->second);
   }
 
   virtual void get_objects_rec(

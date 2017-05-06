@@ -17,7 +17,7 @@ Author: Romain Brenguier, romain.brenguier@diffblue.com
 #include <solvers/refinement/bv_refinement.h>
 #include <solvers/refinement/refined_string_type.h>
 
-class string_constraintt: public exprt
+class string_constraintt : public exprt
 {
 public:
   // String constraints are of the form
@@ -48,18 +48,17 @@ public:
     return operands()[4];
   }
 
-
- private:
+private:
   string_constraintt();
 
- public:
+public:
   string_constraintt(
     const symbol_exprt &_univ_var,
     const exprt &bound_inf,
     const exprt &bound_sup,
     const exprt &prem,
-    const exprt &body):
-    exprt(ID_string_constraint)
+    const exprt &body)
+    : exprt(ID_string_constraint)
   {
     copy_to_operands(prem, body);
     copy_to_operands(_univ_var, bound_sup, bound_inf);
@@ -70,22 +69,24 @@ public:
     const symbol_exprt &_univ_var,
     const exprt &bound_sup,
     const exprt &prem,
-    const exprt &body):
-    string_constraintt(
-      _univ_var,
-      from_integer(0, _univ_var.type()),
-      bound_sup,
-      prem,
-      body)
-  {}
+    const exprt &body)
+    : string_constraintt(
+        _univ_var,
+        from_integer(0, _univ_var.type()),
+        bound_sup,
+        prem,
+        body)
+  {
+  }
 
   // Default premise is true
   string_constraintt(
     const symbol_exprt &_univ_var,
     const exprt &bound_sup,
-    const exprt &body):
-    string_constraintt(_univ_var, bound_sup, true_exprt(), body)
-  {}
+    const exprt &body)
+    : string_constraintt(_univ_var, bound_sup, true_exprt(), body)
+  {
+  }
 
   exprt univ_within_bounds() const
   {
@@ -97,17 +98,17 @@ public:
 
 extern inline const string_constraintt &to_string_constraint(const exprt &expr)
 {
-  assert(expr.id()==ID_string_constraint && expr.operands().size()==5);
+  assert(expr.id() == ID_string_constraint && expr.operands().size() == 5);
   return static_cast<const string_constraintt &>(expr);
 }
 
 extern inline string_constraintt &to_string_constraint(exprt &expr)
 {
-  assert(expr.id()==ID_string_constraint && expr.operands().size()==5);
+  assert(expr.id() == ID_string_constraint && expr.operands().size() == 5);
   return static_cast<string_constraintt &>(expr);
 }
 
-class string_not_contains_constraintt: public exprt
+class string_not_contains_constraintt : public exprt
 {
 public:
   // string_not contains_constraintt are formula of the form:
@@ -120,8 +121,8 @@ public:
     exprt exists_bound_inf,
     exprt exists_bound_sup,
     const string_exprt &s0,
-    const string_exprt &s1):
-  exprt(ID_string_not_contains_constraint)
+    const string_exprt &s1)
+    : exprt(ID_string_not_contains_constraint)
   {
     copy_to_operands(univ_lower_bound, univ_bound_sup, premise);
     copy_to_operands(exists_bound_inf, exists_bound_sup, s0);
@@ -164,19 +165,19 @@ public:
   }
 };
 
-inline const string_not_contains_constraintt
-&to_string_not_contains_constraint(const exprt &expr)
+inline const string_not_contains_constraintt &
+to_string_not_contains_constraint(const exprt &expr)
 {
-  assert(expr.id()==ID_string_not_contains_constraint);
-  assert(expr.operands().size()==7);
+  assert(expr.id() == ID_string_not_contains_constraint);
+  assert(expr.operands().size() == 7);
   return static_cast<const string_not_contains_constraintt &>(expr);
 }
 
-inline string_not_contains_constraintt
-&to_string_not_contains_constraint(exprt &expr)
+inline string_not_contains_constraintt &
+to_string_not_contains_constraint(exprt &expr)
 {
-  assert(expr.id()==ID_string_not_contains_constraint);
-  assert(expr.operands().size()==7);
+  assert(expr.id() == ID_string_not_contains_constraint);
+  assert(expr.operands().size() == 7);
   return static_cast<string_not_contains_constraintt &>(expr);
 }
 

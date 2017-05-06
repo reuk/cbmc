@@ -15,7 +15,7 @@ Author: Daniel Kroening, kroening@kroening.com
 class smt2_parsert
 {
 public:
-  explicit smt2_parsert(std::istream &_in):in(_in)
+  explicit smt2_parsert(std::istream &_in) : in(_in)
   {
   }
 
@@ -27,15 +27,15 @@ protected:
 
   // string literal, numeral, simple symbol, quoted symbol
   // and keyword are in 'buffer'
-  virtual void string_literal() = 0;
-  virtual void numeral() = 0;
-  virtual void symbol() = 0;
-  virtual void keyword() = 0;
-  virtual void open_expression() = 0; // '('
-  virtual void close_expression() = 0; // ')'
+  virtual void string_literal()= 0;
+  virtual void numeral()= 0;
+  virtual void symbol()= 0;
+  virtual void keyword()= 0;
+  virtual void open_expression()= 0;  // '('
+  virtual void close_expression()= 0; // ')'
 
   // parse errors
-  virtual void error(const std::string &) = 0;
+  virtual void error(const std::string &)= 0;
 
 private:
   void get_decimal_numeral();

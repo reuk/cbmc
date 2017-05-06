@@ -14,7 +14,7 @@ Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
 // NOLINTNEXTLINE(readability/identifiers)
 struct PicoSAT;
 
-class satcheck_picosatt:public cnf_solvert
+class satcheck_picosatt : public cnf_solvert
 {
 public:
   satcheck_picosatt();
@@ -29,8 +29,14 @@ public:
 
   virtual bool is_in_conflict(literalt a) const;
   virtual void set_assumptions(const bvt &_assumptions);
-  virtual bool has_set_assumptions() const { return true; }
-  virtual bool has_is_in_conflict() const { return true; }
+  virtual bool has_set_assumptions() const
+  {
+    return true;
+  }
+  virtual bool has_is_in_conflict() const
+  {
+    return true;
+  }
 
 protected:
   bvt assumptions;

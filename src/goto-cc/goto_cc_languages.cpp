@@ -38,7 +38,7 @@ void goto_cc_modet::register_languages()
   register_language(new_java_bytecode_language);
   register_language(new_jsil_language);
 
-  #ifdef HAVE_SPECC
+#ifdef HAVE_SPECC
   register_language(new_specc_language);
-  #endif
+#endif
 }

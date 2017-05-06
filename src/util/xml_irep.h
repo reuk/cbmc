@@ -12,12 +12,8 @@ Author: Daniel Kroening, kroening@kroening.com
 class irept;
 class xmlt;
 
-void convert(
-  const irept &irep,
-  xmlt &xml);
+void convert(const irept &irep, xmlt &xml);
 
-void convert(
-  const xmlt &xml,
-  irept &irep);
+void convert(const xmlt &xml, irept &irep);
 
 #endif // CPROVER_UTIL_XML_IREP_H

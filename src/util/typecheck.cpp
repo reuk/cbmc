@@ -29,7 +29,7 @@ bool typecheckt::typecheck_main()
 
   catch(int)
   {
-    error_found=true;
+    error_found= true;
   }
 
   catch(const char *e)

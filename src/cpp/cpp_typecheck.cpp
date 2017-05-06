@@ -46,7 +46,7 @@ void cpp_typecheckt::convert(cpp_itemt &item)
     convert(item.get_static_assert());
   else
   {
-    error().source_location=item.source_location();
+    error().source_location= item.source_location();
     error() << "unknown parse-tree element: " << item.id() << eom;
     throw 0;
   }
@@ -67,7 +67,7 @@ Function: cpp_typecheckt::typecheck
 void cpp_typecheckt::typecheck()
 {
   // default linkage is "automatic"
-  current_linkage_spec=ID_auto;
+  current_linkage_spec= ID_auto;
 
   for(auto &item : cpp_parse_tree.items)
     convert(item);
@@ -93,14 +93,13 @@ Function: cpp_typecheckt::this_struct_type
 
 const struct_typet &cpp_typecheckt::this_struct_type()
 {
-  const exprt &this_expr=
-    cpp_scopes.current_scope().this_expr;
+  const exprt &this_expr= cpp_scopes.current_scope().this_expr;
 
   assert(this_expr.is_not_nil());
-  assert(this_expr.type().id()==ID_pointer);
+  assert(this_expr.type().id() == ID_pointer);
 
-  const typet &t=follow(this_expr.type().subtype());
-  assert(t.id()==ID_struct);
+  const typet &t= follow(this_expr.type().subtype());
+  assert(t.id() == ID_struct);
   return to_struct_type(t);
 }
 
@@ -181,8 +180,8 @@ bool cpp_typecheck(
   symbol_tablet symbol_table;
   cpp_parse_treet cpp_parse_tree;
 
-  cpp_typecheckt cpp_typecheck(cpp_parse_tree, symbol_table,
-                               ns.get_symbol_table(), "", message_handler);
+  cpp_typecheckt cpp_typecheck(
+    cpp_parse_tree, symbol_table, ns.get_symbol_table(), "", message_handler);
 
   try
   {
@@ -236,11 +235,11 @@ void cpp_typecheckt::static_and_dynamic_initialization()
 {
   code_blockt init_block; // Dynamic Initialization Block
 
-  disable_access_control = true;
+  disable_access_control= true;
 
   for(const auto &d_it : dynamic_initializations)
   {
-    symbolt &symbol=symbol_table.symbols.find(d_it)->second;
+    symbolt &symbol= symbol_table.symbols.find(d_it)->second;
 
     if(symbol.is_extern)
       continue;
@@ -251,16 +250,16 @@ void cpp_typecheckt::static_and_dynamic_initialization()
 
     assert(symbol.is_static_lifetime);
     assert(!symbol.is_type);
-    assert(symbol.type.id()!=ID_code);
+    assert(symbol.type.id() != ID_code);
 
-    exprt symbol_expr=cpp_symbol_expr(symbol);
+    exprt symbol_expr= cpp_symbol_expr(symbol);
 
     // initializer given?
     if(symbol.value.is_not_nil())
     {
       // This will be a constructor call,
       // which we execute.
-      assert(symbol.value.id()==ID_code);
+      assert(symbol.value.id() == ID_code);
       init_block.copy_to_operands(symbol.value);
 
       // Make it nil to get zero initialization by
@@ -272,8 +271,7 @@ void cpp_typecheckt::static_and_dynamic_initialization()
       // use default constructor
       exprt::operandst ops;
 
-      codet call=
-        cpp_constructor(symbol.location, symbol_expr, ops);
+      codet call= cpp_constructor(symbol.location, symbol_expr, ops);
 
       if(call.is_not_nil())
         init_block.move_to_operands(call);
@@ -287,19 +285,19 @@ void cpp_typecheckt::static_and_dynamic_initialization()
   // Create the dynamic initialization procedure
   symbolt init_symbol;
 
-  init_symbol.name="#cpp_dynamic_initialization#"+id2string(module);
-  init_symbol.base_name="#cpp_dynamic_initialization#"+id2string(module);
+  init_symbol.name= "#cpp_dynamic_initialization#" + id2string(module);
+  init_symbol.base_name= "#cpp_dynamic_initialization#" + id2string(module);
   init_symbol.value.swap(init_block);
-  init_symbol.mode=ID_cpp;
-  init_symbol.module=module;
-  init_symbol.type=code_typet();
-  init_symbol.type.add(ID_return_type)=typet(ID_constructor);
-  init_symbol.is_type=false;
-  init_symbol.is_macro=false;
+  init_symbol.mode= ID_cpp;
+  init_symbol.module= module;
+  init_symbol.type= code_typet();
+  init_symbol.type.add(ID_return_type)= typet(ID_constructor);
+  init_symbol.is_type= false;
+  init_symbol.is_macro= false;
 
   symbol_table.move(init_symbol);
 
-  disable_access_control=false;
+  disable_access_control= false;
 }
 
 /*******************************************************************\
@@ -320,45 +318,45 @@ void cpp_typecheckt::do_not_typechecked()
 
   do
   {
-    cont = false;
+    cont= false;
 
     Forall_symbols(s_it, symbol_table.symbols)
     {
-      symbolt &symbol=s_it->second;
+      symbolt &symbol= s_it->second;
 
-      if(symbol.value.id()=="cpp_not_typechecked" &&
-         symbol.value.get_bool("is_used"))
+      if(
+        symbol.value.id() == "cpp_not_typechecked" &&
+        symbol.value.get_bool("is_used"))
       {
-        assert(symbol.type.id()==ID_code);
+        assert(symbol.type.id() == ID_code);
 
-        if(symbol.base_name=="operator=")
+        if(symbol.base_name == "operator=")
         {
           cpp_declaratort declarator;
-          declarator.add_source_location() = symbol.location;
+          declarator.add_source_location()= symbol.location;
           default_assignop_value(
             lookup(symbol.type.get(ID_C_member_name)), declarator);
           symbol.value.swap(declarator.value());
           convert_function(symbol);
-          cont=true;
+          cont= true;
         }
-        else if(symbol.value.operands().size()==1)
+        else if(symbol.value.operands().size() == 1)
         {
-          exprt tmp = symbol.value.op0();
+          exprt tmp= symbol.value.op0();
           symbol.value.swap(tmp);
           convert_function(symbol);
-          cont=true;
+          cont= true;
         }
         else
           assert(0); // Don't know what to do!
       }
     }
-  }
-  while(cont);
+  } while(cont);
 
   Forall_symbols(s_it, symbol_table.symbols)
   {
-    symbolt &symbol=s_it->second;
-    if(symbol.value.id()=="cpp_not_typechecked")
+    symbolt &symbol= s_it->second;
+    if(symbol.value.id() == "cpp_not_typechecked")
       symbol.value.make_nil();
   }
 }
@@ -377,14 +375,14 @@ Function: cpp_typecheckt::clean_up
 
 void cpp_typecheckt::clean_up()
 {
-  symbol_tablet::symbolst::iterator it=symbol_table.symbols.begin();
+  symbol_tablet::symbolst::iterator it= symbol_table.symbols.begin();
 
-  while(it!=symbol_table.symbols.end())
+  while(it != symbol_table.symbols.end())
   {
-    symbol_tablet::symbolst::iterator cur_it = it;
+    symbol_tablet::symbolst::iterator cur_it= it;
     it++;
 
-    symbolt &symbol = cur_it->second;
+    symbolt &symbol= cur_it->second;
 
     // erase templates
     if(symbol.type.get_bool(ID_is_template))
@@ -392,12 +390,10 @@ void cpp_typecheckt::clean_up()
       symbol_table.symbols.erase(cur_it);
       continue;
     }
-    else if(symbol.type.id()==ID_struct ||
-            symbol.type.id()==ID_union)
+    else if(symbol.type.id() == ID_struct || symbol.type.id() == ID_union)
     {
       // remove methods from 'components'
-      struct_union_typet &struct_union_type=
-        to_struct_union_type(symbol.type);
+      struct_union_typet &struct_union_type= to_struct_union_type(symbol.type);
 
       const struct_union_typet::componentst &components=
         struct_union_type.components();
@@ -406,19 +402,18 @@ void cpp_typecheckt::clean_up()
       data_members.reserve(components.size());
 
       struct_union_typet::componentst &function_members=
-        (struct_union_typet::componentst &)
-        (struct_union_type.add(ID_methods).get_sub());
+        (struct_union_typet::componentst &)(struct_union_type.add(ID_methods)
+                                              .get_sub());
 
       function_members.reserve(components.size());
 
       for(const auto &compo_it : components)
       {
-        if(compo_it.get_bool(ID_is_static) ||
-           compo_it.get_bool(ID_is_type))
+        if(compo_it.get_bool(ID_is_static) || compo_it.get_bool(ID_is_type))
         {
           // skip it
         }
-        else if(compo_it.type().id()==ID_code)
+        else if(compo_it.type().id() == ID_code)
         {
           function_members.push_back(compo_it);
         }

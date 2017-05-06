@@ -105,7 +105,8 @@ void __CPROVER_return_predicates();
 #endif
 
 // pipes, write, read, close
-struct __CPROVER_pipet {
+struct __CPROVER_pipet
+{
   _Bool widowed;
   char data[4];
   short next_avail;

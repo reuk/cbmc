@@ -14,7 +14,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 int yymmparse();
 
-class mm_parsert:public parsert
+class mm_parsert : public parsert
 {
 public:
   irep_idt model_name;
@@ -22,7 +22,7 @@ public:
 
   virtual bool parse()
   {
-    return yymmparse()!=0;
+    return yymmparse() != 0;
   }
 
   virtual void clear()

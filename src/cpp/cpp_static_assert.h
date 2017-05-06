@@ -11,10 +11,10 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 #include <util/expr.h>
 
-class cpp_static_assertt:public exprt
+class cpp_static_assertt : public exprt
 {
 public:
-  cpp_static_assertt():exprt(ID_cpp_static_assert)
+  cpp_static_assertt() : exprt(ID_cpp_static_assert)
   {
     operands().resize(2);
   }

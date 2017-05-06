@@ -32,7 +32,7 @@ public:
 // chdir()s there,
 // and deletes it upon destruction,
 // and goes back to the old working directory.
-class temp_working_dirt:public temp_dirt
+class temp_working_dirt : public temp_dirt
 {
 public:
   std::string old_working_directory;

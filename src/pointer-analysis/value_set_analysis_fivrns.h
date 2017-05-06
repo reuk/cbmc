@@ -15,19 +15,23 @@ Author: Daniel Kroening, kroening@kroening.com,
 #include "value_set_domain_fivrns.h"
 #include "value_sets.h"
 
-class value_set_analysis_fivrnst:
-  public value_setst,
-  public flow_insensitive_analysist<value_set_domain_fivrnst>
+class value_set_analysis_fivrnst
+  : public value_setst,
+    public flow_insensitive_analysist<value_set_domain_fivrnst>
 {
 public:
-  enum track_optionst { TRACK_ALL_POINTERS, TRACK_FUNCTION_POINTERS };
+  enum track_optionst
+  {
+    TRACK_ALL_POINTERS,
+    TRACK_FUNCTION_POINTERS
+  };
 
   // constructor
   value_set_analysis_fivrnst(
     const namespacet &_ns,
-    track_optionst _track_options=TRACK_ALL_POINTERS):
-    flow_insensitive_analysist<value_set_domain_fivrnst>(_ns),
-    track_options(_track_options)
+    track_optionst _track_options= TRACK_ALL_POINTERS)
+    : flow_insensitive_analysist<value_set_domain_fivrnst>(_ns),
+      track_options(_track_options)
   {
   }
 
@@ -77,17 +81,15 @@ protected:
 
 public:
   // interface value_sets
-  virtual void get_values(
-    locationt l,
-    const exprt &expr,
-    std::list<exprt> &dest)
+  virtual void
+  get_values(locationt l, const exprt &expr, std::list<exprt> &dest)
   {
-    state.value_set.from_function =
+    state.value_set.from_function=
       state.value_set.function_numbering.number(l->function);
-    state.value_set.to_function =
+    state.value_set.to_function=
       state.value_set.function_numbering.number(l->function);
-    state.value_set.from_target_index = l->location_number;
-    state.value_set.to_target_index = l->location_number;
+    state.value_set.from_target_index= l->location_number;
+    state.value_set.to_target_index= l->location_number;
     state.value_set.get_value_set(expr, dest, ns);
   }
 };

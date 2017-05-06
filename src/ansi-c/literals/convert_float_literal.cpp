@@ -51,7 +51,7 @@ exprt convert_float_literal(const std::string &src)
     is_float80,
     is_float128);
 
-  exprt result=exprt(ID_constant);
+  exprt result= exprt(ID_constant);
 
   // In ANSI-C, float literals are double by default,
   // unless marked with 'f'.
@@ -60,26 +60,26 @@ exprt convert_float_literal(const std::string &src)
   // config.ansi_c.single_precision_constant.
 
   if(is_float)
-    result.type()=float_type();
+    result.type()= float_type();
   else if(is_long)
-    result.type()=long_double_type();
+    result.type()= long_double_type();
   else if(is_float80)
   {
-    result.type()=ieee_float_spect(64, 15).to_type();
+    result.type()= ieee_float_spect(64, 15).to_type();
     result.type().set(ID_C_c_type, ID_long_double);
   }
   else if(is_float128)
   {
-    result.type()=ieee_float_spect::quadruple_precision().to_type();
+    result.type()= ieee_float_spect::quadruple_precision().to_type();
     result.type().set(ID_C_c_type, ID_gcc_float128);
   }
   else
   {
     // default
     if(config.ansi_c.single_precision_constant)
-      result.type()=float_type(); // default
+      result.type()= float_type(); // default
     else
-      result.type()=double_type(); // default
+      result.type()= double_type(); // default
   }
 
   if(is_decimal)
@@ -90,37 +90,37 @@ exprt convert_float_literal(const std::string &src)
 
   if(config.ansi_c.use_fixed_for_float)
   {
-    unsigned width=result.type().get_int(ID_width);
+    unsigned width= result.type().get_int(ID_width);
     unsigned fraction_bits;
-    const irep_idt integer_bits=result.type().get(ID_integer_bits);
+    const irep_idt integer_bits= result.type().get(ID_integer_bits);
 
-    assert(width!=0);
+    assert(width != 0);
 
-    if(integer_bits==irep_idt())
-      fraction_bits=width/2; // default
+    if(integer_bits == irep_idt())
+      fraction_bits= width / 2; // default
     else
-      fraction_bits=width-std::stoi(id2string(integer_bits));
+      fraction_bits= width - std::stoi(id2string(integer_bits));
 
-    mp_integer factor=mp_integer(1)<<fraction_bits;
-    mp_integer value=significand*factor;
+    mp_integer factor= mp_integer(1) << fraction_bits;
+    mp_integer value= significand * factor;
 
-    if(value!=0)
+    if(value != 0)
     {
-      if(exponent<0)
-        value/=power(base, -exponent);
+      if(exponent < 0)
+        value/= power(base, -exponent);
       else
       {
-        value*=power(base, exponent);
+        value*= power(base, exponent);
 
-        if(value>=power(2, width-1))
+        if(value >= power(2, width - 1))
         {
           // saturate: use "biggest value"
-          value=power(2, width-1)-1;
+          value= power(2, width - 1) - 1;
         }
-        else if(value<=-power(2, width-1)-1)
+        else if(value <= -power(2, width - 1) - 1)
         {
           // saturate: use "smallest value"
-          value=-power(2, width-1);
+          value= -power(2, width - 1);
         }
       }
     }
@@ -131,26 +131,24 @@ exprt convert_float_literal(const std::string &src)
   {
     ieee_floatt a(to_floatbv_type(result.type()));
 
-    if(base==10)
+    if(base == 10)
       a.from_base10(significand, exponent);
-    else if(base==2) // hex
+    else if(base == 2) // hex
       a.build(significand, exponent);
     else
       assert(false);
 
-    result.set(
-      ID_value,
-      integer2binary(a.pack(), a.spec.width()));
+    result.set(ID_value, integer2binary(a.pack(), a.spec.width()));
   }
 
   if(is_imaginary)
   {
     complex_typet complex_type;
-    complex_type.subtype()=result.type();
+    complex_type.subtype()= result.type();
     exprt complex_expr(ID_complex, complex_type);
     complex_expr.operands().resize(2);
-    complex_expr.op0()=from_integer(0, result.type());
-    complex_expr.op1()=result;
+    complex_expr.op0()= from_integer(0, result.type());
+    complex_expr.op1()= result;
     return complex_expr;
   }
 

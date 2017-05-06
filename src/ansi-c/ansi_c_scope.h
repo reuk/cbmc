@@ -11,8 +11,13 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <util/irep.h>
 
-typedef enum { ANSI_C_UNKNOWN, ANSI_C_SYMBOL, ANSI_C_TYPEDEF,
-               ANSI_C_TAG, ANSI_C_LOCAL_LABEL } ansi_c_id_classt;
+typedef enum {
+  ANSI_C_UNKNOWN,
+  ANSI_C_SYMBOL,
+  ANSI_C_TYPEDEF,
+  ANSI_C_TAG,
+  ANSI_C_LOCAL_LABEL
+} ansi_c_id_classt;
 
 class ansi_c_identifiert
 {
@@ -20,7 +25,7 @@ public:
   ansi_c_id_classt id_class;
   irep_idt base_name, prefixed_name;
 
-  ansi_c_identifiert():id_class(ANSI_C_UNKNOWN)
+  ansi_c_identifiert() : id_class(ANSI_C_UNKNOWN)
   {
   }
 };
@@ -44,7 +49,9 @@ public:
   unsigned compound_counter;
   unsigned anon_counter;
 
-  ansi_c_scopet():compound_counter(0), anon_counter(0) { }
+  ansi_c_scopet() : compound_counter(0), anon_counter(0)
+  {
+  }
 
   void swap(ansi_c_scopet &scope)
   {

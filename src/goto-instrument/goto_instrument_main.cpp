@@ -25,7 +25,7 @@ Function: main
 #ifdef _MSC_VER
 int wmain(int argc, const wchar_t **argv_wide)
 {
-  const char **argv=narrow_argv(argc, argv_wide);
+  const char **argv= narrow_argv(argc, argv_wide);
 #else
 int main(int argc, const char **argv)
 {

@@ -16,11 +16,10 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "goto_trace.h"
 #include "goto_functions.h"
 
-class safety_checkert:public messaget
+class safety_checkert : public messaget
 {
 public:
-  explicit safety_checkert(
-    const namespacet &_ns);
+  explicit safety_checkert(const namespacet &_ns);
 
   explicit safety_checkert(
     const namespacet &_ns,
@@ -31,8 +30,7 @@ public:
   // check whether all assertions in goto_functions are safe
   // if UNSAFE, then a trace is returned
 
-  virtual resultt operator()(
-    const goto_functionst &goto_functions)=0;
+  virtual resultt operator()(const goto_functionst &goto_functions)= 0;
 
   // this is the counterexample
   goto_tracet error_trace;

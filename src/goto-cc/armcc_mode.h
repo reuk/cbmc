@@ -16,17 +16,15 @@ Date: June 2006
 #include "goto_cc_mode.h"
 #include "armcc_cmdline.h"
 
-class armcc_modet:public goto_cc_modet
+class armcc_modet : public goto_cc_modet
 {
 public:
   int doit() final;
   void help_mode() final;
 
-  armcc_modet(
-    armcc_cmdlinet &_armcc_cmdline,
-    const std::string &_base_name):
-    goto_cc_modet(_armcc_cmdline, _base_name, message_handler),
-    cmdline(_armcc_cmdline)
+  armcc_modet(armcc_cmdlinet &_armcc_cmdline, const std::string &_base_name)
+    : goto_cc_modet(_armcc_cmdline, _base_name, message_handler),
+      cmdline(_armcc_cmdline)
   {
   }
 

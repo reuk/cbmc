@@ -19,7 +19,7 @@ struct cprover_library_entryt
   const char *model;
 } cprover_library[]=
 #include "cprover_library.inc"
-; // NOLINT(whitespace/semicolon)
+  ; // NOLINT(whitespace/semicolon)
 
 /*******************************************************************\
 
@@ -39,28 +39,24 @@ std::string get_cprover_library_text(
 {
   std::ostringstream library_text;
 
-  library_text <<
-    "#line 1 \"<builtin-library>\"\n"
-    "#undef inline\n";
+  library_text << "#line 1 \"<builtin-library>\"\n"
+                  "#undef inline\n";
 
   if(config.ansi_c.string_abstraction)
     library_text << "#define __CPROVER_STRING_ABSTRACTION\n";
 
-  std::size_t count=0;
+  std::size_t count= 0;
 
-  for(cprover_library_entryt *e=cprover_library;
-      e->function!=NULL;
-      e++)
+  for(cprover_library_entryt *e= cprover_library; e->function != NULL; e++)
   {
-    irep_idt id=e->function;
+    irep_idt id= e->function;
 
-    if(functions.find(id)!=functions.end())
+    if(functions.find(id) != functions.end())
     {
       symbol_tablet::symbolst::const_iterator old=
         symbol_table.symbols.find(id);
 
-      if(old!=symbol_table.symbols.end() &&
-         old->second.value.is_nil())
+      if(old != symbol_table.symbols.end() && old->second.value.is_nil())
       {
         count++;
         library_text << e->model << '\n';
@@ -68,7 +64,7 @@ std::string get_cprover_library_text(
     }
   }
 
-  if(count==0)
+  if(count == 0)
     return std::string();
   else
     return library_text.str();
@@ -91,12 +87,12 @@ void add_cprover_library(
   symbol_tablet &symbol_table,
   message_handlert &message_handler)
 {
-  if(config.ansi_c.lib==configt::ansi_ct::libt::LIB_NONE)
+  if(config.ansi_c.lib == configt::ansi_ct::libt::LIB_NONE)
     return;
 
   std::string library_text;
 
-  library_text=get_cprover_library_text(functions, symbol_table);
+  library_text= get_cprover_library_text(functions, symbol_table);
 
   add_library(library_text, symbol_table, message_handler);
 }

@@ -25,18 +25,18 @@ Author: Daniel Kroening, kroening@kroening.com
 class symbol_tablet;
 class symbolt;
 
-class java_bytecode_convert_methodt:public messaget
+class java_bytecode_convert_methodt : public messaget
 {
 public:
   java_bytecode_convert_methodt(
     symbol_tablet &_symbol_table,
     message_handlert &_message_handler,
     size_t _max_array_length,
-    safe_pointer<ci_lazy_methodst> _lazy_methods):
-    messaget(_message_handler),
-    symbol_table(_symbol_table),
-    max_array_length(_max_array_length),
-    lazy_methods(_lazy_methods)
+    safe_pointer<ci_lazy_methodst> _lazy_methods)
+    : messaget(_message_handler),
+      symbol_table(_symbol_table),
+      max_array_length(_max_array_length),
+      lazy_methods(_lazy_methods)
   {
   }
 
@@ -84,19 +84,20 @@ public:
     size_t length;
     bool is_parameter;
     std::vector<holet> holes;
-    variablet() : symbol_expr(), start_pc(0), length(0), is_parameter(false) {}
+    variablet() : symbol_expr(), start_pc(0), length(0), is_parameter(false)
+    {
+    }
   };
 
- protected:
+protected:
   typedef std::vector<variablet> variablest;
   expanding_vectort<variablest> variables;
   std::set<symbol_exprt> used_local_names;
   bool method_has_this;
 
-  typedef enum instruction_sizet
-  {
-    INST_INDEX=2,
-    INST_INDEX_CONST=3
+  typedef enum instruction_sizet {
+    INST_INDEX= 2,
+    INST_INDEX_CONST= 3
   } instruction_sizet;
 
   codet get_array_bounds_check(
@@ -105,9 +106,7 @@ public:
     const source_locationt &original_sloc);
 
   // return corresponding reference of variable
-  const variablet &find_variable_for_slot(
-    size_t address,
-    variablest &var_list);
+  const variablet &find_variable_for_slot(size_t address, variablest &var_list);
 
   // JVM local variables
   enum variable_cast_argumentt
@@ -145,8 +144,10 @@ public:
   {
     converted_instructiont(
       const instructionst::const_iterator &it,
-      const codet &_code):source(it), code(_code), done(false)
-      {}
+      const codet &_code)
+      : source(it), code(_code), done(false)
+    {
+    }
 
     instructionst::const_iterator source;
     std::list<unsigned> successors;
@@ -181,9 +182,16 @@ protected:
     bool leaf;
     std::vector<unsigned> branch_addresses;
     std::vector<block_tree_nodet> branch;
-    block_tree_nodet():leaf(false) {}
-    explicit block_tree_nodet(bool l):leaf(l) {}
-    static block_tree_nodet get_leaf() { return block_tree_nodet(true); }
+    block_tree_nodet() : leaf(false)
+    {
+    }
+    explicit block_tree_nodet(bool l) : leaf(l)
+    {
+    }
+    static block_tree_nodet get_leaf()
+    {
+      return block_tree_nodet(true);
+    }
   };
 
   static void replace_goto_target(
@@ -205,14 +213,12 @@ protected:
     unsigned address_limit,
     unsigned next_block_start_address,
     const address_mapt &amap,
-    bool allow_merge=true);
+    bool allow_merge= true);
 
   // conversion
   void convert(const symbolt &class_symbol, const methodt &);
 
-  codet convert_instructions(
-    const methodt &,
-    const code_typet &);
+  codet convert_instructions(const methodt &, const code_typet &);
 
   const bytecode_infot &get_bytecode_info(const irep_idt &statement);
 };

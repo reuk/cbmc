@@ -61,10 +61,9 @@ void goto_convertt::do_function_call(
 {
   // make it all side effect free
 
-  exprt new_lhs=lhs,
-        new_function=function;
+  exprt new_lhs= lhs, new_function= function;
 
-  exprt::operandst new_arguments=arguments;
+  exprt::operandst new_arguments= arguments;
 
   if(!new_lhs.is_nil())
     clean_expr(new_lhs, dest);
@@ -72,8 +71,9 @@ void goto_convertt::do_function_call(
   clean_expr(new_function, dest);
 
   // the arguments of __noop do not get evaluated
-  if(new_function.id()==ID_symbol &&
-     to_symbol_expr(new_function).get_identifier()=="__noop")
+  if(
+    new_function.id() == ID_symbol &&
+    to_symbol_expr(new_function).get_identifier() == "__noop")
   {
     new_arguments.clear();
   }
@@ -83,28 +83,28 @@ void goto_convertt::do_function_call(
 
   // split on the function
 
-  if(new_function.id()==ID_if)
+  if(new_function.id() == ID_if)
   {
     do_function_call_if(new_lhs, to_if_expr(new_function), new_arguments, dest);
   }
-  else if(new_function.id()==ID_symbol)
+  else if(new_function.id() == ID_symbol)
   {
     do_function_call_symbol(
       new_lhs, to_symbol_expr(new_function), new_arguments, dest);
   }
-  else if(new_function.id()=="NULL-object")
+  else if(new_function.id() == "NULL-object")
   {
   }
-  else if(new_function.id()==ID_dereference ||
-          new_function.id()=="virtual_function")
+  else if(
+    new_function.id() == ID_dereference ||
+    new_function.id() == "virtual_function")
   {
     do_function_call_other(new_lhs, new_function, new_arguments, dest);
   }
   else
   {
-    error().source_location=function.find_source_location();
-    error() << "unexpected function argument: " << new_function.id()
-            << eom;
+    error().source_location= function.find_source_location();
+    error() << "unexpected function argument: " << new_function.id() << eom;
     throw 0;
   }
 }
@@ -139,15 +139,15 @@ void goto_convertt::do_function_call_if(
 
   // do the v label
   goto_programt tmp_v;
-  goto_programt::targett v=tmp_v.add_instruction();
+  goto_programt::targett v= tmp_v.add_instruction();
 
   // do the x label
   goto_programt tmp_x;
-  goto_programt::targett x=tmp_x.add_instruction();
+  goto_programt::targett x= tmp_x.add_instruction();
 
   // do the z label
   goto_programt tmp_z;
-  goto_programt::targett z=tmp_z.add_instruction();
+  goto_programt::targett z= tmp_z.add_instruction();
   z->make_skip();
 
   // y: g();
@@ -157,15 +157,15 @@ void goto_convertt::do_function_call_if(
   do_function_call(lhs, function.false_case(), arguments, tmp_y);
 
   if(tmp_y.instructions.empty())
-    y=tmp_y.add_instruction(SKIP);
+    y= tmp_y.add_instruction(SKIP);
   else
-    y=tmp_y.instructions.begin();
+    y= tmp_y.instructions.begin();
 
   // v: if(!c) goto y;
   v->make_goto(y);
-  v->guard=function.cond();
+  v->guard= function.cond();
   v->guard.make_not();
-  v->source_location=function.cond().source_location();
+  v->source_location= function.cond().source_location();
 
   // w: f();
   goto_programt tmp_w;
@@ -204,14 +204,14 @@ void goto_convertt::do_function_call_other(
   goto_programt &dest)
 {
   // don't know what to do with it
-  goto_programt::targett t=dest.add_instruction(FUNCTION_CALL);
+  goto_programt::targett t= dest.add_instruction(FUNCTION_CALL);
 
   code_function_callt function_call;
-  function_call.add_source_location()=function.source_location();
-  function_call.lhs()=lhs;
-  function_call.function()=function;
-  function_call.arguments()=arguments;
+  function_call.add_source_location()= function.source_location();
+  function_call.lhs()= lhs;
+  function_call.function()= function;
+  function_call.arguments()= arguments;
 
-  t->source_location=function.source_location();
+  t->source_location= function.source_location();
   t->code.swap(function_call);
 }

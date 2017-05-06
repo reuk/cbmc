@@ -28,22 +28,18 @@ Function: get_language
 
 \*******************************************************************/
 
-static languaget* get_language(
-  const namespacet &ns,
-  const irep_idt &identifier)
+static languaget *get_language(const namespacet &ns, const irep_idt &identifier)
 {
   const symbolt *symbol;
 
-  if(identifier=="" ||
-     ns.lookup(identifier, symbol) ||
-     symbol->mode=="")
+  if(identifier == "" || ns.lookup(identifier, symbol) || symbol->mode == "")
     return get_default_language();
 
-  languaget *ptr=get_language_from_mode(symbol->mode);
+  languaget *ptr= get_language_from_mode(symbol->mode);
 
-  if(ptr==NULL)
-    throw "symbol `"+id2string(symbol->name)+
-      "' has unknown mode '"+id2string(symbol->mode)+"'";
+  if(ptr == NULL)
+    throw "symbol `" + id2string(symbol->name) + "' has unknown mode '" +
+      id2string(symbol->mode) + "'";
 
   return ptr;
 }
@@ -60,10 +56,8 @@ Function: from_expr
 
 \*******************************************************************/
 
-std::string from_expr(
-  const namespacet &ns,
-  const irep_idt &identifier,
-  const exprt &expr)
+std::string
+from_expr(const namespacet &ns, const irep_idt &identifier, const exprt &expr)
 {
   std::unique_ptr<languaget> p(get_language(ns, identifier));
 
@@ -85,10 +79,8 @@ Function: from_type
 
 \*******************************************************************/
 
-std::string from_type(
-  const namespacet &ns,
-  const irep_idt &identifier,
-  const typet &type)
+std::string
+from_type(const namespacet &ns, const irep_idt &identifier, const typet &type)
 {
   std::unique_ptr<languaget> p(get_language(ns, identifier));
 
@@ -178,7 +170,7 @@ exprt to_expr(
 {
   std::unique_ptr<languaget> p(get_language(ns, identifier));
 
-  const symbolt &symbol=ns.lookup(identifier);
+  const symbolt &symbol= ns.lookup(identifier);
 
   exprt expr;
 

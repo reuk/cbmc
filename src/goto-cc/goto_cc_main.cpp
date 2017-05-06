@@ -42,7 +42,7 @@ Function: to_lower_string
 
 std::string to_lower_string(const std::string &s)
 {
-  std::string result=s;
+  std::string result= s;
   transform(result.begin(), result.end(), result.begin(), tolower);
   return result;
 }
@@ -65,26 +65,26 @@ int wmain(int argc, const wchar_t **argv_wide)
 int main(int argc, const char **argv)
 #endif
 {
-  #ifdef _MSC_VER
-  const char **argv=narrow_argv(argc, argv_wide);
-  #endif
+#ifdef _MSC_VER
+  const char **argv= narrow_argv(argc, argv_wide);
+#endif
 
-  if(argv==NULL || argc<1)
+  if(argv == NULL || argc < 1)
   {
     std::cerr << "failed to determine base name" << std::endl;
     return 1;
   }
 
-  #ifdef _MSC_VER
+#ifdef _MSC_VER
   // we do 'to_lower_string' because of Windows
-  std::string base_name=
-    to_lower_string(get_base_name(argv[0], true));
-  #else
-  std::string base_name=get_base_name(argv[0], false);
-  #endif
+  std::string base_name= to_lower_string(get_base_name(argv[0], true));
+#else
+  std::string base_name= get_base_name(argv[0], false);
+#endif
 
-  if(base_name=="goto-link" || base_name=="link" ||
-     base_name=="goto-cl" || base_name=="cl")
+  if(
+    base_name == "goto-link" || base_name == "link" || base_name == "goto-cl" ||
+    base_name == "cl")
   {
     // this is the Visual Studio personality
     ms_cl_cmdlinet cmdline;
@@ -92,8 +92,7 @@ int main(int argc, const char **argv)
     ms_cl_modet ms_cl_mode(cmdline, base_name);
     return ms_cl_mode.main(argc, argv);
   }
-  else if(base_name=="goto-cw" ||
-          base_name=="goto-cw-link")
+  else if(base_name == "goto-cw" || base_name == "goto-cw-link")
   {
     // this is the CodeWarrior personality,
     // but we use the gcc command line interface
@@ -101,8 +100,7 @@ int main(int argc, const char **argv)
     cw_modet cw_mode(cmdline, base_name);
     return cw_mode.main(argc, argv);
   }
-  else if(base_name=="goto-armcc" ||
-          base_name=="goto-armlink")
+  else if(base_name == "goto-armcc" || base_name == "goto-armlink")
   {
     // this is the armcc personality
     armcc_cmdlinet cmdline;
@@ -111,8 +109,9 @@ int main(int argc, const char **argv)
   }
   // handle GCC names like x86_64-apple-darwin14-llvm-gcc-4.2
   // via x86_64-apple-darwin14-llvm-goto-gcc-4.2
-  else if(base_name=="goto-clang" ||
-          base_name.find("goto-gcc")!=std::string::npos)
+  else if(
+    base_name == "goto-clang" ||
+    base_name.find("goto-gcc") != std::string::npos)
   {
     // this produces ELF/Mach-O "hybrid binaries",
     // with a GCC-style command-line interface,
@@ -121,14 +120,14 @@ int main(int argc, const char **argv)
     gcc_modet gcc_mode(cmdline, base_name, true);
     return gcc_mode.main(argc, argv);
   }
-  else if(base_name.find("goto-ld")!=std::string::npos)
+  else if(base_name.find("goto-ld") != std::string::npos)
   {
     // this simulates "ld" for linking
     ld_cmdlinet cmdline;
     gcc_modet gcc_mode(cmdline, base_name, true);
     return gcc_mode.main(argc, argv);
   }
-  else if(base_name.find("goto-bcc")!=std::string::npos)
+  else if(base_name.find("goto-bcc") != std::string::npos)
   {
     // this simulates Bruce's C Compiler
     bcc_cmdlinet cmdline;
@@ -137,7 +136,7 @@ int main(int argc, const char **argv)
     gcc_modet gcc_mode(cmdline, base_name, true);
     return gcc_mode.main(argc, argv);
   }
-  else if(base_name.find("goto-as86")!=std::string::npos)
+  else if(base_name.find("goto-as86") != std::string::npos)
   {
     // assembler used by Bruce's C Compiler
     as86_cmdlinet cmdline;
@@ -145,7 +144,7 @@ int main(int argc, const char **argv)
     as_modet as_mode(cmdline, base_name, false);
     return as_mode.main(argc, argv);
   }
-  else if(base_name.find("goto-as")!=std::string::npos)
+  else if(base_name.find("goto-as") != std::string::npos)
   {
     // GNU assembler
     as_cmdlinet cmdline;

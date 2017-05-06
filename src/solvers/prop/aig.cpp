@@ -26,7 +26,7 @@ Function: aigt::label
 
 std::string aigt::label(nodest::size_type v) const
 {
-  return "var("+std::to_string(v)+")";
+  return "var(" + std::to_string(v) + ")";
 }
 
 /*******************************************************************\
@@ -43,7 +43,7 @@ Function: aigt::dot_label
 
 std::string aigt::dot_label(nodest::size_type v) const
 {
-  return "var("+std::to_string(v)+")";
+  return "var(" + std::to_string(v) + ")";
 }
 
 /*******************************************************************\
@@ -60,7 +60,7 @@ Function: aigt::get_terminals
 
 void aigt::get_terminals(terminalst &terminals) const
 {
-  for(nodest::size_type n=0; n<nodes.size(); n++)
+  for(nodest::size_type n= 0; n < nodes.size(); n++)
     get_terminals_rec(n, terminals);
 }
 
@@ -76,19 +76,18 @@ Function: aigt::get_terminals_rec
 
 \*******************************************************************/
 
-const aigt::terminal_sett &aigt::get_terminals_rec(
-  literalt::var_not n,
-  terminalst &terminals) const
+const aigt::terminal_sett &
+aigt::get_terminals_rec(literalt::var_not n, terminalst &terminals) const
 {
-  terminalst::iterator it=terminals.find(n);
+  terminalst::iterator it= terminals.find(n);
 
-  if(it!=terminals.end())
+  if(it != terminals.end())
     return it->second; // already done
 
-  assert(n<nodes.size());
-  const aig_nodet &node=nodes[n];
+  assert(n < nodes.size());
+  const aig_nodet &node= nodes[n];
 
-  terminal_sett &t=terminals[n];
+  terminal_sett &t= terminals[n];
 
   if(node.is_and())
   {
@@ -126,25 +125,23 @@ Function: aigt::print
 
 \*******************************************************************/
 
-void aigt::print(
-  std::ostream &out,
-  literalt a) const
+void aigt::print(std::ostream &out, literalt a) const
 {
-  if(a==const_literal(false))
+  if(a == const_literal(false))
   {
     out << "FALSE";
     return;
   }
-  else if(a==const_literal(true))
+  else if(a == const_literal(true))
   {
     out << "TRUE";
     return;
   }
 
-  literalt::var_not node_nr=a.var_no();
+  literalt::var_not node_nr= a.var_no();
 
   {
-    const aig_nodet &node=nodes[node_nr];
+    const aig_nodet &node= nodes[node_nr];
 
     if(node.is_and())
     {
@@ -160,7 +157,7 @@ void aigt::print(
     {
       if(a.sign())
         out << "!";
-      out << label(node_nr);\
+      out << label(node_nr);
     }
     else
     {
@@ -183,22 +180,22 @@ Function: aigt::output_dot_node
 
 \*******************************************************************/
 
-void aigt::output_dot_node(
-  std::ostream &out,
-  nodest::size_type v) const
+void aigt::output_dot_node(std::ostream &out, nodest::size_type v) const
 {
-  const aig_nodet &node=nodes[v];
+  const aig_nodet &node= nodes[v];
 
   if(node.is_and())
   {
-    out << v << " [label=\"" << v << "\"]" << "\n";
+    out << v << " [label=\"" << v << "\"]"
+        << "\n";
     output_dot_edge(out, v, node.a);
     output_dot_edge(out, v, node.b);
   }
   else // the node is a terminal
   {
     out << v << " [label=\"" << dot_label(v) << "\""
-        << ",shape=box]" << "\n";
+        << ",shape=box]"
+        << "\n";
   }
 }
 
@@ -214,10 +211,8 @@ Function: aigt::output_dot_edge
 
 \*******************************************************************/
 
-void aigt::output_dot_edge(
-  std::ostream &out,
-  nodest::size_type v,
-  literalt l) const
+void aigt::output_dot_edge(std::ostream &out, nodest::size_type v, literalt l)
+  const
 {
   if(l.is_true())
   {
@@ -253,10 +248,11 @@ Function: aigt::output_dot
 void aigt::output_dot(std::ostream &out) const
 {
   // constant TRUE
-  out << "TRUE [label=\"TRUE\", shape=box]" << "\n";
+  out << "TRUE [label=\"TRUE\", shape=box]"
+      << "\n";
 
   // now the nodes
-  for(nodest::size_type n=0; n<number_of_nodes(); n++)
+  for(nodest::size_type n= 0; n < number_of_nodes(); n++)
     output_dot_node(out, n);
 }
 
@@ -274,7 +270,7 @@ Function: aigt::print
 
 void aigt::print(std::ostream &out) const
 {
-  for(nodest::size_type n=0; n<number_of_nodes(); n++)
+  for(nodest::size_type n= 0; n < number_of_nodes(); n++)
   {
     out << "n" << n << " = ";
     literalt l;
@@ -296,7 +292,7 @@ Function: operator <<
 
 \*******************************************************************/
 
-std::ostream &operator << (std::ostream &out, const aigt &aig)
+std::ostream &operator<<(std::ostream &out, const aigt &aig)
 {
   aig.print(out);
   return out;

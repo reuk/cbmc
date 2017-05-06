@@ -15,8 +15,8 @@ Author: Daniel Kroening, kroening@kroening.com
 class function_modifiest
 {
 public:
-  explicit function_modifiest(const goto_functionst &_goto_functions):
-    goto_functions(_goto_functions)
+  explicit function_modifiest(const goto_functionst &_goto_functions)
+    : goto_functions(_goto_functions)
   {
   }
 
@@ -33,9 +33,7 @@ public:
     const exprt &lhs,
     modifiest &);
 
-  void get_modifies_function(
-    const exprt &,
-    modifiest &);
+  void get_modifies_function(const exprt &, modifiest &);
 
   void operator()(const exprt &function, modifiest &modifies)
   {

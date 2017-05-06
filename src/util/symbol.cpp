@@ -89,8 +89,7 @@ Function: operator<<
 
 \*******************************************************************/
 
-std::ostream &operator<<(std::ostream &out,
-                         const symbolt &symbol)
+std::ostream &operator<<(std::ostream &out, const symbolt &symbol)
 {
   symbol.show(out);
   return out;
@@ -113,9 +112,9 @@ irept symbolt::to_irep() const
   irept dest;
 
   dest.clear();
-  dest.add(ID_type)=type;
-  dest.add(ID_value)=value;
-  dest.add(ID_location)=location;
+  dest.add(ID_type)= type;
+  dest.add(ID_value)= value;
+  dest.add(ID_location)= location;
   dest.set(ID_name, name);
   dest.set(ID_module, module);
   dest.set(ID_base_name, base_name);
@@ -172,32 +171,32 @@ Function: symbolt::from_irep
 
 void symbolt::from_irep(const irept &src)
 {
-  type=static_cast<const typet &>(src.find(ID_type));
-  value=static_cast<const exprt &>(src.find(ID_value));
-  location=static_cast<const source_locationt &>(src.find(ID_location));
+  type= static_cast<const typet &>(src.find(ID_type));
+  value= static_cast<const exprt &>(src.find(ID_value));
+  location= static_cast<const source_locationt &>(src.find(ID_location));
 
-  name=src.get(ID_name);
-  module=src.get(ID_module);
-  base_name=src.get(ID_base_name);
-  mode=src.get(ID_mode);
-  pretty_name=src.get(ID_pretty_name);
+  name= src.get(ID_name);
+  module= src.get(ID_module);
+  base_name= src.get(ID_base_name);
+  mode= src.get(ID_mode);
+  pretty_name= src.get(ID_pretty_name);
 
-  is_type=src.get_bool("is_type");
-  is_macro=src.get_bool("is_macro");
-  is_exported=src.get_bool("is_exported");
-  is_input=src.get_bool("is_input");
-  is_output=src.get_bool("is_output");
-  is_state_var=src.get_bool("is_state_var");
-  is_parameter=src.get_bool("is_parameter");
-  is_auxiliary=src.get_bool("is_auxiliary");
-  is_weak=src.get_bool("is_weak");
-  is_property=src.get_bool("property");
-  is_lvalue=src.get_bool("lvalue");
-  is_static_lifetime=src.get_bool("static_lifetime");
-  is_thread_local=src.get_bool("thread_local");
-  is_file_local=src.get_bool("file_local");
-  is_extern=src.get_bool("is_extern");
-  is_volatile=src.get_bool("is_volatile");
+  is_type= src.get_bool("is_type");
+  is_macro= src.get_bool("is_macro");
+  is_exported= src.get_bool("is_exported");
+  is_input= src.get_bool("is_input");
+  is_output= src.get_bool("is_output");
+  is_state_var= src.get_bool("is_state_var");
+  is_parameter= src.get_bool("is_parameter");
+  is_auxiliary= src.get_bool("is_auxiliary");
+  is_weak= src.get_bool("is_weak");
+  is_property= src.get_bool("property");
+  is_lvalue= src.get_bool("lvalue");
+  is_static_lifetime= src.get_bool("static_lifetime");
+  is_thread_local= src.get_bool("thread_local");
+  is_file_local= src.get_bool("file_local");
+  is_extern= src.get_bool("is_extern");
+  is_volatile= src.get_bool("is_volatile");
 }
 
 /*******************************************************************\
@@ -214,7 +213,7 @@ Function: symbolt::swap
 
 void symbolt::swap(symbolt &b)
 {
-  #define SYM_SWAP1(x) x.swap(b.x)
+#define SYM_SWAP1(x) x.swap(b.x)
 
   SYM_SWAP1(type);
   SYM_SWAP1(value);
@@ -225,7 +224,7 @@ void symbolt::swap(symbolt &b)
   SYM_SWAP1(mode);
   SYM_SWAP1(location);
 
-  #define SYM_SWAP2(x) std::swap(x, b.x)
+#define SYM_SWAP2(x) std::swap(x, b.x)
 
   SYM_SWAP2(is_type);
   SYM_SWAP2(is_macro);

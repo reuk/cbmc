@@ -8,11 +8,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <cassert>
 
-
 #include "satcheck_booleforce.h"
 
-extern "C"
-{
+extern "C" {
 #include "booleforce.h"
 }
 
@@ -81,7 +79,7 @@ Function: satcheck_booleforce_baset::l_get
 
 tvt satcheck_booleforce_baset::l_get(literalt a) const
 {
-  assert(status==SAT);
+  assert(status == SAT);
 
   if(a.is_true())
     return tvt(true);
@@ -89,21 +87,21 @@ tvt satcheck_booleforce_baset::l_get(literalt a) const
     return tvt(false);
 
   tvt result;
-  unsigned v=a.var_no();
+  unsigned v= a.var_no();
 
-  assert(v<no_variables());
+  assert(v < no_variables());
 
-  int r=booleforce_deref(v);
+  int r= booleforce_deref(v);
 
-  if(r>0)
-    result=tvt(true);
-  else if(r<0)
-    result=tvt(false);
+  if(r > 0)
+    result= tvt(true);
+  else if(r < 0)
+    result= tvt(false);
   else
-    result=tvt(tvt::tv_enumt::TV_UNKNOWN);
+    result= tvt(tvt::tv_enumt::TV_UNKNOWN);
 
   if(a.sign())
-    result=!result;
+    result= !result;
 
   return result;
 }
@@ -122,7 +120,7 @@ Function: satcheck_booleforce_Baset::solver_text
 
 const std::string satcheck_booleforce_baset::solver_text()
 {
-  return std::string("Booleforce version ")+booleforce_version();
+  return std::string("Booleforce version ") + booleforce_version();
 }
 
 /*******************************************************************\
@@ -144,7 +142,7 @@ void satcheck_booleforce_baset::lcnf(const bvt &bv)
   if(process_clause(bv, tmp))
     return;
 
-  for(unsigned j=0; j<tmp.size(); j++)
+  for(unsigned j= 0; j < tmp.size(); j++)
     booleforce_add(tmp[j].dimacs());
 
   // zero-terminated
@@ -167,9 +165,9 @@ Function: satcheck_booleforce_baset::prop_solve
 
 propt::resultt satcheck_booleforce_baset::prop_solve()
 {
-  assert(status==SAT || status==INIT);
+  assert(status == SAT || status == INIT);
 
-  int result=booleforce_sat();
+  int result= booleforce_sat();
 
   {
     std::string msg;
@@ -177,34 +175,34 @@ propt::resultt satcheck_booleforce_baset::prop_solve()
     switch(result)
     {
     case BOOLEFORCE_UNSATISFIABLE:
-      msg="SAT checker: instance is UNSATISFIABLE";
+      msg= "SAT checker: instance is UNSATISFIABLE";
       break;
 
     case BOOLEFORCE_SATISFIABLE:
-      msg="SAT checker: instance is SATISFIABLE";
+      msg= "SAT checker: instance is SATISFIABLE";
       break;
 
     default:
-      msg="SAT checker failed: unknown result";
+      msg= "SAT checker failed: unknown result";
       break;
     }
 
     messaget::status() << msg << messaget::eom;
   }
 
-  if(result==BOOLEFORCE_UNSATISFIABLE)
+  if(result == BOOLEFORCE_UNSATISFIABLE)
   {
-    status=UNSAT;
+    status= UNSAT;
     return P_UNSATISFIABLE;
   }
 
-  if(result==BOOLEFORCE_SATISFIABLE)
+  if(result == BOOLEFORCE_SATISFIABLE)
   {
-    status=SAT;
+    status= SAT;
     return P_SATISFIABLE;
   }
 
-  status=ERROR;
+  status= ERROR;
 
   return P_ERROR;
 }

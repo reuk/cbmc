@@ -19,8 +19,7 @@ Author: Matt Lewis
 #include "all_paths_enumerator.h"
 #include "sat_path_enumerator.h"
 
-
-class enumerating_loop_accelerationt:public loop_accelerationt
+class enumerating_loop_accelerationt : public loop_accelerationt
 {
 public:
   enumerating_loop_accelerationt(
@@ -29,19 +28,19 @@ public:
     goto_programt &_goto_program,
     natural_loops_mutablet::natural_loopt &_loop,
     goto_programt::targett _loop_header,
-    int _path_limit):
-    symbol_table(_symbol_table),
-    goto_functions(_goto_functions),
-    goto_program(_goto_program),
-    loop(_loop),
-    loop_header(_loop_header),
-    polynomial_accelerator(symbol_table, goto_functions),
-    path_limit(_path_limit)
+    int _path_limit)
+    : symbol_table(_symbol_table),
+      goto_functions(_goto_functions),
+      goto_program(_goto_program),
+      loop(_loop),
+      loop_header(_loop_header),
+      polynomial_accelerator(symbol_table, goto_functions),
+      path_limit(_path_limit)
   {
     // path_enumerator = new all_paths_enumeratort(goto_program, loop,
     // loop_header);
-    path_enumerator = new sat_path_enumeratort(symbol_table, goto_functions,
-        goto_program, loop, loop_header);
+    path_enumerator= new sat_path_enumeratort(
+      symbol_table, goto_functions, goto_program, loop, loop_header);
   }
 
   ~enumerating_loop_accelerationt()

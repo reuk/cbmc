@@ -11,7 +11,6 @@ Date: 2012
 #include <string>
 #include <fstream>
 
-
 #include "goto2graph.h"
 
 #ifdef HAVE_GLPK
@@ -41,48 +40,48 @@ void instrumentert::instrument_with_strategy(instrumentation_strategyt strategy)
   {
     switch(strategy)
     {
-      case all:
-        instrument_all_inserter(set_of_cycles);
-        break;
-      case one_event_per_cycle:
-        instrument_one_event_per_cycle_inserter(set_of_cycles);
-        break;
-      case min_interference:
-        instrument_minimum_interference_inserter(set_of_cycles);
-        break;
-      case read_first:
-        instrument_one_read_per_cycle_inserter(set_of_cycles);
-        break;
-      case write_first:
-        instrument_one_write_per_cycle_inserter(set_of_cycles);
-        break;
-      case my_events:
-        assert(false);
+    case all:
+      instrument_all_inserter(set_of_cycles);
+      break;
+    case one_event_per_cycle:
+      instrument_one_event_per_cycle_inserter(set_of_cycles);
+      break;
+    case min_interference:
+      instrument_minimum_interference_inserter(set_of_cycles);
+      break;
+    case read_first:
+      instrument_one_read_per_cycle_inserter(set_of_cycles);
+      break;
+    case write_first:
+      instrument_one_write_per_cycle_inserter(set_of_cycles);
+      break;
+    case my_events:
+      assert(false);
     }
   }
-  else if(num_sccs!=0)
+  else if(num_sccs != 0)
   {
-    for(std::size_t i=0; i<num_sccs; ++i)
+    for(std::size_t i= 0; i < num_sccs; ++i)
     {
       switch(strategy)
       {
-        case all:
-          instrument_all_inserter(set_of_cycles_per_SCC[i]);
-          break;
-        case one_event_per_cycle:
-          instrument_one_event_per_cycle_inserter(set_of_cycles_per_SCC[i]);
-          break;
-        case min_interference:
-          instrument_minimum_interference_inserter(set_of_cycles_per_SCC[i]);
-          break;
-        case read_first:
-          instrument_one_read_per_cycle_inserter(set_of_cycles_per_SCC[i]);
-          break;
-        case write_first:
-          instrument_one_write_per_cycle_inserter(set_of_cycles_per_SCC[i]);
-          break;
-        case my_events:
-          assert(false);
+      case all:
+        instrument_all_inserter(set_of_cycles_per_SCC[i]);
+        break;
+      case one_event_per_cycle:
+        instrument_one_event_per_cycle_inserter(set_of_cycles_per_SCC[i]);
+        break;
+      case min_interference:
+        instrument_minimum_interference_inserter(set_of_cycles_per_SCC[i]);
+        break;
+      case read_first:
+        instrument_one_read_per_cycle_inserter(set_of_cycles_per_SCC[i]);
+        break;
+      case write_first:
+        instrument_one_write_per_cycle_inserter(set_of_cycles_per_SCC[i]);
+        break;
+      case my_events:
+        assert(false);
       }
     }
   }
@@ -105,26 +104,26 @@ Function: instrumentert::instrument_all_inserter
 void inline instrumentert::instrument_all_inserter(
   const std::set<event_grapht::critical_cyclet> &set_of_cycles)
 {
-  for(std::set<event_grapht::critical_cyclet>::const_iterator
-    it=(set_of_cycles).begin();
-    it!=(set_of_cycles).end(); ++it)
+  for(std::set<event_grapht::critical_cyclet>::const_iterator it=
+        (set_of_cycles).begin();
+      it != (set_of_cycles).end();
+      ++it)
   {
-    for(std::set<event_grapht::critical_cyclet::delayt>::const_iterator
-      p_it=it->unsafe_pairs.begin();
-      p_it!=it->unsafe_pairs.end(); ++p_it)
+    for(std::set<event_grapht::critical_cyclet::delayt>::const_iterator p_it=
+          it->unsafe_pairs.begin();
+        p_it != it->unsafe_pairs.end();
+        ++p_it)
     {
-      const abstract_eventt &first_ev=egraph[p_it->first];
+      const abstract_eventt &first_ev= egraph[p_it->first];
       var_to_instr.insert(first_ev.variable);
-      id2loc.insert(
-        std::pair<irep_idt, source_locationt>(
-          first_ev.variable, first_ev.source_location));
+      id2loc.insert(std::pair<irep_idt, source_locationt>(
+        first_ev.variable, first_ev.source_location));
       if(!p_it->is_po)
       {
-        const abstract_eventt &second_ev = egraph[p_it->second];
+        const abstract_eventt &second_ev= egraph[p_it->second];
         var_to_instr.insert(second_ev.variable);
-        id2loc.insert(
-          std::pair<irep_idt, source_locationt>(
-            second_ev.variable, second_ev.source_location));
+        id2loc.insert(std::pair<irep_idt, source_locationt>(
+          second_ev.variable, second_ev.source_location));
       }
     }
   }
@@ -149,19 +148,21 @@ void inline instrumentert::instrument_one_event_per_cycle_inserter(
      of two pairs in a same cycle */
   std::set<event_grapht::critical_cyclet::delayt> delayed;
 
-  for(std::set<event_grapht::critical_cyclet>::iterator
-    it=set_of_cycles.begin();
-    it!=set_of_cycles.end(); ++it)
+  for(std::set<event_grapht::critical_cyclet>::iterator it=
+        set_of_cycles.begin();
+      it != set_of_cycles.end();
+      ++it)
   {
     /* cycle with already a delayed pair? */
-    bool next=false;
-    for(std::set<event_grapht::critical_cyclet::delayt>::iterator
-      p_it=it->unsafe_pairs.begin();
-      p_it!=it->unsafe_pairs.end(); ++p_it)
+    bool next= false;
+    for(std::set<event_grapht::critical_cyclet::delayt>::iterator p_it=
+          it->unsafe_pairs.begin();
+        p_it != it->unsafe_pairs.end();
+        ++p_it)
     {
-      if(delayed.find(*p_it)!=delayed.end())
+      if(delayed.find(*p_it) != delayed.end())
       {
-        next=true;
+        next= true;
         break;
       }
     }
@@ -170,23 +171,22 @@ void inline instrumentert::instrument_one_event_per_cycle_inserter(
       continue;
 
     /* instruments the first pair */
-    for(std::set<event_grapht::critical_cyclet::delayt>::iterator
-      p_it=it->unsafe_pairs.begin();
-      p_it!=it->unsafe_pairs.end(); ++p_it)
+    for(std::set<event_grapht::critical_cyclet::delayt>::iterator p_it=
+          it->unsafe_pairs.begin();
+        p_it != it->unsafe_pairs.end();
+        ++p_it)
     {
       delayed.insert(*p_it);
-      const abstract_eventt &first_ev=egraph[p_it->first];
+      const abstract_eventt &first_ev= egraph[p_it->first];
       var_to_instr.insert(first_ev.variable);
-      id2loc.insert(
-        std::pair<irep_idt, source_locationt>(
-          first_ev.variable, first_ev.source_location));
+      id2loc.insert(std::pair<irep_idt, source_locationt>(
+        first_ev.variable, first_ev.source_location));
       if(!p_it->is_po)
       {
-        const abstract_eventt &second_ev=egraph[p_it->second];
+        const abstract_eventt &second_ev= egraph[p_it->second];
         var_to_instr.insert(second_ev.variable);
-        id2loc.insert(
-          std::pair<irep_idt, source_locationt>(
-            second_ev.variable, second_ev.source_location));
+        id2loc.insert(std::pair<irep_idt, source_locationt>(
+          second_ev.variable, second_ev.source_location));
       }
       break;
     }
@@ -249,10 +249,9 @@ unsigned inline instrumentert::cost(
   /* cost(poW*)=1
      cost(poRW)=cost(rfe)=2
      cost(poRR)=3 */
-  if(egraph[e.first].operation==abstract_eventt::Write)
+  if(egraph[e.first].operation == abstract_eventt::Write)
     return 1;
-  else if(egraph[e.second].operation==abstract_eventt::Write
-    || !e.is_po)
+  else if(egraph[e.second].operation == abstract_eventt::Write || !e.is_po)
     return 2;
   else
     return 3;
@@ -273,7 +272,7 @@ Function: instrumentert::instrument_minimum_interference
 void inline instrumentert::instrument_minimum_interference_inserter(
   const std::set<event_grapht::critical_cyclet> &set_of_cycles)
 {
-  /* Idea:
+/* Idea:
      We solve this by a linear programming approach,
      using for instance glpk lib.
 
@@ -298,39 +297,39 @@ void inline instrumentert::instrument_minimum_interference_inserter(
 #ifdef HAVE_GLPK
   /* first, identify all the unsafe pairs */
   std::set<event_grapht::critical_cyclet::delayt> edges;
-  for(std::set<event_grapht::critical_cyclet>::iterator
-    C_j=set_of_cycles.begin();
-    C_j!=set_of_cycles.end();
-    ++C_j)
+  for(std::set<event_grapht::critical_cyclet>::iterator C_j=
+        set_of_cycles.begin();
+      C_j != set_of_cycles.end();
+      ++C_j)
     for(std::set<event_grapht::critical_cyclet::delayt>::const_iterator e_i=
-      C_j->unsafe_pairs.begin();
-      e_i!=C_j->unsafe_pairs.end();
-      ++e_i)
+          C_j->unsafe_pairs.begin();
+        e_i != C_j->unsafe_pairs.end();
+        ++e_i)
       edges.insert(*e_i);
 
   glp_prob *lp;
   glp_iocp parm;
   glp_init_iocp(&parm);
-  parm.msg_lev=GLP_MSG_OFF;
-  parm.presolve=GLP_ON;
+  parm.msg_lev= GLP_MSG_OFF;
+  parm.presolve= GLP_ON;
 
-  lp=glp_create_prob();
+  lp= glp_create_prob();
   glp_set_prob_name(lp, "instrumentation optimisation");
   glp_set_obj_dir(lp, GLP_MIN);
 
-  message.debug() << "edges: "<<edges.size()<<" cycles:"<<set_of_cycles.size()
-    << messaget::eom;
+  message.debug() << "edges: " << edges.size()
+                  << " cycles:" << set_of_cycles.size() << messaget::eom;
 
   /* sets the variables and coefficients */
   glp_add_cols(lp, edges.size());
-  std::size_t i=0;
-  for(std::set<event_grapht::critical_cyclet::delayt>::iterator
-      e_i=edges.begin();
-      e_i!=edges.end();
+  std::size_t i= 0;
+  for(std::set<event_grapht::critical_cyclet::delayt>::iterator e_i=
+        edges.begin();
+      e_i != edges.end();
       ++e_i)
   {
     ++i;
-    std::string name="e_"+std::to_string(i);
+    std::string name= "e_" + std::to_string(i);
     glp_set_col_name(lp, i, name.c_str());
     glp_set_col_bnds(lp, i, GLP_LO, 0.0, 0.0);
     glp_set_obj_coef(lp, i, cost(*e_i));
@@ -339,47 +338,46 @@ void inline instrumentert::instrument_minimum_interference_inserter(
 
   /* sets the constraints (soundness): one per cycle */
   glp_add_rows(lp, set_of_cycles.size());
-  i=0;
-  for(std::set<event_grapht::critical_cyclet>::iterator
-    C_j=set_of_cycles.begin();
-    C_j!=set_of_cycles.end();
-    ++C_j)
+  i= 0;
+  for(std::set<event_grapht::critical_cyclet>::iterator C_j=
+        set_of_cycles.begin();
+      C_j != set_of_cycles.end();
+      ++C_j)
   {
     ++i;
-    std::string name="C_"+std::to_string(i);
+    std::string name= "C_" + std::to_string(i);
     glp_set_row_name(lp, i, name.c_str());
     glp_set_row_bnds(lp, i, GLP_LO, 1.0, 0.0); /* >= 1*/
   }
 
-  const std::size_t mat_size=set_of_cycles.size()*edges.size();
-  message.debug() << "size of the system: " << mat_size
-    << messaget::eom;
-  int *imat=new int[mat_size+1];
-  int *jmat=new int[mat_size+1];
-  double *vmat=new double[mat_size+1];
+  const std::size_t mat_size= set_of_cycles.size() * edges.size();
+  message.debug() << "size of the system: " << mat_size << messaget::eom;
+  int *imat= new int[mat_size + 1];
+  int *jmat= new int[mat_size + 1];
+  double *vmat= new double[mat_size + 1];
 
   /* fills the constraints coeff */
   /* tables read from 1 in glpk -- first row/column ignored */
-  std::size_t col=1;
-  std::size_t row=1;
-  i=1;
-  for(std::set<event_grapht::critical_cyclet::delayt>::iterator
-    e_i=edges.begin();
-    e_i!=edges.end();
-    ++e_i)
+  std::size_t col= 1;
+  std::size_t row= 1;
+  i= 1;
+  for(std::set<event_grapht::critical_cyclet::delayt>::iterator e_i=
+        edges.begin();
+      e_i != edges.end();
+      ++e_i)
   {
-    row=1;
-    for(std::set<event_grapht::critical_cyclet>::iterator
-      C_j=set_of_cycles.begin();
-      C_j!=set_of_cycles.end();
-      ++C_j)
+    row= 1;
+    for(std::set<event_grapht::critical_cyclet>::iterator C_j=
+          set_of_cycles.begin();
+        C_j != set_of_cycles.end();
+        ++C_j)
     {
-      imat[i]=row;
-      jmat[i]=col;
-      if(C_j->unsafe_pairs.find(*e_i)!=C_j->unsafe_pairs.end())
-        vmat[i]=1.0;
+      imat[i]= row;
+      jmat[i]= col;
+      if(C_j->unsafe_pairs.find(*e_i) != C_j->unsafe_pairs.end())
+        vmat[i]= 1.0;
       else
-        vmat[i]=0.0;
+        vmat[i]= 0.0;
       ++i;
       ++row;
     }
@@ -387,9 +385,9 @@ void inline instrumentert::instrument_minimum_interference_inserter(
   }
 
 #ifdef DEBUG
-  for(i=1; i<=mat_size; ++i)
-    message.statistics() <<i<<"["<<imat[i]<<","<<jmat[i]<<"]="<<vmat[i]
-      << messaget::eom;
+  for(i= 1; i <= mat_size; ++i)
+    message.statistics() << i << "[" << imat[i] << "," << jmat[i]
+                         << "]=" << vmat[i] << messaget::eom;
 #endif
 
   /* solves MIP by branch-and-cut */
@@ -398,28 +396,26 @@ void inline instrumentert::instrument_minimum_interference_inserter(
 
   /* loads results (x_i) */
   message.statistics() << "minimal cost: " << glp_mip_obj_val(lp)
-    << messaget::eom;
-  i=0;
-  for(std::set<event_grapht::critical_cyclet::delayt>::iterator
-    e_i=edges.begin();
-    e_i!=edges.end();
-    ++e_i)
+                       << messaget::eom;
+  i= 0;
+  for(std::set<event_grapht::critical_cyclet::delayt>::iterator e_i=
+        edges.begin();
+      e_i != edges.end();
+      ++e_i)
   {
     ++i;
-    if(glp_mip_col_val(lp, i)>=1)
+    if(glp_mip_col_val(lp, i) >= 1)
     {
-      const abstract_eventt &first_ev=egraph[e_i->first];
+      const abstract_eventt &first_ev= egraph[e_i->first];
       var_to_instr.insert(first_ev.variable);
-      id2loc.insert(
-        std::pair<irep_idt, source_locationt>(
-          first_ev.variable, first_ev.source_location));
+      id2loc.insert(std::pair<irep_idt, source_locationt>(
+        first_ev.variable, first_ev.source_location));
       if(!e_i->is_po)
       {
-        const abstract_eventt &second_ev=egraph[e_i->second];
+        const abstract_eventt &second_ev= egraph[e_i->second];
         var_to_instr.insert(second_ev.variable);
-        id2loc.insert(
-          std::pair<irep_idt, source_locationt>(
-            second_ev.variable, second_ev.source_location));
+        id2loc.insert(std::pair<irep_idt, source_locationt>(
+          second_ev.variable, second_ev.source_location));
       }
     }
   }
@@ -450,28 +446,27 @@ void inline instrumentert::instrument_my_events_inserter(
   const std::set<event_grapht::critical_cyclet> &set,
   const std::set<event_idt> &my_events)
 {
-  for(std::set<event_grapht::critical_cyclet>::const_iterator
-    it=set.begin();
-    it!=set.end(); ++it)
+  for(std::set<event_grapht::critical_cyclet>::const_iterator it= set.begin();
+      it != set.end();
+      ++it)
   {
-    for(std::set<event_grapht::critical_cyclet::delayt>::const_iterator
-      p_it=it->unsafe_pairs.begin();
-      p_it!=it->unsafe_pairs.end(); ++p_it)
+    for(std::set<event_grapht::critical_cyclet::delayt>::const_iterator p_it=
+          it->unsafe_pairs.begin();
+        p_it != it->unsafe_pairs.end();
+        ++p_it)
     {
-      if(my_events.find(p_it->first)!=my_events.end())
+      if(my_events.find(p_it->first) != my_events.end())
       {
-        const abstract_eventt &first_ev=egraph[p_it->first];
+        const abstract_eventt &first_ev= egraph[p_it->first];
         var_to_instr.insert(first_ev.variable);
-        id2loc.insert(
-          std::pair<irep_idt, source_locationt>(
-            first_ev.variable, first_ev.source_location));
-        if(!p_it->is_po && my_events.find(p_it->second)!=my_events.end())
+        id2loc.insert(std::pair<irep_idt, source_locationt>(
+          first_ev.variable, first_ev.source_location));
+        if(!p_it->is_po && my_events.find(p_it->second) != my_events.end())
         {
-          const abstract_eventt &second_ev=egraph[p_it->second];
+          const abstract_eventt &second_ev= egraph[p_it->second];
           var_to_instr.insert(second_ev.variable);
-          id2loc.insert(
-            std::pair<irep_idt, source_locationt>(second_ev.variable,
-              second_ev.source_location));
+          id2loc.insert(std::pair<irep_idt, source_locationt>(
+            second_ev.variable, second_ev.source_location));
         }
       }
     }
@@ -490,8 +485,7 @@ Function: instrumentert::instrument_my_events
 
 \*******************************************************************/
 
-void instrumentert::instrument_my_events(
-  const std::set<event_idt> &my_events)
+void instrumentert::instrument_my_events(const std::set<event_idt> &my_events)
 {
   var_to_instr.clear();
   id2loc.clear();
@@ -499,9 +493,9 @@ void instrumentert::instrument_my_events(
 
   if(!set_of_cycles.empty())
     instrument_my_events_inserter(set_of_cycles, my_events);
-  else if(num_sccs!=0)
+  else if(num_sccs != 0)
   {
-    for(std::size_t i=0; i<num_sccs; ++i)
+    for(std::size_t i= 0; i < num_sccs; ++i)
       instrument_my_events_inserter(set_of_cycles_per_SCC[i], my_events);
   }
   else
@@ -531,7 +525,7 @@ std::set<event_idt> instrumentert::extract_my_events()
 
   std::size_t tmp;
 
-  for(std::size_t i=0; i<size; i++)
+  for(std::size_t i= 0; i < size; i++)
   {
     file >> tmp;
     this_set.insert(tmp);

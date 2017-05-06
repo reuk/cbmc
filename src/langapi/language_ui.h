@@ -16,7 +16,7 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 class cmdlinet;
 
-class language_uit:public messaget
+class language_uit : public messaget
 {
 public:
   language_filest language_files;
@@ -37,7 +37,7 @@ public:
     language_files.clear();
   }
 
-  virtual void show_symbol_table(bool brief=false);
+  virtual void show_symbol_table(bool brief= false);
   virtual void show_symbol_table_plain(std::ostream &out, bool brief);
   virtual void show_symbol_table_xml_ui(bool brief);
 

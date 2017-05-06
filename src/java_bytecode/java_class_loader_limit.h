@@ -15,7 +15,7 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/irep.h>
 #include <util/message.h>
 
-class java_class_loader_limitt:public messaget
+class java_class_loader_limitt : public messaget
 {
   std::regex regex_matcher;
   std::set<std::string> set_matcher;
@@ -23,12 +23,12 @@ class java_class_loader_limitt:public messaget
   std::smatch string_matcher;
 
   void setup_class_load_limit(std::string &);
- public:
+
+public:
   explicit java_class_loader_limitt(
     message_handlert &_message_handler,
-    std::string &java_cp_include_files) :
-  messaget(_message_handler),
-    regex_match(false)
+    std::string &java_cp_include_files)
+    : messaget(_message_handler), regex_match(false)
   {
     setup_class_load_limit(java_cp_include_files);
   }

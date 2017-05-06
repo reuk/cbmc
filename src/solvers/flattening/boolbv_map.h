@@ -25,14 +25,16 @@ public:
   boolbv_mapt(
     propt &_prop,
     const namespacet &_ns,
-    const boolbv_widtht &_boolbv_width):
-    prop(_prop), ns(_ns), boolbv_width(_boolbv_width)
+    const boolbv_widtht &_boolbv_width)
+    : prop(_prop), ns(_ns), boolbv_width(_boolbv_width)
   {
   }
 
   struct map_bitt
   {
-    map_bitt():is_set(false) { }
+    map_bitt() : is_set(false)
+    {
+    }
     bool is_set;
     literalt l;
   };
@@ -42,7 +44,7 @@ public:
   class map_entryt
   {
   public:
-    map_entryt():width(0), bvtype(IS_UNKNOWN)
+    map_entryt() : width(0), bvtype(IS_UNKNOWN)
     {
     }
 
@@ -59,9 +61,7 @@ public:
 
   void show() const;
 
-  map_entryt &get_map_entry(
-    const irep_idt &identifier,
-    const typet &type);
+  map_entryt &get_map_entry(const irep_idt &identifier, const typet &type);
 
   void get_literals(
     const irep_idt &identifier,

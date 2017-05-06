@@ -24,11 +24,10 @@ class constant_exprt;
 class index_exprt;
 class member_exprt;
 
-class smt2_convt:public prop_convt
+class smt2_convt : public prop_convt
 {
 public:
-  typedef enum
-  {
+  typedef enum {
     GENERIC,
     BOOLECTOR,
     CVC3,
@@ -45,21 +44,21 @@ public:
     const std::string &_notes,
     const std::string &_logic,
     solvert _solver,
-    std::ostream &_out):
-    prop_convt(_ns),
-    use_FPA_theory(false),
-    use_datatypes(false),
-    use_array_of_bool(false),
-    emit_set_logic(true),
-    out(_out),
-    benchmark(_benchmark),
-    notes(_notes),
-    logic(_logic),
-    solver(_solver),
-    boolbv_width(_ns),
-    let_id_count(0),
-    pointer_logic(_ns),
-    no_boolean_variables(0)
+    std::ostream &_out)
+    : prop_convt(_ns),
+      use_FPA_theory(false),
+      use_datatypes(false),
+      use_array_of_bool(false),
+      emit_set_logic(true),
+      out(_out),
+      benchmark(_benchmark),
+      notes(_notes),
+      logic(_logic),
+      solver(_solver),
+      boolbv_width(_ns),
+      let_id_count(0),
+      pointer_logic(_ns),
+      no_boolean_variables(0)
   {
     // We set some defaults differently
     // for some solvers.
@@ -88,16 +87,18 @@ public:
       break;
 
     case Z3:
-      use_array_of_bool=true;
-      emit_set_logic=false;
-      use_datatypes=true;
+      use_array_of_bool= true;
+      emit_set_logic= false;
+      use_datatypes= true;
       break;
     }
 
     write_header();
   }
 
-  virtual ~smt2_convt() { }
+  virtual ~smt2_convt()
+  {
+  }
   virtual resultt dec_solve();
 
   bool use_FPA_theory;
@@ -107,13 +108,21 @@ public:
 
   // overloading interfaces
   virtual literalt convert(const exprt &expr);
-  virtual void set_frozen(literalt a) { /* not needed */ }
+  virtual void set_frozen(literalt a)
+  { /* not needed */
+  }
   virtual void set_to(const exprt &expr, bool value);
   virtual exprt get(const exprt &expr) const;
-  virtual std::string decision_procedure_text() const { return "SMT2"; }
+  virtual std::string decision_procedure_text() const
+  {
+    return "SMT2";
+  }
   virtual void print_assignment(std::ostream &out) const;
   virtual tvt l_get(literalt l) const;
-  virtual void set_assumptions(const bvt &bv) { assumptions=bv; }
+  virtual void set_assumptions(const bvt &bv)
+  {
+    assumptions= bv;
+  }
 
   // new stuff
   void convert_expr(const exprt &);
@@ -176,23 +185,24 @@ protected:
   typedef std::pair<unsigned, symbol_exprt> let_count_idt;
   typedef std::unordered_map<exprt, let_count_idt, irep_hash> seen_expressionst;
   unsigned let_id_count;
-  static const unsigned LET_COUNT=2;
+  static const unsigned LET_COUNT= 2;
 
-  class let_visitort:public expr_visitort
+  class let_visitort : public expr_visitort
   {
     const seen_expressionst &let_map;
 
   public:
-    explicit let_visitort(const seen_expressionst &map):let_map(map) { }
+    explicit let_visitort(const seen_expressionst &map) : let_map(map)
+    {
+    }
 
     void operator()(exprt &expr)
     {
-      seen_expressionst::const_iterator it=let_map.find(expr);
-      if(it!=let_map.end() &&
-         it->second.first>=LET_COUNT)
+      seen_expressionst::const_iterator it= let_map.find(expr);
+      if(it != let_map.end() && it->second.first >= LET_COUNT)
       {
-        symbol_exprt symb=it->second.second;
-        expr=symb;
+        symbol_exprt symb= it->second.second;
+        expr= symb;
       }
     }
   };
@@ -209,9 +219,7 @@ protected:
     seen_expressionst &map,
     std::vector<exprt> &let_order);
 
-  exprt substitute_let(
-    exprt &expr,
-    const seen_expressionst &map);
+  exprt substitute_let(exprt &expr, const seen_expressionst &map);
 
   // Parsing solver responses
   constant_exprt parse_literal(const irept &, const typet &type);
@@ -226,12 +234,14 @@ protected:
   std::string floatbv_suffix(const exprt &) const;
   std::set<irep_idt> bvfp_set; // already converted
 
-  class smt2_symbolt:public exprt
+  class smt2_symbolt : public exprt
   {
   public:
-    smt2_symbolt(const irep_idt &_identifier, const typet &_type):
-      exprt(ID_smt2_symbol, _type)
-    { set(ID_identifier, _identifier); }
+    smt2_symbolt(const irep_idt &_identifier, const typet &_type)
+      : exprt(ID_smt2_symbol, _type)
+    {
+      set(ID_identifier, _identifier);
+    }
 
     const irep_idt &get_identifier() const
     {
@@ -241,8 +251,8 @@ protected:
 
   const smt2_symbolt &to_smt2_symbol(const exprt &expr)
   {
-    assert(expr.id()==ID_smt2_symbol && !expr.has_operands());
-    return static_cast<const smt2_symbolt&>(expr);
+    assert(expr.id() == ID_smt2_symbol && !expr.has_operands());
+    return static_cast<const smt2_symbolt &>(expr);
   }
 
   // flattens any non-bitvector type into a bitvector,
@@ -251,12 +261,12 @@ protected:
   // unflatten() does the opposite.
   typedef enum { BEGIN, END } wheret;
   void flatten2bv(const exprt &);
-  void unflatten(wheret, const typet &, unsigned nesting=0);
+  void unflatten(wheret, const typet &, unsigned nesting= 0);
 
   // pointers
   pointer_logict pointer_logic;
-  void convert_address_of_rec(
-    const exprt &expr, const pointer_typet &result_type);
+  void
+  convert_address_of_rec(const exprt &expr, const pointer_typet &result_type);
 
   void define_object_size(const irep_idt &id, const exprt &expr);
 

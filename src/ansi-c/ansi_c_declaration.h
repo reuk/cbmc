@@ -13,10 +13,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <util/symbol.h>
 
-class ansi_c_declaratort:public exprt
+class ansi_c_declaratort : public exprt
 {
 public:
-  ansi_c_declaratort():exprt(ID_declarator)
+  ansi_c_declaratort() : exprt(ID_declarator)
   {
   }
 
@@ -55,20 +55,20 @@ public:
 
 inline ansi_c_declaratort &to_ansi_c_declarator(exprt &expr)
 {
-  assert(expr.id()==ID_declarator);
+  assert(expr.id() == ID_declarator);
   return static_cast<ansi_c_declaratort &>(expr);
 }
 
 inline const ansi_c_declaratort &to_ansi_c_declarator(const exprt &expr)
 {
-  assert(expr.id()==ID_declarator);
+  assert(expr.id() == ID_declarator);
   return static_cast<const ansi_c_declaratort &>(expr);
 }
 
-class ansi_c_declarationt:public exprt
+class ansi_c_declarationt : public exprt
 {
 public:
-  ansi_c_declarationt():exprt(ID_declaration)
+  ansi_c_declarationt() : exprt(ID_declaration)
   {
   }
 
@@ -192,9 +192,7 @@ public:
     set(ID_is_weak, is_weak);
   }
 
-  void to_symbol(
-    const ansi_c_declaratort &,
-    symbolt &symbol) const;
+  void to_symbol(const ansi_c_declaratort &, symbolt &symbol) const;
 
   typet full_type(const ansi_c_declaratort &) const;
 
@@ -213,13 +211,13 @@ public:
   // special case of a declaration with exactly one declarator
   const ansi_c_declaratort &declarator() const
   {
-    assert(declarators().size()==1);
+    assert(declarators().size() == 1);
     return declarators()[0];
   }
 
   ansi_c_declaratort &declarator()
   {
-    assert(declarators().size()==1);
+    assert(declarators().size() == 1);
     return declarators()[0];
   }
 
@@ -234,13 +232,13 @@ public:
 
 inline ansi_c_declarationt &to_ansi_c_declaration(exprt &expr)
 {
-  assert(expr.id()==ID_declaration);
+  assert(expr.id() == ID_declaration);
   return static_cast<ansi_c_declarationt &>(expr);
 }
 
 inline const ansi_c_declarationt &to_ansi_c_declaration(const exprt &expr)
 {
-  assert(expr.id()==ID_declaration);
+  assert(expr.id() == ID_declaration);
   return static_cast<const ansi_c_declarationt &>(expr);
 }
 

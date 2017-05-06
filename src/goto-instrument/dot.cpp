@@ -10,24 +10,21 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <fstream>
 #include <sstream>
 
-#define DOTGRAPHSETTINGS  "color=black;" \
-                          "orientation=portrait;" \
-                          "fontsize=20;"\
-                          "compound=true;"\
-                          "size=\"30,40\";"\
-                          "ratio=compress;"
+#define DOTGRAPHSETTINGS                                                       \
+  "color=black;"                                                               \
+  "orientation=portrait;"                                                      \
+  "fontsize=20;"                                                               \
+  "compound=true;"                                                             \
+  "size=\"30,40\";"                                                            \
+  "ratio=compress;"
 
 #include "dot.h"
 
 class dott
 {
 public:
-  dott(
-    const goto_functionst &_goto_functions,
-    const namespacet &_ns):
-    ns(_ns),
-    goto_functions(_goto_functions),
-    subgraphscount(0)
+  dott(const goto_functionst &_goto_functions, const namespacet &_ns)
+    : ns(_ns), goto_functions(_goto_functions), subgraphscount(0)
   {
   }
 
@@ -51,15 +48,17 @@ protected:
 
   std::string &escape(std::string &str);
 
-  void write_edge(std::ostream &,
-                  const goto_programt::instructiont &,
-                  const goto_programt::instructiont &,
-                  const std::string &);
+  void write_edge(
+    std::ostream &,
+    const goto_programt::instructiont &,
+    const goto_programt::instructiont &,
+    const std::string &);
 
-  void find_next(const goto_programt::instructionst &,
-                 const goto_programt::const_targett &,
-                 std::set<goto_programt::const_targett> &,
-                 std::set<goto_programt::const_targett> &);
+  void find_next(
+    const goto_programt::instructionst &,
+    const goto_programt::const_targett &,
+    std::set<goto_programt::const_targett> &,
+    std::set<goto_programt::const_targett> &);
 };
 
 /*******************************************************************\
@@ -87,13 +86,12 @@ void dott::write_dot_subgraph(
   out << "subgraph \"cluster_" << name << "\" {" << std::endl;
   out << "label=\"" << name << "\";" << std::endl;
 
-  const goto_programt::instructionst &instructions =
-    goto_program.instructions;
+  const goto_programt::instructionst &instructions= goto_program.instructions;
 
   if(instructions.empty())
   {
-    out << "Node_" << subgraphscount << "_0 " <<
-      "[shape=Mrecord,fontsize=22,label=\"?\"];" << std::endl;
+    out << "Node_" << subgraphscount << "_0 "
+        << "[shape=Mrecord,fontsize=22,label=\"?\"];" << std::endl;
   }
   else
   {
@@ -103,11 +101,11 @@ void dott::write_dot_subgraph(
 
     while(!worklist.empty())
     {
-      goto_programt::const_targett it=worklist.front();
+      goto_programt::const_targett it= worklist.front();
       worklist.pop_front();
 
-      if(it==instructions.end() ||
-         seen.find(it)!=seen.end()) continue;
+      if(it == instructions.end() || seen.find(it) != seen.end())
+        continue;
 
       std::stringstream tmp("");
       if(it->is_goto())
@@ -116,24 +114,24 @@ void dott::write_dot_subgraph(
           tmp.str("Goto");
         else
         {
-          std::string t = from_expr(ns, "", it->guard);
-          while(t[ t.size()-1 ]=='\n')
-            t = t.substr(0, t.size()-1);
+          std::string t= from_expr(ns, "", it->guard);
+          while(t[t.size() - 1] == '\n')
+            t= t.substr(0, t.size() - 1);
           tmp << escape(t) << "?";
         }
       }
       else if(it->is_assume())
       {
-        std::string t = from_expr(ns, "", it->guard);
-        while(t[ t.size()-1 ]=='\n')
-          t = t.substr(0, t.size()-1);
+        std::string t= from_expr(ns, "", it->guard);
+        while(t[t.size() - 1] == '\n')
+          t= t.substr(0, t.size() - 1);
         tmp << "Assume\\n(" << escape(t) << ")";
       }
       else if(it->is_assert())
       {
-        std::string t = from_expr(ns, "", it->guard);
-        while(t[ t.size()-1 ]=='\n')
-          t = t.substr(0, t.size()-1);
+        std::string t= from_expr(ns, "", it->guard);
+        while(t[t.size() - 1] == '\n')
+          t= t.substr(0, t.size() - 1);
         tmp << "Assert\\n(" << escape(t) << ")";
       }
       else if(it->is_skip())
@@ -150,9 +148,9 @@ void dott::write_dot_subgraph(
         tmp.str("Atomic End");
       else if(it->is_function_call())
       {
-        std::string t = from_expr(ns, "", it->code);
-        while(t[ t.size()-1 ]=='\n')
-          t = t.substr(0, t.size()-1);
+        std::string t= from_expr(ns, "", it->code);
+        while(t[t.size() - 1] == '\n')
+          t= t.substr(0, t.size() - 1);
         tmp.str(escape(t));
 
         exprt fc;
@@ -162,14 +160,12 @@ void dott::write_dot_subgraph(
         fc.operands().push_back(it->code.op1());
         function_calls.push_back(fc);
       }
-      else if(it->is_assign() ||
-              it->is_decl() ||
-              it->is_return() ||
-              it->is_other())
+      else if(
+        it->is_assign() || it->is_decl() || it->is_return() || it->is_other())
       {
-        std::string t = from_expr(ns, "", it->code);
-        while(t[ t.size()-1 ]=='\n')
-          t = t.substr(0, t.size()-1);
+        std::string t= from_expr(ns, "", it->code);
+        while(t[t.size() - 1] == '\n')
+          t= t.substr(0, t.size() - 1);
         tmp.str(escape(t));
       }
       else if(it->is_start_thread())
@@ -188,7 +184,7 @@ void dott::write_dot_subgraph(
       if(it->is_goto() && !it->guard.is_true() && !it->guard.is_false())
         out << "diamond";
       else
-        out <<"Mrecord";
+        out << "Mrecord";
       out << ",fontsize=22,label=\"";
       out << tmp.str();
       out << "\"];" << std::endl;
@@ -197,27 +193,23 @@ void dott::write_dot_subgraph(
       std::set<goto_programt::const_targett> fres;
       find_next(instructions, it, tres, fres);
 
-      std::string tlabel="true";
-      std::string flabel="false";
+      std::string tlabel= "true";
+      std::string flabel= "false";
       if(fres.empty() || tres.empty())
       {
-        tlabel="";
-        flabel="";
+        tlabel= "";
+        flabel= "";
       }
 
       typedef std::set<goto_programt::const_targett> t;
 
-      for(t::iterator trit=tres.begin();
-           trit!=tres.end();
-           trit++)
+      for(t::iterator trit= tres.begin(); trit != tres.end(); trit++)
         write_edge(out, *it, **trit, tlabel);
-      for(t::iterator frit=fres.begin();
-          frit!=fres.end();
-          frit++)
+      for(t::iterator frit= fres.begin(); frit != fres.end(); frit++)
         write_edge(out, *it, **frit, flabel);
 
       seen.insert(it);
-      const auto temp=goto_program.get_successors(it);
+      const auto temp= goto_program.get_successors(it);
       worklist.insert(worklist.end(), temp.begin(), temp.end());
     }
   }
@@ -238,40 +230,42 @@ Function: dott::do_dot_function_calls
 
 \*******************************************************************/
 
-void dott::do_dot_function_calls(
-  std::ostream &out)
+void dott::do_dot_function_calls(std::ostream &out)
 {
   for(const auto &expr : function_calls)
   {
-    std::list<exprt>::const_iterator cit=clusters.begin();
-    for( ; cit!=clusters.end(); cit++)
-      if(cit->get("name")==expr.op1().get(ID_identifier))
+    std::list<exprt>::const_iterator cit= clusters.begin();
+    for(; cit != clusters.end(); cit++)
+      if(cit->get("name") == expr.op1().get(ID_identifier))
         break;
 
-    if(cit!=clusters.end())
+    if(cit != clusters.end())
     {
-      out << expr.op0().id() <<
-        " -> " "Node_" << cit->get("nr") << "_0" <<
-        " [lhead=\"cluster_" << expr.op1().get(ID_identifier) << "\"," <<
-        "color=blue];" << std::endl;
+      out << expr.op0().id()
+          << " -> "
+             "Node_"
+          << cit->get("nr") << "_0"
+          << " [lhead=\"cluster_" << expr.op1().get(ID_identifier) << "\","
+          << "color=blue];" << std::endl;
     }
     else
     {
-      out << "subgraph \"cluster_" << expr.op1().get(ID_identifier) <<
-        "\" {" << std::endl;
-      out << "rank=sink;"<<std::endl;
-      out << "label=\"" << expr.op1().get(ID_identifier) << "\";" << std::endl;
-      out << "Node_" << subgraphscount << "_0 " <<
-        "[shape=Mrecord,fontsize=22,label=\"?\"];"
+      out << "subgraph \"cluster_" << expr.op1().get(ID_identifier) << "\" {"
           << std::endl;
+      out << "rank=sink;" << std::endl;
+      out << "label=\"" << expr.op1().get(ID_identifier) << "\";" << std::endl;
+      out << "Node_" << subgraphscount << "_0 "
+          << "[shape=Mrecord,fontsize=22,label=\"?\"];" << std::endl;
       out << "}" << std::endl;
       clusters.push_back(exprt("cluster"));
       clusters.back().set("name", expr.op1().get(ID_identifier));
       clusters.back().set("nr", subgraphscount);
-      out << expr.op0().id() <<
-        " -> " "Node_" << subgraphscount << "_0" <<
-        " [lhead=\"cluster_" << expr.op1().get("identifier") << "\"," <<
-        "color=blue];" << std::endl;
+      out << expr.op0().id()
+          << " -> "
+             "Node_"
+          << subgraphscount << "_0"
+          << " [lhead=\"cluster_" << expr.op1().get("identifier") << "\","
+          << "color=blue];" << std::endl;
       subgraphscount++;
     }
   }
@@ -320,20 +314,16 @@ Function: dott::escape
 
 std::string &dott::escape(std::string &str)
 {
-  for(std::string::size_type i=0; i<str.size(); i++)
+  for(std::string::size_type i= 0; i < str.size(); i++)
   {
-    if(str[i]=='\n')
+    if(str[i] == '\n')
     {
-      str[i] = 'n';
+      str[i]= 'n';
       str.insert(i, "\\");
     }
-    else if(str[i]=='\"' ||
-            str[i]=='|' ||
-            str[i]=='\\' ||
-            str[i]=='>' ||
-            str[i]=='<' ||
-            str[i]=='{' ||
-            str[i]=='}')
+    else if(
+      str[i] == '\"' || str[i] == '|' || str[i] == '\\' || str[i] == '>' ||
+      str[i] == '<' || str[i] == '{' || str[i] == '}')
     {
       str.insert(i, "\\");
       i++;
@@ -371,8 +361,9 @@ void dott::find_next(
   if(it->is_goto() && it->guard.is_true())
     return;
 
-  goto_programt::const_targett next = it; next++;
-  if(next!=instructions.end())
+  goto_programt::const_targett next= it;
+  next++;
+  if(next != instructions.end())
     fres.insert(next);
 }
 
@@ -398,14 +389,13 @@ void dott::write_edge(
   out << "Node_" << subgraphscount << "_" << from.location_number;
   out << " -> ";
   out << "Node_" << subgraphscount << "_" << to.location_number << " ";
-  if(label!="")
-    {
-      out << "[fontsize=20,label=\"" << label << "\"";
-      if(from.is_backwards_goto() &&
-          from.location_number > to.location_number)
-        out << ",color=red";
-      out << "]";
-    }
+  if(label != "")
+  {
+    out << "[fontsize=20,label=\"" << label << "\"";
+    if(from.is_backwards_goto() && from.location_number > to.location_number)
+      out << ",color=red";
+    out << "]";
+  }
   out << ";" << std::endl;
 }
 
@@ -421,10 +411,7 @@ Function: dot
 
 \*******************************************************************/
 
-void dot(
-  const goto_functionst &src,
-  const namespacet &ns,
-  std::ostream &out)
+void dot(const goto_functionst &src, const namespacet &ns, std::ostream &out)
 {
   dott dot(src, ns);
   dot.output(out);

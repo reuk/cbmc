@@ -18,7 +18,7 @@ public:
 
   loc_reft next_loc() const
   {
-    loc_reft tmp=*this;
+    loc_reft tmp= *this;
     tmp.increase();
     return tmp;
   }
@@ -35,10 +35,10 @@ public:
 
   bool is_nil() const
   {
-    return loc_number==nil().loc_number;
+    return loc_number == nil().loc_number;
   }
 
-  loc_reft():loc_number(-1) // ugly conversion
+  loc_reft() : loc_number(-1) // ugly conversion
   {
   }
 
@@ -61,17 +61,17 @@ public:
 
   bool operator<(const loc_reft other) const
   {
-    return loc_number<other.loc_number;
+    return loc_number < other.loc_number;
   }
 
   bool operator!=(const loc_reft other) const
   {
-    return loc_number!=other.loc_number;
+    return loc_number != other.loc_number;
   }
 
   bool operator==(const loc_reft other) const
   {
-    return loc_number==other.loc_number;
+    return loc_number == other.loc_number;
   }
 };
 

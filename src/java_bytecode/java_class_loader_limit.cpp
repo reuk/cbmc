@@ -29,12 +29,12 @@ void java_class_loader_limitt::setup_class_load_limit(
     throw "class regexp cannot be empty";
 
   // '@' signals file reading with list of class files to load
-  regex_match=java_cp_include_files[0]!='@';
+  regex_match= java_cp_include_files[0] != '@';
   if(regex_match)
-    regex_matcher=std::regex(java_cp_include_files);
+    regex_matcher= std::regex(java_cp_include_files);
   else
   {
-    assert(java_cp_include_files.length()>1);
+    assert(java_cp_include_files.length() > 1);
     jsont json_cp_config;
     if(parse_json(
          java_cp_include_files.substr(1),
@@ -43,7 +43,7 @@ void java_class_loader_limitt::setup_class_load_limit(
       throw "cannot read JSON input configuration for JAR loading";
     if(!json_cp_config.is_object())
       throw "the JSON file has a wrong format";
-    jsont include_files=json_cp_config["classFiles"];
+    jsont include_files= json_cp_config["classFiles"];
     if(!include_files.is_null() && !include_files.is_array())
       throw "the JSON file has a wrong format";
     for(const jsont &file_entry : include_files.array)
@@ -71,11 +71,9 @@ bool java_class_loader_limitt::load_class_file(const irep_idt &file_name)
   if(regex_match)
   {
     return std::regex_match(
-      id2string(file_name),
-      string_matcher,
-      regex_matcher);
+      id2string(file_name), string_matcher, regex_matcher);
   }
   // load .class file only if it is in the match set
   else
-    return set_matcher.find(id2string(file_name))!=set_matcher.end();
+    return set_matcher.find(id2string(file_name)) != set_matcher.end();
 }

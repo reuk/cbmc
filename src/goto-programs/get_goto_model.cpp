@@ -34,7 +34,7 @@ Function: get_goto_modelt::operator()
 
 bool get_goto_modelt::operator()(const cmdlinet &_cmdline)
 {
-  const std::vector<std::string> &files=_cmdline.args;
+  const std::vector<std::string> &files= _cmdline.args;
   if(files.empty())
   {
     error() << "Please provide a program" << eom;
@@ -63,35 +63,34 @@ bool get_goto_modelt::operator()(const cmdlinet &_cmdline)
 
       for(const auto &filename : sources)
       {
-        #ifdef _MSC_VER
+#ifdef _MSC_VER
         std::ifstream infile(widen(filename));
-        #else
+#else
         std::ifstream infile(filename);
-        #endif
+#endif
 
         if(!infile)
         {
-          error() << "failed to open input file `" << filename
-                  << '\'' << eom;
+          error() << "failed to open input file `" << filename << '\'' << eom;
           return true;
         }
 
-        std::pair<language_filest::file_mapt::iterator, bool>
-          result=language_files.file_map.insert(
+        std::pair<language_filest::file_mapt::iterator, bool> result=
+          language_files.file_map.insert(
             std::pair<std::string, language_filet>(filename, language_filet()));
 
-        language_filet &lf=result.first->second;
+        language_filet &lf= result.first->second;
 
-        lf.filename=filename;
-        lf.language=get_language_from_filename(filename);
+        lf.filename= filename;
+        lf.language= get_language_from_filename(filename);
 
-        if(lf.language==NULL)
+        if(lf.language == NULL)
         {
           error("failed to figure out type of file", filename);
           return true;
         }
 
-        languaget &language=*lf.language;
+        languaget &language= *lf.language;
         language.set_message_handler(get_message_handler());
         language.get_language_options(_cmdline);
 
@@ -137,9 +136,7 @@ bool get_goto_modelt::operator()(const cmdlinet &_cmdline)
 
     status() << "Generating GOTO Program" << eom;
 
-    goto_convert(symbol_table,
-                 goto_functions,
-                 get_message_handler());
+    goto_convert(symbol_table, goto_functions, get_message_handler());
   }
 
   catch(const char *e)

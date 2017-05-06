@@ -22,7 +22,7 @@ Author: Daniel Kroening, kroening@kroening.com
 class inv_object_storet
 {
 public:
-  explicit inv_object_storet(const namespacet &_ns):ns(_ns)
+  explicit inv_object_storet(const namespacet &_ns) : ns(_ns)
   {
   }
 
@@ -42,15 +42,13 @@ public:
 
   const exprt &get_expr(unsigned n) const
   {
-    assert(n<entries.size());
+    assert(n < entries.size());
     return entries[n].expr;
   }
 
   void output(std::ostream &out) const;
 
-  std::string to_string(
-    unsigned n,
-    const irep_idt &identifier) const;
+  std::string to_string(unsigned n, const irep_idt &identifier) const;
 
 protected:
   const namespacet &ns;
@@ -78,7 +76,7 @@ public:
   unsigned_union_find eq_set;
 
   // <=
-  typedef std::set<std::pair<unsigned, unsigned> > ineq_sett;
+  typedef std::set<std::pair<unsigned, unsigned>> ineq_sett;
   ineq_sett le_set;
 
   // !=
@@ -92,18 +90,16 @@ public:
   bool threaded;
   bool is_false;
 
-  invariant_sett():
-    threaded(false),
-    is_false(false),
-    value_sets(NULL),
-    object_store(NULL),
-    ns(NULL)
+  invariant_sett()
+    : threaded(false),
+      is_false(false),
+      value_sets(NULL),
+      object_store(NULL),
+      ns(NULL)
   {
   }
 
-  void output(
-    const irep_idt &identifier,
-    std::ostream &out) const;
+  void output(const irep_idt &identifier, std::ostream &out) const;
 
   // true = added s.th.
   bool make_union(const invariant_sett &other_invariants);
@@ -115,7 +111,7 @@ public:
     eq_set.clear();
     le_set.clear();
     ne_set.clear();
-    is_false=false;
+    is_false= false;
   }
 
   void make_false()
@@ -123,69 +119,63 @@ public:
     eq_set.clear();
     le_set.clear();
     ne_set.clear();
-    is_false=true;
+    is_false= true;
   }
 
   void make_threaded()
   {
     make_true();
-    threaded=true;
+    threaded= true;
   }
 
-  void apply_code(
-    const codet &code);
+  void apply_code(const codet &code);
 
-  void modifies(
-    const exprt &lhs);
+  void modifies(const exprt &lhs);
 
-  void assignment(
-    const exprt &lhs,
-    const exprt &rhs);
+  void assignment(const exprt &lhs, const exprt &rhs);
 
   void set_value_sets(value_setst &_value_sets)
   {
-    value_sets=&_value_sets;
+    value_sets= &_value_sets;
   }
 
   void set_object_store(inv_object_storet &_object_store)
   {
-    object_store=&_object_store;
+    object_store= &_object_store;
   }
 
   void set_namespace(const namespacet &_ns)
   {
-    ns=&_ns;
+    ns= &_ns;
   }
 
   static void intersection(ineq_sett &dest, const ineq_sett &other)
   {
-    ineq_sett::iterator it_d=dest.begin();
+    ineq_sett::iterator it_d= dest.begin();
 
-    while(it_d!=dest.end())
+    while(it_d != dest.end())
     {
       ineq_sett::iterator next_d(it_d);
       next_d++;
 
-      if(other.find(*it_d)==other.end())
+      if(other.find(*it_d) == other.end())
         dest.erase(it_d);
 
-      it_d=next_d;
+      it_d= next_d;
     }
   }
 
   static void remove(ineq_sett &dest, unsigned a)
   {
-    for(ineq_sett::iterator it=dest.begin();
-        it!=dest.end();
-        ) // no it++
+    for(ineq_sett::iterator it= dest.begin(); it != dest.end();) // no it++
     {
       ineq_sett::iterator next(it);
       next++;
 
-      if(it->first==a || it->second==a)
+      if(it->first == a || it->second == a)
         dest.erase(it);
 
-      it=next;
+      it= next;
     }
   }
 
@@ -199,7 +189,7 @@ protected:
   const namespacet *ns;
 
   tvt implies_rec(const exprt &expr) const;
-  static void nnf(exprt &expr, bool negate=false);
+  static void nnf(exprt &expr, bool negate= false);
   void strengthen_rec(const exprt &expr);
 
   void add_type_bounds(const exprt &expr, const typet &type);
@@ -216,13 +206,9 @@ protected:
 
   void modifies(unsigned a);
 
-  std::string to_string(
-    unsigned a,
-    const irep_idt &identifier) const;
+  std::string to_string(unsigned a, const irep_idt &identifier) const;
 
-  bool get_object(
-    const exprt &expr,
-    unsigned &n) const;
+  bool get_object(const exprt &expr, unsigned &n) const;
 
   exprt get_constant(const exprt &expr) const;
 
@@ -234,12 +220,12 @@ protected:
 
   bool has_le(const std::pair<unsigned, unsigned> &p) const
   {
-    return le_set.find(p)!=le_set.end();
+    return le_set.find(p) != le_set.end();
   }
 
   bool has_ne(const std::pair<unsigned, unsigned> &p) const
   {
-    return ne_set.find(p)!=ne_set.end();
+    return ne_set.find(p) != ne_set.end();
   }
 
   tvt is_eq(std::pair<unsigned, unsigned> p) const;

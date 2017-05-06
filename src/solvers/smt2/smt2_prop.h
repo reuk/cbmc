@@ -16,7 +16,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <solvers/prop/prop.h>
 
-class smt2_propt:public propt
+class smt2_propt : public propt
 {
 public:
   smt2_propt(
@@ -40,13 +40,21 @@ public:
   virtual literalt lselect(literalt a, literalt b, literalt c); // a?b:c
 
   virtual literalt new_variable();
-  virtual size_t no_variables() const { return _no_variables; }
-  virtual void set_no_variables(size_t no) { assert(false); }
+  virtual size_t no_variables() const
+  {
+    return _no_variables;
+  }
+  virtual void set_no_variables(size_t no)
+  {
+    assert(false);
+  }
 
   virtual void lcnf(const bvt &bv);
 
   virtual const std::string solver_text()
-  { return "SMT"; }
+  {
+    return "SMT";
+  }
 
   virtual tvt l_get(literalt literal) const;
   virtual void set_assignment(literalt a, bool value);

@@ -12,13 +12,13 @@ Author: Peter Schrammel
 #include <langapi/language_ui.h>
 #include <goto-programs/goto_model.h>
 
-class goto_diff_languagest:public language_uit
+class goto_diff_languagest : public language_uit
 {
 public:
   explicit goto_diff_languagest(
     const cmdlinet &cmdline,
-    ui_message_handlert &ui_message_handler) :
-  language_uit(cmdline, ui_message_handler)
+    ui_message_handlert &ui_message_handler)
+    : language_uit(cmdline, ui_message_handler)
   {
     register_languages();
   }

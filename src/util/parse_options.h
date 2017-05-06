@@ -17,17 +17,21 @@ class parse_options_baset
 {
 public:
   parse_options_baset(
-    const std::string &optstring, int argc, const char **argv);
+    const std::string &optstring,
+    int argc,
+    const char **argv);
 
   cmdlinet cmdline;
 
   virtual void help();
   virtual void usage_error();
 
-  virtual int doit()=0;
+  virtual int doit()= 0;
 
   virtual int main();
-  virtual ~parse_options_baset() { }
+  virtual ~parse_options_baset()
+  {
+  }
 
 private:
   bool parse_result;

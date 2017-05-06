@@ -28,7 +28,7 @@ public:
   virtual void get_values(
     goto_programt::const_targett l,
     const exprt &expr,
-    valuest &dest)=0;
+    valuest &dest)= 0;
 
   virtual ~value_setst()
   {

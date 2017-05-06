@@ -10,12 +10,8 @@ Date: January 2012
 
 #include <cerrno>
 
-#if defined(__linux__) || \
-    defined(__FreeBSD_kernel__) || \
-    defined(__GNU__) || \
-    defined(__unix__) || \
-    defined(__CYGWIN__) || \
-    defined(__MACH__)
+#if defined(__linux__) || defined(__FreeBSD_kernel__) || defined(__GNU__) ||   \
+  defined(__unix__) || defined(__CYGWIN__) || defined(__MACH__)
 #include <sys/stat.h>
 #include <unistd.h>
 #include <dirent.h>
@@ -51,21 +47,21 @@ Function: get_current_working_directory
 
 std::string get_current_working_directory()
 {
-  unsigned bsize=50;
+  unsigned bsize= 50;
 
-  char *buf=reinterpret_cast<char*>(malloc(sizeof(char)*bsize));
+  char *buf= reinterpret_cast<char *>(malloc(sizeof(char) * bsize));
   if(!buf)
     abort();
 
-  errno=0;
+  errno= 0;
 
-  while(buf && getcwd(buf, bsize-1)==NULL && errno==ERANGE)
+  while(buf && getcwd(buf, bsize - 1) == NULL && errno == ERANGE)
   {
-    bsize*=2;
-    buf=reinterpret_cast<char*>(realloc(buf, sizeof(char)*bsize));
+    bsize*= 2;
+    buf= reinterpret_cast<char *>(realloc(buf, sizeof(char) * bsize));
   }
 
-  std::string working_directory=buf;
+  std::string working_directory= buf;
   free(buf);
 
   return working_directory;
@@ -87,23 +83,22 @@ Function: delete_directory
 
 void delete_directory_utf16(const std::wstring &path)
 {
-  std::wstring pattern=path + L"\\*";
+  std::wstring pattern= path + L"\\*";
   // NOLINTNEXTLINE(readability/identifiers)
   struct _wfinddata_t info;
-  intptr_t hFile=_wfindfirst(pattern.c_str(), &info);
-  if(hFile!=-1)
+  intptr_t hFile= _wfindfirst(pattern.c_str(), &info);
+  if(hFile != -1)
   {
     do
     {
-      if(wcscmp(info.name, L".")==0 || wcscmp(info.name, L"..")==0)
+      if(wcscmp(info.name, L".") == 0 || wcscmp(info.name, L"..") == 0)
         continue;
-      std::wstring sub_path=path+L"\\"+info.name;
+      std::wstring sub_path= path + L"\\" + info.name;
       if(info.attrib & _A_SUBDIR)
         delete_directory_utf16(sub_path);
       else
         DeleteFileW(sub_path.c_str());
-    }
-    while(_wfindnext(hFile, &info)==0);
+    } while(_wfindnext(hFile, &info) == 0);
     _findclose(hFile);
     RemoveDirectoryW(path.c_str());
   }
@@ -116,17 +111,17 @@ void delete_directory(const std::string &path)
 #ifdef _WIN32
   delete_directory_utf16(utf8_to_utf16_little_endian(path));
 #else
-  DIR *dir=opendir(path.c_str());
-  if(dir!=NULL)
+  DIR *dir= opendir(path.c_str());
+  if(dir != NULL)
   {
     struct dirent *ent;
-    while((ent=readdir(dir))!=NULL)
+    while((ent= readdir(dir)) != NULL)
     {
       // Needed for Alpine Linux
-      if(strcmp(ent->d_name, ".")==0 || strcmp(ent->d_name, "..")==0)
+      if(strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0)
         continue;
 
-      std::string sub_path=path+"/"+ent->d_name;
+      std::string sub_path= path + "/" + ent->d_name;
 
       struct stat stbuf;
       stat(sub_path.c_str(), &stbuf);
@@ -155,17 +150,16 @@ Function: concat_dir_file
 
 \*******************************************************************/
 
-std::string concat_dir_file(
-  const std::string &directory,
-  const std::string &file_name)
+std::string
+concat_dir_file(const std::string &directory, const std::string &file_name)
 {
-  #ifdef _WIN32
-  return  (file_name.size()>1 &&
-           file_name[0]!='/' &&
-           file_name[1]!=':') ?
-           file_name : directory+"\\"+file_name;
-  #else
-  return (!file_name.empty() && file_name[0]=='/') ?
-          file_name : directory+"/"+file_name;
-  #endif
+#ifdef _WIN32
+  return (file_name.size() > 1 && file_name[0] != '/' && file_name[1] != ':')
+           ? file_name
+           : directory + "\\" + file_name;
+#else
+  return (!file_name.empty() && file_name[0] == '/')
+           ? file_name
+           : directory + "/" + file_name;
+#endif
 }

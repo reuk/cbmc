@@ -18,7 +18,7 @@ Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
 #error "Expected HAVE_PRECOSAT"
 #endif
 
-#define precosat_lit(a) ((a).var_no()*2 + !(a).sign())
+#define precosat_lit(a) ((a).var_no() * 2 + !(a).sign())
 
 /*******************************************************************\
 
@@ -39,14 +39,14 @@ tvt satcheck_precosatt::l_get(literalt a) const
 
   tvt result;
 
-  if(a.var_no()>solver->getMaxVar())
+  if(a.var_no() > solver->getMaxVar())
     return tvt(tvt::tv_enumt::TV_UNKNOWN);
 
-  const int val=solver->val(precosat_lit(a));
-  if(val>0)
-    result=tvt(true);
-  else if(val<0)
-    result=tvt(false);
+  const int val= solver->val(precosat_lit(a));
+  if(val > 0)
+    result= tvt(true);
+  else if(val < 0)
+    result= tvt(false);
   else
     return tvt(tvt::tv_enumt::TV_UNKNOWN);
 
@@ -111,34 +111,33 @@ Function: satcheck_precosatt::prop_solve
 
 propt::resultt satcheck_precosatt::prop_solve()
 {
-  assert(status!=ERROR);
+  assert(status != ERROR);
 
   // We start counting at 1, thus there is one variable fewer.
   {
-    std::string msg=
-      std::to_string(no_variables()-1)+" variables, "+
-      std::to_string(solver->getAddedOrigClauses())+" clauses";
+    std::string msg= std::to_string(no_variables() - 1) + " variables, " +
+                     std::to_string(solver->getAddedOrigClauses()) + " clauses";
     messaget::status() << msg << messaget::eom;
   }
 
   std::string msg;
 
-  const int res=solver->solve();
-  if(res==1)
+  const int res= solver->solve();
+  if(res == 1)
   {
-    msg="SAT checker: instance is SATISFIABLE";
+    msg= "SAT checker: instance is SATISFIABLE";
     messaget::status() << msg << messaget::eom;
-    status=SAT;
+    status= SAT;
     return P_SATISFIABLE;
   }
   else
   {
-    assert(res==-1);
-    msg="SAT checker: instance is UNSATISFIABLE";
+    assert(res == -1);
+    msg= "SAT checker: instance is UNSATISFIABLE";
     messaget::status() << msg << messaget::eom;
   }
 
-  status=UNSAT;
+  status= UNSAT;
   return P_UNSATISFIABLE;
 }
 
@@ -171,8 +170,7 @@ Function: satcheck_precosatt::satcheck_precosatt
 
 \*******************************************************************/
 
-satcheck_precosatt::satcheck_precosatt() :
-  solver(new PrecoSat::Solver())
+satcheck_precosatt::satcheck_precosatt() : solver(new PrecoSat::Solver())
 {
   solver->init();
 }

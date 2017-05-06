@@ -9,7 +9,6 @@ Author: Thomas Kiley
 #include <iostream>
 #include <sstream>
 
-
 #include <util/xml_expr.h>
 #include <util/cprover_prefix.h>
 #include <util/prefix.h>
@@ -34,9 +33,10 @@ Function: show_goto_functions_xmlt::show_goto_functions_xmlt
 
 \*******************************************************************/
 
-show_goto_functions_xmlt::show_goto_functions_xmlt(const namespacet &ns):
-  ns(ns)
-{}
+show_goto_functions_xmlt::show_goto_functions_xmlt(const namespacet &ns)
+  : ns(ns)
+{
+}
 
 /*******************************************************************\
 
@@ -66,30 +66,30 @@ Function: show_goto_functions_xmlt::convert
 
 \*******************************************************************/
 
-xmlt show_goto_functions_xmlt::convert(
-  const goto_functionst &goto_functions)
+xmlt show_goto_functions_xmlt::convert(const goto_functionst &goto_functions)
 {
-  xmlt xml_functions=xmlt("functions");
+  xmlt xml_functions= xmlt("functions");
   for(const auto &function_entry : goto_functions.function_map)
   {
-    const irep_idt &function_name=function_entry.first;
-    const goto_functionst::goto_functiont &function=function_entry.second;
+    const irep_idt &function_name= function_entry.first;
+    const goto_functionst::goto_functiont &function= function_entry.second;
 
-    xmlt &xml_function=xml_functions.new_element("function");
+    xmlt &xml_function= xml_functions.new_element("function");
     xml_function.set_attribute("name", id2string(function_name));
     xml_function.set_attribute_bool(
       "is_body_available", function.body_available());
-    bool is_internal=(has_prefix(id2string(function_name), CPROVER_PREFIX) ||
-                      function_name==goto_functions.entry_point());
+    bool is_internal=
+      (has_prefix(id2string(function_name), CPROVER_PREFIX) ||
+       function_name == goto_functions.entry_point());
     xml_function.set_attribute_bool("is_internal", is_internal);
 
     if(function.body_available())
     {
-      xmlt &xml_instructions=xml_function.new_element("instructions");
+      xmlt &xml_instructions= xml_function.new_element("instructions");
       for(const goto_programt::instructiont &instruction :
-        function.body.instructions)
+          function.body.instructions)
       {
-        xmlt &instruction_entry=xml_instructions.new_element("instruction");
+        xmlt &instruction_entry= xml_instructions.new_element("instruction");
 
         instruction_entry.set_attribute(
           "instruction_id", instruction.to_string());
@@ -106,7 +106,7 @@ xmlt show_goto_functions_xmlt::convert(
 
         xmlt &instruction_value=
           instruction_entry.new_element("instruction_value");
-        instruction_value.data=instruction_builder.str();
+        instruction_value.data= instruction_builder.str();
         instruction_value.elements.clear();
       }
     }

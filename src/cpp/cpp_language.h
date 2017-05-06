@@ -18,7 +18,7 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 /*! \brief TO_BE_DOCUMENTED
     \ingroup gr_cpp
 */
-class cpp_languaget:public languaget
+class cpp_languaget : public languaget
 {
 public:
   bool preprocess(
@@ -26,13 +26,10 @@ public:
     const std::string &path,
     std::ostream &outstream) override;
 
-  bool parse(
-    std::istream &instream,
-    const std::string &path) override;
+  bool parse(std::istream &instream, const std::string &path) override;
 
-  bool typecheck(
-    symbol_tablet &symbol_table,
-    const std::string &module) override;
+  bool
+  typecheck(symbol_tablet &symbol_table, const std::string &module) override;
 
   bool merge_symbol_table(
     symbol_tablet &dest,
@@ -40,31 +37,26 @@ public:
     const std::string &module,
     class replace_symbolt &replace_symbol) const;
 
-  bool final(
-    symbol_tablet &symbol_table) override;
+  bool final(symbol_tablet &symbol_table) override;
 
   void show_parse(std::ostream &out) override;
 
   // constructor, destructor
   ~cpp_languaget() override;
-  cpp_languaget() { }
+  cpp_languaget()
+  {
+  }
 
   // conversion from expression into string
-  bool from_expr(
-    const exprt &expr,
-    std::string &code,
-    const namespacet &ns) override;
+  bool from_expr(const exprt &expr, std::string &code, const namespacet &ns)
+    override;
 
   // conversion from type into string
-  bool from_type(
-    const typet &type,
-    std::string &code,
-    const namespacet &ns) override;
+  bool from_type(const typet &type, std::string &code, const namespacet &ns)
+    override;
 
-  bool type_to_name(
-    const typet &type,
-    std::string &name,
-    const namespacet &ns) override;
+  bool type_to_name(const typet &type, std::string &name, const namespacet &ns)
+    override;
 
   // conversion from string into expression
   bool to_expr(
@@ -74,10 +66,18 @@ public:
     const namespacet &ns) override;
 
   languaget *new_language() override
-  { return new cpp_languaget; }
+  {
+    return new cpp_languaget;
+  }
 
-  std::string id() const override { return "cpp"; }
-  std::string description() const override { return "C++"; }
+  std::string id() const override
+  {
+    return "cpp";
+  }
+  std::string description() const override
+  {
+    return "C++";
+  }
   std::set<std::string> extensions() const override;
 
   void modules_provided(std::set<std::string> &modules) override;

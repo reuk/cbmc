@@ -33,7 +33,7 @@ void goto_convert(
   goto_functionst &functions,
   message_handlert &message_handler);
 
-class goto_convert_functionst:public goto_convertt
+class goto_convert_functionst : public goto_convertt
 {
 public:
   void goto_convert();
@@ -54,9 +54,7 @@ protected:
   //
   // function calls
   //
-  void add_return(
-    goto_functionst::goto_functiont &,
-    const source_locationt &);
+  void add_return(goto_functionst::goto_functiont &, const source_locationt &);
 };
 
 #endif // CPROVER_GOTO_PROGRAMS_GOTO_CONVERT_FUNCTIONS_H

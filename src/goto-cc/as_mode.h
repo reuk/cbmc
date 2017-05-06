@@ -15,7 +15,7 @@ Date: July 2016
 
 #include "goto_cc_mode.h"
 
-class as_modet:public goto_cc_modet
+class as_modet : public goto_cc_modet
 {
 public:
   virtual int doit();

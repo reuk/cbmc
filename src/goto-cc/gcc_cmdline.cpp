@@ -28,64 +28,55 @@ Function: gcc_cmdlinet::parse
 \*******************************************************************/
 
 // non-gcc options
-const char *goto_cc_options_with_separated_argument[]=
-{
+const char *goto_cc_options_with_separated_argument[]= {
   "--verbosity",
   "--function",
   "--native-compiler",
   "--native-linker",
   "--print-rejected-preprocessed-source",
-  NULL
-};
+  NULL};
 
 // non-gcc options
-const char *goto_cc_options_without_argument[]=
-{
-  "--show-symbol-table",
-  "--show-function-table",
-  "--ppc-macos",
-  "--i386-linux",
-  "--i386-win32",
-  "--i386-macos",
-  "--winx64",
-  "--string-abstraction",
-  "--no-library",
-  "--16",
-  "--32",
-  "--64",
-  "--little-endian",
-  "--big-endian",
-  "--no-arch",
-  "--partial-inlining",
-  "-?",
-  NULL
-};
+const char *goto_cc_options_without_argument[]= {"--show-symbol-table",
+                                                 "--show-function-table",
+                                                 "--ppc-macos",
+                                                 "--i386-linux",
+                                                 "--i386-win32",
+                                                 "--i386-macos",
+                                                 "--winx64",
+                                                 "--string-abstraction",
+                                                 "--no-library",
+                                                 "--16",
+                                                 "--32",
+                                                 "--64",
+                                                 "--little-endian",
+                                                 "--big-endian",
+                                                 "--no-arch",
+                                                 "--partial-inlining",
+                                                 "-?",
+                                                 NULL};
 
 // separated or concatenated
-const char *gcc_options_with_argument[]=
-{
-  "-o",
-  "-x",
-  "-B",
-  "-iquote",
-  "-idirafter",
-  "-include",
-  "-I",
-  "-V",
-  "-D",
-  "-L",
-  "-l",
-  "-MT",
-  "-MQ",
-  "-MF",
-  "-U",
-  "-u", // goes to linker
-  "-T", // goes to linker
-  NULL
-};
+const char *gcc_options_with_argument[]= {"-o",
+                                          "-x",
+                                          "-B",
+                                          "-iquote",
+                                          "-idirafter",
+                                          "-include",
+                                          "-I",
+                                          "-V",
+                                          "-D",
+                                          "-L",
+                                          "-l",
+                                          "-MT",
+                                          "-MQ",
+                                          "-MF",
+                                          "-U",
+                                          "-u", // goes to linker
+                                          "-T", // goes to linker
+                                          NULL};
 
-const char *gcc_options_with_separated_argument[]=
-{
+const char *gcc_options_with_separated_argument[]= {
   "-aux-info",
   "--param", // Apple only
   "-imacros",
@@ -106,26 +97,18 @@ const char *gcc_options_with_separated_argument[]=
   "-print-prog-name",
   "-specs",
   "--sysroot",
-  "--include", // undocumented
-  "-current_version", // on the Mac
-  "-compatibility_version",  // on the Mac
+  "--include",              // undocumented
+  "-current_version",       // on the Mac
+  "-compatibility_version", // on the Mac
   "-z",
-  NULL
-};
+  NULL};
 
-const char *gcc_options_with_concatenated_argument[]=
-{
-  "-d",
-  "-g",
-  "-A",
-  NULL
-};
+const char *gcc_options_with_concatenated_argument[]= {"-d", "-g", "-A", NULL};
 
-const char *gcc_options_without_argument[]=
-{
+const char *gcc_options_without_argument[]= {
   "--help",
   "-h",
-  "-r", // for ld mimicking
+  "-r",     // for ld mimicking
   "-dylib", // for ld mimicking on MacOS
   "-c",
   "-S",
@@ -209,21 +192,20 @@ const char *gcc_options_without_argument[]=
   "-EB",
   "-EL",
   "-fast", // Apple only
-  NULL
-};
+  NULL};
 
 bool gcc_cmdlinet::parse(int argc, const char **argv)
 {
-  assert(argc>0);
+  assert(argc > 0);
   add_arg(argv[0]);
 
   argst args;
-  args.reserve(argc-1);
+  args.reserve(argc - 1);
 
-  for(int i=1; i<argc; i++)
+  for(int i= 1; i < argc; i++)
     args.push_back(argv[i]);
 
-  bool result=parse_arguments(args, false);
+  bool result= parse_arguments(args, false);
 
   parse_specs();
 
@@ -242,15 +224,11 @@ Function: gcc_cmdlinet::parse_arguments
 
 \*******************************************************************/
 
-bool gcc_cmdlinet::parse_arguments(
-  const argst &args,
-  bool in_spec_file)
+bool gcc_cmdlinet::parse_arguments(const argst &args, bool in_spec_file)
 {
-  for(argst::const_iterator it=args.begin();
-      it!=args.end();
-      ++it)
+  for(argst::const_iterator it= args.begin(); it != args.end(); ++it)
   {
-    const std::string &argv_i=*it;
+    const std::string &argv_i= *it;
 
     // options file?
     if(has_prefix(argv_i, "@"))
@@ -271,7 +249,7 @@ bool gcc_cmdlinet::parse_arguments(
     }
 
     // file?
-    if(argv_i=="-" || !has_prefix(argv_i, "-"))
+    if(argv_i == "-" || !has_prefix(argv_i, "-"))
     {
       if(!in_spec_file)
         add_infile_arg(argv_i);
@@ -280,27 +258,28 @@ bool gcc_cmdlinet::parse_arguments(
 
     if(!in_spec_file)
     {
-      argst::const_iterator next=it;
+      argst::const_iterator next= it;
       ++next;
 
-      bool found=false;
+      bool found= false;
 
-      if(in_list(argv_i.c_str(),
-                 goto_cc_options_without_argument)) // without argument
+      if(in_list(
+           argv_i.c_str(),
+           goto_cc_options_without_argument)) // without argument
       {
         set(argv_i);
-        found=true;
+        found= true;
       }
 
       // separated only, and also allow concatenation with "="
-      for(const char **o=goto_cc_options_with_separated_argument;
-          *o!=NULL && !found;
+      for(const char **o= goto_cc_options_with_separated_argument;
+          *o != NULL && !found;
           ++o)
       {
-        if(argv_i==*o) // separated
+        if(argv_i == *o) // separated
         {
-          found=true;
-          if(next!=args.end())
+          found= true;
+          if(next != args.end())
           {
             set(argv_i, *next);
             ++it;
@@ -309,10 +288,10 @@ bool gcc_cmdlinet::parse_arguments(
             set(argv_i, "");
         }
         // concatenated with "="
-        else if(has_prefix(argv_i, std::string(*o)+"="))
+        else if(has_prefix(argv_i, std::string(*o) + "="))
         {
-          found=true;
-          set(*o, argv_i.substr(strlen(*o)+1));
+          found= true;
+          set(*o, argv_i.substr(strlen(*o) + 1));
         }
       }
 
@@ -335,7 +314,7 @@ bool gcc_cmdlinet::parse_arguments(
       // to the preprocessor.
       if(has_prefix(argv_i, "-Wp,"))
       {
-        std::string value=argv_i.substr(4);
+        std::string value= argv_i.substr(4);
         set("-WP,", value);
       }
       else
@@ -345,12 +324,12 @@ bool gcc_cmdlinet::parse_arguments(
     {
       // these sometimes come with a value separated by '=', e.g.,
       // -march=cpu_type
-      std::size_t equal_pos=argv_i.find('=');
+      std::size_t equal_pos= argv_i.find('=');
 
-      if(equal_pos==std::string::npos)
+      if(equal_pos == std::string::npos)
         set(argv_i); // no value
       else
-        set(argv_i.substr(0, equal_pos), argv_i.substr(equal_pos+1));
+        set(argv_i.substr(0, equal_pos), argv_i.substr(equal_pos + 1));
     }
     // without argument
     else if(in_list(argv_i.c_str(), gcc_options_without_argument))
@@ -359,20 +338,20 @@ bool gcc_cmdlinet::parse_arguments(
     }
     else
     {
-      argst::const_iterator next=it;
+      argst::const_iterator next= it;
       ++next;
 
-      bool found=false;
+      bool found= false;
 
       // separated only, and also allow concatenation with "="
-      for(const char **o=gcc_options_with_separated_argument;
-          *o!=NULL && !found;
+      for(const char **o= gcc_options_with_separated_argument;
+          *o != NULL && !found;
           ++o)
       {
-        if(argv_i==*o) // separated
+        if(argv_i == *o) // separated
         {
-          found=true;
-          if(next!=args.end())
+          found= true;
+          if(next != args.end())
           {
             set(argv_i, *next);
             if(!in_spec_file)
@@ -383,22 +362,20 @@ bool gcc_cmdlinet::parse_arguments(
             set(argv_i, "");
         }
         // concatenated with "="
-        else if(has_prefix(argv_i, std::string(*o)+"="))
+        else if(has_prefix(argv_i, std::string(*o) + "="))
         {
-          found=true;
-          set(*o, argv_i.substr(strlen(*o)+1));
+          found= true;
+          set(*o, argv_i.substr(strlen(*o) + 1));
         }
       }
 
       // concatenated _or_ separated, e.g., -I
-      for(const char **o=gcc_options_with_argument;
-          *o!=NULL && !found;
-          ++o)
+      for(const char **o= gcc_options_with_argument; *o != NULL && !found; ++o)
       {
-        if(argv_i==*o) // separated
+        if(argv_i == *o) // separated
         {
-          found=true;
-          if(next!=args.end())
+          found= true;
+          if(next != args.end())
           {
             set(argv_i, *next);
             if(!in_spec_file)
@@ -410,19 +387,19 @@ bool gcc_cmdlinet::parse_arguments(
         }
         else if(has_prefix(argv_i, *o)) // concatenated
         {
-          found=true;
+          found= true;
           set(*o, argv_i.substr(strlen(*o)));
         }
       }
 
       // concatenated only
-      for(const char **o=gcc_options_with_concatenated_argument;
-          *o!=NULL && !found;
+      for(const char **o= gcc_options_with_concatenated_argument;
+          *o != NULL && !found;
           ++o)
       {
         if(has_prefix(argv_i, *o)) // concatenated
         {
-          found=true;
+          found= true;
           set(*o, argv_i.substr(strlen(*o)));
         }
       }
@@ -430,8 +407,8 @@ bool gcc_cmdlinet::parse_arguments(
       if(!found)
       {
         // unrecognized option
-        std::cerr << "Warning: uninterpreted gcc option '" << argv_i
-                  << "'" << std::endl;
+        std::cerr << "Warning: uninterpreted gcc option '" << argv_i << "'"
+                  << std::endl;
       }
     }
   }
@@ -456,16 +433,16 @@ void gcc_cmdlinet::parse_specs_line(const std::string &line)
 {
   // initial whitespace has been stripped
   assert(!line.empty());
-  assert(line[0]!=' ' && line[0]!='\t');
+  assert(line[0] != ' ' && line[0] != '\t');
 
   argst args;
 
-  for(std::string::size_type arg_start=0, arg_end=0;
-      arg_end!=std::string::npos;
-      arg_start=line.find_first_not_of("\t ", arg_end))
+  for(std::string::size_type arg_start= 0, arg_end= 0;
+      arg_end != std::string::npos;
+      arg_start= line.find_first_not_of("\t ", arg_end))
   {
-    arg_end=line.find_first_of("\t ", arg_start);
-    args.push_back(line.substr(arg_start, arg_end-arg_start));
+    arg_end= line.find_first_of("\t ", arg_start);
+    args.push_back(line.substr(arg_start, arg_end - arg_start));
   }
 
   parse_arguments(args, true);
@@ -486,13 +463,13 @@ Function: gcc_cmdlinet::parse_specs
 
 void gcc_cmdlinet::parse_specs()
 {
-  const std::string &specs_file_name=get_value("specs");
+  const std::string &specs_file_name= get_value("specs");
   if(specs_file_name.empty())
     return;
 
   std::ifstream specs_file(specs_file_name);
   std::string line;
-  bool use_line=false;
+  bool use_line= false;
 
   while(std::getline(specs_file, line))
   {
@@ -501,13 +478,11 @@ void gcc_cmdlinet::parse_specs()
 
     if(line.empty())
       // blank lines reset the mode
-      use_line=false;
-    else if(!use_line &&
-            (line=="*link_libgcc:" ||
-             line=="*lib:" ||
-             line=="*libgcc:" ||
-             line=="*link:"))
-      use_line=true;
+      use_line= false;
+    else if(
+      !use_line && (line == "*link_libgcc:" || line == "*lib:" ||
+                    line == "*libgcc:" || line == "*link:"))
+      use_line= true;
     else if(use_line)
       parse_specs_line(line);
     else

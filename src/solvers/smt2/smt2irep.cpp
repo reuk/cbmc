@@ -12,10 +12,10 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "smt2irep.h"
 #include "smt2_parser.h"
 
-class smt2irept:public smt2_parsert
+class smt2irept : public smt2_parsert
 {
 public:
-  explicit smt2irept(std::istream &_in):smt2_parsert(_in)
+  explicit smt2irept(std::istream &_in) : smt2_parsert(_in)
   {
   }
 
@@ -34,7 +34,7 @@ protected:
   virtual void symbol()
   {
     if(stack.empty())
-      result=irept(buffer);
+      result= irept(buffer);
     else
       stack.top().get_sub().push_back(irept(buffer));
   }
@@ -62,11 +62,11 @@ protected:
     // done with sub-irep
     assert(!stack.empty()); // unexpected )
 
-    irept tmp=stack.top();
+    irept tmp= stack.top();
     stack.pop();
 
     if(stack.empty())
-      result=tmp;
+      result= tmp;
     else
       stack.top().get_sub().push_back(tmp);
   }

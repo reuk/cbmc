@@ -22,20 +22,18 @@ Author: Daniel Kroening, kroening@kroening.com
 
 int yyansi_cparse();
 
-class ansi_c_parsert:public parsert
+class ansi_c_parsert : public parsert
 {
 public:
   ansi_c_parse_treet parse_tree;
 
-  ansi_c_parsert():
-    cpp98(false), cpp11(false),
-    for_has_scope(false)
+  ansi_c_parsert() : cpp98(false), cpp11(false), for_has_scope(false)
   {
   }
 
   virtual bool parse() override
   {
-    return yyansi_cparse()!=0;
+    return yyansi_cparse() != 0;
   }
 
   virtual void clear() override
@@ -44,9 +42,9 @@ public:
     parse_tree.clear();
 
     // scanner state
-    tag_following=false;
-    asm_block_following=false;
-    parenthesis_counter=0;
+    tag_following= false;
+    asm_block_following= false;
+    parenthesis_counter= 0;
     string_literal.clear();
     pragma_pack.clear();
 
@@ -108,20 +106,20 @@ public:
 
   void copy_item(const ansi_c_declarationt &declaration)
   {
-    assert(declaration.id()==ID_declaration);
+    assert(declaration.id() == ID_declaration);
     parse_tree.items.push_back(declaration);
   }
 
   void new_scope(const std::string &prefix)
   {
-    const scopet &current=current_scope();
+    const scopet &current= current_scope();
     scopes.push_back(scopet());
-    scopes.back().prefix=current.prefix+prefix;
+    scopes.back().prefix= current.prefix + prefix;
   }
 
   ansi_c_id_classt lookup(
     const irep_idt &base_name, // in
-    irep_idt &identifier, // out
+    irep_idt &identifier,      // out
     bool tag,
     bool label);
 

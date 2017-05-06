@@ -32,11 +32,9 @@ Function: is_zero_string
 
 \*******************************************************************/
 
-exprt is_zero_string(
-  const exprt &what,
-  bool write)
+exprt is_zero_string(const exprt &what, bool write)
 {
-  exprt result=predicate_exprt("is_zero_string");
+  exprt result= predicate_exprt("is_zero_string");
   result.copy_to_operands(what);
   result.set("lhs", write);
   return result;
@@ -54,9 +52,7 @@ Function: zero_string_length
 
 \*******************************************************************/
 
-exprt zero_string_length(
-  const exprt &what,
-  bool write)
+exprt zero_string_length(const exprt &what, bool write)
 {
   exprt result("zero_string_length", size_type());
   result.copy_to_operands(what);
@@ -95,15 +91,13 @@ exprt buffer_size(const exprt &what)
 
 \*******************************************************************/
 
-class string_instrumentationt:public messaget
+class string_instrumentationt : public messaget
 {
 public:
   string_instrumentationt(
     symbol_tablet &_symbol_table,
-    message_handlert &_message_handler):
-    messaget(_message_handler),
-    symbol_table(_symbol_table),
-    ns(_symbol_table)
+    message_handlert &_message_handler)
+    : messaget(_message_handler), symbol_table(_symbol_table), ns(_symbol_table)
   {
   }
 
@@ -116,7 +110,7 @@ protected:
 
   void make_type(exprt &dest, const typet &type)
   {
-    if(ns.follow(dest.type())!=ns.follow(type))
+    if(ns.follow(dest.type()) != ns.follow(type))
       dest.make_typecast(type);
   }
 
@@ -183,10 +177,11 @@ protected:
 
   bool is_string_type(const typet &t) const
   {
-    return
-      (t.id()==ID_pointer || t.id()==ID_array) &&
-      (t.subtype().id()==ID_signedbv || t.subtype().id()==ID_unsignedbv) &&
-      (to_bitvector_type(t.subtype()).get_width()==config.ansi_c.char_width);
+    return (t.id() == ID_pointer || t.id() == ID_array) &&
+           (t.subtype().id() == ID_signedbv ||
+            t.subtype().id() == ID_unsignedbv) &&
+           (to_bitvector_type(t.subtype()).get_width() ==
+            config.ansi_c.char_width);
   }
 
   void invalidate_buffer(
@@ -253,9 +248,8 @@ Function: string_instrumentationt::operator()
 
 void string_instrumentationt::operator()(goto_functionst &dest)
 {
-  for(goto_functionst::function_mapt::iterator
-      it=dest.function_map.begin();
-      it!=dest.function_map.end();
+  for(goto_functionst::function_mapt::iterator it= dest.function_map.begin();
+      it != dest.function_map.end();
       it++)
   {
     (*this)(it->second.body);
@@ -306,8 +300,8 @@ void string_instrumentationt::instrument(
     break;
 
   default:
-    {
-    }
+  {
+  }
   }
 }
 
@@ -327,48 +321,46 @@ void string_instrumentationt::do_function_call(
   goto_programt &dest,
   goto_programt::targett target)
 {
-  code_function_callt &call=
-    to_code_function_call(target->code);
-  exprt &function=call.function();
+  code_function_callt &call= to_code_function_call(target->code);
+  exprt &function= call.function();
   // const exprt &lhs=call.lhs();
 
-  if(function.id()==ID_symbol)
+  if(function.id() == ID_symbol)
   {
-    const irep_idt &identifier=
-      to_symbol_expr(function).get_identifier();
+    const irep_idt &identifier= to_symbol_expr(function).get_identifier();
 
-    if(identifier=="strcoll")
+    if(identifier == "strcoll")
     {
     }
-    else if(identifier=="strncmp")
+    else if(identifier == "strncmp")
       do_strncmp(dest, target, call);
-    else if(identifier=="strxfrm")
+    else if(identifier == "strxfrm")
     {
     }
-    else if(identifier=="strchr")
+    else if(identifier == "strchr")
       do_strchr(dest, target, call);
-    else if(identifier=="strcspn")
+    else if(identifier == "strcspn")
     {
     }
-    else if(identifier=="strpbrk")
+    else if(identifier == "strpbrk")
     {
     }
-    else if(identifier=="strrchr")
+    else if(identifier == "strrchr")
       do_strrchr(dest, target, call);
-    else if(identifier=="strspn")
+    else if(identifier == "strspn")
     {
     }
-    else if(identifier=="strerror")
+    else if(identifier == "strerror")
       do_strerror(dest, target, call);
-    else if(identifier=="strstr")
+    else if(identifier == "strstr")
       do_strstr(dest, target, call);
-    else if(identifier=="strtok")
+    else if(identifier == "strtok")
       do_strtok(dest, target, call);
-    else if(identifier=="sprintf")
+    else if(identifier == "sprintf")
       do_sprintf(dest, target, call);
-    else if(identifier=="snprintf")
+    else if(identifier == "snprintf")
       do_snprintf(dest, target, call);
-    else if(identifier=="fscanf")
+    else if(identifier == "fscanf")
       do_fscanf(dest, target, call);
 
     dest.update();
@@ -392,19 +384,19 @@ void string_instrumentationt::do_sprintf(
   goto_programt::targett target,
   code_function_callt &call)
 {
-  const code_function_callt::argumentst &arguments=call.arguments();
+  const code_function_callt::argumentst &arguments= call.arguments();
 
-  if(arguments.size()<2)
+  if(arguments.size() < 2)
   {
-    error().source_location=target->source_location;
+    error().source_location= target->source_location;
     error() << "sprintf expected to have two or more arguments" << eom;
     throw 0;
   }
 
   goto_programt tmp;
 
-  goto_programt::targett assertion=tmp.add_instruction();
-  assertion->source_location=target->source_location;
+  goto_programt::targett assertion= tmp.add_instruction();
+  assertion->source_location= target->source_location;
   assertion->source_location.set_property_class("string");
   assertion->source_location.set_comment("sprintf buffer overflow");
 
@@ -416,13 +408,13 @@ void string_instrumentationt::do_sprintf(
 
   if(call.lhs().is_not_nil())
   {
-    goto_programt::targett return_assignment=tmp.add_instruction(ASSIGN);
-    return_assignment->source_location=target->source_location;
+    goto_programt::targett return_assignment= tmp.add_instruction(ASSIGN);
+    return_assignment->source_location= target->source_location;
 
-    exprt rhs=side_effect_expr_nondett(call.lhs().type());
-    rhs.add_source_location()=target->source_location;
+    exprt rhs= side_effect_expr_nondett(call.lhs().type());
+    rhs.add_source_location()= target->source_location;
 
-    return_assignment->code=code_assignt(call.lhs(), rhs);
+    return_assignment->code= code_assignt(call.lhs(), rhs);
   }
 
   target->make_skip();
@@ -446,24 +438,23 @@ void string_instrumentationt::do_snprintf(
   goto_programt::targett target,
   code_function_callt &call)
 {
-  const code_function_callt::argumentst &arguments=call.arguments();
+  const code_function_callt::argumentst &arguments= call.arguments();
 
-  if(arguments.size()<3)
+  if(arguments.size() < 3)
   {
-    error().source_location=target->source_location;
-    error() << "snprintf expected to have three or more arguments"
-            << eom;
+    error().source_location= target->source_location;
+    error() << "snprintf expected to have three or more arguments" << eom;
     throw 0;
   }
 
   goto_programt tmp;
 
-  goto_programt::targett assertion=tmp.add_instruction();
-  assertion->source_location=target->source_location;
+  goto_programt::targett assertion= tmp.add_instruction();
+  assertion->source_location= target->source_location;
   assertion->source_location.set_property_class("string");
   assertion->source_location.set_comment("snprintf buffer overflow");
 
-  exprt bufsize=buffer_size(arguments[0]);
+  exprt bufsize= buffer_size(arguments[0]);
   assertion->make_assertion(
     binary_relation_exprt(bufsize, ID_ge, arguments[1]));
 
@@ -471,13 +462,13 @@ void string_instrumentationt::do_snprintf(
 
   if(call.lhs().is_not_nil())
   {
-    goto_programt::targett return_assignment=tmp.add_instruction(ASSIGN);
-    return_assignment->source_location=target->source_location;
+    goto_programt::targett return_assignment= tmp.add_instruction(ASSIGN);
+    return_assignment->source_location= target->source_location;
 
-    exprt rhs=side_effect_expr_nondett(call.lhs().type());
-    rhs.add_source_location()=target->source_location;
+    exprt rhs= side_effect_expr_nondett(call.lhs().type());
+    rhs.add_source_location()= target->source_location;
 
-    return_assignment->code=code_assignt(call.lhs(), rhs);
+    return_assignment->code= code_assignt(call.lhs(), rhs);
   }
 
   target->make_skip();
@@ -501,11 +492,11 @@ void string_instrumentationt::do_fscanf(
   goto_programt::targett target,
   code_function_callt &call)
 {
-  const code_function_callt::argumentst &arguments=call.arguments();
+  const code_function_callt::argumentst &arguments= call.arguments();
 
-  if(arguments.size()<2)
+  if(arguments.size() < 2)
   {
-    error().source_location=target->source_location;
+    error().source_location= target->source_location;
     error() << "fscanf expected to have two or more arguments" << eom;
     throw 0;
   }
@@ -516,13 +507,13 @@ void string_instrumentationt::do_fscanf(
 
   if(call.lhs().is_not_nil())
   {
-    goto_programt::targett return_assignment=tmp.add_instruction(ASSIGN);
-    return_assignment->source_location=target->source_location;
+    goto_programt::targett return_assignment= tmp.add_instruction(ASSIGN);
+    return_assignment->source_location= target->source_location;
 
-    exprt rhs=side_effect_expr_nondett(call.lhs().type());
-    rhs.add_source_location()=target->source_location;
+    exprt rhs= side_effect_expr_nondett(call.lhs().type());
+    rhs.add_source_location()= target->source_location;
 
-    return_assignment->code=code_assignt(call.lhs(), rhs);
+    return_assignment->code= code_assignt(call.lhs(), rhs);
   }
 
   target->make_skip();
@@ -549,90 +540,92 @@ void string_instrumentationt::do_format_string_read(
   unsigned argument_start_inx,
   const std::string &function_name)
 {
-  const exprt &format_arg=arguments[format_string_inx];
+  const exprt &format_arg= arguments[format_string_inx];
 
-  if(format_arg.id()==ID_address_of &&
-     format_arg.op0().id()==ID_index &&
-     format_arg.op0().op0().id()==ID_string_constant)
+  if(
+    format_arg.id() == ID_address_of && format_arg.op0().id() == ID_index &&
+    format_arg.op0().op0().id() == ID_string_constant)
   {
     format_token_listt token_list=
       parse_format_string(format_arg.op0().op0().get_string(ID_value));
 
-    unsigned args=0;
+    unsigned args= 0;
 
     for(const auto &token : token_list)
     {
-      if(token.type==format_tokent::STRING)
+      if(token.type == format_tokent::STRING)
       {
-        const exprt &arg=arguments[argument_start_inx+args];
-        const typet &arg_type=ns.follow(arg.type());
+        const exprt &arg= arguments[argument_start_inx + args];
+        const typet &arg_type= ns.follow(arg.type());
 
-        if(arg.id()!=ID_string_constant) // we don't need to check constants
+        if(arg.id() != ID_string_constant) // we don't need to check constants
         {
-          goto_programt::targett assertion=dest.add_instruction();
-          assertion->source_location=target->source_location;
+          goto_programt::targett assertion= dest.add_instruction();
+          assertion->source_location= target->source_location;
           assertion->source_location.set_property_class("string");
           std::string comment("zero-termination of string argument of ");
-          comment += function_name;
+          comment+= function_name;
           assertion->source_location.set_comment(comment);
 
           exprt temp(arg);
 
-          if(arg_type.id()!=ID_pointer)
+          if(arg_type.id() != ID_pointer)
           {
             index_exprt index;
-            index.array()=temp;
-            index.index()=from_integer(0, index_type());
-            index.type()=arg_type.subtype();
-            temp=address_of_exprt(index);
+            index.array()= temp;
+            index.index()= from_integer(0, index_type());
+            index.type()= arg_type.subtype();
+            temp= address_of_exprt(index);
           }
 
           assertion->make_assertion(is_zero_string(temp));
         }
       }
 
-      if(token.type!=format_tokent::TEXT &&
-         token.type!=format_tokent::UNKNOWN) args++;
+      if(
+        token.type != format_tokent::TEXT &&
+        token.type != format_tokent::UNKNOWN)
+        args++;
 
-      if(find(token.flags.begin(), token.flags.end(), format_tokent::ASTERISK)!=
-         token.flags.end())
+      if(
+        find(token.flags.begin(), token.flags.end(), format_tokent::ASTERISK) !=
+        token.flags.end())
         args++; // just eat the additional argument
     }
   }
   else // non-const format string
   {
-    goto_programt::targett format_ass=dest.add_instruction();
+    goto_programt::targett format_ass= dest.add_instruction();
     format_ass->make_assertion(is_zero_string(arguments[1]));
-    format_ass->source_location=target->source_location;
+    format_ass->source_location= target->source_location;
     format_ass->source_location.set_property_class("string");
     std::string comment("zero-termination of format string of ");
-    comment += function_name;
+    comment+= function_name;
     format_ass->source_location.set_comment(comment);
 
-    for(unsigned i=2; i<arguments.size(); i++)
+    for(unsigned i= 2; i < arguments.size(); i++)
     {
-      const exprt &arg=arguments[i];
-      const typet &arg_type=ns.follow(arguments[i].type());
+      const exprt &arg= arguments[i];
+      const typet &arg_type= ns.follow(arguments[i].type());
 
-      if(arguments[i].id()!=ID_string_constant &&
-         is_string_type(arg_type))
+      if(arguments[i].id() != ID_string_constant && is_string_type(arg_type))
       {
-        goto_programt::targett assertion=dest.add_instruction();
-        assertion->source_location=target->source_location;
+        goto_programt::targett assertion= dest.add_instruction();
+        assertion->source_location= target->source_location;
         assertion->source_location.set_property_class("string");
         std::string comment("zero-termination of string argument of ");
-        comment += function_name;
+        comment+= function_name;
         assertion->source_location.set_comment(comment);
 
         exprt temp(arg);
 
-        if(arg_type.id()!=ID_pointer)
+        if(arg_type.id() != ID_pointer)
         {
           index_exprt index;
-          index.array()=temp;
-          index.index()=from_integer(0, index_type());
-          index.type()=arg_type.subtype();
-          temp=address_of_exprt(index);
+          index.array()= temp;
+          index.index()= from_integer(0, index_type());
+          index.type()= arg_type.subtype();
+          temp= address_of_exprt(index);
         }
 
         assertion->make_assertion(is_zero_string(temp));
@@ -661,107 +654,106 @@ void string_instrumentationt::do_format_string_write(
   unsigned argument_start_inx,
   const std::string &function_name)
 {
-  const exprt &format_arg=arguments[format_string_inx];
+  const exprt &format_arg= arguments[format_string_inx];
 
-  if(format_arg.id()==ID_address_of &&
-     format_arg.op0().id()==ID_index &&
-     format_arg.op0().op0().id()==ID_string_constant) // constant format
+  if(
+    format_arg.id() == ID_address_of && format_arg.op0().id() == ID_index &&
+    format_arg.op0().op0().id() == ID_string_constant) // constant format
   {
     format_token_listt token_list=
       parse_format_string(format_arg.op0().op0().get_string(ID_value));
 
-    unsigned args=0;
+    unsigned args= 0;
 
     for(const auto &token : token_list)
     {
-      if(find(token.flags.begin(), token.flags.end(), format_tokent::ASTERISK)!=
-         token.flags.end())
+      if(
+        find(token.flags.begin(), token.flags.end(), format_tokent::ASTERISK) !=
+        token.flags.end())
         continue; // asterisk means `ignore this'
 
       switch(token.type)
       {
-        case format_tokent::STRING:
+      case format_tokent::STRING:
+      {
+        const exprt &argument= arguments[argument_start_inx + args];
+        const typet &arg_type= ns.follow(argument.type());
+
+        goto_programt::targett assertion= dest.add_instruction();
+        assertion->source_location= target->source_location;
+        assertion->source_location.set_property_class("string");
+        std::string comment("format string buffer overflow in ");
+        comment+= function_name;
+        assertion->source_location.set_comment(comment);
+
+        if(token.field_width != 0)
         {
-          const exprt &argument=arguments[argument_start_inx+args];
-          const typet &arg_type=ns.follow(argument.type());
+          exprt fwidth= from_integer(token.field_width, unsigned_int_type());
+          exprt fw_1(ID_plus, unsigned_int_type());
+          exprt one= from_integer(1, unsigned_int_type());
+          fw_1.move_to_operands(fwidth);
+          fw_1.move_to_operands(one); // +1 for 0-char
 
-          goto_programt::targett assertion=dest.add_instruction();
-          assertion->source_location=target->source_location;
-          assertion->source_location.set_property_class("string");
-          std::string comment("format string buffer overflow in ");
-          comment += function_name;
-          assertion->source_location.set_comment(comment);
+          exprt fw_lt_bs;
 
-          if(token.field_width!=0)
-          {
-            exprt fwidth=from_integer(token.field_width, unsigned_int_type());
-            exprt fw_1(ID_plus, unsigned_int_type());
-            exprt one=from_integer(1, unsigned_int_type());
-            fw_1.move_to_operands(fwidth);
-            fw_1.move_to_operands(one); // +1 for 0-char
-
-            exprt fw_lt_bs;
-
-            if(arg_type.id()==ID_pointer)
-              fw_lt_bs=
-                binary_relation_exprt(fw_1, ID_le, buffer_size(argument));
-            else
-            {
-              index_exprt index;
-              index.array()=argument;
-              index.index()=from_integer(0, unsigned_int_type());
-              address_of_exprt aof(index);
-              fw_lt_bs=binary_relation_exprt(fw_1, ID_le, buffer_size(aof));
-            }
-
-            assertion->make_assertion(fw_lt_bs);
-          }
+          if(arg_type.id() == ID_pointer)
+            fw_lt_bs= binary_relation_exprt(fw_1, ID_le, buffer_size(argument));
           else
           {
-            // this is a possible overflow.
-            assertion->make_assertion(false_exprt());
+            index_exprt index;
+            index.array()= argument;
+            index.index()= from_integer(0, unsigned_int_type());
+            address_of_exprt aof(index);
+            fw_lt_bs= binary_relation_exprt(fw_1, ID_le, buffer_size(aof));
           }
 
-          // now kill the contents
-          invalidate_buffer(
-            dest, target, argument, arg_type, token.field_width);
-
-          args++;
-          break;
+          assertion->make_assertion(fw_lt_bs);
         }
-        case format_tokent::TEXT:
-        case format_tokent::UNKNOWN:
+        else
         {
-          // nothing
-          break;
+          // this is a possible overflow.
+          assertion->make_assertion(false_exprt());
         }
-        default: // everything else
-        {
-          const exprt &argument=arguments[argument_start_inx+args];
-          const typet &arg_type=ns.follow(argument.type());
 
-          goto_programt::targett assignment=dest.add_instruction(ASSIGN);
-          assignment->source_location=target->source_location;
+        // now kill the contents
+        invalidate_buffer(dest, target, argument, arg_type, token.field_width);
 
-          exprt lhs(ID_dereference, arg_type.subtype());
-          lhs.copy_to_operands(argument);
+        args++;
+        break;
+      }
+      case format_tokent::TEXT:
+      case format_tokent::UNKNOWN:
+      {
+        // nothing
+        break;
+      }
+      default: // everything else
+      {
+        const exprt &argument= arguments[argument_start_inx + args];
+        const typet &arg_type= ns.follow(argument.type());
 
-          exprt rhs=side_effect_expr_nondett(lhs.type());
-          rhs.add_source_location()=target->source_location;
+        goto_programt::targett assignment= dest.add_instruction(ASSIGN);
+        assignment->source_location= target->source_location;
 
-          assignment->code=code_assignt(lhs, rhs);
+        exprt lhs(ID_dereference, arg_type.subtype());
+        lhs.copy_to_operands(argument);
 
-          args++;
-          break;
-        }
+        exprt rhs= side_effect_expr_nondett(lhs.type());
+        rhs.add_source_location()= target->source_location;
+
+        assignment->code= code_assignt(lhs, rhs);
+
+        args++;
+        break;
+      }
       }
     }
   }
   else // non-const format string
   {
-    for(unsigned i=argument_start_inx; i<arguments.size(); i++)
+    for(unsigned i= argument_start_inx; i < arguments.size(); i++)
     {
-      const typet &arg_type=ns.follow(arguments[i].type());
+      const typet &arg_type= ns.follow(arguments[i].type());
 
       // Note: is_string_type() is a `good guess' here. Actually
       // any of the pointers could point into an array. But it
@@ -769,11 +761,11 @@ void string_instrumentationt::do_format_string_write(
       // Luckily this case isn't needed too often.
       if(is_string_type(arg_type))
       {
-        goto_programt::targett assertion=dest.add_instruction();
-        assertion->source_location=target->source_location;
+        goto_programt::targett assertion= dest.add_instruction();
+        assertion->source_location= target->source_location;
         assertion->source_location.set_property_class("string");
         std::string comment("format string buffer overflow in ");
-        comment += function_name;
+        comment+= function_name;
         assertion->source_location.set_comment(comment);
 
         // as we don't know any field width for the %s that
@@ -785,16 +777,16 @@ void string_instrumentationt::do_format_string_write(
       }
       else
       {
-        goto_programt::targett assignment=dest.add_instruction(ASSIGN);
-        assignment->source_location=target->source_location;
+        goto_programt::targett assignment= dest.add_instruction(ASSIGN);
+        assignment->source_location= target->source_location;
 
         exprt lhs(ID_dereference, arg_type.subtype());
         lhs.copy_to_operands(arguments[i]);
 
-        exprt rhs=side_effect_expr_nondett(lhs.type());
-        rhs.add_source_location()=target->source_location;
+        exprt rhs= side_effect_expr_nondett(lhs.type());
+        rhs.add_source_location()= target->source_location;
 
-        assignment->code=code_assignt(lhs, rhs);
+        assignment->code= code_assignt(lhs, rhs);
       }
     }
   }
@@ -836,20 +828,20 @@ void string_instrumentationt::do_strchr(
   goto_programt::targett target,
   code_function_callt &call)
 {
-  const code_function_callt::argumentst &arguments=call.arguments();
+  const code_function_callt::argumentst &arguments= call.arguments();
 
-  if(arguments.size()!=2)
+  if(arguments.size() != 2)
   {
-    error().source_location=target->source_location;
+    error().source_location= target->source_location;
     error() << "strchr expected to have two arguments" << eom;
     throw 0;
   }
 
   goto_programt tmp;
 
-  goto_programt::targett assertion=tmp.add_instruction();
+  goto_programt::targett assertion= tmp.add_instruction();
   assertion->make_assertion(is_zero_string(arguments[0]));
-  assertion->source_location=target->source_location;
+  assertion->source_location= target->source_location;
   assertion->source_location.set_property_class("string");
   assertion->source_location.set_comment(
     "zero-termination of string argument of strchr");
@@ -875,20 +867,20 @@ void string_instrumentationt::do_strrchr(
   goto_programt::targett target,
   code_function_callt &call)
 {
-  const code_function_callt::argumentst &arguments=call.arguments();
+  const code_function_callt::argumentst &arguments= call.arguments();
 
-  if(arguments.size()!=2)
+  if(arguments.size() != 2)
   {
-    error().source_location=target->source_location;
+    error().source_location= target->source_location;
     error() << "strrchr expected to have two arguments" << eom;
     throw 0;
   }
 
   goto_programt tmp;
 
-  goto_programt::targett assertion=tmp.add_instruction();
+  goto_programt::targett assertion= tmp.add_instruction();
   assertion->make_assertion(is_zero_string(arguments[0]));
-  assertion->source_location=target->source_location;
+  assertion->source_location= target->source_location;
   assertion->source_location.set_property_class("string");
   assertion->source_location.set_comment(
     "zero-termination of string argument of strrchr");
@@ -914,27 +906,27 @@ void string_instrumentationt::do_strstr(
   goto_programt::targett target,
   code_function_callt &call)
 {
-  const code_function_callt::argumentst &arguments=call.arguments();
+  const code_function_callt::argumentst &arguments= call.arguments();
 
-  if(arguments.size()!=2)
+  if(arguments.size() != 2)
   {
-    error().source_location=target->source_location;
+    error().source_location= target->source_location;
     error() << "strstr expected to have two arguments" << eom;
     throw 0;
   }
 
   goto_programt tmp;
 
-  goto_programt::targett assertion0=tmp.add_instruction();
+  goto_programt::targett assertion0= tmp.add_instruction();
   assertion0->make_assertion(is_zero_string(arguments[0]));
-  assertion0->source_location=target->source_location;
+  assertion0->source_location= target->source_location;
   assertion0->source_location.set_property_class("string");
   assertion0->source_location.set_comment(
     "zero-termination of 1st string argument of strstr");
 
-  goto_programt::targett assertion1=tmp.add_instruction();
+  goto_programt::targett assertion1= tmp.add_instruction();
   assertion1->make_assertion(is_zero_string(arguments[1]));
-  assertion1->source_location=target->source_location;
+  assertion1->source_location= target->source_location;
   assertion1->source_location.set_property_class("string");
   assertion1->source_location.set_comment(
     "zero-termination of 2nd string argument of strstr");
@@ -960,27 +952,27 @@ void string_instrumentationt::do_strtok(
   goto_programt::targett target,
   code_function_callt &call)
 {
-  const code_function_callt::argumentst &arguments=call.arguments();
+  const code_function_callt::argumentst &arguments= call.arguments();
 
-  if(arguments.size()!=2)
+  if(arguments.size() != 2)
   {
-    error().source_location=target->source_location;
+    error().source_location= target->source_location;
     error() << "strtok expected to have two arguments" << eom;
     throw 0;
   }
 
   goto_programt tmp;
 
-  goto_programt::targett assertion0=tmp.add_instruction();
+  goto_programt::targett assertion0= tmp.add_instruction();
   assertion0->make_assertion(is_zero_string(arguments[0]));
-  assertion0->source_location=target->source_location;
+  assertion0->source_location= target->source_location;
   assertion0->source_location.set_property_class("string");
   assertion0->source_location.set_comment(
     "zero-termination of 1st string argument of strtok");
 
-  goto_programt::targett assertion1=tmp.add_instruction();
+  goto_programt::targett assertion1= tmp.add_instruction();
   assertion1->make_assertion(is_zero_string(arguments[1]));
-  assertion1->source_location=target->source_location;
+  assertion1->source_location= target->source_location;
   assertion1->source_location.set_property_class("string");
   assertion1->source_location.set_comment(
     "zero-termination of 2nd string argument of strtok");
@@ -1012,85 +1004,83 @@ void string_instrumentationt::do_strerror(
     return;
   }
 
-  irep_idt identifier_buf="__strerror_buffer";
-  irep_idt identifier_size="__strerror_buffer_size";
+  irep_idt identifier_buf= "__strerror_buffer";
+  irep_idt identifier_size= "__strerror_buffer_size";
 
-  if(symbol_table.symbols.find(identifier_buf)==symbol_table.symbols.end())
+  if(symbol_table.symbols.find(identifier_buf) == symbol_table.symbols.end())
   {
     symbolt new_symbol_size;
-    new_symbol_size.base_name="__strerror_buffer_size";
-    new_symbol_size.pretty_name=new_symbol_size.base_name;
-    new_symbol_size.name=identifier_size;
-    new_symbol_size.mode=ID_C;
-    new_symbol_size.type=size_type();
-    new_symbol_size.is_state_var=true;
-    new_symbol_size.is_lvalue=true;
-    new_symbol_size.is_static_lifetime=true;
+    new_symbol_size.base_name= "__strerror_buffer_size";
+    new_symbol_size.pretty_name= new_symbol_size.base_name;
+    new_symbol_size.name= identifier_size;
+    new_symbol_size.mode= ID_C;
+    new_symbol_size.type= size_type();
+    new_symbol_size.is_state_var= true;
+    new_symbol_size.is_lvalue= true;
+    new_symbol_size.is_static_lifetime= true;
 
     array_typet type;
-    type.subtype()=char_type();
-    type.size()=new_symbol_size.symbol_expr();
+    type.subtype()= char_type();
+    type.size()= new_symbol_size.symbol_expr();
     symbolt new_symbol_buf;
-    new_symbol_buf.mode=ID_C;
-    new_symbol_buf.type=type;
-    new_symbol_buf.is_state_var=true;
-    new_symbol_buf.is_lvalue=true;
-    new_symbol_buf.is_static_lifetime=true;
-    new_symbol_buf.base_name="__strerror_buffer";
-    new_symbol_buf.pretty_name=new_symbol_buf.base_name;
-    new_symbol_buf.name=new_symbol_buf.base_name;
+    new_symbol_buf.mode= ID_C;
+    new_symbol_buf.type= type;
+    new_symbol_buf.is_state_var= true;
+    new_symbol_buf.is_lvalue= true;
+    new_symbol_buf.is_static_lifetime= true;
+    new_symbol_buf.base_name= "__strerror_buffer";
+    new_symbol_buf.pretty_name= new_symbol_buf.base_name;
+    new_symbol_buf.name= new_symbol_buf.base_name;
 
     symbol_table.move(new_symbol_buf);
     symbol_table.move(new_symbol_size);
   }
 
-  const symbolt &symbol_size=ns.lookup(identifier_size);
-  const symbolt &symbol_buf=ns.lookup(identifier_buf);
+  const symbolt &symbol_size= ns.lookup(identifier_size);
+  const symbolt &symbol_buf= ns.lookup(identifier_buf);
 
   goto_programt tmp;
 
   {
-    goto_programt::targett assignment1=tmp.add_instruction(ASSIGN);
-    exprt nondet_size=side_effect_expr_nondett(size_type());
+    goto_programt::targett assignment1= tmp.add_instruction(ASSIGN);
+    exprt nondet_size= side_effect_expr_nondett(size_type());
 
-    assignment1->code=code_assignt(symbol_size.symbol_expr(), nondet_size);
-    assignment1->source_location=it->source_location;
+    assignment1->code= code_assignt(symbol_size.symbol_expr(), nondet_size);
+    assignment1->source_location= it->source_location;
 
-    goto_programt::targett assumption1=tmp.add_instruction();
+    goto_programt::targett assumption1= tmp.add_instruction();
 
-    assumption1->make_assumption(
-      binary_relation_exprt(
-        symbol_size.symbol_expr(),
-        ID_notequal,
-        from_integer(0, symbol_size.type)));
+    assumption1->make_assumption(binary_relation_exprt(
+      symbol_size.symbol_expr(),
+      ID_notequal,
+      from_integer(0, symbol_size.type)));
 
-    assumption1->source_location=it->source_location;
+    assumption1->source_location= it->source_location;
   }
 
   // return a pointer to some magic buffer
-  exprt index=exprt(ID_index, char_type());
+  exprt index= exprt(ID_index, char_type());
   index.copy_to_operands(
-    symbol_buf.symbol_expr(),
-    from_integer(0, index_type()));
+    symbol_buf.symbol_expr(), from_integer(0, index_type()));
 
-  exprt ptr=exprt(ID_address_of, pointer_typet());
-  ptr.type().subtype()=char_type();
+  exprt ptr= exprt(ID_address_of, pointer_typet());
+  ptr.type().subtype()= char_type();
   ptr.copy_to_operands(index);
 
   // make that zero-terminated
   {
-    goto_programt::targett assignment2=tmp.add_instruction(ASSIGN);
-    assignment2->code=code_assignt(is_zero_string(ptr, true), true_exprt());
-    assignment2->source_location=it->source_location;
+    goto_programt::targett assignment2= tmp.add_instruction(ASSIGN);
+    assignment2->code= code_assignt(is_zero_string(ptr, true), true_exprt());
+    assignment2->source_location= it->source_location;
   }
 
   // assign address
   {
-    goto_programt::targett assignment3=tmp.add_instruction(ASSIGN);
-    exprt rhs=ptr;
+    goto_programt::targett assignment3= tmp.add_instruction(ASSIGN);
+    exprt rhs= ptr;
     make_type(rhs, call.lhs().type());
-    assignment3->code=code_assignt(call.lhs(), rhs);
-    assignment3->source_location=it->source_location;
+    assignment3->code= code_assignt(call.lhs(), rhs);
+    assignment3->source_location= it->source_location;
   }
 
   it->make_skip();
@@ -1116,68 +1106,68 @@ void string_instrumentationt::invalidate_buffer(
   const typet &buf_type,
   const mp_integer &limit)
 {
-  irep_idt cntr_id="string_instrumentation::$counter";
+  irep_idt cntr_id= "string_instrumentation::$counter";
 
-  if(symbol_table.symbols.find(cntr_id)==symbol_table.symbols.end())
+  if(symbol_table.symbols.find(cntr_id) == symbol_table.symbols.end())
   {
     symbolt new_symbol;
-    new_symbol.base_name="$counter";
-    new_symbol.pretty_name=new_symbol.base_name;
-    new_symbol.name=cntr_id;
-    new_symbol.mode=ID_C;
-    new_symbol.type=size_type();
-    new_symbol.is_state_var=true;
-    new_symbol.is_lvalue=true;
-    new_symbol.is_static_lifetime=true;
+    new_symbol.base_name= "$counter";
+    new_symbol.pretty_name= new_symbol.base_name;
+    new_symbol.name= cntr_id;
+    new_symbol.mode= ID_C;
+    new_symbol.type= size_type();
+    new_symbol.is_state_var= true;
+    new_symbol.is_lvalue= true;
+    new_symbol.is_static_lifetime= true;
 
     symbol_table.move(new_symbol);
   }
 
-  const symbolt &cntr_sym=ns.lookup(cntr_id);
+  const symbolt &cntr_sym= ns.lookup(cntr_id);
 
   // create a loop that runs over the buffer
   // and invalidates every element
 
-  goto_programt::targett init=dest.add_instruction(ASSIGN);
-  init->source_location=target->source_location;
+  goto_programt::targett init= dest.add_instruction(ASSIGN);
+  init->source_location= target->source_location;
   init->code=
     code_assignt(cntr_sym.symbol_expr(), from_integer(0, cntr_sym.type));
 
-  goto_programt::targett check=dest.add_instruction();
-  check->source_location=target->source_location;
+  goto_programt::targett check= dest.add_instruction();
+  check->source_location= target->source_location;
 
-  goto_programt::targett invalidate=dest.add_instruction(ASSIGN);
-  invalidate->source_location=target->source_location;
+  goto_programt::targett invalidate= dest.add_instruction(ASSIGN);
+  invalidate->source_location= target->source_location;
 
-  goto_programt::targett increment=dest.add_instruction(ASSIGN);
-  increment->source_location=target->source_location;
+  goto_programt::targett increment= dest.add_instruction(ASSIGN);
+  increment->source_location= target->source_location;
 
   exprt plus(ID_plus, unsigned_int_type());
   plus.copy_to_operands(cntr_sym.symbol_expr());
   plus.copy_to_operands(from_integer(1, unsigned_int_type()));
 
-  increment->code=code_assignt(cntr_sym.symbol_expr(), plus);
+  increment->code= code_assignt(cntr_sym.symbol_expr(), plus);
 
-  goto_programt::targett back=dest.add_instruction();
-  back->source_location=target->source_location;
+  goto_programt::targett back= dest.add_instruction();
+  back->source_location= target->source_location;
   back->make_goto(check);
-  back->guard=true_exprt();
+  back->guard= true_exprt();
 
-  goto_programt::targett exit=dest.add_instruction();
-  exit->source_location=target->source_location;
+  goto_programt::targett exit= dest.add_instruction();
+  exit->source_location= target->source_location;
   exit->make_skip();
 
   exprt cnt_bs, bufp;
 
-  if(buf_type.id()==ID_pointer)
-    bufp=buffer;
+  if(buf_type.id() == ID_pointer)
+    bufp= buffer;
   else
   {
     index_exprt index;
-    index.array()=buffer;
-    index.index()=from_integer(0, index_type());
-    index.type()=buf_type.subtype();
-    bufp=address_of_exprt(index);
+    index.array()= buffer;
+    index.index()= from_integer(0, index_type());
+    index.type()= buf_type.subtype();
+    bufp= address_of_exprt(index);
   }
 
   exprt deref(ID_dereference, buf_type.subtype());
@@ -1188,19 +1178,13 @@ void string_instrumentationt::invalidate_buffer(
 
   check->make_goto(exit);
 
-  if(limit==0)
+  if(limit == 0)
     check->guard=
-      binary_relation_exprt(
-        cntr_sym.symbol_expr(),
-        ID_ge,
-        buffer_size(bufp));
+      binary_relation_exprt(cntr_sym.symbol_expr(), ID_ge, buffer_size(bufp));
   else
-    check->guard=
-      binary_relation_exprt(
-        cntr_sym.symbol_expr(),
-        ID_gt,
-        from_integer(limit, unsigned_int_type()));
+    check->guard= binary_relation_exprt(
+      cntr_sym.symbol_expr(), ID_gt, from_integer(limit, unsigned_int_type()));
 
-  exprt nondet=side_effect_expr_nondett(buf_type.subtype());
-  invalidate->code=code_assignt(deref, nondet);
+  exprt nondet= side_effect_expr_nondett(buf_type.subtype());
+  invalidate->code= code_assignt(deref, nondet);
 }

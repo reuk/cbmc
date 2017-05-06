@@ -27,21 +27,29 @@ Function: parse_flags
 
 \*******************************************************************/
 
-void parse_flags(
-  std::string::const_iterator &it,
-  format_tokent &curtok)
+void parse_flags(std::string::const_iterator &it, format_tokent &curtok)
 {
-  while(*it=='#' || *it=='0' ||
-        *it=='-' || *it==' ' || *it=='+')
+  while(*it == '#' || *it == '0' || *it == '-' || *it == ' ' || *it == '+')
   {
     switch(*it)
     {
-      case '#': curtok.flags.push_back(format_tokent::ALTERNATE); break;
-      case '0': curtok.flags.push_back(format_tokent::ZERO_PAD); break;
-      case '-': curtok.flags.push_back(format_tokent::LEFT_ADJUST); break;
-      case ' ': curtok.flags.push_back(format_tokent::SIGNED_SPACE); break;
-      case '+': curtok.flags.push_back(format_tokent::SIGN); break;
-      default: throw 0;
+    case '#':
+      curtok.flags.push_back(format_tokent::ALTERNATE);
+      break;
+    case '0':
+      curtok.flags.push_back(format_tokent::ZERO_PAD);
+      break;
+    case '-':
+      curtok.flags.push_back(format_tokent::LEFT_ADJUST);
+      break;
+    case ' ':
+      curtok.flags.push_back(format_tokent::SIGNED_SPACE);
+      break;
+    case '+':
+      curtok.flags.push_back(format_tokent::SIGN);
+      break;
+    default:
+      throw 0;
     }
     it++;
   }
@@ -59,19 +67,18 @@ Function: parse_field_width
 
 \*******************************************************************/
 
-void parse_field_width(
-  std::string::const_iterator &it,
-  format_tokent &curtok)
+void parse_field_width(std::string::const_iterator &it, format_tokent &curtok)
 {
-  if(*it=='*')
+  if(*it == '*')
   {
     curtok.flags.push_back(format_tokent::ASTERISK);
     it++;
   }
 
   std::string tmp;
-  for( ; isdigit(*it); it++) tmp+=*it;
-  curtok.field_width=string2integer(tmp);
+  for(; isdigit(*it); it++)
+    tmp+= *it;
+  curtok.field_width= string2integer(tmp);
 }
 
 /*******************************************************************\
@@ -86,15 +93,13 @@ Function: parse_precision
 
 \*******************************************************************/
 
-void parse_precision(
-  std::string::const_iterator &it,
-  format_tokent &curtok)
+void parse_precision(std::string::const_iterator &it, format_tokent &curtok)
 {
-  if(*it=='.')
+  if(*it == '.')
   {
     it++;
 
-    if(*it=='*')
+    if(*it == '*')
     {
       curtok.flags.push_back(format_tokent::ASTERISK);
       it++;
@@ -102,8 +107,9 @@ void parse_precision(
     else
     {
       std::string tmp;
-      for( ; isdigit(*it); it++) tmp+=*it;
-      curtok.precision=string2integer(tmp);
+      for(; isdigit(*it); it++)
+        tmp+= *it;
+      curtok.precision= string2integer(tmp);
     }
   }
 }
@@ -124,34 +130,34 @@ void parse_length_modifier(
   std::string::const_iterator &it,
   format_tokent &curtok)
 {
-  if(*it=='h')
+  if(*it == 'h')
   {
     it++;
-    if(*it=='h')
+    if(*it == 'h')
       it++;
-    curtok.length_modifier = format_tokent::LEN_h;
+    curtok.length_modifier= format_tokent::LEN_h;
   }
-  else if(*it=='l')
+  else if(*it == 'l')
   {
     it++;
-    if(*it=='l')
+    if(*it == 'l')
       it++;
-    curtok.length_modifier = format_tokent::LEN_l;
+    curtok.length_modifier= format_tokent::LEN_l;
   }
-  else if(*it=='L')
+  else if(*it == 'L')
   {
     it++;
-    curtok.length_modifier = format_tokent::LEN_L;
+    curtok.length_modifier= format_tokent::LEN_L;
   }
-  else if(*it=='j')
+  else if(*it == 'j')
   {
     it++;
-    curtok.length_modifier = format_tokent::LEN_j;
+    curtok.length_modifier= format_tokent::LEN_j;
   }
-  else if(*it=='t')
+  else if(*it == 't')
   {
     it++;
-    curtok.length_modifier = format_tokent::LEN_L;
+    curtok.length_modifier= format_tokent::LEN_L;
   }
 }
 
@@ -174,57 +180,76 @@ void parse_conversion_specifier(
 {
   switch(*it)
   {
-    case 'd':
-    case 'i':
-      curtok.type=format_tokent::INT;
-      curtok.representation=format_tokent::SIGNED_DEC;
-      break;
-    case 'o':
-      curtok.type=format_tokent::INT;
-      curtok.representation=format_tokent::UNSIGNED_OCT;
-      break;
-    case 'u':
-      curtok.type=format_tokent::INT;
-      curtok.representation=format_tokent::UNSIGNED_DEC;
-      break;
-    case 'x':
-    case 'X':
-      curtok.type=format_tokent::INT;
-      curtok.representation=format_tokent::UNSIGNED_HEX;
-      break;
-    case 'e':
-    case 'E': curtok.type=format_tokent::FLOAT; break;
-    case 'f':
-    case 'F': curtok.type=format_tokent::FLOAT; break;
-    case 'g':
-    case 'G': curtok.type=format_tokent::FLOAT; break;
-    case 'a':
-    case 'A': curtok.type=format_tokent::FLOAT; break;
-    case 'c': curtok.type=format_tokent::CHAR; break;
-    case 's': curtok.type=format_tokent::STRING; break;
-    case 'p': curtok.type=format_tokent::POINTER; break;
-    case '%': curtok.type=format_tokent::TEXT; curtok.value="%"; break;
-    case '[': // pattern matching in, e.g., fscanf.
+  case 'd':
+  case 'i':
+    curtok.type= format_tokent::INT;
+    curtok.representation= format_tokent::SIGNED_DEC;
+    break;
+  case 'o':
+    curtok.type= format_tokent::INT;
+    curtok.representation= format_tokent::UNSIGNED_OCT;
+    break;
+  case 'u':
+    curtok.type= format_tokent::INT;
+    curtok.representation= format_tokent::UNSIGNED_DEC;
+    break;
+  case 'x':
+  case 'X':
+    curtok.type= format_tokent::INT;
+    curtok.representation= format_tokent::UNSIGNED_HEX;
+    break;
+  case 'e':
+  case 'E':
+    curtok.type= format_tokent::FLOAT;
+    break;
+  case 'f':
+  case 'F':
+    curtok.type= format_tokent::FLOAT;
+    break;
+  case 'g':
+  case 'G':
+    curtok.type= format_tokent::FLOAT;
+    break;
+  case 'a':
+  case 'A':
+    curtok.type= format_tokent::FLOAT;
+    break;
+  case 'c':
+    curtok.type= format_tokent::CHAR;
+    break;
+  case 's':
+    curtok.type= format_tokent::STRING;
+    break;
+  case 'p':
+    curtok.type= format_tokent::POINTER;
+    break;
+  case '%':
+    curtok.type= format_tokent::TEXT;
+    curtok.value= "%";
+    break;
+  case '[': // pattern matching in, e.g., fscanf.
+  {
+    std::string tmp;
+    it++;
+    if(*it == '^') // if it's there, it must be first
     {
-      std::string tmp;
+      tmp+= '^';
       it++;
-      if(*it=='^') // if it's there, it must be first
+      if(*it == ']') // if it's there, it must be here
       {
-        tmp+='^'; it++;
-        if(*it==']') // if it's there, it must be here
-        {
-          tmp+=']'; it++;
-        }
+        tmp+= ']';
+        it++;
       }
-
-      for( ; it!=arg_string.end() && *it!=']'; it++)
-        tmp+=*it;
-
-      break;
     }
 
-    default:
-      throw std::string("unsupported format conversion specifier: `")+*it+"'";
+    for(; it != arg_string.end() && *it != ']'; it++)
+      tmp+= *it;
+
+    break;
+  }
+
+  default:
+    throw std::string("unsupported format conversion specifier: `") + *it + "'";
   }
   it++;
 }
@@ -245,14 +270,14 @@ format_token_listt parse_format_string(const std::string &arg_string)
 {
   format_token_listt token_list;
 
-  std::string::const_iterator it=arg_string.begin();
+  std::string::const_iterator it= arg_string.begin();
 
-  while(it!=arg_string.end())
+  while(it != arg_string.end())
   {
-    if(*it=='%')
+    if(*it == '%')
     {
       token_list.push_back(format_tokent());
-      format_tokent &curtok=token_list.back();
+      format_tokent &curtok= token_list.back();
       it++;
 
       parse_flags(it, curtok);
@@ -263,16 +288,15 @@ format_token_listt parse_format_string(const std::string &arg_string)
     }
     else
     {
-      if(token_list.empty() ||
-         token_list.back().type!=format_tokent::TEXT)
+      if(token_list.empty() || token_list.back().type != format_tokent::TEXT)
         token_list.push_back(format_tokent(format_tokent::TEXT));
 
       std::string tmp;
-      for( ; it!=arg_string.end() && *it!='%'; it++)
-        tmp+=*it;
+      for(; it != arg_string.end() && *it != '%'; it++)
+        tmp+= *it;
 
       assert(!token_list.empty());
-      token_list.back().value=tmp;
+      token_list.back().value= tmp;
     }
   }
 
@@ -299,31 +323,31 @@ typet get_type(const format_tokent &token)
     switch(token.length_modifier)
     {
     case format_tokent::LEN_h:
-      if(token.representation==format_tokent::SIGNED_DEC)
+      if(token.representation == format_tokent::SIGNED_DEC)
         return signed_char_type();
       else
         return unsigned_char_type();
 
     case format_tokent::LEN_hh:
-      if(token.representation==format_tokent::SIGNED_DEC)
+      if(token.representation == format_tokent::SIGNED_DEC)
         return signed_short_int_type();
       else
         return unsigned_short_int_type();
 
     case format_tokent::LEN_l:
-      if(token.representation==format_tokent::SIGNED_DEC)
+      if(token.representation == format_tokent::SIGNED_DEC)
         return signed_long_int_type();
       else
         return unsigned_long_int_type();
 
     case format_tokent::LEN_ll:
-      if(token.representation==format_tokent::SIGNED_DEC)
+      if(token.representation == format_tokent::SIGNED_DEC)
         return signed_long_long_int_type();
       else
         return unsigned_long_long_int_type();
 
     default:
-      if(token.representation==format_tokent::SIGNED_DEC)
+      if(token.representation == format_tokent::SIGNED_DEC)
         return signed_int_type();
       else
         return unsigned_int_type();
@@ -332,16 +356,21 @@ typet get_type(const format_tokent &token)
   case format_tokent::FLOAT:
     switch(token.length_modifier)
     {
-    case format_tokent::LEN_l: return double_type();
-    case format_tokent::LEN_L: return long_double_type();
-    default: return float_type();
+    case format_tokent::LEN_l:
+      return double_type();
+    case format_tokent::LEN_L:
+      return long_double_type();
+    default:
+      return float_type();
     }
 
   case format_tokent::CHAR:
     switch(token.length_modifier)
     {
-    case format_tokent::LEN_l: return wchar_t_type();
-    default: return char_type();
+    case format_tokent::LEN_l:
+      return wchar_t_type();
+    default:
+      return char_type();
     }
 
   case format_tokent::POINTER:
@@ -350,8 +379,10 @@ typet get_type(const format_tokent &token)
   case format_tokent::STRING:
     switch(token.length_modifier)
     {
-    case format_tokent::LEN_l: return array_typet(wchar_t_type(), nil_exprt());
-    default: return array_typet(char_type(), nil_exprt());
+    case format_tokent::LEN_l:
+      return array_typet(wchar_t_type(), nil_exprt());
+    default:
+      return array_typet(char_type(), nil_exprt());
     }
 
   default:

@@ -49,17 +49,16 @@ void value_set_domaint::transform(
     break;
 
   case FUNCTION_CALL:
-    {
-      const code_function_callt &code=
-        to_code_function_call(from_l->code);
+  {
+    const code_function_callt &code= to_code_function_call(from_l->code);
 
-      value_set.do_function_call(to_l->function, code.arguments(), ns);
-    }
-    break;
+    value_set.do_function_call(to_l->function, code.arguments(), ns);
+  }
+  break;
 
   default:
-    {
-      // do nothing
-    }
+  {
+    // do nothing
+  }
   }
 }

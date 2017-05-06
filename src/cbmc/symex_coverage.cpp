@@ -26,12 +26,12 @@ Date: March 2016
 class coverage_recordt
 {
 public:
-  explicit coverage_recordt(const std::string &node_id):
-    xml(node_id),
-    lines_covered(0),
-    lines_total(0),
-    branches_covered(0),
-    branches_total(0)
+  explicit coverage_recordt(const std::string &node_id)
+    : xml(node_id),
+      lines_covered(0),
+      lines_total(0),
+      branches_covered(0),
+      branches_total(0)
   {
   }
 
@@ -42,7 +42,7 @@ public:
   std::size_t branches_total;
 };
 
-class goto_program_coverage_recordt:public coverage_recordt
+class goto_program_coverage_recordt : public coverage_recordt
 {
 public:
   goto_program_coverage_recordt(
@@ -60,8 +60,7 @@ protected:
 
   struct coverage_conditiont
   {
-    coverage_conditiont():
-      false_taken(false), true_taken(false)
+    coverage_conditiont() : false_taken(false), true_taken(false)
     {
     }
 
@@ -71,18 +70,15 @@ protected:
 
   struct coverage_linet
   {
-    coverage_linet():
-      hits(0)
+    coverage_linet() : hits(0)
     {
     }
 
     unsigned hits;
-    std::map<goto_programt::const_targett, coverage_conditiont>
-      conditions;
+    std::map<goto_programt::const_targett, coverage_conditiont> conditions;
   };
 
-  typedef std::map<unsigned, coverage_linet>
-    coverage_lines_mapt;
+  typedef std::map<unsigned, coverage_linet> coverage_lines_mapt;
 
   void compute_coverage_lines(
     const goto_programt &goto_program,
@@ -103,23 +99,21 @@ Function: rate
 
 \*******************************************************************/
 
-static std::string rate(
-  std::size_t covered,
-  std::size_t total,
-  bool per_cent=false)
+static std::string
+rate(std::size_t covered, std::size_t total, bool per_cent= false)
 {
   std::ostringstream oss;
 
 #if 1
   float fraction;
 
-  if(total==0)
-    fraction=1.0;
+  if(total == 0)
+    fraction= 1.0;
   else
-    fraction=static_cast<float>(covered)/static_cast<float>(total);
+    fraction= static_cast<float>(covered) / static_cast<float>(total);
 
   if(per_cent)
-    oss << fraction*100.0 << '%';
+    oss << fraction * 100.0 << '%';
   else
     oss << fraction;
 #else
@@ -144,8 +138,8 @@ Function: goto_program_coverage_recordt::goto_program_coverage_recordt
 goto_program_coverage_recordt::goto_program_coverage_recordt(
   const namespacet &ns,
   goto_functionst::function_mapt::const_iterator gf_it,
-  const symex_coveraget::coveraget &coverage):
-  coverage_recordt("method")
+  const symex_coveraget::coveraget &coverage)
+  : coverage_recordt("method")
 {
   assert(gf_it->second.body_available());
 
@@ -154,16 +148,13 @@ goto_program_coverage_recordt::goto_program_coverage_recordt(
   goto_programt::const_targett end_function=
     --gf_it->second.body.instructions.end();
   assert(end_function->is_end_function());
-  file_name=end_function->source_location.get_file();
+  file_name= end_function->source_location.get_file();
   assert(!file_name.empty());
 
   // compute the maximum coverage of individual source-code lines
   coverage_lines_mapt coverage_lines_map;
   compute_coverage_lines(
-    gf_it->second.body,
-    file_name,
-    coverage,
-    coverage_lines_map);
+    gf_it->second.body, file_name, coverage, coverage_lines_map);
 
   // <method name="foo" signature="int(int)" line-rate="1.0" branch-rate="1.0">
   //   <lines>
@@ -182,20 +173,17 @@ goto_program_coverage_recordt::goto_program_coverage_recordt(
   code_typet sig_type=
     original_return_type(ns.get_symbol_table(), gf_it->first);
   if(sig_type.is_nil())
-    sig_type=gf_it->second.type;
-  xml.set_attribute("signature",
-                    from_type(ns, gf_it->first, sig_type));
+    sig_type= gf_it->second.type;
+  xml.set_attribute("signature", from_type(ns, gf_it->first, sig_type));
 
-  xml.set_attribute("line-rate",
-                    rate(lines_covered, lines_total));
-  xml.set_attribute("branch-rate",
-                    rate(branches_covered, branches_total));
+  xml.set_attribute("line-rate", rate(lines_covered, lines_total));
+  xml.set_attribute("branch-rate", rate(branches_covered, branches_total));
 
-  xmlt &lines=xml.new_element("lines");
+  xmlt &lines= xml.new_element("lines");
 
   for(const auto &cov_line : coverage_lines_map)
   {
-    xmlt &line=lines.new_element("line");
+    xmlt &line= lines.new_element("line");
 
     line.set_attribute("number", std::to_string(cov_line.first));
     line.set_attribute("hits", std::to_string(cov_line.second.hits));
@@ -205,23 +193,23 @@ goto_program_coverage_recordt::goto_program_coverage_recordt(
     {
       line.set_attribute("branch", "true");
 
-      xmlt &conditions=line.new_element("conditions");
+      xmlt &conditions= line.new_element("conditions");
 
-      std::size_t number=0, total_taken=0;
+      std::size_t number= 0, total_taken= 0;
       for(const auto &c : cov_line.second.conditions)
       {
         // <condition number="0" type="jump" coverage="50%"/>
-        xmlt &condition=conditions.new_element("condition");
+        xmlt &condition= conditions.new_element("condition");
         condition.set_attribute("number", std::to_string(number++));
         condition.set_attribute("type", "jump");
-        unsigned taken=c.second.false_taken+c.second.true_taken;
-        total_taken+=taken;
+        unsigned taken= c.second.false_taken + c.second.true_taken;
+        total_taken+= taken;
         condition.set_attribute("coverage", rate(taken, 2, true));
       }
 
       std::ostringstream oss;
-      oss << rate(total_taken, number*2, true)
-          << " (" << total_taken << '/' << number*2 << ')';
+      oss << rate(total_taken, number * 2, true) << " (" << total_taken << '/'
+          << number * 2 << ')';
       line.set_attribute("condition-coverage", oss.str());
     }
   }
@@ -240,23 +228,22 @@ Function: goto_program_coverage_recordt::compute_coverage_lines
 \*******************************************************************/
 
 void goto_program_coverage_recordt::compute_coverage_lines(
-    const goto_programt &goto_program,
-    const irep_idt &file_name,
-    const symex_coveraget::coveraget &coverage,
-    coverage_lines_mapt &dest)
+  const goto_programt &goto_program,
+  const irep_idt &file_name,
+  const symex_coveraget::coveraget &coverage,
+  coverage_lines_mapt &dest)
 {
   forall_goto_program_instructions(it, goto_program)
   {
-    if(it->source_location.is_nil() ||
-       it->source_location.get_file()!=file_name ||
-       it->is_dead() ||
-       it->is_end_function())
+    if(
+      it->source_location.is_nil() ||
+      it->source_location.get_file() != file_name || it->is_dead() ||
+      it->is_end_function())
       continue;
 
-    const bool is_branch=it->is_goto() && !it->guard.is_constant();
+    const bool is_branch= it->is_goto() && !it->guard.is_constant();
 
-    unsigned l=
-      safe_string2unsigned(id2string(it->source_location.get_line()));
+    unsigned l= safe_string2unsigned(id2string(it->source_location.get_line()));
     std::pair<coverage_lines_mapt::iterator, bool> entry=
       dest.insert(std::make_pair(l, coverage_linet()));
 
@@ -267,43 +254,42 @@ void goto_program_coverage_recordt::compute_coverage_lines(
     // a branching instruction
     if(is_branch)
     {
-      branches_total+=2;
-      if(!entry.first->second.conditions.insert(
-          {it, coverage_conditiont()}).second)
+      branches_total+= 2;
+      if(!entry.first->second.conditions.insert({it, coverage_conditiont()})
+            .second)
         assert(false);
     }
 
-    symex_coveraget::coveraget::const_iterator c_entry=
-      coverage.find(it);
-    if(c_entry!=coverage.end())
+    symex_coveraget::coveraget::const_iterator c_entry= coverage.find(it);
+    if(c_entry != coverage.end())
     {
-      if(!(c_entry->second.size()==1 || is_branch))
+      if(!(c_entry->second.size() == 1 || is_branch))
       {
         std::cerr << it->location_number << std::endl;
         for(const auto &cov : c_entry->second)
           std::cerr << cov.second.succ->location_number << std::endl;
       }
-      assert(c_entry->second.size()==1 || is_branch);
+      assert(c_entry->second.size() == 1 || is_branch);
 
       for(const auto &cov : c_entry->second)
       {
-        assert(cov.second.num_executions>0);
+        assert(cov.second.num_executions > 0);
 
-        if(entry.first->second.hits==0)
+        if(entry.first->second.hits == 0)
           ++lines_covered;
 
-        entry.first->second.hits+=cov.second.num_executions;
+        entry.first->second.hits+= cov.second.num_executions;
 
         if(is_branch)
         {
-          auto cond_entry=entry.first->second.conditions.find(it);
-          assert(cond_entry!=entry.first->second.conditions.end());
+          auto cond_entry= entry.first->second.conditions.find(it);
+          assert(cond_entry != entry.first->second.conditions.end());
 
-          if(it->get_target()==cov.second.succ)
+          if(it->get_target() == cov.second.succ)
           {
             if(!cond_entry->second.false_taken)
             {
-              cond_entry->second.false_taken=true;
+              cond_entry->second.false_taken= true;
               ++branches_covered;
             }
           }
@@ -311,7 +297,7 @@ void goto_program_coverage_recordt::compute_coverage_lines(
           {
             if(!cond_entry->second.true_taken)
             {
-              cond_entry->second.true_taken=true;
+              cond_entry->second.true_taken= true;
               ++branches_covered;
             }
           }
@@ -342,17 +328,17 @@ void symex_coveraget::compute_overall_coverage(
 
   forall_goto_functions(gf_it, goto_functions)
   {
-    if(!gf_it->second.body_available() ||
-       gf_it->first==goto_functions.entry_point() ||
-       gf_it->first==CPROVER_PREFIX "initialize")
+    if(
+      !gf_it->second.body_available() ||
+      gf_it->first == goto_functions.entry_point() ||
+      gf_it->first == CPROVER_PREFIX "initialize")
       continue;
 
     goto_program_coverage_recordt func_cov(ns, gf_it, coverage);
 
-    std::pair<file_recordst::iterator, bool> entry=
-      file_records.insert(std::make_pair(func_cov.get_file(),
-                                         coverage_recordt("class")));
-    coverage_recordt &file_record=entry.first->second;
+    std::pair<file_recordst::iterator, bool> entry= file_records.insert(
+      std::make_pair(func_cov.get_file(), coverage_recordt("class")));
+    coverage_recordt &file_record= entry.first->second;
 
     if(entry.second)
     {
@@ -364,48 +350,46 @@ void symex_coveraget::compute_overall_coverage(
     file_record.xml.elements.front().new_element(func_cov.xml);
 
     // copy any lines
-    for(xmlt::elementst::const_iterator
-        it=func_cov.xml.elements.front().elements.begin();
-        it!=func_cov.xml.elements.front().elements.end();
+    for(xmlt::elementst::const_iterator it=
+          func_cov.xml.elements.front().elements.begin();
+        it != func_cov.xml.elements.front().elements.end();
         ++it)
       file_record.xml.elements.back().new_element(*it);
 
     // merge line/branch info
-    file_record.lines_covered+=func_cov.lines_covered;
-    file_record.lines_total+=func_cov.lines_total;
-    file_record.branches_covered+=func_cov.branches_covered;
-    file_record.branches_total+=func_cov.branches_total;
+    file_record.lines_covered+= func_cov.lines_covered;
+    file_record.lines_total+= func_cov.lines_total;
+    file_record.branches_covered+= func_cov.branches_covered;
+    file_record.branches_total+= func_cov.branches_total;
   }
 
-  xmlt &classes=dest.xml.new_element("classes");
+  xmlt &classes= dest.xml.new_element("classes");
 
   // <class name="MyProject.GameRules" filename="MyProject/GameRules.java"
   //        line-rate="1.0" branch-rate="1.0" complexity="1.4">
-  for(file_recordst::const_iterator it=file_records.begin();
-      it!=file_records.end();
+  for(file_recordst::const_iterator it= file_records.begin();
+      it != file_records.end();
       ++it)
   {
     if(source_locationt::is_built_in(id2string(it->first)))
       continue;
 
-    const coverage_recordt &f_cov=it->second;
+    const coverage_recordt &f_cov= it->second;
 
-    xmlt &class_xml=classes.new_element(f_cov.xml);
+    xmlt &class_xml= classes.new_element(f_cov.xml);
     class_xml.set_attribute("name", id2string(it->first));
     class_xml.set_attribute("filename", id2string(it->first));
-    class_xml.set_attribute("line-rate",
-                            rate(f_cov.lines_covered,
-                                 f_cov.lines_total));
-    class_xml.set_attribute("branch-rate",
-                            rate(f_cov.branches_covered,
-                                 f_cov.branches_total));
+    class_xml.set_attribute(
+      "line-rate", rate(f_cov.lines_covered, f_cov.lines_total));
+    class_xml.set_attribute(
+      "branch-rate", rate(f_cov.branches_covered, f_cov.branches_total));
     class_xml.set_attribute("complexity", "0.0");
 
     // merge line/branch info
-    dest.lines_covered+=f_cov.lines_covered;
-    dest.lines_total+=f_cov.lines_total;
-    dest.branches_covered+=f_cov.branches_covered;
-    dest.branches_total+=f_cov.branches_total;
+    dest.lines_covered+= f_cov.lines_covered;
+    dest.lines_total+= f_cov.lines_total;
+    dest.branches_covered+= f_cov.branches_covered;
+    dest.branches_total+= f_cov.branches_total;
   }
 }
 
@@ -439,23 +423,23 @@ void symex_coveraget::build_cobertura(
   //           version="2.1.1" timestamp="0">
   xml_coverage.set_attribute("line-rate", overall_line_rate_str);
   xml_coverage.set_attribute("branch-rate", overall_branch_rate_str);
-  xml_coverage.set_attribute("lines-covered",
-                             std::to_string(overall_cov.lines_covered));
-  xml_coverage.set_attribute("lines-valid",
-                             std::to_string(overall_cov.lines_total));
-  xml_coverage.set_attribute("branches-covered",
-                             std::to_string(overall_cov.branches_covered));
-  xml_coverage.set_attribute("branches-valid",
-                             std::to_string(overall_cov.branches_total));
+  xml_coverage.set_attribute(
+    "lines-covered", std::to_string(overall_cov.lines_covered));
+  xml_coverage.set_attribute(
+    "lines-valid", std::to_string(overall_cov.lines_total));
+  xml_coverage.set_attribute(
+    "branches-covered", std::to_string(overall_cov.branches_covered));
+  xml_coverage.set_attribute(
+    "branches-valid", std::to_string(overall_cov.branches_total));
   xml_coverage.set_attribute("complexity", "0.0");
   xml_coverage.set_attribute("version", "2.1.1");
-  xml_coverage.set_attribute("timestamp",
-                             std::to_string(current_time().get_t()));
+  xml_coverage.set_attribute(
+    "timestamp", std::to_string(current_time().get_t()));
 
-  xmlt &packages=xml_coverage.new_element("packages");
+  xmlt &packages= xml_coverage.new_element("packages");
 
   // <package name="" line-rate="0.0" branch-rate="0.0" complexity="0.0">
-  xmlt &package=packages.new_element(overall_cov.xml);
+  xmlt &package= packages.new_element(overall_cov.xml);
   package.set_attribute("name", "");
   package.set_attribute("line-rate", overall_line_rate_str);
   package.set_attribute("branch-rate", overall_branch_rate_str);
@@ -507,7 +491,7 @@ bool symex_coveraget::generate_report(
 {
   assert(!path.empty());
 
-  if(path=="-")
+  if(path == "-")
     return output_report(goto_functions, std::cout);
   else
   {
@@ -515,4 +499,3 @@ bool symex_coveraget::generate_report(
     return output_report(goto_functions, out);
   }
 }
-

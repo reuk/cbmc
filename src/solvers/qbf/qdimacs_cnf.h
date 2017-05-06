@@ -14,11 +14,15 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "../sat/dimacs_cnf.h"
 
-class qdimacs_cnft:public dimacs_cnft
+class qdimacs_cnft : public dimacs_cnft
 {
 public:
-  qdimacs_cnft() { }
-  virtual ~qdimacs_cnft() { }
+  qdimacs_cnft()
+  {
+  }
+  virtual ~qdimacs_cnft()
+  {
+  }
 
   virtual void write_qdimacs_cnf(std::ostream &out);
 
@@ -36,22 +40,22 @@ public:
     typet type;
     unsigned var_no;
 
-    quantifiert():type(NONE), var_no(0)
+    quantifiert() : type(NONE), var_no(0)
     {
     }
 
-    quantifiert(typet _type, literalt _l):type(_type), var_no(_l.var_no())
+    quantifiert(typet _type, literalt _l) : type(_type), var_no(_l.var_no())
     {
     }
 
     bool operator==(const quantifiert &other) const
     {
-      return type==other.type && var_no==other.var_no;
+      return type == other.type && var_no == other.var_no;
     }
 
     size_t hash() const
     {
-      return var_no^(type<<24);
+      return var_no ^ (type << 24);
     }
   };
 

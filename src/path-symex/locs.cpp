@@ -20,9 +20,7 @@ Function: locst::locst
 
 \*******************************************************************/
 
-locst::locst(
-  const namespacet &_ns):
-  ns(_ns)
+locst::locst(const namespacet &_ns) : ns(_ns)
 {
 }
 
@@ -42,60 +40,58 @@ void locst::build(const goto_functionst &goto_functions)
 {
   // build locations
 
-  typedef std::map<goto_programt::const_targett,
-                   loc_reft> target_mapt;
+  typedef std::map<goto_programt::const_targett, loc_reft> target_mapt;
 
   target_mapt target_map;
 
   forall_goto_functions(f_it, goto_functions)
   {
-    const goto_functionst::goto_functiont &goto_function = f_it->second;
+    const goto_functionst::goto_functiont &goto_function= f_it->second;
 
-    function_entryt &function_entry=function_map[f_it->first];
-    function_entry.type=goto_function.type;
+    function_entryt &function_entry= function_map[f_it->first];
+    function_entry.type= goto_function.type;
 
     if(goto_function.body_available())
     {
-      const loc_reft entry_loc=end();
-      function_entry.first_loc=entry_loc;
+      const loc_reft entry_loc= end();
+      function_entry.first_loc= entry_loc;
 
       forall_goto_program_instructions(i_it, goto_function.body)
       {
-        target_map[i_it]=end();
+        target_map[i_it]= end();
         loc_vector.push_back(loct(i_it, f_it->first));
       }
     }
     else
-      function_entry.first_loc=loc_reft::nil();
+      function_entry.first_loc= loc_reft::nil();
   }
 
-  if(function_map.find(goto_functionst::entry_point())==
-     function_map.end())
+  if(function_map.find(goto_functionst::entry_point()) == function_map.end())
     throw "no entry point";
 
-  entry_loc=function_map[goto_functionst::entry_point()].first_loc;
+  entry_loc= function_map[goto_functionst::entry_point()].first_loc;
 
   // build branch targets
-  for(unsigned l=0; l<loc_vector.size(); l++)
+  for(unsigned l= 0; l < loc_vector.size(); l++)
   {
-    const goto_programt::instructiont &i=*loc_vector[l].target;
+    const goto_programt::instructiont &i= *loc_vector[l].target;
 
     if(i.targets.empty())
     {
     }
-    else if(i.targets.size()==1)
+    else if(i.targets.size() == 1)
     {
-      const target_mapt::const_iterator m_it=target_map.find(i.get_target());
+      const target_mapt::const_iterator m_it= target_map.find(i.get_target());
 
-      if(m_it==target_map.end())
+      if(m_it == target_map.end())
         throw "locst::build: jump target not found";
 
-      const loc_reft target=m_it->second;
+      const loc_reft target= m_it->second;
 
-      if(target.loc_number>=loc_vector.size())
+      if(target.loc_number >= loc_vector.size())
         throw "locst::build: illegal jump target";
 
-      loc_vector[l].branch_target=target;
+      loc_vector[l].branch_target= target;
     }
     else
       throw "locst does not support more than one branch target";
@@ -118,18 +114,19 @@ void locst::output(std::ostream &out) const
 {
   irep_idt function;
 
-  for(unsigned l=0; l<loc_vector.size(); l++)
+  for(unsigned l= 0; l < loc_vector.size(); l++)
   {
-    const loct &loc=loc_vector[l];
-    if(function!=loc.function)
+    const loct &loc= loc_vector[l];
+    if(function != loc.function)
     {
-      function=loc.function;
+      function= loc.function;
       out << "*** " << function << "\n";
     }
 
-    out << "  L" << l << ": "
-//        << loc.target->type << " "
-//        << loc.target->location
+    out << "  L" << l
+        << ": "
+        //        << loc.target->type << " "
+        //        << loc.target->location
         << " " << as_string(ns, *loc.target) << "\n";
 
     if(!loc.branch_target.is_nil())

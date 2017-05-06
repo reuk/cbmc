@@ -23,8 +23,8 @@ typedef std::set<statet> state_sett;
 
 class automatont
 {
- public:
-  automatont():num_states(0)
+public:
+  automatont() : num_states(0)
   {
   }
 
@@ -33,7 +33,7 @@ class automatont
 
   bool is_accepting(statet s)
   {
-    return accept_states.find(s)!=accept_states.end();
+    return accept_states.find(s) != accept_states.end();
   }
 
   void set_accepting(statet s)
@@ -55,18 +55,18 @@ class automatont
   {
     transitions.clear();
     accept_states.clear();
-    num_states=0;
+    num_states= 0;
   }
 
   void swap(automatont &that)
   {
     transitions.swap(that.transitions);
     accept_states.swap(that.accept_states);
-    num_states=that.num_states;
-    init_state=that.init_state;
+    num_states= that.num_states;
+    init_state= that.init_state;
   }
 
-// protected:
+  // protected:
   typedef std::multimap<goto_programt::targett, statet> transitionst;
   typedef std::pair<transitionst::iterator, transitionst::iterator>
     transition_ranget;
@@ -81,14 +81,14 @@ class automatont
 
 class trace_automatont
 {
- public:
-  explicit trace_automatont(goto_programt &_goto_program):
-    goto_program(_goto_program)
+public:
+  explicit trace_automatont(goto_programt &_goto_program)
+    : goto_program(_goto_program)
   {
     build_alphabet(goto_program);
     init_nta();
 
-    epsilon=goto_program.instructions.end();
+    epsilon= goto_program.instructions.end();
     epsilon++;
   }
 
@@ -120,13 +120,13 @@ class trace_automatont
   typedef std::set<goto_programt::targett> alphabett;
   alphabett alphabet;
 
- protected:
+protected:
   void build_alphabet(goto_programt &program);
   void init_nta();
 
   bool in_alphabet(goto_programt::targett t)
   {
-    return alphabet.find(t)!=alphabet.end();
+    return alphabet.find(t) != alphabet.end();
   }
 
   void pop_unmarked_dstate(state_sett &s);
@@ -137,7 +137,7 @@ class trace_automatont
   void minimise();
   void reverse();
 
-  static const statet no_state = -1;
+  static const statet no_state= -1;
   statet add_dstate(state_sett &s);
   statet find_dstate(state_sett &s);
   void add_dtrans(state_sett &s, goto_programt::targett a, state_sett &t);

@@ -25,29 +25,30 @@ Function: qdimacs_coret::simplify_extractbits
 
 void qdimacs_coret::simplify_extractbits(exprt &expr) const
 {
-  if(expr.id()==ID_and)
+  if(expr.id() == ID_and)
   {
-    typedef std::map<exprt, std::set<exprt> > used_bits_mapt;
+    typedef std::map<exprt, std::set<exprt>> used_bits_mapt;
     used_bits_mapt used_bits_map;
 
     forall_operands(it, expr)
     {
-      if(it->id()==ID_extractbit && it->op1().is_constant())
+      if(it->id() == ID_extractbit && it->op1().is_constant())
       {
         used_bits_map[it->op0()].insert(it->op1());
       }
-      else if(it->id()==ID_not &&
-              it->op0().id()==ID_extractbit && it->op0().op1().is_constant())
+      else if(
+        it->id() == ID_not && it->op0().id() == ID_extractbit &&
+        it->op0().op1().is_constant())
       {
         used_bits_map[it->op0().op0()].insert(it->op0().op1());
       }
     }
 
-    for(used_bits_mapt::const_iterator it=used_bits_map.begin();
-        it!=used_bits_map.end();
+    for(used_bits_mapt::const_iterator it= used_bits_map.begin();
+        it != used_bits_map.end();
         it++)
     {
-      #if 0
+#if 0
       unsigned width;
       boolbv_get_width(it->first.type(), width);
 
@@ -74,9 +75,9 @@ void qdimacs_coret::simplify_extractbits(exprt &expr) const
               to_integer(val_expr, value);
               value_string[value.to_ulong()]='1';
 
-              #if 0
+#if 0
               std::cout << "[" << value << "]=1" << std::endl;
-              #endif
+#endif
 
               continue;
             }
@@ -99,13 +100,13 @@ void qdimacs_coret::simplify_extractbits(exprt &expr) const
         new_value.set(ID_value, value_string);
         new_operands.push_back(equality_exprt(it->first, new_value));
 
-        #if 0
+#if 0
         std::cout << "FINAL: " << value_string << std::endl;
-        #endif
+#endif
 
         expr.operands()=new_operands;
       }
-      #endif
+#endif
     }
   }
 }

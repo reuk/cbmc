@@ -17,12 +17,12 @@ Author: Matt Lewis
 
 class path_enumeratort
 {
- public:
+public:
   virtual ~path_enumeratort()
   {
   }
 
-  virtual bool next(patht &path) = 0;
+  virtual bool next(patht &path)= 0;
 };
 
 #endif // CPROVER_GOTO_INSTRUMENT_ACCELERATE_PATH_ENUMERATOR_H

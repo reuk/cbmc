@@ -19,7 +19,7 @@ Author: Romain Brenguier, romain.brenguier@diffblue.com
 #include <util/expr_util.h>
 
 // Internal type used for string refinement
-class refined_string_typet: public struct_typet
+class refined_string_typet : public struct_typet
 {
 public:
   refined_string_typet(const typet &index_type, const typet &char_type);
@@ -27,13 +27,13 @@ public:
   // Type for the content (list of characters) of a string
   const array_typet &get_content_type() const
   {
-    assert(components().size()==2);
+    assert(components().size() == 2);
     return to_array_type(components()[1].type());
   }
 
   const typet &get_char_type() const
   {
-    assert(components().size()==2);
+    assert(components().size() == 2);
     return components()[0].type();
   }
 
@@ -58,10 +58,8 @@ public:
   static bool is_unrefined_string_type(const typet &type)
   {
     return (
-      is_c_string_type(type) ||
-      is_java_string_pointer_type(type) ||
-      is_java_string_builder_type(type) ||
-      is_java_char_sequence_type(type));
+      is_c_string_type(type) || is_java_string_pointer_type(type) ||
+      is_java_string_builder_type(type) || is_java_char_sequence_type(type));
   }
 
   static bool is_unrefined_string(const exprt &expr)
@@ -77,7 +75,7 @@ public:
 
 const refined_string_typet &to_refined_string_type(const typet &type)
 {
-  assert(type.id()==ID_struct);
+  assert(type.id() == ID_struct);
   return static_cast<const refined_string_typet &>(type);
 }
 

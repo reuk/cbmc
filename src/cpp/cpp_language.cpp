@@ -49,9 +49,9 @@ std::set<std::string> cpp_languaget::extensions() const
   s.insert("ii");
   s.insert("cxx");
 
-  #ifndef _WIN32
+#ifndef _WIN32
   s.insert("C");
-  #endif
+#endif
 
   return s;
 }
@@ -90,13 +90,13 @@ bool cpp_languaget::preprocess(
   const std::string &path,
   std::ostream &outstream)
 {
-  if(path=="")
+  if(path == "")
     return c_preprocess(instream, outstream, get_message_handler());
 
   // check extension
 
-  const char *ext=strrchr(path.c_str(), '.');
-  if(ext!=NULL && std::string(ext)==".ipp")
+  const char *ext= strrchr(path.c_str(), '.');
+  if(ext != NULL && std::string(ext) == ".ipp")
   {
     std::ifstream infile(path);
 
@@ -123,13 +123,11 @@ Function: cpp_languaget::parse
 
 \*******************************************************************/
 
-bool cpp_languaget::parse(
-  std::istream &instream,
-  const std::string &path)
+bool cpp_languaget::parse(std::istream &instream, const std::string &path)
 {
   // store the path
 
-  parse_path=path;
+  parse_path= path;
 
   // preprocessing
 
@@ -146,11 +144,11 @@ bool cpp_languaget::parse(
 
   cpp_parser.clear();
   cpp_parser.set_file(path);
-  cpp_parser.in=&i_preprocessed;
+  cpp_parser.in= &i_preprocessed;
   cpp_parser.set_message_handler(get_message_handler());
-  cpp_parser.mode=config.ansi_c.mode;
+  cpp_parser.mode= config.ansi_c.mode;
 
-  bool result=cpp_parser.parse();
+  bool result= cpp_parser.parse();
 
   // save result
   cpp_parse_tree.swap(cpp_parser.parse_tree);
@@ -177,13 +175,13 @@ bool cpp_languaget::typecheck(
   symbol_tablet &symbol_table,
   const std::string &module)
 {
-  if(module=="")
+  if(module == "")
     return false;
 
   symbol_tablet new_symbol_table;
 
   if(cpp_typecheck(
-      cpp_parse_tree, new_symbol_table, module, get_message_handler()))
+       cpp_parse_tree, new_symbol_table, module, get_message_handler()))
     return true;
 
   return linking(symbol_table, new_symbol_table, get_message_handler());
@@ -223,9 +221,8 @@ Function: cpp_languaget::show_parse
 
 void cpp_languaget::show_parse(std::ostream &out)
 {
-  for(cpp_parse_treet::itemst::const_iterator it=
-      cpp_parse_tree.items.begin();
-      it!=cpp_parse_tree.items.end();
+  for(cpp_parse_treet::itemst::const_iterator it= cpp_parse_tree.items.begin();
+      it != cpp_parse_tree.items.end();
       it++)
     show_parse(out, *it);
 }
@@ -242,21 +239,18 @@ Function: cpp_languaget::show_parse
 
 \*******************************************************************/
 
-void cpp_languaget::show_parse(
-  std::ostream &out,
-  const cpp_itemt &item)
+void cpp_languaget::show_parse(std::ostream &out, const cpp_itemt &item)
 {
   if(item.is_linkage_spec())
   {
-    const cpp_linkage_spect &linkage_spec=
-      item.get_linkage_spec();
+    const cpp_linkage_spect &linkage_spec= item.get_linkage_spec();
 
-    out << "LINKAGE " << linkage_spec.linkage().get("value")
-        << ":" << std::endl;
+    out << "LINKAGE " << linkage_spec.linkage().get("value") << ":"
+        << std::endl;
 
-    for(cpp_linkage_spect::itemst::const_iterator
-        it=linkage_spec.items().begin();
-        it!=linkage_spec.items().end();
+    for(cpp_linkage_spect::itemst::const_iterator it=
+          linkage_spec.items().begin();
+        it != linkage_spec.items().end();
         it++)
       show_parse(out, *it);
 
@@ -264,15 +258,13 @@ void cpp_languaget::show_parse(
   }
   else if(item.is_namespace_spec())
   {
-    const cpp_namespace_spect &namespace_spec=
-      item.get_namespace_spec();
+    const cpp_namespace_spect &namespace_spec= item.get_namespace_spec();
 
-    out << "NAMESPACE " << namespace_spec.get_namespace()
-        << ":" << std::endl;
+    out << "NAMESPACE " << namespace_spec.get_namespace() << ":" << std::endl;
 
-    for(cpp_namespace_spect::itemst::const_iterator
-        it=namespace_spec.items().begin();
-        it!=namespace_spec.items().end();
+    for(cpp_namespace_spect::itemst::const_iterator it=
+          namespace_spec.items().begin();
+        it != namespace_spec.items().end();
         it++)
       show_parse(out, *it);
 
@@ -280,7 +272,7 @@ void cpp_languaget::show_parse(
   }
   else if(item.is_using())
   {
-    const cpp_usingt &cpp_using=item.get_using();
+    const cpp_usingt &cpp_using= item.get_using();
 
     out << "USING ";
     if(cpp_using.get_namespace())
@@ -330,7 +322,7 @@ bool cpp_languaget::from_expr(
   std::string &code,
   const namespacet &ns)
 {
-  code=expr2cpp(expr, ns);
+  code= expr2cpp(expr, ns);
   return false;
 }
 
@@ -351,7 +343,7 @@ bool cpp_languaget::from_type(
   std::string &code,
   const namespacet &ns)
 {
-  code=type2cpp(type, ns);
+  code= type2cpp(type, ns);
   return false;
 }
 
@@ -372,7 +364,7 @@ bool cpp_languaget::type_to_name(
   std::string &name,
   const namespacet &ns)
 {
-  name=cpp_type2name(type);
+  name= cpp_type2name(type);
   return false;
 }
 
@@ -404,20 +396,20 @@ bool cpp_languaget::to_expr(
 
   cpp_parser.clear();
   cpp_parser.set_file(irep_idt());
-  cpp_parser.in=&i_preprocessed;
+  cpp_parser.in= &i_preprocessed;
   cpp_parser.set_message_handler(get_message_handler());
 
-  bool result=cpp_parser.parse();
+  bool result= cpp_parser.parse();
 
   if(cpp_parser.parse_tree.items.empty())
-    result=true;
+    result= true;
   else
   {
     // TODO
     // expr.swap(cpp_parser.parse_tree.declarations.front());
 
     // typecheck it
-    result=cpp_typecheck(expr, get_message_handler(), ns);
+    result= cpp_typecheck(expr, get_message_handler(), ns);
   }
 
   // save some memory

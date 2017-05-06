@@ -15,12 +15,12 @@ Date: June 2006
 
 #include "goto_cc_cmdline.h"
 
-class goto_cc_modet:public messaget
+class goto_cc_modet : public messaget
 {
 public:
   virtual int main(int argc, const char **argv);
-  virtual int doit()=0;
-  virtual void help_mode()=0;
+  virtual int doit()= 0;
+  virtual void help_mode()= 0;
   virtual void help();
   virtual void usage_error();
 

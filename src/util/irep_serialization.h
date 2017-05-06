@@ -28,7 +28,7 @@ public:
   class ireps_containert
   {
   public:
-    typedef std::vector<std::pair<bool, irept> > ireps_on_readt;
+    typedef std::vector<std::pair<bool, irept>> ireps_on_readt;
     ireps_on_readt ireps_on_read;
 
     irep_full_hash_containert irep_full_hash_container;
@@ -38,7 +38,7 @@ public:
     typedef std::vector<bool> string_mapt;
     string_mapt string_map;
 
-    typedef std::vector<std::pair<bool, irep_idt> > string_rev_mapt;
+    typedef std::vector<std::pair<bool, irep_idt>> string_rev_mapt;
     string_rev_mapt string_rev_map;
 
     void clear()
@@ -51,8 +51,7 @@ public:
     }
   };
 
-  explicit irep_serializationt(ireps_containert &ic):
-    ireps_container(ic)
+  explicit irep_serializationt(ireps_containert &ic) : ireps_container(ic)
   {
     read_buffer.resize(1, 0);
     clear();
@@ -67,7 +66,10 @@ public:
   irep_idt read_string_ref(std::istream &);
   void write_string_ref(std::ostream &, const irep_idt &);
 
-  void clear() { ireps_container.clear(); }
+  void clear()
+  {
+    ireps_container.clear();
+  }
 
   static std::size_t read_gb_word(std::istream &);
   irep_idt read_gb_string(std::istream &);

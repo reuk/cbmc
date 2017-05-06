@@ -44,9 +44,9 @@ Function:
 void timert::start()
 {
   assert(!started);
-  started = true;
+  started= true;
 
-  _start_time = current_time();
+  _start_time= current_time();
   nr_starts++;
 }
 
@@ -65,10 +65,10 @@ Function:
 void timert::stop()
 {
   assert(started);
-  started = false;
+  started= false;
 
-  _latest_time = current_time() - _start_time;
-  _total_time += _latest_time;
+  _latest_time= current_time() - _start_time;
+  _total_time+= _latest_time;
 }
 
 /*******************************************************************\

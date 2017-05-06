@@ -31,20 +31,16 @@ public:
     {
     }
 
-    pointert(std::size_t _obj, mp_integer _off):object(_obj), offset(_off)
+    pointert(std::size_t _obj, mp_integer _off) : object(_obj), offset(_off)
     {
     }
   };
 
   // converts an (object,offset) pair to an expression
-  exprt pointer_expr(
-    const pointert &pointer,
-    const typet &type) const;
+  exprt pointer_expr(const pointert &pointer, const typet &type) const;
 
   // converts an (object,0) pair to an expression
-  exprt pointer_expr(
-    std::size_t object,
-    const typet &type) const;
+  exprt pointer_expr(std::size_t object, const typet &type) const;
 
   ~pointer_logict();
   explicit pointer_logict(const namespacet &_ns);
@@ -71,9 +67,7 @@ protected:
   const namespacet &ns;
   std::size_t null_object, invalid_object;
 
-  exprt pointer_expr(
-    const mp_integer &offset,
-    const exprt &object) const;
+  exprt pointer_expr(const mp_integer &offset, const exprt &object) const;
 
   exprt object_rec(
     const mp_integer &offset,

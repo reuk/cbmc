@@ -38,15 +38,18 @@ public:
     symbol_tablet &_new_symbol_table,
     const optionst &_options,
     dereference_callbackt &_dereference_callback,
-    const irep_idt _language_mode):
-    ns(_ns),
-    new_symbol_table(_new_symbol_table),
-    options(_options),
-    dereference_callback(_dereference_callback),
-    language_mode(_language_mode)
-  { }
+    const irep_idt _language_mode)
+    : ns(_ns),
+      new_symbol_table(_new_symbol_table),
+      options(_options),
+      dereference_callback(_dereference_callback),
+      language_mode(_language_mode)
+  {
+  }
 
-  virtual ~value_set_dereferencet() { }
+  virtual ~value_set_dereferencet()
+  {
+  }
 
   typedef enum { READ, WRITE } modet;
 
@@ -64,10 +67,8 @@ public:
             is a load or store.
   */
 
-  virtual exprt dereference(
-    const exprt &pointer,
-    const guardt &guard,
-    const modet mode);
+  virtual exprt
+  dereference(const exprt &pointer, const guardt &guard, const modet mode);
 
   /*! \brief Returns 'true' iff the given expression contains unary '*'
   */
@@ -89,9 +90,7 @@ private:
     const typet &object_type,
     const typet &dereference_type) const;
 
-  void offset_sum(
-    exprt &dest,
-    const exprt &offset) const;
+  void offset_sum(exprt &dest, const exprt &offset) const;
 
   class valuet
   {
@@ -99,7 +98,7 @@ private:
     exprt value;
     exprt pointer_guard;
 
-    valuet():value(nil_exprt()), pointer_guard(false_exprt())
+    valuet() : value(nil_exprt()), pointer_guard(false_exprt())
     {
     }
   };
@@ -110,10 +109,7 @@ private:
     const exprt &pointer,
     const guardt &guard);
 
-  bool get_value_guard(
-    const exprt &symbol,
-    const exprt &premise,
-    exprt &value);
+  bool get_value_guard(const exprt &symbol, const exprt &premise, exprt &value);
 
   static const exprt &get_symbol(const exprt &object);
 

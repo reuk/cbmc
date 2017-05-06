@@ -21,7 +21,7 @@ class empty_edget
 {
 };
 
-template<class E=empty_edget>
+template <class E= empty_edget>
 class graph_nodet
 {
 public:
@@ -54,8 +54,8 @@ public:
 };
 
 // a node type with an exta bit
-template<class E>
-class visited_nodet:public graph_nodet<E>
+template <class E>
+class visited_nodet : public graph_nodet<E>
 {
 public:
   typedef typename graph_nodet<E>::edget edget;
@@ -63,32 +63,31 @@ public:
 
   bool visited;
 
-  visited_nodet():visited(false)
+  visited_nodet() : visited(false)
   {
   }
 };
 
 // compute intersection of two edge sets,
 // in linear time
-template<class E>
+template <class E>
 void intersection(
   const typename graph_nodet<E>::edgest &a,
   const typename graph_nodet<E>::edgest &b,
   typename graph_nodet<E>::edgest &dest)
 {
-  typename graph_nodet<E>::edgest::const_iterator
-    it_a=a.begin(),
-    it_b=b.begin();
+  typename graph_nodet<E>::edgest::const_iterator it_a= a.begin(),
+                                                  it_b= b.begin();
 
-  while(it_a!=a.end() && it_b!=b.end())
+  while(it_a != a.end() && it_b != b.end())
   {
-    if(*it_a==*it_b)
+    if(*it_a == *it_b)
     {
       dest.insert(*it_a);
       it_a++;
       it_b++;
     }
-    else if(*it_a<*it_b)
+    else if(*it_a < *it_b)
       it_a++;
     else // *it_a>*it_b
       it_b++;
@@ -96,7 +95,7 @@ void intersection(
 }
 
 // a generic graph class with a parametric node type
-template<class N=graph_nodet<empty_edget> >
+template <class N= graph_nodet<empty_edget>>
 class grapht
 {
 public:
@@ -112,7 +111,7 @@ protected:
 public:
   node_indext add_node()
   {
-    node_indext no=nodes.size();
+    node_indext no= nodes.size();
     nodes.push_back(nodet());
     return no;
   }
@@ -124,7 +123,7 @@ public:
 
   bool has_edge(node_indext i, node_indext j) const
   {
-    return nodes[i].out.find(j)!=nodes[i].out.end();
+    return nodes[i].out.find(j) != nodes[i].out.end();
   }
 
   const nodet &operator[](node_indext n) const
@@ -192,17 +191,12 @@ public:
 
   typedef std::list<node_indext> patht;
 
-  void shortest_path(
-    node_indext src,
-    node_indext dest,
-    patht &path) const
+  void shortest_path(node_indext src, node_indext dest, patht &path) const
   {
     shortest_path(src, dest, path, false);
   }
 
-  void shortest_loop(
-    node_indext node,
-    patht &path) const
+  void shortest_loop(node_indext node, patht &path) const
   {
     shortest_path(node, node, path, true);
   }
@@ -212,8 +206,7 @@ public:
   void make_chordal();
 
   // return value: number of connected subgraphs
-  std::size_t connected_subgraphs(
-    std::vector<node_indext> &subgraph_nr);
+  std::size_t connected_subgraphs(std::vector<node_indext> &subgraph_nr);
 
   // return value: number of SCCs
   std::size_t SCCs(std::vector<node_indext> &subgraph_nr);
@@ -234,14 +227,14 @@ protected:
 
     std::size_t scc_count, max_dfs;
 
-    tarjant(std::size_t n, std::vector<node_indext> &_subgraph_nr):
-      subgraph_nr(_subgraph_nr)
+    tarjant(std::size_t n, std::vector<node_indext> &_subgraph_nr)
+      : subgraph_nr(_subgraph_nr)
     {
       visited.resize(n, false);
       depth.resize(n, 0);
       lowlink.resize(n, 0);
       in_scc.resize(n, false);
-      max_dfs=scc_count=0;
+      max_dfs= scc_count= 0;
       subgraph_nr.resize(n, 0);
     }
   };
@@ -267,13 +260,13 @@ Function: grapht::add_undirected_edge
 
 \*******************************************************************/
 
-template<class N>
+template <class N>
 void grapht<N>::add_undirected_edge(node_indext a, node_indext b)
 {
-  assert(a<nodes.size());
-  assert(b<nodes.size());
-  nodet &na=nodes[a];
-  nodet &nb=nodes[b];
+  assert(a < nodes.size());
+  assert(b < nodes.size());
+  nodet &na= nodes[a];
+  nodet &nb= nodes[b];
   na.add_out(b);
   nb.add_out(a);
   na.add_in(b);
@@ -292,11 +285,11 @@ Function: grapht::remove_undirected_edge
 
 \*******************************************************************/
 
-template<class N>
+template <class N>
 void grapht<N>::remove_undirected_edge(node_indext a, node_indext b)
 {
-  nodet &na=nodes[a];
-  nodet &nb=nodes[b];
+  nodet &na= nodes[a];
+  nodet &nb= nodes[b];
   na.out.erase(b);
   nb.out.erase(a);
   na.in.erase(b);
@@ -315,15 +308,13 @@ Function: grapht::remove_in_edges
 
 \*******************************************************************/
 
-template<class N>
+template <class N>
 void grapht<N>::remove_in_edges(node_indext n)
 {
-  nodet &node=nodes[n];
+  nodet &node= nodes[n];
 
   // delete all incoming edges
-  for(typename edgest::const_iterator
-      it=node.in.begin();
-      it!=node.in.end();
+  for(typename edgest::const_iterator it= node.in.begin(); it != node.in.end();
       it++)
     nodes[it->first].erase_out(n);
 
@@ -342,15 +333,14 @@ Function: grapht::remove_out_edges
 
 \*******************************************************************/
 
-template<class N>
+template <class N>
 void grapht<N>::remove_out_edges(node_indext n)
 {
-  nodet &node=nodes[n];
+  nodet &node= nodes[n];
 
   // delete all outgoing edges
-  for(typename edgest::const_iterator
-      it=node.out.begin();
-      it!=node.out.end();
+  for(typename edgest::const_iterator it= node.out.begin();
+      it != node.out.end();
       it++)
     nodes[it->first].erase_in(n);
 
@@ -369,7 +359,7 @@ Function: grapht::shortest_path
 
 \*******************************************************************/
 
-template<class N>
+template <class N>
 void grapht<N>::shortest_path(
   node_indext src,
   node_indext dest,
@@ -387,8 +377,8 @@ void grapht<N>::shortest_path(
 
   if(!non_trivial)
   {
-    distance[src]=0;
-    visited[src]=true;
+    distance[src]= 0;
+    visited[src]= true;
   }
 
   // does BFS, not Dijkstra
@@ -399,8 +389,8 @@ void grapht<N>::shortest_path(
 
   frontier_set.push_back(src);
 
-  unsigned d=0;
-  bool found=false;
+  unsigned d= 0;
+  bool found= false;
 
   while(!frontier_set.empty() && !found)
   {
@@ -409,30 +399,29 @@ void grapht<N>::shortest_path(
     new_frontier_set.clear();
     new_frontier_set.reserve(nodes.size());
 
-    for(typename std::vector<node_indext>::const_iterator
-        f_it=frontier_set.begin();
-        f_it!=frontier_set.end() && !found;
+    for(typename std::vector<node_indext>::const_iterator f_it=
+          frontier_set.begin();
+        f_it != frontier_set.end() && !found;
         f_it++)
     {
-      node_indext i=*f_it;
-      const nodet &n=nodes[i];
+      node_indext i= *f_it;
+      const nodet &n= nodes[i];
 
       // do all neighbors
-      for(typename edgest::const_iterator
-          o_it=n.out.begin();
-          o_it!=n.out.end() && !found;
+      for(typename edgest::const_iterator o_it= n.out.begin();
+          o_it != n.out.end() && !found;
           o_it++)
       {
-        node_indext o=o_it->first;
+        node_indext o= o_it->first;
 
         if(!visited[o])
         {
-          distance[o]=d;
-          previous[o]=i;
-          visited[o]=true;
+          distance[o]= d;
+          previous[o]= i;
+          visited[o]= true;
 
-          if(o==dest)
-            found=true;
+          if(o == dest)
+            found= true;
           else
             new_frontier_set.push_back(o);
         }
@@ -447,16 +436,16 @@ void grapht<N>::shortest_path(
   path.clear();
 
   // reachable at all?
-  if(distance[dest]==(unsigned)(-1))
+  if(distance[dest] == (unsigned)(-1))
     return; // nah
 
   while(true)
   {
     path.push_front(dest);
-    if(distance[dest]==0 ||
-       previous[dest]==src) break; // we are there
-    assert(dest!=previous[dest]);
-    dest=previous[dest];
+    if(distance[dest] == 0 || previous[dest] == src)
+      break; // we are there
+    assert(dest != previous[dest]);
+    dest= previous[dest];
   }
 }
 
@@ -472,7 +461,7 @@ Function: grapht::visit_reachable
 
 \*******************************************************************/
 
-template<class N>
+template <class N>
 void grapht<N>::visit_reachable(node_indext src)
 {
   // DFS
@@ -482,15 +471,14 @@ void grapht<N>::visit_reachable(node_indext src)
 
   while(!s.empty())
   {
-    node_indext n=s.top();
+    node_indext n= s.top();
     s.pop();
 
-    nodet &node=nodes[n];
-    node.visited=true;
+    nodet &node= nodes[n];
+    node.visited= true;
 
-    for(typename edgest::const_iterator
-        it=node.out.begin();
-        it!=node.out.end();
+    for(typename edgest::const_iterator it= node.out.begin();
+        it != node.out.end();
         it++)
       if(!nodes[it->first].visited)
         s.push(it->first);
@@ -509,18 +497,18 @@ Function: grapht::connected_subgraphs
 
 \*******************************************************************/
 
-template<class N>
-std::size_t grapht<N>::connected_subgraphs(
-  std::vector<node_indext> &subgraph_nr)
+template <class N>
+std::size_t
+grapht<N>::connected_subgraphs(std::vector<node_indext> &subgraph_nr)
 {
   std::vector<bool> visited;
 
   visited.resize(nodes.size(), false);
   subgraph_nr.resize(nodes.size(), 0);
 
-  std::size_t nr=0;
+  std::size_t nr= 0;
 
-  for(node_indext src=0; src<size(); src++)
+  for(node_indext src= 0; src < size(); src++)
   {
     if(visited[src])
       continue;
@@ -532,17 +520,16 @@ std::size_t grapht<N>::connected_subgraphs(
 
     while(!s.empty())
     {
-      node_indext n=s.top();
+      node_indext n= s.top();
       s.pop();
 
-      visited[n]=true;
-      subgraph_nr[n]=nr;
+      visited[n]= true;
+      subgraph_nr[n]= nr;
 
-      const nodet &node=nodes[n];
+      const nodet &node= nodes[n];
 
-      for(typename edgest::const_iterator
-          it=node.out.begin();
-          it!=node.out.end();
+      for(typename edgest::const_iterator it= node.out.begin();
+          it != node.out.end();
           it++)
         if(!visited[*it])
           s.push(*it);
@@ -566,43 +553,42 @@ Function: grapht::tarjan
 
 \*******************************************************************/
 
-template<class N>
+template <class N>
 void grapht<N>::tarjan(tarjant &t, node_indext v)
 {
   t.scc_stack.push(v);
-  t.in_scc[v]=true;
-  t.depth[v]=t.max_dfs;
-  t.lowlink[v]=t.max_dfs;
-  t.visited[v]=true;
+  t.in_scc[v]= true;
+  t.depth[v]= t.max_dfs;
+  t.lowlink[v]= t.max_dfs;
+  t.visited[v]= true;
   t.max_dfs++;
 
-  const nodet &node=nodes[v];
-  for(typename edgest::const_iterator
-      it=node.out.begin();
-      it!=node.out.end();
+  const nodet &node= nodes[v];
+  for(typename edgest::const_iterator it= node.out.begin();
+      it != node.out.end();
       it++)
   {
-    node_indext vp=it->first;
+    node_indext vp= it->first;
     if(!t.visited[vp])
     {
       tarjan(t, vp);
-      t.lowlink[v]=std::min(t.lowlink[v], t.lowlink[vp]);
+      t.lowlink[v]= std::min(t.lowlink[v], t.lowlink[vp]);
     }
     else if(t.in_scc[vp])
-      t.lowlink[v]=std::min(t.lowlink[v], t.depth[vp]);
+      t.lowlink[v]= std::min(t.lowlink[v], t.depth[vp]);
   }
 
   // check if root of SCC
-  if(t.lowlink[v]==t.depth[v])
+  if(t.lowlink[v] == t.depth[v])
   {
     while(true)
     {
       assert(!t.scc_stack.empty());
-      node_indext vp=t.scc_stack.top();
+      node_indext vp= t.scc_stack.top();
       t.scc_stack.pop();
-      t.in_scc[vp]=false;
-      t.subgraph_nr[vp]=t.scc_count;
-      if(vp==v)
+      t.in_scc[vp]= false;
+      t.subgraph_nr[vp]= t.scc_count;
+      if(vp == v)
         break;
     }
 
@@ -622,12 +608,12 @@ Function: grapht::SCCs
 
 \*******************************************************************/
 
-template<class N>
+template <class N>
 std::size_t grapht<N>::SCCs(std::vector<node_indext> &subgraph_nr)
 {
   tarjant t(nodes.size(), subgraph_nr);
 
-  for(node_indext v0=0; v0<size(); v0++)
+  for(node_indext v0= 0; v0 < size(); v0++)
     if(!t.visited[v0])
       tarjan(t, v0);
 
@@ -646,7 +632,7 @@ Function: grapht::make_chordal
 
 \*******************************************************************/
 
-template<class N>
+template <class N>
 void grapht<N>::make_chordal()
 {
   grapht tmp(*this);
@@ -655,22 +641,19 @@ void grapht<N>::make_chordal()
   // 1. remove all nodes in tmp, reconnecting the remaining ones
   // 2. the chordal graph is the old one plus the new edges
 
-  for(node_indext i=0; i<tmp.size(); i++)
+  for(node_indext i= 0; i < tmp.size(); i++)
   {
-    const nodet &n=tmp[i];
+    const nodet &n= tmp[i];
 
     // connect all the nodes in n.out with each other
 
-    for(typename edgest::const_iterator
-        it1=n.out.begin();
-        it1!=n.out.end();
+    for(typename edgest::const_iterator it1= n.out.begin(); it1 != n.out.end();
         it1++)
-      for(typename edgest::const_iterator
-          it2=n.out.begin();
-          it2!=n.out.end();
+      for(typename edgest::const_iterator it2= n.out.begin();
+          it2 != n.out.end();
           it2++)
       {
-        if(*it1!=*it2)
+        if(*it1 != *it2)
         {
           tmp.add_undirected_edge(*it1, *it2);
           this->add_undirected_edge(*it1, *it2);
@@ -694,10 +677,10 @@ Function: grapht::output_dot
 
 \*******************************************************************/
 
-template<class N>
+template <class N>
 void grapht<N>::output_dot(std::ostream &out) const
 {
-  for(node_indext n=0; n<nodes.size(); n++)
+  for(node_indext n= 0; n < nodes.size(); n++)
     output_dot_node(out, n);
 }
 
@@ -713,14 +696,13 @@ Function: grapht::output_dot_node
 
 \*******************************************************************/
 
-template<class N>
+template <class N>
 void grapht<N>::output_dot_node(std::ostream &out, node_indext n) const
 {
-  const nodet &node=nodes[n];
+  const nodet &node= nodes[n];
 
-  for(typename edgest::const_iterator
-      it=node.out.begin();
-      it!=node.out.end();
+  for(typename edgest::const_iterator it= node.out.begin();
+      it != node.out.end();
       it++)
     out << n << " -> " << it->first << '\n';
 }

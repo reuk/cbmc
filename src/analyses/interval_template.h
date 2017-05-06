@@ -14,27 +14,22 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <util/threeval.h>
 
-template<class T> class interval_template
+template <class T>
+class interval_template
 {
 public:
-  interval_template():lower_set(false), upper_set(false)
+  interval_template() : lower_set(false), upper_set(false)
   {
     // this is 'top'
   }
 
-  explicit interval_template(const T &x):
-    lower_set(true),
-    upper_set(true),
-    lower(x),
-    upper(x)
+  explicit interval_template(const T &x)
+    : lower_set(true), upper_set(true), lower(x), upper(x)
   {
   }
 
-  explicit interval_template(const T &l, const T &u):
-    lower_set(true),
-    upper_set(true),
-    lower(l),
-    upper(u)
+  explicit interval_template(const T &l, const T &u)
+    : lower_set(true), upper_set(true), lower(l), upper(u)
   {
   }
 
@@ -53,7 +48,7 @@ public:
 
   bool empty() const
   {
-    return upper_set && lower_set && lower>upper;
+    return upper_set && lower_set && lower > upper;
   }
 
   bool is_bottom() const // equivalent to 'false'
@@ -68,7 +63,7 @@ public:
 
   bool singleton() const
   {
-    return upper_set && lower_set && lower==upper;
+    return upper_set && lower_set && lower == upper;
   }
 
   // constraints
@@ -76,13 +71,13 @@ public:
   {
     if(upper_set)
     {
-      if(upper>v)
-        upper=v;
+      if(upper > v)
+        upper= v;
     }
     else
     {
-      upper_set=true;
-      upper=v;
+      upper_set= true;
+      upper= v;
     }
   }
 
@@ -90,13 +85,13 @@ public:
   {
     if(lower_set)
     {
-      if(lower<v)
-        lower=v;
+      if(lower < v)
+        lower= v;
     }
     else
     {
-      lower_set=true;
-      lower=v;
+      lower_set= true;
+      lower= v;
     }
   }
 
@@ -118,12 +113,12 @@ public:
     {
       if(lower_set)
       {
-        lower=std::max(lower, i.lower);
+        lower= std::max(lower, i.lower);
       }
       else
       {
-        lower_set=true;
-        lower=i.lower;
+        lower_set= true;
+        lower= i.lower;
       }
     }
 
@@ -131,12 +126,12 @@ public:
     {
       if(upper_set)
       {
-        upper=std::min(upper, i.upper);
+        upper= std::min(upper, i.upper);
       }
       else
       {
-        upper_set=true;
-        upper=i.upper;
+        upper_set= true;
+        upper= i.upper;
       }
     }
   }
@@ -144,88 +139,88 @@ public:
   void approx_union_with(const interval_template &i)
   {
     if(i.lower_set && lower_set)
-      lower=std::min(lower, i.lower);
+      lower= std::min(lower, i.lower);
     else if(!i.lower_set && lower_set)
-      lower_set=false;
+      lower_set= false;
 
     if(i.upper_set && upper_set)
-      upper=std::max(upper, i.upper);
+      upper= std::max(upper, i.upper);
     else if(!i.upper_set && upper_set)
-      upper_set=false;
+      upper_set= false;
   }
 };
 
-template<class T>
+template <class T>
 tvt operator<=(const interval_template<T> &a, const interval_template<T> &b)
 {
-  if(a.upper_set && b.lower_set && a.upper<=b.lower)
+  if(a.upper_set && b.lower_set && a.upper <= b.lower)
     return tvt(true);
-  if(a.lower_set && b.upper_set && a.lower>b.upper)
+  if(a.lower_set && b.upper_set && a.lower > b.upper)
     return tvt(false);
 
   return tvt::unknown();
 }
 
-template<class T>
+template <class T>
 tvt operator>=(const interval_template<T> &a, const interval_template<T> &b)
 {
-  return b<=a;
+  return b <= a;
 }
 
-template<class T>
+template <class T>
 tvt operator<(const interval_template<T> &a, const interval_template<T> &b)
 {
-  return !(a>=b);
+  return !(a >= b);
 }
 
-template<class T>
+template <class T>
 tvt operator>(const interval_template<T> &a, const interval_template<T> &b)
 {
-  return !(a<=b);
+  return !(a <= b);
 }
 
-template<class T>
+template <class T>
 bool operator==(const interval_template<T> &a, const interval_template<T> &b)
 {
-  if(a.lower_set!=b.lower_set)
+  if(a.lower_set != b.lower_set)
     return false;
-  if(a.upper_set!=b.upper_set)
+  if(a.upper_set != b.upper_set)
     return false;
 
-  if(a.lower_set && a.lower!=b.lower)
+  if(a.lower_set && a.lower != b.lower)
     return false;
-  if(a.upper_set && a.upper!=b.upper)
+  if(a.upper_set && a.upper != b.upper)
     return false;
 
   return true;
 }
 
-template<class T>
+template <class T>
 bool operator!=(const interval_template<T> &a, const interval_template<T> &b)
 {
-  return !(a==b);
+  return !(a == b);
 }
 
-template<class T>
+template <class T>
 interval_template<T> upper_interval(const T &u)
 {
   interval_template<T> i;
-  i.upper_set=true;
-  i.upper=u;
+  i.upper_set= true;
+  i.upper= u;
   return i;
 }
 
-template<class T>
+template <class T>
 interval_template<T> lower_interval(const T &l)
 {
   interval_template<T> i;
-  i.lower_set=true;
-  i.lower=l;
+  i.lower_set= true;
+  i.lower= l;
   return i;
 }
 
-template<class T>
-std::ostream &operator << (std::ostream &out, const interval_template<T> &i)
+template <class T>
+std::ostream &operator<<(std::ostream &out, const interval_template<T> &i)
 {
   if(i.lower_set)
     out << '[' << i.lower;

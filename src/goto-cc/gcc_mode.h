@@ -15,7 +15,7 @@ Date: June 2006
 
 #include "goto_cc_mode.h"
 
-class gcc_modet:public goto_cc_modet
+class gcc_modet : public goto_cc_modet
 {
 public:
   int doit() final;

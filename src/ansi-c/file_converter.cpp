@@ -17,21 +17,19 @@ int main()
   {
     std::cout << "\"";
 
-    for(std::size_t i=0; i<line.size(); i++)
+    for(std::size_t i= 0; i < line.size(); i++)
     {
-      const char ch=line[i];
-      if(ch=='\\')
+      const char ch= line[i];
+      if(ch == '\\')
         std::cout << "\\\\";
-      else if(ch=='"')
+      else if(ch == '"')
         std::cout << "\\\"";
-      else if(ch=='\r' || ch=='\n')
+      else if(ch == '\r' || ch == '\n')
       {
       }
-      else if((ch&0x80)!=0)
+      else if((ch & 0x80) != 0)
       {
-        std::cout << "\\x"
-                  << std::hex << (unsigned(ch)&0xff)
-                  << std::dec;
+        std::cout << "\\x" << std::hex << (unsigned(ch) & 0xff) << std::dec;
       }
       else
         std::cout << ch;

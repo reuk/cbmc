@@ -36,8 +36,8 @@ void convert(const bvt &bv, vec<Lit> &dest)
 {
   dest.growTo(bv.size());
 
-  for(unsigned i=0; i<bv.size(); i++)
-    dest[i]=Lit(bv[i].var_no(), bv[i].sign());
+  for(unsigned i= 0; i < bv.size(); i++)
+    dest[i]= Lit(bv[i].var_no(), bv[i].sign());
 }
 
 /*******************************************************************\
@@ -48,30 +48,36 @@ void convert(const bvt &bv, vec<Lit> &dest)
 
 \*******************************************************************/
 
-class minisat_prooft:public ProofTraverser
+class minisat_prooft : public ProofTraverser
 {
 public:
   virtual void root(const vec<Lit> &c)
   {
     resolution_proof.clauses.push_back(clauset());
-    resolution_proof.clauses.back().is_root=true;
+    resolution_proof.clauses.back().is_root= true;
     resolution_proof.clauses.back().root_clause.resize(c.size());
-//    resolution_proof.clauses.back().pid = resolution_proof.partition_id;
+    //    resolution_proof.clauses.back().pid = resolution_proof.partition_id;
 
-    for(int i=0; i<c.size(); i++)
+    for(int i= 0; i < c.size(); i++)
     {
       resolution_proof.clauses.back().root_clause[i]=
         literalt(var(c[i]), sign(c[i]));
-//    if(var(c[i]) > resolution_proof.no_vars)
-//      resolution_proof.no_vars = var(c[i]);
+      //    if(var(c[i]) > resolution_proof.no_vars)
+      //      resolution_proof.no_vars = var(c[i]);
     }
   }
 
   virtual void chain(const vec<ClauseId> &cs, const vec<Var> &xs);
 
-  virtual void deleted(ClauseId c) { }
-  virtual void done() { }
-  virtual ~minisat_prooft() { }
+  virtual void deleted(ClauseId c)
+  {
+  }
+  virtual void done()
+  {
+  }
+  virtual ~minisat_prooft()
+  {
+  }
 
   simple_prooft resolution_proof;
 };
@@ -90,25 +96,25 @@ Function: minisat_prooft::chain
 
 void minisat_prooft::chain(const vec<ClauseId> &cs, const vec<Var> &xs)
 {
-  assert(cs.size()==xs.size()+1);
+  assert(cs.size() == xs.size() + 1);
 
   resolution_proof.clauses.push_back(clauset());
-  clauset &c=resolution_proof.clauses.back();
+  clauset &c= resolution_proof.clauses.back();
 
-  c.is_root=false;
+  c.is_root= false;
   // c.pid = resolution_proof.partition_id;
-  c.first_clause_id=cs[0];
+  c.first_clause_id= cs[0];
   c.steps.resize(xs.size());
 
   // copy clause IDs
-  int c_id=resolution_proof.clauses.size();
+  int c_id= resolution_proof.clauses.size();
 
-  for(int i=0; i<xs.size(); i++)
+  for(int i= 0; i < xs.size(); i++)
   {
     // must be decreasing
-    assert(cs[i]<c_id);
-    c.steps[i].clause_id=cs[i+1];
-    c.steps[i].pivot_var_no=xs[i];
+    assert(cs[i] < c_id);
+    c.steps[i].clause_id= cs[i + 1];
+    c.steps[i].pivot_var_no= xs[i];
   }
 }
 
@@ -133,18 +139,18 @@ tvt satcheck_minisat1_baset::l_get(literalt a) const
 
   tvt result;
 
-  assert(a.var_no()!=0);
-  assert(a.var_no()<(unsigned)solver->model.size());
+  assert(a.var_no() != 0);
+  assert(a.var_no() < (unsigned)solver->model.size());
 
-  if(solver->model[a.var_no()]==l_True)
-    result=tvt(true);
-  else if(solver->model[a.var_no()]==l_False)
-    result=tvt(false);
+  if(solver->model[a.var_no()] == l_True)
+    result= tvt(true);
+  else if(solver->model[a.var_no()] == l_False)
+    result= tvt(false);
   else
-    result=tvt(tvt::tv_enumt::TV_UNKNOWN);
+    result= tvt(tvt::tv_enumt::TV_UNKNOWN);
 
   if(a.sign())
-    result=!result;
+    result= !result;
 
   return result;
 }
@@ -180,7 +186,7 @@ Function: satcheck_minisat1_baset::add_variables
 
 void satcheck_minisat1_baset::add_variables()
 {
-  while((unsigned)solver->nVars()<no_variables())
+  while((unsigned)solver->nVars() < no_variables())
     solver->newVar();
 }
 
@@ -206,7 +212,7 @@ void satcheck_minisat1_baset::lcnf(const bvt &bv)
   // Minisat can't do empty clauses
   if(new_bv.empty())
   {
-    empty_clause_added=true;
+    empty_clause_added= true;
     return;
   }
 
@@ -215,8 +221,8 @@ void satcheck_minisat1_baset::lcnf(const bvt &bv)
   vec<Lit> c;
   convert(new_bv, c);
 
-  for(unsigned i=0; i<new_bv.size(); i++)
-    assert(new_bv[i].var_no()<(unsigned)solver->nVars());
+  for(unsigned i= 0; i < new_bv.size(); i++)
+    assert(new_bv[i].var_no() < (unsigned)solver->nVars());
 
   solver->addClause(c);
 
@@ -237,12 +243,11 @@ Function: satcheck_minisat1_baset::prop_solve
 
 propt::resultt satcheck_minisat1_baset::prop_solve()
 {
-  assert(status!=ERROR);
+  assert(status != ERROR);
 
   {
-    messaget::status() <<
-      (_no_variables-1) << " variables, " <<
-      solver->nClauses() << " clauses" << messaget::eom;
+    messaget::status() << (_no_variables - 1) << " variables, "
+                       << solver->nClauses() << " clauses" << messaget::eom;
   }
 
   add_variables();
@@ -253,11 +258,11 @@ propt::resultt satcheck_minisat1_baset::prop_solve()
 
   if(empty_clause_added)
   {
-    msg="empty clause: instance is UNSATISFIABLE";
+    msg= "empty clause: instance is UNSATISFIABLE";
   }
   else if(!solver->okay())
   {
-    msg="SAT checker inconsistent: instance is UNSATISFIABLE";
+    msg= "SAT checker inconsistent: instance is UNSATISFIABLE";
   }
   else
   {
@@ -266,17 +271,17 @@ propt::resultt satcheck_minisat1_baset::prop_solve()
 
     if(solver->solve(MiniSat_assumptions))
     {
-      msg="SAT checker: instance is SATISFIABLE";
+      msg= "SAT checker: instance is SATISFIABLE";
       messaget::status() << msg << messaget::eom;
-      status=SAT;
+      status= SAT;
       return P_SATISFIABLE;
     }
     else
-      msg="SAT checker: instance is UNSATISFIABLE";
+      msg= "SAT checker: instance is UNSATISFIABLE";
   }
 
   messaget::status() << msg << messaget::eom;
-  status=UNSAT;
+  status= UNSAT;
   return P_UNSATISFIABLE;
 }
 
@@ -294,11 +299,11 @@ Function: satcheck_minisat1_baset::set_assignment
 
 void satcheck_minisat1_baset::set_assignment(literalt a, bool value)
 {
-  unsigned v=a.var_no();
-  bool sign=a.sign();
-  solver->model.growTo(v+1);
-  value^=sign;
-  solver->model[v]=lbool(value);
+  unsigned v= a.var_no();
+  bool sign= a.sign();
+  solver->model.growTo(v + 1);
+  value^= sign;
+  solver->model[v]= lbool(value);
 }
 
 /*******************************************************************\
@@ -315,11 +320,11 @@ Function: satcheck_minisat1_baset::is_in_conflict
 
 bool satcheck_minisat1_baset::is_in_conflict(literalt a) const
 {
-  int v=a.var_no();
+  int v= a.var_no();
 
-  for(int i=0; i<solver->conflict.size(); i++)
+  for(int i= 0; i < solver->conflict.size(); i++)
   {
-    if(var(solver->conflict[i])==v)
+    if(var(solver->conflict[i]) == v)
       return true;
   }
 
@@ -340,10 +345,9 @@ Function: satcheck_minisat1_baset::set_assumptions
 
 void satcheck_minisat1_baset::set_assumptions(const bvt &bv)
 {
-  assumptions=bv;
+  assumptions= bv;
 
-  for(bvt::const_iterator it=assumptions.begin();
-      it!=assumptions.end();
+  for(bvt::const_iterator it= assumptions.begin(); it != assumptions.end();
       it++)
     assert(!it->is_constant());
 }
@@ -362,8 +366,8 @@ Function: satcheck_minisat1t::satcheck_minisat1t
 
 satcheck_minisat1t::satcheck_minisat1t()
 {
-  empty_clause_added=false;
-  solver=new Solver;
+  empty_clause_added= false;
+  solver= new Solver;
 }
 
 /*******************************************************************\
@@ -378,12 +382,12 @@ Function: satcheck_minisat1_prooft::satcheck_minisat1_prooft
 
 \*******************************************************************/
 
-satcheck_minisat1_prooft::satcheck_minisat1_prooft():satcheck_minisat1t()
+satcheck_minisat1_prooft::satcheck_minisat1_prooft() : satcheck_minisat1t()
 {
-  minisat_proof=new minisat_prooft;
-  proof=new Proof(*minisat_proof);
+  minisat_proof= new minisat_prooft;
+  proof= new Proof(*minisat_proof);
   //  solver=new Solver;
-  solver->proof=proof;
+  solver->proof= proof;
 }
 
 /*******************************************************************\
@@ -486,9 +490,9 @@ propt::resultt satcheck_minisat1_coret::prop_solve()
 {
   propt::resultt r;
 
-  r=satcheck_minisat1_prooft::prop_solve();
+  r= satcheck_minisat1_prooft::prop_solve();
 
-  if(status==UNSAT)
+  if(status == UNSAT)
   {
     in_core.resize(no_variables(), false);
     minisat_proof->resolution_proof.build_core(in_core);

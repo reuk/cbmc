@@ -14,17 +14,17 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/typecheck.h>
 #include <util/std_expr.h>
 
-class linkingt:public typecheckt
+class linkingt : public typecheckt
 {
 public:
   linkingt(
     symbol_tablet &_main_symbol_table,
     symbol_tablet &_src_symbol_table,
-    message_handlert &_message_handler):
-    typecheckt(_message_handler),
-    main_symbol_table(_main_symbol_table),
-    src_symbol_table(_src_symbol_table),
-    ns(_main_symbol_table)
+    message_handlert &_message_handler)
+    : typecheckt(_message_handler),
+      main_symbol_table(_main_symbol_table),
+      src_symbol_table(_src_symbol_table),
+      ns(_main_symbol_table)
   {
   }
 
@@ -35,17 +35,13 @@ public:
 protected:
   typedef std::unordered_set<irep_idt, irep_id_hash> id_sett;
 
-  bool needs_renaming_type(
-    const symbolt &old_symbol,
-    const symbolt &new_symbol);
+  bool
+  needs_renaming_type(const symbolt &old_symbol, const symbolt &new_symbol);
 
-  bool needs_renaming_non_type(
-    const symbolt &old_symbol,
-    const symbolt &new_symbol);
+  bool
+  needs_renaming_non_type(const symbolt &old_symbol, const symbolt &new_symbol);
 
-  bool needs_renaming(
-    const symbolt &old_symbol,
-    const symbolt &new_symbol)
+  bool needs_renaming(const symbolt &old_symbol, const symbolt &new_symbol)
   {
     if(new_symbol.is_type)
       return needs_renaming_type(old_symbol, new_symbol);
@@ -58,17 +54,11 @@ protected:
   void rename_symbols(const id_sett &needs_to_be_renamed);
   void copy_symbols();
 
-  void duplicate_non_type_symbol(
-    symbolt &old_symbol,
-    symbolt &new_symbol);
+  void duplicate_non_type_symbol(symbolt &old_symbol, symbolt &new_symbol);
 
-  void duplicate_code_symbol(
-    symbolt &old_symbol,
-    symbolt &new_symbol);
+  void duplicate_code_symbol(symbolt &old_symbol, symbolt &new_symbol);
 
-  void duplicate_object_symbol(
-    symbolt &old_symbol,
-    symbolt &new_symbol);
+  void duplicate_object_symbol(symbolt &old_symbol, symbolt &new_symbol);
 
   bool adjust_object_type(
     const symbolt &old_symbol,
@@ -77,12 +67,8 @@ protected:
 
   struct adjust_type_infot
   {
-    adjust_type_infot(
-      const symbolt &_old_symbol,
-      const symbolt &_new_symbol):
-      old_symbol(_old_symbol),
-      new_symbol(_new_symbol),
-      set_to_new(false)
+    adjust_type_infot(const symbolt &_old_symbol, const symbolt &_new_symbol)
+      : old_symbol(_old_symbol), new_symbol(_new_symbol), set_to_new(false)
     {
     }
 
@@ -98,9 +84,7 @@ protected:
     const typet &type2,
     adjust_type_infot &info);
 
-  void duplicate_type_symbol(
-    symbolt &old_symbol,
-    symbolt &new_symbol);
+  void duplicate_type_symbol(symbolt &old_symbol, symbolt &new_symbol);
 
   std::string expr_to_string(
     const namespacet &ns,
@@ -117,9 +101,8 @@ protected:
     const symbolt &symbol,
     const typet &type) const;
 
-  std::string type_to_string_verbose(
-    const namespacet &ns,
-    const symbolt &symbol) const
+  std::string
+  type_to_string_verbose(const namespacet &ns, const symbolt &symbol) const
   {
     return type_to_string_verbose(ns, symbol, symbol.type);
   }
@@ -158,9 +141,8 @@ protected:
     const symbolt &new_symbol,
     const std::string &msg);
 
-  void show_struct_diff(
-    const struct_typet &old_type,
-    const struct_typet &new_type);
+  void
+  show_struct_diff(const struct_typet &old_type, const struct_typet &new_type);
 
   symbol_tablet &main_symbol_table;
   symbol_tablet &src_symbol_table;

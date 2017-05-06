@@ -46,9 +46,13 @@ void fence_pensieve(
 
   // all access to shared variables is pushed into assignments
   Forall_goto_functions(f_it, goto_functions)
-    if(f_it->first!=CPROVER_PREFIX "initialize" &&
-      f_it->first!=goto_functionst::entry_point())
-      introduce_temporaries(value_sets, symbol_table, f_it->first,
+    if(
+      f_it->first != CPROVER_PREFIX "initialize" &&
+      f_it->first != goto_functionst::entry_point())
+      introduce_temporaries(
+        value_sets,
+        symbol_table,
+        f_it->first,
         f_it->second.body,
 #ifdef LOCAL_MAY
         f_it->second,
@@ -56,13 +60,13 @@ void fence_pensieve(
         message);
   message.status() << "Temporary variables added" << messaget::eom;
 
-  unsigned max_thds = 0;
+  unsigned max_thds= 0;
 
   instrumenter_pensievet instrumenter(symbol_table, goto_functions, message);
-  max_thds=instrumenter.goto2graph_cfg(value_sets, Power, true, no_loop);
+  max_thds= instrumenter.goto2graph_cfg(value_sets, Power, true, no_loop);
   message.status() << "Abstract event graph computed" << messaget::eom;
 
-  if(input_max_po_trans!=0)
+  if(input_max_po_trans != 0)
     instrumenter.set_parameters_collection(0, input_max_po_trans);
   else
     instrumenter.set_parameters_collection(max_thds);

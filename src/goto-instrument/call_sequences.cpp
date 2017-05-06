@@ -39,12 +39,12 @@ void show_call_sequences(
   std::stack<goto_programt::const_targett> stack;
   std::set<goto_programt::const_targett> seen;
 
-  if(start!=goto_program.instructions.end())
+  if(start != goto_program.instructions.end())
     stack.push(start);
 
   while(!stack.empty())
   {
-    goto_programt::const_targett t=stack.top();
+    goto_programt::const_targett t= stack.top();
     stack.pop();
 
     if(!seen.insert(t).second)
@@ -52,8 +52,8 @@ void show_call_sequences(
 
     if(t->is_function_call())
     {
-      const exprt &function2=to_code_function_call(t->code).function();
-      if(function2.id()==ID_symbol)
+      const exprt &function2= to_code_function_call(t->code).function();
+      if(function2.id() == ID_symbol)
       {
         // print pair function, function2
         std::cout << function << " -> "
@@ -91,28 +91,24 @@ void show_call_sequences(
   std::cout << "# " << function << std::endl;
 
   show_call_sequences(
-    function,
-    goto_program,
-    goto_program.instructions.begin());
+    function, goto_program, goto_program.instructions.begin());
 
   forall_goto_program_instructions(i_it, goto_program)
   {
     if(!i_it->is_function_call())
       continue;
 
-    const exprt &f1=to_code_function_call(i_it->code).function();
+    const exprt &f1= to_code_function_call(i_it->code).function();
 
-    if(f1.id()!=ID_symbol)
+    if(f1.id() != ID_symbol)
       continue;
 
     // find any calls reachable from this one
-    goto_programt::const_targett next=i_it;
+    goto_programt::const_targett next= i_it;
     next++;
 
     show_call_sequences(
-      to_symbol_expr(f1).get_identifier(),
-      goto_program,
-      next);
+      to_symbol_expr(f1).get_identifier(), goto_program, next);
   }
 
   std::cout << std::endl;
@@ -155,9 +151,8 @@ class check_call_sequencet
 public:
   explicit check_call_sequencet(
     const goto_functionst &_goto_functions,
-    const std::vector<irep_idt> &_sequence):
-    goto_functions(_goto_functions),
-    sequence(_sequence)
+    const std::vector<irep_idt> &_sequence)
+    : goto_functions(_goto_functions), sequence(_sequence)
   {
   }
 
@@ -174,9 +169,8 @@ protected:
 
     bool operator==(const call_stack_entryt &other) const
     {
-      return
-        f->first==other.f->first &&
-        return_address==other.return_address;
+      return f->first == other.f->first &&
+             return_address == other.return_address;
     }
   };
 
@@ -189,11 +183,8 @@ protected:
 
     bool operator==(const statet &other) const
     {
-      return
-        f->first==other.f->first &&
-        pc==other.pc &&
-        call_stack==other.call_stack &&
-        index==other.index;
+      return f->first == other.f->first && pc == other.pc &&
+             call_stack == other.call_stack && index == other.index;
     }
   };
 
@@ -203,12 +194,9 @@ protected:
     std::size_t operator()(const statet &s) const
     {
       size_t pc_hash=
-        s.pc==s.f->second.body.instructions.end()?0:
-        (size_t)&*s.pc;
+        s.pc == s.f->second.body.instructions.end() ? 0 : (size_t) & *s.pc;
 
-      return hash_string(s.f->first)^
-             pc_hash^
-             s.index^s.call_stack.size();
+      return hash_string(s.f->first) ^ pc_hash ^ s.index ^ s.call_stack.size();
     }
   };
 
@@ -226,25 +214,25 @@ void check_call_sequencet::operator()()
     return;
   }
 
-  irep_idt entry=sequence.front();
+  irep_idt entry= sequence.front();
 
   goto_functionst::function_mapt::const_iterator f_it=
     goto_functions.function_map.find(entry);
 
-  if(f_it!=goto_functions.function_map.end())
+  if(f_it != goto_functions.function_map.end())
   {
     queue.push(statet());
-    queue.top().f=f_it;
-    queue.top().pc=f_it->second.body.instructions.begin();
-    queue.top().index=1;
+    queue.top().f= f_it;
+    queue.top().pc= f_it->second.body.instructions.begin();
+    queue.top().index= 1;
   }
 
   while(!queue.empty())
   {
-    statet &e=queue.top();
+    statet &e= queue.top();
 
     // seen already?
-    if(states.find(e)!=states.end())
+    if(states.find(e) != states.end())
     {
       // drop, continue
       queue.pop();
@@ -255,49 +243,49 @@ void check_call_sequencet::operator()()
     states.insert(e);
 
     // satisfies sequence?
-    if(e.index==sequence.size())
+    if(e.index == sequence.size())
     {
       std::cout << "sequence feasible\n";
       return;
     }
 
     // new, explore
-    if(e.pc==e.f->second.body.instructions.end())
+    if(e.pc == e.f->second.body.instructions.end())
     {
       if(e.call_stack.empty())
         queue.pop();
       else
       {
         // successor is the return location
-        e.pc=e.call_stack.back().return_address;
-        e.f=e.call_stack.back().f;
+        e.pc= e.call_stack.back().return_address;
+        e.f= e.call_stack.back().f;
         e.call_stack.pop_back();
       }
     }
     else if(e.pc->is_function_call())
     {
-      const exprt &function=to_code_function_call(e.pc->code).function();
-      if(function.id()==ID_symbol)
+      const exprt &function= to_code_function_call(e.pc->code).function();
+      if(function.id() == ID_symbol)
       {
-        irep_idt identifier=to_symbol_expr(function).get_identifier();
+        irep_idt identifier= to_symbol_expr(function).get_identifier();
 
-        if(sequence[e.index]==identifier)
+        if(sequence[e.index] == identifier)
         {
           e.index++; // yes, we have seen it
 
           goto_functionst::function_mapt::const_iterator f_call_it=
             goto_functions.function_map.find(identifier);
 
-          if(f_call_it==goto_functions.function_map.end())
+          if(f_call_it == goto_functions.function_map.end())
             e.pc++;
           else
           {
             e.pc++;
             e.call_stack.push_back(call_stack_entryt());
-            e.call_stack.back().return_address=e.pc;
-            e.call_stack.back().f=e.f;
-            e.pc=f_call_it->second.body.instructions.begin();
-            e.f=f_call_it;
+            e.call_stack.back().return_address= e.pc;
+            e.call_stack.back().f= e.f;
+            e.pc= f_call_it->second.body.instructions.begin();
+            e.f= f_call_it;
           }
         }
         else
@@ -306,15 +294,15 @@ void check_call_sequencet::operator()()
     }
     else if(e.pc->is_goto())
     {
-      goto_programt::const_targett t=e.pc->get_target();
+      goto_programt::const_targett t= e.pc->get_target();
 
       if(e.pc->guard.is_true())
-        e.pc=t;
+        e.pc= t;
       else
       {
         e.pc++;
         queue.push(e); // deque doesn't invalidate references
-        queue.top().pc=t;
+        queue.top().pc= t;
       }
     }
     else
@@ -347,10 +335,10 @@ void check_call_sequence(const goto_functionst &goto_functions)
   std::string line;
   while(std::getline(std::cin, line))
   {
-    if(line!="" && line[line.size()-1]=='\r')
-      line.resize(line.size()-1);
+    if(line != "" && line[line.size() - 1] == '\r')
+      line.resize(line.size() - 1);
 
-    if(line!="")
+    if(line != "")
       sequence.push_back(line);
   }
 
@@ -379,20 +367,20 @@ static void list_calls_and_arguments(
     if(!i_it->is_function_call())
       continue;
 
-    const code_function_callt call=to_code_function_call(i_it->code);
+    const code_function_callt call= to_code_function_call(i_it->code);
 
-    const exprt &f=call.function();
+    const exprt &f= call.function();
 
-    if(f.id()!=ID_symbol)
+    if(f.id() != ID_symbol)
       continue;
 
-    const irep_idt &identifier=to_symbol_expr(f).get_identifier();
-    if(identifier=="__CPROVER_initialize")
+    const irep_idt &identifier= to_symbol_expr(f).get_identifier();
+    if(identifier == "__CPROVER_initialize")
       continue;
 
-    std::string name=from_expr(ns, identifier, f);
-    std::string::size_type java_type_suffix=name.find(":(");
-    if(java_type_suffix!=std::string::npos)
+    std::string name= from_expr(ns, identifier, f);
+    std::string::size_type java_type_suffix= name.find(":(");
+    if(java_type_suffix != std::string::npos)
       name.erase(java_type_suffix);
 
     std::cout << "found call to " << name;
@@ -400,12 +388,11 @@ static void list_calls_and_arguments(
     if(!call.arguments().empty())
     {
       std::cout << " with arguments ";
-      for(exprt::operandst::const_iterator
-          it=call.arguments().begin();
-          it!=call.arguments().end();
+      for(exprt::operandst::const_iterator it= call.arguments().begin();
+          it != call.arguments().end();
           ++it)
       {
-        if(it!=call.arguments().begin())
+        if(it != call.arguments().begin())
           std::cout << ", ";
         std::cout << from_expr(ns, identifier, simplify_expr(*it, ns));
       }

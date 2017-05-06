@@ -48,18 +48,14 @@ public:
     locationt from,
     locationt to,
     ai_baset &ai,
-    const namespacet &ns)=0;
+    const namespacet &ns)= 0;
 
-  virtual void output(
-    std::ostream &out,
-    const ai_baset &ai,
-    const namespacet &ns) const
+  virtual void
+  output(std::ostream &out, const ai_baset &ai, const namespacet &ns) const
   {
   }
 
-  virtual jsont output_json(
-    const ai_baset &ai,
-    const namespacet &ns) const
+  virtual jsont output_json(const ai_baset &ai, const namespacet &ns) const
   {
     std::ostringstream out;
     output(out, ai, ns);
@@ -67,26 +63,24 @@ public:
     return json;
   }
 
-  virtual xmlt output_xml(
-    const ai_baset &ai,
-    const namespacet &ns) const
+  virtual xmlt output_xml(const ai_baset &ai, const namespacet &ns) const
   {
     std::ostringstream out;
     output(out, ai, ns);
     xmlt xml("domain");
-    xml.data=out.str();
+    xml.data= out.str();
     return xml;
   }
 
   // no states
-  virtual void make_bottom()=0;
+  virtual void make_bottom()= 0;
 
   // all states -- the analysis doesn't use this,
   // and domains may refuse to implement it.
-  virtual void make_top()=0;
+  virtual void make_top()= 0;
 
   // a reasonable entry-point state
-  virtual void make_entry()=0;
+  virtual void make_entry()= 0;
 
   // also add
   //
@@ -112,9 +106,7 @@ public:
   {
   }
 
-  void operator()(
-    const goto_programt &goto_program,
-    const namespacet &ns)
+  void operator()(const goto_programt &goto_program, const namespacet &ns)
   {
     goto_functionst goto_functions;
     initialize(goto_program);
@@ -122,9 +114,7 @@ public:
     fixedpoint(goto_program, goto_functions, ns);
   }
 
-  void operator()(
-    const goto_functionst &goto_functions,
-    const namespacet &ns)
+  void operator()(const goto_functionst &goto_functions, const namespacet &ns)
   {
     initialize(goto_functions);
     entry_state(goto_functions);
@@ -158,9 +148,7 @@ public:
     const goto_functionst &goto_functions,
     std::ostream &out) const;
 
-  void output(
-    const goto_modelt &goto_model,
-    std::ostream &out) const
+  void output(const goto_modelt &goto_model, std::ostream &out) const
   {
     const namespacet ns(goto_model.symbol_table);
     output(ns, goto_model.goto_functions, out);
@@ -182,21 +170,18 @@ public:
     output(ns, goto_function.body, "", out);
   }
 
-
   virtual jsont output_json(
     const namespacet &ns,
     const goto_functionst &goto_functions) const;
 
-  jsont output_json(
-    const goto_modelt &goto_model) const
+  jsont output_json(const goto_modelt &goto_model) const
   {
     const namespacet ns(goto_model.symbol_table);
     return output_json(ns, goto_model.goto_functions);
   }
 
-  jsont output_json(
-    const namespacet &ns,
-    const goto_programt &goto_program) const
+  jsont
+  output_json(const namespacet &ns, const goto_programt &goto_program) const
   {
     return output_json(ns, goto_program, "");
   }
@@ -208,21 +193,16 @@ public:
     return output_json(ns, goto_function.body, "");
   }
 
+  virtual xmlt
+  output_xml(const namespacet &ns, const goto_functionst &goto_functions) const;
 
-  virtual xmlt output_xml(
-    const namespacet &ns,
-    const goto_functionst &goto_functions) const;
-
-  xmlt output_xml(
-    const goto_modelt &goto_model) const
+  xmlt output_xml(const goto_modelt &goto_model) const
   {
     const namespacet ns(goto_model.symbol_table);
     return output_xml(ns, goto_model.goto_functions);
   }
 
-  xmlt output_xml(
-    const namespacet &ns,
-    const goto_programt &goto_program) const
+  xmlt output_xml(const namespacet &ns, const goto_programt &goto_program) const
   {
     return output_xml(ns, goto_program, "");
   }
@@ -259,18 +239,14 @@ protected:
     const goto_programt &goto_program,
     const irep_idt &identifier) const;
 
-
   // the work-queue is sorted by location number
   typedef std::map<unsigned, locationt> working_sett;
 
   locationt get_next(working_sett &working_set);
 
-  void put_in_working_set(
-    working_sett &working_set,
-    locationt l)
+  void put_in_working_set(working_sett &working_set, locationt l)
   {
-    working_set.insert(
-      std::pair<unsigned, locationt>(l->location_number, l));
+    working_set.insert(std::pair<unsigned, locationt>(l->location_number, l));
   }
 
   // true = found s.th. new
@@ -279,9 +255,8 @@ protected:
     const goto_functionst &goto_functions,
     const namespacet &ns);
 
-  virtual void fixedpoint(
-    const goto_functionst &goto_functions,
-    const namespacet &ns)=0;
+  virtual void
+  fixedpoint(const goto_functionst &goto_functions, const namespacet &ns)= 0;
 
   void sequential_fixedpoint(
     const goto_functionst &goto_functions,
@@ -303,14 +278,16 @@ protected:
 
   // function calls
   bool do_function_call_rec(
-    locationt l_call, locationt l_return,
+    locationt l_call,
+    locationt l_return,
     const exprt &function,
     const exprt::operandst &arguments,
     const goto_functionst &goto_functions,
     const namespacet &ns);
 
   bool do_function_call(
-    locationt l_call, locationt l_return,
+    locationt l_call,
+    locationt l_return,
     const goto_functionst &goto_functions,
     const goto_functionst::function_mapt::const_iterator f_it,
     const exprt::operandst &arguments,
@@ -318,25 +295,25 @@ protected:
 
   // abstract methods
 
-  virtual bool merge(const statet &src, locationt from, locationt to)=0;
+  virtual bool merge(const statet &src, locationt from, locationt to)= 0;
   // for concurrent fixedpoint
   virtual bool merge_shared(
     const statet &src,
     locationt from,
     locationt to,
-    const namespacet &ns)=0;
-  virtual statet &get_state(locationt l)=0;
-  virtual const statet &find_state(locationt l) const=0;
-  virtual statet* make_temporary_state(const statet &s)=0;
+    const namespacet &ns)= 0;
+  virtual statet &get_state(locationt l)= 0;
+  virtual const statet &find_state(locationt l) const= 0;
+  virtual statet *make_temporary_state(const statet &s)= 0;
 };
 
 // domainT is expected to be derived from ai_domain_baseT
-template<typename domainT>
-class ait:public ai_baset
+template <typename domainT>
+class ait : public ai_baset
 {
 public:
   // constructor
-  ait():ai_baset()
+  ait() : ai_baset()
   {
   }
 
@@ -344,8 +321,8 @@ public:
 
   domainT &operator[](locationt l)
   {
-    typename state_mapt::iterator it=state_map.find(l);
-    if(it==state_map.end())
+    typename state_mapt::iterator it= state_map.find(l);
+    if(it == state_map.end())
       throw "failed to find state";
 
     return it->second;
@@ -353,8 +330,8 @@ public:
 
   const domainT &operator[](locationt l) const
   {
-    typename state_mapt::const_iterator it=state_map.find(l);
-    if(it==state_map.end())
+    typename state_mapt::const_iterator it= state_map.find(l);
+    if(it == state_map.end())
       throw "failed to find state";
 
     return it->second;
@@ -379,8 +356,8 @@ protected:
   // this one just finds states
   const statet &find_state(locationt l) const override
   {
-    typename state_mapt::const_iterator it=state_map.find(l);
-    if(it==state_map.end())
+    typename state_mapt::const_iterator it= state_map.find(l);
+    if(it == state_map.end())
       throw "failed to find state";
 
     return it->second;
@@ -388,7 +365,7 @@ protected:
 
   bool merge(const statet &src, locationt from, locationt to) override
   {
-    statet &dest=get_state(to);
+    statet &dest= get_state(to);
     return static_cast<domainT &>(dest).merge(
       static_cast<const domainT &>(src), from, to);
   }
@@ -398,16 +375,19 @@ protected:
     return new domainT(static_cast<const domainT &>(s));
   }
 
-  void fixedpoint(
-    const goto_functionst &goto_functions,
-    const namespacet &ns) override
+  void fixedpoint(const goto_functionst &goto_functions, const namespacet &ns)
+    override
   {
     sequential_fixedpoint(goto_functions, ns);
   }
 
 private:
   // to enforce that domainT is derived from ai_domain_baset
-  void dummy(const domainT &s) { const statet &x=s; (void)x; }
+  void dummy(const domainT &s)
+  {
+    const statet &x= s;
+    (void)x;
+  }
 
   // not implemented in sequential analyses
   bool merge_shared(
@@ -420,14 +400,14 @@ private:
   }
 };
 
-template<typename domainT>
-class concurrency_aware_ait:public ait<domainT>
+template <typename domainT>
+class concurrency_aware_ait : public ait<domainT>
 {
 public:
   typedef typename ait<domainT>::statet statet;
 
   // constructor
-  concurrency_aware_ait():ait<domainT>()
+  concurrency_aware_ait() : ait<domainT>()
   {
   }
 
@@ -437,15 +417,14 @@ public:
     goto_programt::const_targett to,
     const namespacet &ns) override
   {
-    statet &dest=this->get_state(to);
+    statet &dest= this->get_state(to);
     return static_cast<domainT &>(dest).merge_shared(
       static_cast<const domainT &>(src), from, to, ns);
   }
 
 protected:
-  void fixedpoint(
-    const goto_functionst &goto_functions,
-    const namespacet &ns) override
+  void fixedpoint(const goto_functionst &goto_functions, const namespacet &ns)
+    override
   {
     this->concurrent_fixedpoint(goto_functions, ns);
   }

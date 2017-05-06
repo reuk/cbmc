@@ -18,21 +18,23 @@ Author: Daniel Kroening, kroening@kroening.com
 class object_idt
 {
 public:
-  object_idt() { }
+  object_idt()
+  {
+  }
 
   explicit object_idt(const symbol_exprt &symbol_expr)
   {
-    id=symbol_expr.get_identifier();
+    id= symbol_expr.get_identifier();
   }
 
   explicit object_idt(const irep_idt &identifier)
   {
-    id=identifier;
+    id= identifier;
   }
 
   bool operator<(const object_idt &other) const
   {
-    return id<other.id;
+    return id < other.id;
   }
 
   const irep_idt &get_id() const
@@ -44,9 +46,7 @@ protected:
   irep_idt id;
 };
 
-inline std::ostream &operator<<(
-  std::ostream &out,
-  const object_idt &object_id)
+inline std::ostream &operator<<(std::ostream &out, const object_idt &object_id)
 {
   return out << object_id.get_id();
 }

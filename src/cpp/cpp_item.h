@@ -17,7 +17,7 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 #include "cpp_using.h"
 #include "cpp_static_assert.h"
 
-class cpp_itemt:public irept
+class cpp_itemt : public irept
 {
 public:
   // declaration
@@ -42,7 +42,7 @@ public:
 
   bool is_declaration() const
   {
-    return id()==ID_cpp_declaration;
+    return id() == ID_cpp_declaration;
   }
 
   // linkage spec
@@ -67,7 +67,7 @@ public:
 
   bool is_linkage_spec() const
   {
-    return id()==ID_cpp_linkage_spec;
+    return id() == ID_cpp_linkage_spec;
   }
 
   // namespace
@@ -92,7 +92,7 @@ public:
 
   bool is_namespace_spec() const
   {
-    return id()==ID_cpp_namespace_spec;
+    return id() == ID_cpp_namespace_spec;
   }
 
   // using
@@ -105,7 +105,7 @@ public:
 
   cpp_usingt &get_using()
   {
-     assert(is_using());
+    assert(is_using());
     return (cpp_usingt &)*this;
   }
 
@@ -117,7 +117,7 @@ public:
 
   bool is_using() const
   {
-    return id()==ID_cpp_using;
+    return id() == ID_cpp_using;
   }
 
   // static assertion
@@ -136,13 +136,12 @@ public:
 
   bool is_static_assert() const
   {
-    return id()==ID_cpp_static_assert;
+    return id() == ID_cpp_static_assert;
   }
 
   const source_locationt &source_location() const
   {
-    return static_cast<const source_locationt &>(
-      find(ID_C_source_location));
+    return static_cast<const source_locationt &>(find(ID_C_source_location));
   }
 };
 

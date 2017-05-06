@@ -20,8 +20,6 @@ void show_properties(
   ui_message_handlert::uit ui,
   const goto_functionst &goto_functions);
 
-void show_properties(
-  const goto_modelt &,
-  ui_message_handlert::uit ui);
+void show_properties(const goto_modelt &, ui_message_handlert::uit ui);
 
 #endif // CPROVER_GOTO_PROGRAMS_SHOW_PROPERTIES_H

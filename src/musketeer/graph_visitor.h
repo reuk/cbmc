@@ -36,14 +36,27 @@ public:
     event_idt next,
     event_idt end,
     std::list<event_idt> &old_path);
-  void graph_explore(event_grapht &graph, event_idt next, event_idt end,
-    std::list<event_idt> &old_path, std::set<unsigned> &edges);
-  void graph_explore_BC(event_grapht &egraph, event_idt next,
-    std::list<event_idt> &old_path, std::set<unsigned> &edges, bool porw);
-  void graph_explore_AC(event_grapht &egraph, event_idt next,
-    std::list<event_idt> &old_path, std::set<unsigned> &edges, bool porw);
+  void graph_explore(
+    event_grapht &graph,
+    event_idt next,
+    event_idt end,
+    std::list<event_idt> &old_path,
+    std::set<unsigned> &edges);
   void graph_explore_BC(
-    event_grapht &egraph, event_idt next,
+    event_grapht &egraph,
+    event_idt next,
+    std::list<event_idt> &old_path,
+    std::set<unsigned> &edges,
+    bool porw);
+  void graph_explore_AC(
+    event_grapht &egraph,
+    event_idt next,
+    std::list<event_idt> &old_path,
+    std::set<unsigned> &edges,
+    bool porw);
+  void graph_explore_BC(
+    event_grapht &egraph,
+    event_idt next,
     std::list<event_idt> &old_path,
     std::set<unsigned> &edges)
   {
@@ -59,14 +72,19 @@ public:
     graph_explore_AC(egraph, next, old_path, edges, false);
   }
 
-  void const_graph_explore_BC(event_grapht &egraph, event_idt next,
+  void const_graph_explore_BC(
+    event_grapht &egraph,
+    event_idt next,
     std::list<event_idt> &old_path);
-  void const_graph_explore_AC(event_grapht &egraph, event_idt next,
+  void const_graph_explore_AC(
+    event_grapht &egraph,
+    event_idt next,
     std::list<event_idt> &old_path);
 
   explicit const_graph_visitort(fence_insertert &_fence_inserter)
     : fence_inserter(_fence_inserter)
-  {}
+  {
+  }
 };
 
 #endif // CPROVER_MUSKETEER_GRAPH_VISITOR_H

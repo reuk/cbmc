@@ -19,11 +19,10 @@ Purpose: Find a satisfying assignment that minimizes a given set
 
 typedef std::set<exprt> minimization_listt;
 
-class bv_minimizet:public messaget
+class bv_minimizet : public messaget
 {
 public:
-  explicit bv_minimizet(boolbvt &_boolbv):
-    boolbv(_boolbv)
+  explicit bv_minimizet(boolbvt &_boolbv) : boolbv(_boolbv)
   {
   }
 
@@ -32,12 +31,11 @@ public:
 protected:
   boolbvt &boolbv;
 
-  void add_objective(
-    class prop_minimizet &prop_minimize,
-    const exprt &objective);
+  void
+  add_objective(class prop_minimizet &prop_minimize, const exprt &objective);
 };
 
-class bv_minimizing_dect:public bv_pointerst
+class bv_minimizing_dect : public bv_pointerst
 {
 public:
   virtual const std::string description()
@@ -45,8 +43,8 @@ public:
     return "Bit vector minimizing SAT";
   }
 
-  explicit bv_minimizing_dect(const namespacet &_ns):
-    bv_pointerst(_ns, satcheck)
+  explicit bv_minimizing_dect(const namespacet &_ns)
+    : bv_pointerst(_ns, satcheck)
   {
   }
 

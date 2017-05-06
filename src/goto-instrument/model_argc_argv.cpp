@@ -47,7 +47,7 @@ bool model_argc_argv(
   messaget message(message_handler);
   const namespacet ns(symbol_table);
 
-  const symbolt *init_symbol=0;
+  const symbolt *init_symbol= 0;
   if(ns.lookup(CPROVER_PREFIX "initialize", init_symbol))
   {
     message.error() << "Linking not done, missing "
@@ -55,37 +55,34 @@ bool model_argc_argv(
     return true;
   }
 
-  if(init_symbol->mode!=ID_C)
+  if(init_symbol->mode != ID_C)
   {
-    message.error() << "argc/argv modelling is C specific"
-                    << messaget::eom;
+    message.error() << "argc/argv modelling is C specific" << messaget::eom;
     return true;
   }
 
   goto_functionst::function_mapt::iterator init_entry=
     goto_functions.function_map.find(CPROVER_PREFIX "initialize");
   assert(
-    init_entry!=goto_functions.function_map.end() &&
+    init_entry != goto_functions.function_map.end() &&
     init_entry->second.body_available());
 
-  goto_programt &init=init_entry->second.body;
-  goto_programt::targett init_end=init.instructions.end();
+  goto_programt &init= init_entry->second.body;
+  goto_programt::targett init_end= init.instructions.end();
   --init_end;
   assert(init_end->is_end_function());
-  assert(init_end!=init.instructions.begin());
+  assert(init_end != init.instructions.begin());
   --init_end;
 
   const symbolt &main_symbol=
-    ns.lookup(config.main.empty()?ID_main:config.main);
+    ns.lookup(config.main.empty() ? ID_main : config.main);
 
   const code_typet::parameterst &parameters=
     to_code_type(main_symbol.type).parameters();
-  if(parameters.size()!=2 &&
-     parameters.size()!=3)
+  if(parameters.size() != 2 && parameters.size() != 3)
   {
     message.warning() << "main expected to take 2 or 3 arguments,"
-                      << " argc/argv instrumentation skipped"
-                      << messaget::eom;
+                      << " argc/argv instrumentation skipped" << messaget::eom;
     return false;
   }
 
@@ -115,49 +112,45 @@ bool model_argc_argv(
 
   ansi_c_languaget ansi_c_language;
   ansi_c_language.set_message_handler(message_handler);
-  configt::ansi_ct::preprocessort pp=config.ansi_c.preprocessor;
-  config.ansi_c.preprocessor=configt::ansi_ct::preprocessort::NONE;
+  configt::ansi_ct::preprocessort pp= config.ansi_c.preprocessor;
+  config.ansi_c.preprocessor= configt::ansi_ct::preprocessort::NONE;
   ansi_c_language.parse(iss, "");
-  config.ansi_c.preprocessor=pp;
+  config.ansi_c.preprocessor= pp;
 
   symbol_tablet tmp_symbol_table;
   ansi_c_language.typecheck(tmp_symbol_table, "<built-in-library>");
 
   goto_programt tmp;
-  exprt value=nil_exprt();
+  exprt value= nil_exprt();
   // locate the body of the newly built initialize function as well
   // as any additional declarations we might need; the body will then
   // be converted and appended to the existing initialize function
   forall_symbols(it, tmp_symbol_table.symbols)
   {
     // add __CPROVER_assume if necessary (it might exist already)
-    if(it->first==CPROVER_PREFIX "assume")
+    if(it->first == CPROVER_PREFIX "assume")
       symbol_table.add(it->second);
-    else if(it->first==CPROVER_PREFIX "initialize")
+    else if(it->first == CPROVER_PREFIX "initialize")
     {
-      value=it->second.value;
+      value= it->second.value;
 
       replace_symbolt replace;
       replace.insert("ARGC", ns.lookup("argc'").symbol_expr());
       replace.insert("ARGV", ns.lookup("argv'").symbol_expr());
       replace(value);
     }
-    else if(has_prefix(id2string(it->first),
-                       CPROVER_PREFIX "initialize::") &&
-            symbol_table.add(it->second))
+    else if(
+      has_prefix(id2string(it->first), CPROVER_PREFIX "initialize::") &&
+      symbol_table.add(it->second))
       assert(false);
   }
 
   assert(value.is_not_nil());
-  goto_convert(
-    to_code(value),
-    symbol_table,
-    tmp,
-    message_handler);
+  goto_convert(to_code(value), symbol_table, tmp, message_handler);
   Forall_goto_program_instructions(it, tmp)
   {
     it->source_location.set_file("<built-in-library>");
-    it->function=CPROVER_PREFIX "initialize";
+    it->function= CPROVER_PREFIX "initialize";
   }
   init.insert_before_swap(init_end, tmp);
 
@@ -168,4 +161,3 @@ bool model_argc_argv(
 
   return false;
 }
-

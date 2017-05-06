@@ -15,14 +15,12 @@ Author: Daniel Kroening, kroening@kroening.com
 class printf_formattert
 {
 public:
-  void operator()(
-    const std::string &format,
-    const std::list<exprt> &_operands);
+  void operator()(const std::string &format, const std::list<exprt> &_operands);
 
   void print(std::ostream &out);
   std::string as_string();
 
-  explicit printf_formattert(const namespacet &_ns):ns(_ns)
+  explicit printf_formattert(const namespacet &_ns) : ns(_ns)
   {
   }
 
@@ -32,9 +30,14 @@ protected:
   std::list<exprt> operands;
   std::list<exprt>::const_iterator next_operand;
   unsigned format_pos;
-  bool eol() const { return format_pos>=format.size(); }
+  bool eol() const
+  {
+    return format_pos >= format.size();
+  }
 
-  class eol_exceptiont { };
+  class eol_exceptiont
+  {
+  };
 
   char next()
   {

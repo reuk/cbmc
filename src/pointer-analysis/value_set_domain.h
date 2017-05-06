@@ -14,7 +14,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "value_set.h"
 
-class value_set_domaint:public domain_baset
+class value_set_domaint : public domain_baset
 {
 public:
   value_sett value_set;
@@ -26,25 +26,19 @@ public:
     return value_set.make_union(other.value_set);
   }
 
-  virtual void output(
-    const namespacet &ns,
-    std::ostream &out) const
+  virtual void output(const namespacet &ns, std::ostream &out) const
   {
     value_set.output(ns, out);
   }
 
-  virtual void initialize(
-    const namespacet &ns,
-    locationt l)
+  virtual void initialize(const namespacet &ns, locationt l)
   {
     value_set.clear();
-    value_set.location_number=l->location_number;
+    value_set.location_number= l->location_number;
   }
 
-  virtual void transform(
-    const namespacet &ns,
-    locationt from_l,
-    locationt to_l);
+  virtual void
+  transform(const namespacet &ns, locationt from_l, locationt to_l);
 
   virtual void get_reference_set(
     const namespacet &ns,

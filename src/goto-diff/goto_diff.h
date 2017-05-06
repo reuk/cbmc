@@ -16,25 +16,27 @@ Author: Peter Schrammel
 
 #include <ostream>
 
-class goto_difft:public messaget
+class goto_difft : public messaget
 {
 public:
   explicit goto_difft(
     const goto_modelt &_goto_model1,
     const goto_modelt &_goto_model2,
-    message_handlert &_message_handler
-    )
-    :
-    messaget(_message_handler),
-    goto_model1(_goto_model1),
-    goto_model2(_goto_model2),
-    ui(ui_message_handlert::PLAIN),
-    total_functions_count(0)
-     {}
+    message_handlert &_message_handler)
+    : messaget(_message_handler),
+      goto_model1(_goto_model1),
+      goto_model2(_goto_model2),
+      ui(ui_message_handlert::PLAIN),
+      total_functions_count(0)
+  {
+  }
 
-  virtual bool operator()()=0;
+  virtual bool operator()()= 0;
 
-  void set_ui(language_uit::uit _ui) { ui=_ui; }
+  void set_ui(language_uit::uit _ui)
+  {
+    ui= _ui;
+  }
 
   virtual std::ostream &output_functions(std::ostream &out) const;
 
@@ -50,9 +52,8 @@ protected:
   void convert_function_group(
     json_arrayt &result,
     const irep_id_sett &function_group) const;
-  void convert_function(
-    json_objectt &result,
-    const irep_idt &function_name) const;
+  void
+  convert_function(json_objectt &result, const irep_idt &function_name) const;
 };
 
 #endif // CPROVER_GOTO_DIFF_GOTO_DIFF_H

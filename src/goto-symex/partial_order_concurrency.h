@@ -13,7 +13,7 @@ Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
 
 #include "symex_target_equation.h"
 
-class partial_order_concurrencyt:public messaget
+class partial_order_concurrencyt : public messaget
 {
 public:
   explicit partial_order_concurrencyt(const namespacet &_ns);
@@ -24,17 +24,14 @@ public:
   typedef eventst::const_iterator event_it;
 
   // the name of a clock variable for a shared read/write
-  typedef enum
-  {
-    AX_SC_PER_LOCATION=1,
-    AX_NO_THINAIR=2,
-    AX_OBSERVATION=4,
-    AX_PROPAGATION=8
+  typedef enum {
+    AX_SC_PER_LOCATION= 1,
+    AX_NO_THINAIR= 2,
+    AX_OBSERVATION= 4,
+    AX_PROPAGATION= 8
   } axiomt;
 
-  static irep_idt rw_clock_id(
-    event_it e,
-    axiomt axiom=AX_PROPAGATION);
+  static irep_idt rw_clock_id(event_it e, axiomt axiom= AX_PROPAGATION);
 
 protected:
   const namespacet &ns;
@@ -66,7 +63,7 @@ protected:
   // produces an address ID for an event
   irep_idt address(event_it event) const
   {
-    ssa_exprt tmp=event->ssa_lhs;
+    ssa_exprt tmp= event->ssa_lhs;
     tmp.remove_level_2();
     return tmp.get_identifier();
   }
@@ -85,7 +82,7 @@ protected:
 
   // the partial order constraint for two events
   exprt before(event_it e1, event_it e2, unsigned axioms);
-  virtual exprt before(event_it e1, event_it e2)=0;
+  virtual exprt before(event_it e1, event_it e2)= 0;
 };
 
 #if 0
@@ -232,10 +229,10 @@ public:
   void acyclic();
 
   // steps as used in PLDI Power model
-#  define S_COMMIT 0
-#  define S_R_REQ 1
-#  define S_S_ACK 1
-#  define S_PROP(t) ((t+1)<<1)
+#define S_COMMIT 0
+#define S_R_REQ 1
+#define S_S_ACK 1
+#define S_PROP(t) ((t + 1) << 1)
   symbol_exprt clock(
       const acyclict check,
       const evtt &n,

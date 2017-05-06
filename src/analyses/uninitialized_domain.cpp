@@ -37,26 +37,27 @@ void uninitialized_domaint::transform(
   switch(from->type)
   {
   case DECL:
-    {
-      const irep_idt &identifier=
-        to_code_decl(from->code).get_identifier();
-      const symbolt &symbol=ns.lookup(identifier);
+  {
+    const irep_idt &identifier= to_code_decl(from->code).get_identifier();
+    const symbolt &symbol= ns.lookup(identifier);
 
-      if(!symbol.is_static_lifetime)
-        uninitialized.insert(identifier);
-    }
-    break;
+    if(!symbol.is_static_lifetime)
+      uninitialized.insert(identifier);
+  }
+  break;
 
   default:
-    {
-      std::list<exprt> read=expressions_read(*from);
-      std::list<exprt> written=expressions_written(*from);
+  {
+    std::list<exprt> read= expressions_read(*from);
+    std::list<exprt> written= expressions_written(*from);
 
-      forall_expr_list(it, written) assign(*it);
+    forall_expr_list(it, written)
+      assign(*it);
 
-      // we only care about the *first* uninitalized use
-      forall_expr_list(it, read) assign(*it);
-    }
+    // we only care about the *first* uninitalized use
+    forall_expr_list(it, read)
+      assign(*it);
+  }
   }
 }
 
@@ -74,11 +75,11 @@ Function: uninitialized_domaint::assign
 
 void uninitialized_domaint::assign(const exprt &lhs)
 {
-  if(lhs.id()==ID_index)
+  if(lhs.id() == ID_index)
     assign(to_index_expr(lhs).array());
-  else if(lhs.id()==ID_member)
+  else if(lhs.id() == ID_member)
     assign(to_member_expr(lhs).struct_op());
-  else if(lhs.id()==ID_symbol)
+  else if(lhs.id() == ID_symbol)
     uninitialized.erase(to_symbol_expr(lhs).get_identifier());
 }
 
@@ -125,16 +126,13 @@ bool uninitialized_domaint::merge(
   locationt from,
   locationt to)
 {
-  unsigned old_uninitialized=uninitialized.size();
+  unsigned old_uninitialized= uninitialized.size();
 
-  uninitialized.insert(
-    other.uninitialized.begin(),
-    other.uninitialized.end());
+  uninitialized.insert(other.uninitialized.begin(), other.uninitialized.end());
 
-  bool changed=
-    (has_values.is_false() && !other.has_values.is_false()) ||
-    old_uninitialized!=uninitialized.size();
-  has_values=tvt::unknown();
+  bool changed= (has_values.is_false() && !other.has_values.is_false()) ||
+                old_uninitialized != uninitialized.size();
+  has_values= tvt::unknown();
 
   return changed;
 }

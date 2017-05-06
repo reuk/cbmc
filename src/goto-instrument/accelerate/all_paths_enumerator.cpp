@@ -39,7 +39,7 @@ bool all_paths_enumeratort::next(patht &path)
     std::cout << "Enumerating next path..." << std::endl;
 #endif
 
-    int decision=backtrack(last_path);
+    int decision= backtrack(last_path);
     complete_path(last_path, decision);
 
     if(is_looping(last_path))
@@ -48,8 +48,7 @@ bool all_paths_enumeratort::next(patht &path)
       path.insert(path.begin(), last_path.begin(), last_path.end());
       return true;
     }
-  }
-  while(!last_path.empty());
+  } while(!last_path.empty());
 
   // We've enumerated all the paths.
   return false;
@@ -59,37 +58,37 @@ int all_paths_enumeratort::backtrack(patht &path)
 {
   // If we have a path of length 1 or 0, we can't backtrack any further.
   // That means we're done enumerating paths!
-  if(path.size()<2)
+  if(path.size() < 2)
   {
     path.clear();
     return 0;
   }
 
-  path_nodet &node=path.back();
+  path_nodet &node= path.back();
   path.pop_back();
 
-  path_nodet &parent=path.back();
-  const auto succs=goto_program.get_successors(parent.loc);
+  path_nodet &parent= path.back();
+  const auto succs= goto_program.get_successors(parent.loc);
 
-  unsigned int ret=0;
+  unsigned int ret= 0;
 
   for(const auto &succ : succs)
   {
-    if(succ==node.loc)
+    if(succ == node.loc)
       break;
 
     ret++;
   }
 
-  if((ret+1)<succs.size())
+  if((ret + 1) < succs.size())
   {
-    // We can take the next branch here...
+// We can take the next branch here...
 
 #ifdef DEBUG
     std::cout << "Backtracked to a path of size " << path.size() << std::endl;
 #endif
 
-    return ret+1;
+    return ret + 1;
   }
 
   // Recurse.
@@ -101,12 +100,12 @@ void all_paths_enumeratort::complete_path(patht &path, int succ)
   if(path.empty())
     return;
 
-  path_nodet &node=path.back();
+  path_nodet &node= path.back();
   extend_path(path, node.loc, succ);
 
-  goto_programt::targett end=path.back().loc;
+  goto_programt::targett end= path.back().loc;
 
-  if(end==loop_header || loop.find(end)==loop.end())
+  if(end == loop_header || loop.find(end) == loop.end())
     return;
 
   complete_path(path, 0);
@@ -118,13 +117,13 @@ void all_paths_enumeratort::extend_path(
   int succ)
 {
   goto_programt::targett next;
-  exprt guard=true_exprt();
+  exprt guard= true_exprt();
 
   for(const auto &s : goto_program.get_successors(t))
   {
-    if(succ==0)
+    if(succ == 0)
     {
-      next=s;
+      next= s;
       break;
     }
 
@@ -133,15 +132,15 @@ void all_paths_enumeratort::extend_path(
 
   if(t->is_goto())
   {
-    guard=not_exprt(t->guard);
+    guard= not_exprt(t->guard);
 
-    for(goto_programt::targetst::iterator it=t->targets.begin();
+    for(goto_programt::targetst::iterator it= t->targets.begin();
         it != t->targets.end();
         ++it)
     {
       if(next == *it)
       {
-        guard=t->guard;
+        guard= t->guard;
         break;
       }
     }
@@ -152,5 +151,5 @@ void all_paths_enumeratort::extend_path(
 
 bool all_paths_enumeratort::is_looping(patht &path)
 {
-  return path.size()>1 && path.back().loc==loop_header;
+  return path.size() > 1 && path.back().loc == loop_header;
 }

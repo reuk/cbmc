@@ -34,14 +34,14 @@ public:
 
   void set_from(const irep_idt &function, unsigned inx)
   {
-    from_function = function_numbering.number(function);
-    from_target_index = inx;
+    from_function= function_numbering.number(function);
+    from_target_index= inx;
   }
 
   void set_to(const irep_idt &function, unsigned inx)
   {
-    to_function = function_numbering.number(function);
-    to_target_index = inx;
+    to_function= function_numbering.number(function);
+    to_target_index= inx;
   }
 
   typedef irep_idt idt;
@@ -49,26 +49,29 @@ public:
   class objectt
   {
   public:
-    objectt():offset_is_set(false)
+    objectt() : offset_is_set(false)
     {
     }
 
-    explicit objectt(const mp_integer &_offset):
-      offset(_offset),
-      offset_is_set(true)
+    explicit objectt(const mp_integer &_offset)
+      : offset(_offset), offset_is_set(true)
     {
     }
 
     mp_integer offset;
     bool offset_is_set;
     bool offset_is_zero() const
-    { return offset_is_set && offset.is_zero(); }
+    {
+      return offset_is_set && offset.is_zero();
+    }
   };
 
-  class object_map_dt:public std::map<unsigned, objectt>
+  class object_map_dt : public std::map<unsigned, objectt>
   {
   public:
-    object_map_dt() {}
+    object_map_dt()
+    {
+    }
     static const object_map_dt blank;
   };
 
@@ -78,7 +81,7 @@ public:
 
   void set(object_mapt &dest, object_map_dt::const_iterator it) const
   {
-    dest.write()[it->first]=it->second;
+    dest.write()[it->first]= it->second;
   }
 
   bool insert(object_mapt &dest, object_map_dt::const_iterator it) const
@@ -91,33 +94,31 @@ public:
     return insert(dest, object_numbering.number(src), objectt());
   }
 
-  bool insert(
-    object_mapt &dest,
-    const exprt &src,
-    const mp_integer &offset) const
+  bool
+  insert(object_mapt &dest, const exprt &src, const mp_integer &offset) const
   {
     return insert(dest, object_numbering.number(src), objectt(offset));
   }
 
   bool insert(object_mapt &dest, unsigned n, const objectt &object) const
   {
-    if(dest.read().find(n)==dest.read().end())
+    if(dest.read().find(n) == dest.read().end())
     {
       // new
-      dest.write()[n]=object;
+      dest.write()[n]= object;
       return true;
     }
     else
     {
-      objectt &old=dest.write()[n];
+      objectt &old= dest.write()[n];
 
       if(old.offset_is_set && object.offset_is_set)
       {
-        if(old.offset==object.offset)
+        if(old.offset == object.offset)
           return false;
         else
         {
-          old.offset_is_set=false;
+          old.offset_is_set= false;
           return true;
         }
       }
@@ -125,7 +126,7 @@ public:
         return false;
       else
       {
-        old.offset_is_set=false;
+        old.offset_is_set= false;
         return true;
       }
     }
@@ -146,9 +147,8 @@ public:
     {
     }
 
-    entryt(const idt &_identifier, const std::string _suffix):
-      identifier(_identifier),
-      suffix(_suffix)
+    entryt(const idt &_identifier, const std::string _suffix)
+      : identifier(_identifier), suffix(_suffix)
     {
     }
   };
@@ -157,28 +157,26 @@ public:
 
   typedef std::unordered_set<unsigned int> dynamic_object_id_sett;
 
-  #ifdef USE_DSTRING
+#ifdef USE_DSTRING
   typedef std::map<idt, entryt> valuest;
   typedef std::set<idt> flatten_seent;
   typedef std::unordered_set<idt, irep_id_hash> gvs_recursion_sett;
   typedef std::unordered_set<idt, irep_id_hash> recfind_recursion_sett;
   typedef std::unordered_set<idt, irep_id_hash> assign_recursion_sett;
-  #else
+#else
   typedef std::unordered_map<idt, entryt, string_hash> valuest;
   typedef std::unordered_set<idt, string_hash> flatten_seent;
   typedef std::unordered_set<idt, string_hash> gvs_recursion_sett;
   typedef std::unordered_set<idt, string_hash> recfind_recursion_sett;
   typedef std::unordered_set<idt, string_hash> assign_recursion_sett;
-  #endif
+#endif
 
   void get_value_set(
     const exprt &expr,
     std::list<exprt> &dest,
     const namespacet &ns) const;
 
-  expr_sett &get(
-    const idt &identifier,
-    const std::string &suffix);
+  expr_sett &get(const idt &identifier, const std::string &suffix);
 
   void make_any()
   {
@@ -207,7 +205,7 @@ public:
 
   entryt &get_entry(const entryt &e)
   {
-    std::string index=id2string(e.identifier)+e.suffix;
+    std::string index= id2string(e.identifier) + e.suffix;
 
     std::pair<valuest::iterator, bool> r=
       values.insert(std::pair<idt, entryt>(index, e));
@@ -217,16 +215,12 @@ public:
 
   void add_vars(const std::list<entryt> &vars)
   {
-    for(std::list<entryt>::const_iterator
-        it=vars.begin();
-        it!=vars.end();
+    for(std::list<entryt>::const_iterator it= vars.begin(); it != vars.end();
         it++)
       add_var(*it);
   }
 
-  void output(
-    const namespacet &ns,
-    std::ostream &out) const;
+  void output(const namespacet &ns, std::ostream &out) const;
 
   valuest values;
 
@@ -244,14 +238,9 @@ public:
     return make_union(new_values.values);
   }
 
-  void apply_code(
-    const exprt &code,
-    const namespacet &ns);
+  void apply_code(const exprt &code, const namespacet &ns);
 
-  void assign(
-    const exprt &lhs,
-    const exprt &rhs,
-    const namespacet &ns);
+  void assign(const exprt &lhs, const exprt &rhs, const namespacet &ns);
 
   void do_function_call(
     const irep_idt &function,
@@ -259,9 +248,7 @@ public:
     const namespacet &ns);
 
   // edge back to call site
-  void do_end_function(
-    const exprt &lhs,
-    const namespacet &ns);
+  void do_end_function(const exprt &lhs, const namespacet &ns);
 
   void get_reference_set(
     const exprt &expr,
@@ -282,11 +269,8 @@ protected:
     const namespacet &ns,
     gvs_recursion_sett &recursion_set) const;
 
-
-  void get_value_set(
-    const exprt &expr,
-    object_mapt &dest,
-    const namespacet &ns) const;
+  void get_value_set(const exprt &expr, object_mapt &dest, const namespacet &ns)
+    const;
 
   void get_reference_set_sharing(
     const exprt &expr,
@@ -301,9 +285,7 @@ protected:
     object_mapt &dest,
     const namespacet &ns) const;
 
-  void dereference_rec(
-    const exprt &src,
-    exprt &dest) const;
+  void dereference_rec(const exprt &src, exprt &dest) const;
 
   void assign_rec(
     const exprt &lhs,
@@ -312,16 +294,11 @@ protected:
     const namespacet &ns,
     assign_recursion_sett &recursion_set);
 
-  void do_free(
-    const exprt &op,
-    const namespacet &ns);
+  void do_free(const exprt &op, const namespacet &ns);
 
   void flatten(const entryt &e, object_mapt &dest) const;
 
-  void flatten_rec(
-    const entryt&,
-    object_mapt&,
-    flatten_seent&) const;
+  void flatten_rec(const entryt &, object_mapt &, flatten_seent &) const;
 };
 
 #endif // CPROVER_POINTER_ANALYSIS_VALUE_SET_FI_H

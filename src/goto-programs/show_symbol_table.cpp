@@ -43,9 +43,7 @@ Function: show_symbol_table_plain
 
 \*******************************************************************/
 
-void show_symbol_table_plain(
-  const goto_modelt &goto_model,
-  std::ostream &out)
+void show_symbol_table_plain(const goto_modelt &goto_model, std::ostream &out)
 {
   out << '\n' << "Symbols:" << '\n' << '\n';
 
@@ -59,17 +57,17 @@ void show_symbol_table_plain(
 
   for(const std::string &id : symbols)
   {
-    const symbolt &symbol=ns.lookup(id);
+    const symbolt &symbol= ns.lookup(id);
 
     languaget *ptr;
 
-    if(symbol.mode=="")
-      ptr=get_default_language();
+    if(symbol.mode == "")
+      ptr= get_default_language();
     else
     {
-      ptr=get_language_from_mode(symbol.mode);
-      if(ptr==NULL)
-        throw "symbol "+id2string(symbol.name)+" has unknown mode";
+      ptr= get_language_from_mode(symbol.mode);
+      if(ptr == NULL)
+        throw "symbol " + id2string(symbol.name) + " has unknown mode";
     }
 
     std::unique_ptr<languaget> p(ptr);

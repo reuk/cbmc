@@ -35,14 +35,14 @@ public:
 
   void set_from(const irep_idt &function, unsigned inx)
   {
-    from_function = function_numbering.number(function);
-    from_target_index = inx;
+    from_function= function_numbering.number(function);
+    from_target_index= inx;
   }
 
   void set_to(const irep_idt &function, unsigned inx)
   {
-    to_function = function_numbering.number(function);
-    to_target_index = inx;
+    to_function= function_numbering.number(function);
+    to_target_index= inx;
   }
 
   typedef irep_idt idt;
@@ -50,27 +50,29 @@ public:
   class objectt
   {
   public:
-    objectt() :
-      offset_is_set(false)
+    objectt() : offset_is_set(false)
     {
     }
 
-    explicit objectt(const mp_integer &_offset):
-      offset(_offset),
-      offset_is_set(true)
+    explicit objectt(const mp_integer &_offset)
+      : offset(_offset), offset_is_set(true)
     {
     }
 
     mp_integer offset;
     bool offset_is_set;
     bool offset_is_zero() const
-    { return offset_is_set && offset.is_zero(); }
+    {
+      return offset_is_set && offset.is_zero();
+    }
   };
 
   class object_map_dt
   {
   public:
-    object_map_dt() {}
+    object_map_dt()
+    {
+    }
     static const object_map_dt blank;
 
     typedef std::map<unsigned, objectt> objmapt;
@@ -81,13 +83,35 @@ public:
     // NOLINTNEXTLINE(readability/identifiers)
     typedef objmapt::iterator iterator;
 
-    const_iterator find(unsigned k) { return objmap.find(k); }
-    iterator begin(void) { return objmap.begin(); }
-    const_iterator begin(void) const { return objmap.begin(); }
-    iterator end(void) { return objmap.end(); }
-    const_iterator end(void) const { return objmap.end(); }
-    size_t size(void) const { return objmap.size(); }
-    void clear(void) { objmap.clear(); validity_ranges.clear(); }
+    const_iterator find(unsigned k)
+    {
+      return objmap.find(k);
+    }
+    iterator begin(void)
+    {
+      return objmap.begin();
+    }
+    const_iterator begin(void) const
+    {
+      return objmap.begin();
+    }
+    iterator end(void)
+    {
+      return objmap.end();
+    }
+    const_iterator end(void) const
+    {
+      return objmap.end();
+    }
+    size_t size(void) const
+    {
+      return objmap.size();
+    }
+    void clear(void)
+    {
+      objmap.clear();
+      validity_ranges.clear();
+    }
 
     objectt &operator[](unsigned k)
     {
@@ -95,11 +119,11 @@ public:
     }
 
     // operator[] is the only way to insert something!
-    std::pair<iterator, bool> insert(const std::pair<unsigned, objectt>&)
+    std::pair<iterator, bool> insert(const std::pair<unsigned, objectt> &)
     {
       assert(false);
     }
-    iterator insert(iterator, const std::pair<unsigned, objectt>&)
+    iterator insert(iterator, const std::pair<unsigned, objectt> &)
     {
       assert(false);
     }
@@ -110,19 +134,18 @@ public:
       unsigned function;
       unsigned from, to;
 
-      validity_ranget(void):
-        function(0), from(0), to(0)
+      validity_ranget(void) : function(0), from(0), to(0)
       {
       }
 
-      validity_ranget(unsigned fnc, unsigned f, unsigned t):
-        function(fnc), from(f), to(t)
+      validity_ranget(unsigned fnc, unsigned f, unsigned t)
+        : function(fnc), from(f), to(t)
       {
       }
 
       bool contains(unsigned f, unsigned line) const
       {
-        return (function==f && from<=line && line<=to);
+        return (function == f && from <= line && line <= to);
       }
     };
 
@@ -140,7 +163,7 @@ public:
 
   void set(object_mapt &dest, object_map_dt::const_iterator it) const
   {
-    dest.write()[it->first]=it->second;
+    dest.write()[it->first]= it->second;
   }
 
   bool insert_to(object_mapt &dest, object_map_dt::const_iterator it) const
@@ -153,20 +176,16 @@ public:
     return insert_to(dest, object_numbering.number(src), objectt());
   }
 
-  bool insert_to(
-    object_mapt &dest,
-    const exprt &src,
-    const mp_integer &offset) const
+  bool
+  insert_to(object_mapt &dest, const exprt &src, const mp_integer &offset) const
   {
     return insert_to(dest, object_numbering.number(src), objectt(offset));
   }
 
   bool insert_to(object_mapt &dest, unsigned n, const objectt &object) const;
 
-  bool insert_to(
-    object_mapt &dest,
-    const exprt &expr,
-    const objectt &object) const
+  bool
+  insert_to(object_mapt &dest, const exprt &expr, const objectt &object) const
   {
     return insert_to(dest, object_numbering.number(expr), object);
   }
@@ -191,10 +210,8 @@ public:
 
   bool insert_from(object_mapt &dest, unsigned n, const objectt &object) const;
 
-  bool insert_from(
-    object_mapt &dest,
-    const exprt &expr,
-    const objectt &object) const
+  bool
+  insert_from(object_mapt &dest, const exprt &expr, const objectt &object) const
   {
     return insert_from(dest, object_numbering.number(expr), object);
   }
@@ -205,11 +222,12 @@ public:
     idt identifier;
     std::string suffix;
 
-    entryt() { }
+    entryt()
+    {
+    }
 
-    entryt(const idt &_identifier, const std::string _suffix):
-      identifier(_identifier),
-      suffix(_suffix)
+    entryt(const idt &_identifier, const std::string _suffix)
+      : identifier(_identifier), suffix(_suffix)
     {
     }
   };
@@ -218,20 +236,18 @@ public:
 
   typedef std::unordered_set<unsigned int> dynamic_object_id_sett;
 
-  #ifdef USE_DSTRING
+#ifdef USE_DSTRING
   typedef std::map<idt, entryt> valuest;
-  #else
+#else
   typedef std::unordered_map<idt, entryt, string_hash> valuest;
-  #endif
+#endif
 
   void get_value_set(
     const exprt &expr,
     std::list<exprt> &expr_set,
     const namespacet &ns) const;
 
-  expr_sett &get(
-    const idt &identifier,
-    const std::string &suffix);
+  expr_sett &get(const idt &identifier, const std::string &suffix);
 
   void make_any()
   {
@@ -260,7 +276,7 @@ public:
 
   entryt &get_entry(const entryt &e)
   {
-    std::string index=id2string(e.identifier)+e.suffix;
+    std::string index= id2string(e.identifier) + e.suffix;
 
     std::pair<valuest::iterator, bool> r=
       values.insert(std::pair<idt, entryt>(index, e));
@@ -270,47 +286,33 @@ public:
 
   entryt &get_temporary_entry(const idt &id, const std::string &suffix)
   {
-    std::string index=id2string(id)+suffix;
+    std::string index= id2string(id) + suffix;
     return temporary_values[index];
   }
 
   void add_vars(const std::list<entryt> &vars)
   {
-    for(std::list<entryt>::const_iterator
-        it=vars.begin();
-        it!=vars.end();
+    for(std::list<entryt>::const_iterator it= vars.begin(); it != vars.end();
         it++)
       add_var(*it);
   }
 
-  void output(
-    const namespacet &ns,
-    std::ostream &out) const;
+  void output(const namespacet &ns, std::ostream &out) const;
 
-  void output_entry(
-    const entryt &e,
-    const namespacet &ns,
-    std::ostream &out) const;
+  void
+  output_entry(const entryt &e, const namespacet &ns, std::ostream &out) const;
 
   valuest values;
   valuest temporary_values;
 
   // true = added s.th. new
-  bool make_union(
-    object_mapt &dest,
-    const object_mapt &src) const;
+  bool make_union(object_mapt &dest, const object_mapt &src) const;
 
-  bool make_valid_union(
-    object_mapt &dest,
-    const object_mapt &src) const;
+  bool make_valid_union(object_mapt &dest, const object_mapt &src) const;
 
-  void copy_objects(
-    object_mapt &dest,
-    const object_mapt &src) const;
+  void copy_objects(object_mapt &dest, const object_mapt &src) const;
 
-  void apply_code(
-    const exprt &code,
-    const namespacet &ns);
+  void apply_code(const exprt &code, const namespacet &ns);
 
   bool handover(void);
 
@@ -318,7 +320,7 @@ public:
     const exprt &lhs,
     const exprt &rhs,
     const namespacet &ns,
-    bool add_to_sets=false);
+    bool add_to_sets= false);
 
   void do_function_call(
     const irep_idt &function,
@@ -326,9 +328,7 @@ public:
     const namespacet &ns);
 
   // edge back to call site
-  void do_end_function(
-    const exprt &lhs,
-    const namespacet &ns);
+  void do_end_function(const exprt &lhs, const namespacet &ns);
 
   void get_reference_set(
     const exprt &expr,
@@ -343,10 +343,8 @@ protected:
     const typet &original_type,
     const namespacet &ns) const;
 
-  void get_value_set(
-    const exprt &expr,
-    object_mapt &dest,
-    const namespacet &ns) const;
+  void get_value_set(const exprt &expr, object_mapt &dest, const namespacet &ns)
+    const;
 
   void get_reference_set(
     const exprt &expr,
@@ -361,9 +359,7 @@ protected:
     object_mapt &dest,
     const namespacet &ns) const;
 
-  void dereference_rec(
-    const exprt &src,
-    exprt &dest) const;
+  void dereference_rec(const exprt &src, exprt &dest) const;
 
   void assign_rec(
     const exprt &lhs,
@@ -372,9 +368,7 @@ protected:
     const namespacet &ns,
     bool add_to_sets);
 
-  void do_free(
-    const exprt &op,
-    const namespacet &ns);
+  void do_free(const exprt &op, const namespacet &ns);
 };
 
 #endif // CPROVER_POINTER_ANALYSIS_VALUE_SET_FIVRNS_H

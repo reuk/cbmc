@@ -16,13 +16,9 @@ class typet;
 class exprt;
 class namespacet;
 
-xmlt xml(
-  const exprt &,
-  const namespacet &);
+xmlt xml(const exprt &, const namespacet &);
 
-xmlt xml(
-  const typet &,
-  const namespacet &);
+xmlt xml(const typet &, const namespacet &);
 
 xmlt xml(const source_locationt &);
 

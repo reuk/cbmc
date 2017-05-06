@@ -28,79 +28,105 @@ static unsigned __indent;
 
 struct indenter // NOLINT(readability/identifiers)
 {
-  indenter() { __indent+=2; }
-  ~indenter() { __indent-=2; }
+  indenter()
+  {
+    __indent+= 2;
+  }
+  ~indenter()
+  {
+    __indent-= 2;
+  }
 };
 
-#define TOK_TEXT \
-{ \
-  cpp_tokent _tk; \
-  lex.LookAhead(0, _tk); \
-  std::cout << std::string(__indent, ' ') << "Text [" << _tk.line_no << "]: " \
-    << _tk.text << std::endl; \
-}
+#define TOK_TEXT                                                               \
+  {                                                                            \
+    cpp_tokent _tk;                                                            \
+    lex.LookAhead(0, _tk);                                                     \
+    std::cout << std::string(__indent, ' ') << "Text [" << _tk.line_no         \
+              << "]: " << _tk.text << std::endl;                               \
+  }
 #endif
 
 class new_scopet
 {
 public:
-  new_scopet():kind(NONE), anon_count(0), parent(NULL)
+  new_scopet() : kind(NONE), anon_count(0), parent(NULL)
   {
   }
 
-  typedef enum { NONE,
-                 TEMPLATE, MEMBER, FUNCTION, VARIABLE,
-                 TYPEDEF, TAG,
-                 NAMESPACE, CLASS_TEMPLATE, MEMBER_TEMPLATE,
-                 FUNCTION_TEMPLATE, BLOCK,
-                 NON_TYPE_TEMPLATE_PARAMETER,
-                 TYPE_TEMPLATE_PARAMETER,
-                 TEMPLATE_TEMPLATE_PARAMETER } kindt;
+  typedef enum {
+    NONE,
+    TEMPLATE,
+    MEMBER,
+    FUNCTION,
+    VARIABLE,
+    TYPEDEF,
+    TAG,
+    NAMESPACE,
+    CLASS_TEMPLATE,
+    MEMBER_TEMPLATE,
+    FUNCTION_TEMPLATE,
+    BLOCK,
+    NON_TYPE_TEMPLATE_PARAMETER,
+    TYPE_TEMPLATE_PARAMETER,
+    TEMPLATE_TEMPLATE_PARAMETER
+  } kindt;
   kindt kind;
   irep_idt id;
 
   bool is_type() const
   {
-    return kind==TYPEDEF ||
-           kind==TYPE_TEMPLATE_PARAMETER ||
-           kind==TAG ||
-           kind==CLASS_TEMPLATE;
+    return kind == TYPEDEF || kind == TYPE_TEMPLATE_PARAMETER || kind == TAG ||
+           kind == CLASS_TEMPLATE;
   }
 
   bool is_template() const
   {
-    return kind==FUNCTION_TEMPLATE ||
-           kind==CLASS_TEMPLATE ||
-           kind==MEMBER_TEMPLATE;
+    return kind == FUNCTION_TEMPLATE || kind == CLASS_TEMPLATE ||
+           kind == MEMBER_TEMPLATE;
   }
 
   bool is_named_scope() const
   {
-    return kind==NAMESPACE ||
-           kind==TAG ||
-           kind==TYPE_TEMPLATE_PARAMETER;
+    return kind == NAMESPACE || kind == TAG || kind == TYPE_TEMPLATE_PARAMETER;
   }
 
   static const char *kind2string(kindt kind)
   {
     switch(kind)
     {
-    case NONE: return "?";
-    case TEMPLATE: return "TEMPLATE";
-    case MEMBER: return "MEMBER";
-    case FUNCTION: return "FUNCTION";
-    case VARIABLE: return "VARIABLE";
-    case TYPEDEF: return "TYPEDEF";
-    case TAG: return "TAG";
-    case NAMESPACE: return "NAMESPACE";
-    case CLASS_TEMPLATE: return "CLASS_TEMPLATE";
-    case MEMBER_TEMPLATE: return "MEMBER_TEMPLATE";
-    case FUNCTION_TEMPLATE: return "FUNCTION_TEMPLATE";
-    case BLOCK: return "BLOCK";
-    case NON_TYPE_TEMPLATE_PARAMETER: return "NON_TYPE_TEMPLATE_PARAMETER";
-    case TYPE_TEMPLATE_PARAMETER: return "TYPE_TEMPLATE_PARAMETER";
-    case TEMPLATE_TEMPLATE_PARAMETER: return "TEMPLATE_TEMPLATE_PARAMETER";
-    default: return "";
+    case NONE:
+      return "?";
+    case TEMPLATE:
+      return "TEMPLATE";
+    case MEMBER:
+      return "MEMBER";
+    case FUNCTION:
+      return "FUNCTION";
+    case VARIABLE:
+      return "VARIABLE";
+    case TYPEDEF:
+      return "TYPEDEF";
+    case TAG:
+      return "TAG";
+    case NAMESPACE:
+      return "NAMESPACE";
+    case CLASS_TEMPLATE:
+      return "CLASS_TEMPLATE";
+    case MEMBER_TEMPLATE:
+      return "MEMBER_TEMPLATE";
+    case FUNCTION_TEMPLATE:
+      return "FUNCTION_TEMPLATE";
+    case BLOCK:
+      return "BLOCK";
+    case NON_TYPE_TEMPLATE_PARAMETER:
+      return "NON_TYPE_TEMPLATE_PARAMETER";
+    case TYPE_TEMPLATE_PARAMETER:
+      return "TYPE_TEMPLATE_PARAMETER";
+    case TEMPLATE_TEMPLATE_PARAMETER:
+      return "TEMPLATE_TEMPLATE_PARAMETER";
+    default:
+      return "";
     }
   }
 
@@ -119,13 +145,12 @@ public:
   irep_idt get_anon_id()
   {
     ++anon_count;
-    return "#anon"+std::to_string(anon_count);
+    return "#anon" + std::to_string(anon_count);
   }
 
   std::string full_name() const
   {
-    return (parent==NULL?"":(parent->full_name()+"::"))+
-           id2string(id);
+    return (parent == NULL ? "" : (parent->full_name() + "::")) + id2string(id);
   }
 
 protected:
@@ -135,14 +160,14 @@ protected:
 class save_scopet
 {
 public:
-  explicit save_scopet(new_scopet *&_scope):
-    scope_ptr(_scope), old_scope(_scope)
+  explicit save_scopet(new_scopet *&_scope)
+    : scope_ptr(_scope), old_scope(_scope)
   {
   }
 
   inline ~save_scopet()
   {
-    scope_ptr=old_scope;
+    scope_ptr= old_scope;
   }
 
 protected:
@@ -164,28 +189,22 @@ Function:
 
 void new_scopet::print_rec(std::ostream &out, unsigned indent) const
 {
-  for(id_mapt::const_iterator
-      it=id_map.begin();
-      it!=id_map.end();
-      it++)
+  for(id_mapt::const_iterator it= id_map.begin(); it != id_map.end(); it++)
   {
-    out << std::string(indent, ' ')
-        << it->first << ": "
-        << kind2string(it->second.kind)
-        << "\n";
-    it->second.print_rec(out, indent+2);
+    out << std::string(indent, ' ') << it->first << ": "
+        << kind2string(it->second.kind) << "\n";
+    it->second.print_rec(out, indent + 2);
   }
 }
 
 class Parser // NOLINT(readability/identifiers)
 {
 public:
-  explicit Parser(cpp_parsert &_cpp_parser):
-    lex(_cpp_parser.token_buffer),
-    parser(_cpp_parser)
+  explicit Parser(cpp_parsert &_cpp_parser)
+    : lex(_cpp_parser.token_buffer), parser(_cpp_parser)
   {
-    root_scope.kind=new_scopet::NAMESPACE;
-    current_scope=&root_scope;
+    root_scope.kind= new_scopet::NAMESPACE;
+    current_scope= &root_scope;
   }
 
   bool operator()();
@@ -202,9 +221,20 @@ protected:
   void make_sub_scope(const irept &name, new_scopet::kindt);
   void make_sub_scope(const irep_idt &, new_scopet::kindt);
 
-  enum DeclKind { kDeclarator, kArgDeclarator, kCastDeclarator };
-  enum TemplateDeclKind { tdk_unknown, tdk_decl, tdk_instantiation,
-                          tdk_specialization, num_tdks };
+  enum DeclKind
+  {
+    kDeclarator,
+    kArgDeclarator,
+    kCastDeclarator
+  };
+  enum TemplateDeclKind
+  {
+    tdk_unknown,
+    tdk_decl,
+    tdk_instantiation,
+    tdk_specialization,
+    num_tdks
+  };
 
   // rules
   bool rProgram(cpp_itemt &item);
@@ -258,15 +288,13 @@ protected:
   bool rAttribute();
   bool optAttribute(cpp_declarationt &);
   bool optIntegralTypeOrClassSpec(typet &);
-  bool rConstructorDecl(
-    cpp_declaratort &,
-    typet &,
-    typet &trailing_return_type);
+  bool
+  rConstructorDecl(cpp_declaratort &, typet &, typet &trailing_return_type);
   bool optThrowDecl(irept &);
 
-  bool rDeclarators(cpp_declarationt::declaratorst &, bool, bool=false);
+  bool rDeclarators(cpp_declarationt::declaratorst &, bool, bool= false);
   bool rDeclaratorWithInit(cpp_declaratort &, bool, bool);
-  bool rDeclarator(cpp_declaratort &, DeclKind, bool, bool, bool=false);
+  bool rDeclarator(cpp_declaratort &, DeclKind, bool, bool, bool= false);
   bool rDeclaratorQualifier();
   bool optPtrOperator(typet &);
   bool rMemberInitializers(irept &);
@@ -278,7 +306,7 @@ protected:
   bool rPtrToMember(irept &);
   bool rTemplateArgs(irept &);
 
-  bool rArgDeclListOrInit(exprt &, bool&, bool);
+  bool rArgDeclListOrInit(exprt &, bool &, bool);
   bool rArgDeclList(irept &);
   bool rArgDeclaration(cpp_declarationt &);
 
@@ -378,20 +406,20 @@ protected:
 
   void make_subtype(const typet &src, typet &dest)
   {
-    typet *p=&dest;
+    typet *p= &dest;
 
-    while(p->id()!=irep_idt() && p->is_not_nil())
+    while(p->id() != irep_idt() && p->is_not_nil())
     {
-      if(p->id()==ID_merged_type)
+      if(p->id() == ID_merged_type)
       {
         assert(!p->subtypes().empty());
-        p=&p->subtypes().back();
+        p= &p->subtypes().back();
       }
       else
-        p=&p->subtype();
+        p= &p->subtype();
     }
 
-    *p=src;
+    *p= src;
   }
 
   unsigned int max_errors;
@@ -413,11 +441,12 @@ new_scopet &Parser::add_id(const irept &cpp_name, new_scopet::kindt kind)
 {
   irep_idt id;
 
-  if(cpp_name.get_sub().size()==1 &&
-     cpp_name.get_sub().front().id()==ID_name)
-    id=cpp_name.get_sub().front().get(ID_identifier);
+  if(
+    cpp_name.get_sub().size() == 1 &&
+    cpp_name.get_sub().front().id() == ID_name)
+    id= cpp_name.get_sub().front().get(ID_identifier);
   else
-    id=current_scope->get_anon_id();
+    id= current_scope->get_anon_id();
 
   return add_id(id, kind);
 }
@@ -436,11 +465,11 @@ Function: Parser::add_id
 
 new_scopet &Parser::add_id(const irep_idt &id, new_scopet::kindt kind)
 {
-  new_scopet &s=current_scope->id_map[id];
+  new_scopet &s= current_scope->id_map[id];
 
-  s.kind=kind;
-  s.id=id;
-  s.parent=current_scope;
+  s.kind= kind;
+  s.id= id;
+  s.parent= current_scope;
 
   return s;
 }
@@ -459,8 +488,8 @@ Function: Parser::make_sub_scope
 
 void Parser::make_sub_scope(const irept &cpp_name, new_scopet::kindt kind)
 {
-  new_scopet &s=add_id(cpp_name, kind);
-  current_scope=&s;
+  new_scopet &s= add_id(cpp_name, kind);
+  current_scope= &s;
 }
 
 /*******************************************************************\
@@ -477,8 +506,8 @@ Function: Parser::make_sub_scope
 
 void Parser::make_sub_scope(const irep_idt &id, new_scopet::kindt kind)
 {
-  new_scopet &s=add_id(id, kind);
-  current_scope=&s;
+  new_scopet &s= add_id(id, kind);
+  current_scope= &s;
 }
 
 /*******************************************************************\
@@ -495,7 +524,7 @@ Function: Parser::rString
 
 bool Parser::rString(cpp_tokent &tk)
 {
-  if(lex.get_token(tk)!=TOK_STRING)
+  if(lex.get_token(tk) != TOK_STRING)
     return false;
 
   return true;
@@ -519,14 +548,14 @@ void Parser::merge_types(const typet &src, typet &dest)
     return;
 
   if(dest.is_nil())
-    dest=src;
+    dest= src;
   else
   {
-    if(dest.id()!=ID_merged_type)
+    if(dest.id() != ID_merged_type)
     {
       typet tmp(ID_merged_type);
       tmp.move_to_subtypes(dest);
-      dest=tmp;
+      dest= tmp;
     }
 
     dest.copy_to_subtypes(src);
@@ -547,32 +576,32 @@ Function:
 
 bool Parser::SyntaxError()
 {
-  #define ERROR_TOKENS 4
+#define ERROR_TOKENS 4
 
   cpp_tokent t[ERROR_TOKENS];
 
-  for(unsigned i=0; i<ERROR_TOKENS; i++)
+  for(unsigned i= 0; i < ERROR_TOKENS; i++)
     lex.LookAhead(i, t[i]);
 
-  if(t[0].kind!='\0')
+  if(t[0].kind != '\0')
   {
     source_locationt source_location;
     source_location.set_file(t[0].filename);
     source_location.set_line(std::to_string(t[0].line_no));
 
-    std::string message="parse error before `";
+    std::string message= "parse error before `";
 
-    for(unsigned i=0; i<ERROR_TOKENS; i++)
-      if(t[i].kind!='\0')
+    for(unsigned i= 0; i < ERROR_TOKENS; i++)
+      if(t[i].kind != '\0')
       {
-        if(i!=0)
-          message+=' ';
-        message+=t[i].text;
+        if(i != 0)
+          message+= ' ';
+        message+= t[i].text;
       }
 
-    message+="'";
+    message+= "'";
 
-    parser.error().source_location=source_location;
+    parser.error().source_location= source_location;
     parser.error() << message << messaget::eom;
   }
 
@@ -593,7 +622,7 @@ Function:
 
 bool Parser::rProgram(cpp_itemt &item)
 {
-  while(lex.LookAhead(0)!='\0')
+  while(lex.LookAhead(0) != '\0')
     if(rDefinition(item))
       return true;
     else
@@ -601,10 +630,10 @@ bool Parser::rProgram(cpp_itemt &item)
       cpp_tokent tk;
 
       if(!SyntaxError())
-        return false;                // too many errors
+        return false; // too many errors
 
       SkipTo(';');
-      lex.get_token(tk);        // ignore ';'
+      lex.get_token(tk); // ignore ';'
     }
 
   return false;
@@ -635,35 +664,35 @@ Function:
 */
 bool Parser::rDefinition(cpp_itemt &item)
 {
-  int t=lex.LookAhead(0);
+  int t= lex.LookAhead(0);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rDefinition 1 " << t
             << '\n';
-  #endif
+#endif
 
-  if(t==';')
+  if(t == ';')
     return rNullDeclaration(item.make_declaration());
-  else if(t==TOK_TYPEDEF)
+  else if(t == TOK_TYPEDEF)
     return rTypedef(item.make_declaration());
-  else if(t==TOK_TEMPLATE)
+  else if(t == TOK_TEMPLATE)
     return rTemplateDecl(item.make_declaration());
-  else if(t==TOK_EXTERN && lex.LookAhead(1)==TOK_STRING)
+  else if(t == TOK_EXTERN && lex.LookAhead(1) == TOK_STRING)
     return rLinkageSpec(item.make_linkage_spec());
-  else if(t==TOK_EXTERN && lex.LookAhead(1)==TOK_TEMPLATE)
+  else if(t == TOK_EXTERN && lex.LookAhead(1) == TOK_TEMPLATE)
     return rExternTemplateDecl(item.make_declaration());
-  else if(t==TOK_NAMESPACE)
+  else if(t == TOK_NAMESPACE)
     return rNamespaceSpec(item.make_namespace_spec());
-  else if(t==TOK_INLINE && lex.LookAhead(1)==TOK_NAMESPACE)
+  else if(t == TOK_INLINE && lex.LookAhead(1) == TOK_NAMESPACE)
     return rNamespaceSpec(item.make_namespace_spec());
-  else if(t==TOK_USING &&
-          lex.LookAhead(1)==TOK_IDENTIFIER &&
-          lex.LookAhead(2)=='=')
+  else if(
+    t == TOK_USING && lex.LookAhead(1) == TOK_IDENTIFIER &&
+    lex.LookAhead(2) == '=')
     return rTypedefUsing(item.make_declaration());
-  else if(t==TOK_USING)
+  else if(t == TOK_USING)
     return rUsing(item.make_using());
-  else if(t==TOK_STATIC_ASSERT)
+  else if(t == TOK_STATIC_ASSERT)
     return rStaticAssert(item.make_static_assert());
   else
     return rDeclaration(item.make_declaration());
@@ -685,7 +714,7 @@ bool Parser::rNullDeclaration(cpp_declarationt &decl)
 {
   cpp_tokent tk;
 
-  if(lex.get_token(tk)!=';')
+  if(lex.get_token(tk) != ';')
     return false;
 
   set_location(decl, tk);
@@ -713,15 +742,15 @@ bool Parser::rTypedef(cpp_declarationt &declaration)
 {
   cpp_tokent tk;
 
-  if(lex.get_token(tk)!=TOK_TYPEDEF)
+  if(lex.get_token(tk) != TOK_TYPEDEF)
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rTypedef 1\n";
-  #endif
+#endif
 
-  declaration=cpp_declarationt();
+  declaration= cpp_declarationt();
   set_location(declaration, tk);
   declaration.set_is_typedef();
 
@@ -754,31 +783,31 @@ bool Parser::rTypedefUsing(cpp_declarationt &declaration)
   cpp_tokent tk;
   typet type_name;
 
-  if(lex.get_token(tk)!=TOK_USING)
+  if(lex.get_token(tk) != TOK_USING)
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rTypedefUsing 1\n";
-  #endif
+#endif
 
-  declaration=cpp_declarationt();
+  declaration= cpp_declarationt();
   set_location(declaration, tk);
 
-  declaration.type()=typet(ID_typedef);
+  declaration.type()= typet(ID_typedef);
 
-  if(lex.get_token(tk)!=TOK_IDENTIFIER)
+  if(lex.get_token(tk) != TOK_IDENTIFIER)
     return false;
 
   cpp_declaratort name;
-  name.name()=cpp_namet(tk.data.get(ID_C_base_name));
+  name.name()= cpp_namet(tk.data.get(ID_C_base_name));
   name.type().make_nil();
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rTypedefUsing 2\n";
-  #endif
+#endif
 
-  if(lex.get_token(tk)!='=')
+  if(lex.get_token(tk) != '=')
     return false;
 
   if(!rTypeNameOrFunctionType(type_name))
@@ -788,12 +817,12 @@ bool Parser::rTypedefUsing(cpp_declarationt &declaration)
 
   declaration.declarators().push_back(name);
 
-  if(lex.get_token(tk)!=';')
+  if(lex.get_token(tk) != ';')
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rTypedefUsing 3\n";
-  #endif
+#endif
 
   return true;
 }
@@ -812,7 +841,7 @@ Function:
 
 bool Parser::rTypedefStatement(codet &statement)
 {
-  statement=codet(ID_decl);
+  statement= codet(ID_decl);
   statement.operands().resize(1);
   return rTypedef((cpp_declarationt &)statement.op0());
 }
@@ -835,10 +864,10 @@ Function:
 */
 bool Parser::rTypeSpecifier(typet &tspec, bool check)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rTypeSpecifier 0\n";
-  #endif
+#endif
 
   typet cv_q;
 
@@ -847,9 +876,9 @@ bool Parser::rTypeSpecifier(typet &tspec, bool check)
   if(!optCvQualify(cv_q))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rTypeSpecifier 0.1\n";
-  #endif
+#endif
 
   if(!optIntegralTypeOrClassSpec(tspec))
     return false;
@@ -859,34 +888,34 @@ bool Parser::rTypeSpecifier(typet &tspec, bool check)
     cpp_tokent tk;
     lex.LookAhead(0, tk);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rTypeSpecifier 1\n";
-    #endif
+#endif
 
     if(check)
       if(!MaybeTypeNameOrClassTemplate(tk))
         return false;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rTypeSpecifier 2\n";
-    #endif
+#endif
 
     if(!rName(tspec))
       return false;
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rTypeSpecifier 3\n";
-  #endif
+#endif
 
   if(!optCvQualify(cv_q))
     return false;
 
   merge_types(cv_q, tspec);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rTypeSpecifier 4\n";
-  #endif
+#endif
 
   return true;
 }
@@ -907,26 +936,22 @@ Function:
 
 bool Parser::isTypeSpecifier()
 {
-  int t=lex.LookAhead(0);
+  int t= lex.LookAhead(0);
 
-  if(t==TOK_IDENTIFIER || t==TOK_SCOPE
-       || t==TOK_CONSTEXPR || t==TOK_CONST || t==TOK_VOLATILE || t==TOK_RESTRICT
-       || t==TOK_CHAR || t==TOK_INT || t==TOK_SHORT || t==TOK_LONG
-       || t==TOK_CHAR16_T || t==TOK_CHAR32_T
-       || t==TOK_WCHAR_T || t==TOK_COMPLEX // new !!!
-       || t==TOK_SIGNED || t==TOK_UNSIGNED || t==TOK_FLOAT || t==TOK_DOUBLE
-       || t==TOK_INT8 || t==TOK_INT16 || t==TOK_INT32 || t==TOK_INT64
-       || t==TOK_GCC_INT128
-       || t==TOK_PTR32 || t==TOK_PTR64
-       || t==TOK_GCC_FLOAT128
-       || t==TOK_VOID || t==TOK_BOOL || t==TOK_CPROVER_BOOL
-       || t==TOK_CLASS || t==TOK_STRUCT || t==TOK_UNION || t==TOK_ENUM
-       || t==TOK_INTERFACE
-       || t==TOK_TYPENAME
-       || t==TOK_TYPEOF
-       || t==TOK_DECLTYPE
-       || t==TOK_UNDERLYING_TYPE
-     )
+  if(
+    t == TOK_IDENTIFIER || t == TOK_SCOPE || t == TOK_CONSTEXPR ||
+    t == TOK_CONST || t == TOK_VOLATILE || t == TOK_RESTRICT || t == TOK_CHAR ||
+    t == TOK_INT || t == TOK_SHORT || t == TOK_LONG || t == TOK_CHAR16_T ||
+    t == TOK_CHAR32_T || t == TOK_WCHAR_T || t == TOK_COMPLEX // new !!!
+    ||
+    t == TOK_SIGNED || t == TOK_UNSIGNED || t == TOK_FLOAT || t == TOK_DOUBLE ||
+    t == TOK_INT8 || t == TOK_INT16 || t == TOK_INT32 || t == TOK_INT64 ||
+    t == TOK_GCC_INT128 || t == TOK_PTR32 || t == TOK_PTR64 ||
+    t == TOK_GCC_FLOAT128 || t == TOK_VOID || t == TOK_BOOL ||
+    t == TOK_CPROVER_BOOL || t == TOK_CLASS || t == TOK_STRUCT ||
+    t == TOK_UNION || t == TOK_ENUM || t == TOK_INTERFACE ||
+    t == TOK_TYPENAME || t == TOK_TYPEOF || t == TOK_DECLTYPE ||
+    t == TOK_UNDERLYING_TYPE)
     return true;
 
   return false;
@@ -953,18 +978,18 @@ bool Parser::rLinkageSpec(cpp_linkage_spect &linkage_spec)
 {
   cpp_tokent tk1, tk2;
 
-  if(lex.get_token(tk1)!=TOK_EXTERN)
+  if(lex.get_token(tk1) != TOK_EXTERN)
     return false;
 
   if(!rString(tk2))
     return false;
 
-  linkage_spec=cpp_linkage_spect();
+  linkage_spec= cpp_linkage_spect();
   set_location(linkage_spec, tk1);
   linkage_spec.linkage().swap(tk2.data);
   set_location(linkage_spec.linkage(), tk2);
 
-  if(lex.LookAhead(0)=='{')
+  if(lex.LookAhead(0) == '{')
   {
     if(!rLinkageBody(linkage_spec.items()))
       return false;
@@ -1004,30 +1029,30 @@ Function:
 bool Parser::rNamespaceSpec(cpp_namespace_spect &namespace_spec)
 {
   cpp_tokent tk1, tk2;
-  bool is_inline=false;
+  bool is_inline= false;
 
-  if(lex.LookAhead(0)==TOK_INLINE)
+  if(lex.LookAhead(0) == TOK_INLINE)
   {
     lex.get_token(tk1);
-    is_inline=true;
+    is_inline= true;
   }
 
-  if(lex.get_token(tk1)!=TOK_NAMESPACE)
+  if(lex.get_token(tk1) != TOK_NAMESPACE)
     return false;
 
   irep_idt name;
 
-  if(lex.LookAhead(0)=='{')
-    name=""; // an anonymous namespace
+  if(lex.LookAhead(0) == '{')
+    name= ""; // an anonymous namespace
   else
   {
-    if(lex.get_token(tk2)==TOK_IDENTIFIER)
-      name=tk2.data.get(ID_C_base_name);
+    if(lex.get_token(tk2) == TOK_IDENTIFIER)
+      name= tk2.data.get(ID_C_base_name);
     else
       return false;
   }
 
-  namespace_spec=cpp_namespace_spect();
+  namespace_spec= cpp_namespace_spect();
   set_location(namespace_spec, tk1);
   namespace_spec.set_namespace(name);
   namespace_spec.set_is_inline(is_inline);
@@ -1037,7 +1062,7 @@ bool Parser::rNamespaceSpec(cpp_namespace_spect &namespace_spec)
   case '{':
     return rLinkageBody(namespace_spec.items());
 
-  case '=': // namespace alias
+  case '=':             // namespace alias
     lex.get_token(tk2); // eat =
     return rName(namespace_spec.alias());
 
@@ -1066,13 +1091,13 @@ bool Parser::rUsing(cpp_usingt &cpp_using)
 {
   cpp_tokent tk;
 
-  if(lex.get_token(tk)!=TOK_USING)
+  if(lex.get_token(tk) != TOK_USING)
     return false;
 
-  cpp_using=cpp_usingt();
+  cpp_using= cpp_usingt();
   set_location(cpp_using, tk);
 
-  if(lex.LookAhead(0)==TOK_NAMESPACE)
+  if(lex.LookAhead(0) == TOK_NAMESPACE)
   {
     lex.get_token(tk);
     cpp_using.set_namespace(true);
@@ -1081,7 +1106,7 @@ bool Parser::rUsing(cpp_usingt &cpp_using)
   if(!rName(cpp_using.name()))
     return false;
 
-  if(lex.get_token(tk)!=';')
+  if(lex.get_token(tk) != ';')
     return false;
 
   return true;
@@ -1106,28 +1131,28 @@ bool Parser::rStaticAssert(cpp_static_assertt &cpp_static_assert)
 {
   cpp_tokent tk;
 
-  if(lex.get_token(tk)!=TOK_STATIC_ASSERT)
+  if(lex.get_token(tk) != TOK_STATIC_ASSERT)
     return false;
 
-  cpp_static_assert=cpp_static_assertt();
+  cpp_static_assert= cpp_static_assertt();
   set_location(cpp_static_assert, tk);
 
-  if(lex.get_token(tk)!='(')
+  if(lex.get_token(tk) != '(')
     return false;
 
   if(!rExpression(cpp_static_assert.cond(), false))
     return false;
 
-  if(lex.get_token(tk)!=',')
+  if(lex.get_token(tk) != ',')
     return false;
 
   if(!rExpression(cpp_static_assert.description(), false))
     return false;
 
-  if(lex.get_token(tk)!=')')
+  if(lex.get_token(tk) != ')')
     return false;
 
-  if(lex.get_token(tk)!=';')
+  if(lex.get_token(tk) != ';')
     return false;
 
   return true;
@@ -1154,23 +1179,23 @@ bool Parser::rLinkageBody(cpp_linkage_spect::itemst &items)
 {
   cpp_tokent op, cp;
 
-  if(lex.get_token(op)!='{')
+  if(lex.get_token(op) != '{')
     return false;
 
   items.clear();
-  while(lex.LookAhead(0)!='}')
+  while(lex.LookAhead(0) != '}')
   {
     cpp_itemt item;
 
     if(!rDefinition(item))
     {
       if(!SyntaxError())
-        return false;                // too many errors
+        return false; // too many errors
 
       SkipTo('}');
       lex.get_token(cp);
       items.push_back(item);
-      return true;                // error recovery
+      return true; // error recovery
     }
 
     items.push_back(item);
@@ -1212,7 +1237,7 @@ Function:
 */
 bool Parser::rTemplateDecl(cpp_declarationt &decl)
 {
-  TemplateDeclKind kind=tdk_unknown;
+  TemplateDeclKind kind= tdk_unknown;
 
   make_sub_scope("#template", new_scopet::TEMPLATE);
   current_scope->id_map.clear();
@@ -1222,7 +1247,7 @@ bool Parser::rTemplateDecl(cpp_declarationt &decl)
     return false;
 
   cpp_declarationt body;
-  if(lex.LookAhead(0)==TOK_USING)
+  if(lex.LookAhead(0) == TOK_USING)
   {
     if(!rTypedefUsing(body))
       return false;
@@ -1235,12 +1260,12 @@ bool Parser::rTemplateDecl(cpp_declarationt &decl)
   switch(kind)
   {
   case tdk_decl:
-    #ifdef DEBUG
-    std::cout << std::string(__indent, ' ') << "BODY: "
-              << body.pretty() << '\n';
-    std::cout << std::string(__indent, ' ') << "TEMPLATE_TYPE: "
-              << template_type.pretty() << '\n';
-    #endif
+#ifdef DEBUG
+    std::cout << std::string(__indent, ' ') << "BODY: " << body.pretty()
+              << '\n';
+    std::cout << std::string(__indent, ' ')
+              << "TEMPLATE_TYPE: " << template_type.pretty() << '\n';
+#endif
     body.add(ID_template_type).swap(template_type);
     body.set(ID_is_template, true);
     decl.swap(body);
@@ -1248,7 +1273,7 @@ bool Parser::rTemplateDecl(cpp_declarationt &decl)
 
   case tdk_instantiation:
     // Repackage the decl
-    decl=body;
+    decl= body;
     break;
 
   case tdk_specialization:
@@ -1257,7 +1282,7 @@ bool Parser::rTemplateDecl(cpp_declarationt &decl)
     decl.swap(body);
     break;
 
-   default:
+  default:
     assert(0);
     break;
   }
@@ -1281,35 +1306,35 @@ bool Parser::rTemplateDecl2(typet &decl, TemplateDeclKind &kind)
 {
   cpp_tokent tk;
 
-  if(lex.get_token(tk)!=TOK_TEMPLATE)
+  if(lex.get_token(tk) != TOK_TEMPLATE)
     return false;
 
-  decl=typet(ID_template);
+  decl= typet(ID_template);
   set_location(decl, tk);
 
-  if(lex.LookAhead(0)!='<')
+  if(lex.LookAhead(0) != '<')
   {
     // template instantiation
-    kind=tdk_instantiation;
-    return true;        // ignore TEMPLATE
+    kind= tdk_instantiation;
+    return true; // ignore TEMPLATE
   }
 
-  if(lex.get_token(tk)!='<')
+  if(lex.get_token(tk) != '<')
     return false;
 
-  irept &template_parameters=decl.add(ID_template_parameters);
+  irept &template_parameters= decl.add(ID_template_parameters);
 
   if(!rTempArgList(template_parameters))
     return false;
 
-  if(lex.get_token(tk)!='>')
+  if(lex.get_token(tk) != '>')
     return false;
 
   // ignore nested TEMPLATE
-  while(lex.LookAhead(0)==TOK_TEMPLATE)
+  while(lex.LookAhead(0) == TOK_TEMPLATE)
   {
     lex.get_token(tk);
-    if(lex.LookAhead(0)!='<')
+    if(lex.LookAhead(0) != '<')
       break;
 
     lex.get_token(tk);
@@ -1317,16 +1342,16 @@ bool Parser::rTemplateDecl2(typet &decl, TemplateDeclKind &kind)
     if(!rTempArgList(dummy_args))
       return false;
 
-    if(lex.get_token(tk)!='>')
+    if(lex.get_token(tk) != '>')
       return false;
   }
 
   if(template_parameters.get_sub().empty())
     // template < > declaration
-    kind=tdk_specialization;
+    kind= tdk_specialization;
   else
     // template < ... > declaration
-    kind=tdk_decl;
+    kind= tdk_decl;
 
   return true;
 }
@@ -1350,7 +1375,7 @@ Function:
 */
 bool Parser::rTempArgList(irept &args)
 {
-  if(lex.LookAhead(0)=='>')
+  if(lex.LookAhead(0) == '>')
     return true;
 
   cpp_declarationt a;
@@ -1360,7 +1385,7 @@ bool Parser::rTempArgList(irept &args)
   args.get_sub().push_back(get_nil_irep());
   args.get_sub().back().swap(a);
 
-  while(lex.LookAhead(0)==',')
+  while(lex.LookAhead(0) == ',')
   {
     cpp_tokent tk;
 
@@ -1396,42 +1421,42 @@ Function:
 */
 bool Parser::rTempArgDeclaration(cpp_declarationt &declaration)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rTempArgDeclaration 0\n";
-  #endif
+#endif
 
-  int t0=lex.LookAhead(0);
+  int t0= lex.LookAhead(0);
 
-  if((t0==TOK_CLASS || t0==TOK_TYPENAME))
+  if((t0 == TOK_CLASS || t0 == TOK_TYPENAME))
   {
-    cpp_token_buffert::post pos=lex.Save();
+    cpp_token_buffert::post pos= lex.Save();
 
     cpp_tokent tk1;
     lex.get_token(tk1);
 
-    declaration=cpp_declarationt();
+    declaration= cpp_declarationt();
     set_location(declaration, tk1);
 
     declaration.set(ID_is_type, true);
-    declaration.type()=typet("cpp-template-type");
+    declaration.type()= typet("cpp-template-type");
 
     declaration.declarators().resize(1);
-    cpp_declaratort &declarator=declaration.declarators().front();
+    cpp_declaratort &declarator= declaration.declarators().front();
 
-    declarator=cpp_declaratort();
+    declarator= cpp_declaratort();
     declarator.name().make_nil();
     declarator.type().make_nil();
     set_location(declarator, tk1);
 
-    bool has_ellipsis=false;
+    bool has_ellipsis= false;
 
-    if(lex.LookAhead(0)==TOK_ELLIPSIS)
+    if(lex.LookAhead(0) == TOK_ELLIPSIS)
     {
       cpp_tokent tk2;
       lex.get_token(tk2);
 
-      has_ellipsis=true;
+      has_ellipsis= true;
     }
 
     if(lex.LookAhead(0) == TOK_IDENTIFIER)
@@ -1454,7 +1479,7 @@ bool Parser::rTempArgDeclaration(cpp_declarationt &declaration)
       }
     }
 
-    if(lex.LookAhead(0)=='=')
+    if(lex.LookAhead(0) == '=')
     {
       if(has_ellipsis)
         return false;
@@ -1465,22 +1490,21 @@ bool Parser::rTempArgDeclaration(cpp_declarationt &declaration)
       if(!rTypeName(default_type))
         return false;
 
-      declarator.value()=exprt(ID_type);
+      declarator.value()= exprt(ID_type);
       declarator.value().type().swap(default_type);
     }
 
-    if(lex.LookAhead(0)==',' ||
-       lex.LookAhead(0)=='>')
+    if(lex.LookAhead(0) == ',' || lex.LookAhead(0) == '>')
       return true;
 
     lex.Restore(pos);
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rTempArgDeclaration 1\n";
-  #endif
+#endif
 
-  if(t0==TOK_TEMPLATE)
+  if(t0 == TOK_TEMPLATE)
   {
     TemplateDeclKind kind;
 
@@ -1493,20 +1517,19 @@ bool Parser::rTempArgDeclaration(cpp_declarationt &declaration)
 
     cpp_tokent tk1, tk2;
 
-    if(lex.get_token(tk1)!=TOK_CLASS ||
-       lex.get_token(tk2)!=TOK_IDENTIFIER)
+    if(lex.get_token(tk1) != TOK_CLASS || lex.get_token(tk2) != TOK_IDENTIFIER)
       return false;
 
     // Ptree cspec=new PtreeClassSpec(new LeafReserved(tk1),
     //                                  Ptree::Cons(new Leaf(tk2),nil),
     //                                  nil);
     // decl=Ptree::Snoc(decl, cspec);
-    if(lex.LookAhead(0)=='=')
+    if(lex.LookAhead(0) == '=')
     {
       typet default_type;
       lex.get_token(tk1);
       if(!rTypeName(default_type))
-          return false;
+        return false;
 
       // decl=Ptree::Nconc(decl, Ptree::List(new Leaf(tk1),
       //                                      default_type));
@@ -1514,42 +1537,42 @@ bool Parser::rTempArgDeclaration(cpp_declarationt &declaration)
   }
   else
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ')
               << "Parser::rTempArgDeclaration 2\n";
-    #endif
+#endif
 
-    declaration=cpp_declarationt();
+    declaration= cpp_declarationt();
     declaration.set(ID_is_type, false);
 
     if(!rTypeSpecifier(declaration.type(), true))
       return false;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ')
               << "Parser::rTempArgDeclaration 3\n";
-    #endif
+#endif
 
-    bool has_ellipsis=false;
+    bool has_ellipsis= false;
 
-    if(lex.LookAhead(0)==TOK_ELLIPSIS)
+    if(lex.LookAhead(0) == TOK_ELLIPSIS)
     {
       cpp_tokent tk2;
       lex.get_token(tk2);
 
-      has_ellipsis=true;
+      has_ellipsis= true;
     }
 
     declaration.declarators().resize(1);
-    cpp_declaratort &declarator=declaration.declarators().front();
+    cpp_declaratort &declarator= declaration.declarators().front();
 
     if(!rDeclarator(declarator, kArgDeclarator, false, true))
       return false;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ')
               << "Parser::rTempArgDeclaration 4\n";
-    #endif
+#endif
 
     add_id(declarator.name(), new_scopet::NON_TYPE_TEMPLATE_PARAMETER);
 
@@ -1558,9 +1581,9 @@ bool Parser::rTempArgDeclaration(cpp_declarationt &declaration)
       // TODO
     }
 
-    exprt &value=declarator.value();
+    exprt &value= declarator.value();
 
-    if(lex.LookAhead(0)=='=')
+    if(lex.LookAhead(0) == '=')
     {
       if(has_ellipsis)
         return false;
@@ -1598,10 +1621,10 @@ bool Parser::rExternTemplateDecl(irept &decl)
 {
   cpp_tokent tk1, tk2;
 
-  if(lex.get_token(tk1)!=TOK_EXTERN)
+  if(lex.get_token(tk1) != TOK_EXTERN)
     return false;
 
-  if(lex.get_token(tk2)!=TOK_TEMPLATE)
+  if(lex.get_token(tk2) != TOK_TEMPLATE)
     return false;
 
   cpp_declarationt body;
@@ -1657,11 +1680,12 @@ Function:
 
 bool Parser::rDeclaration(cpp_declarationt &declaration)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
-  std::cout << std::string(__indent, ' ') << "Parser::rDeclaration 0.1  token: "
-            << lex.LookAhead(0) << std::endl;
-  #endif
+  std::cout << std::string(__indent, ' ')
+            << "Parser::rDeclaration 0.1  token: " << lex.LookAhead(0)
+            << std::endl;
+#endif
 
   if(!optAttribute(declaration))
     return false;
@@ -1670,25 +1694,25 @@ bool Parser::rDeclaration(cpp_declarationt &declaration)
   if(!optMemberSpec(member_spec))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rDeclaration 0.2\n";
-  #endif
+#endif
 
   cpp_storage_spect storage_spec;
   if(!optStorageSpec(storage_spec))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rDeclaration 1\n";
-  #endif
+#endif
 
   if(member_spec.is_empty())
     if(!optMemberSpec(member_spec))
       return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rDeclaration 3\n";
-  #endif
+#endif
 
   typet cv_q, integral;
   cv_q.make_nil();
@@ -1703,9 +1727,9 @@ bool Parser::rDeclaration(cpp_declarationt &declaration)
   if(!optCvQualify(cv_q))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rDeclaration 4\n";
-  #endif
+#endif
 
   if(!optIntegralTypeOrClassSpec(integral))
     return false;
@@ -1717,24 +1741,24 @@ bool Parser::rDeclaration(cpp_declarationt &declaration)
 
   if(integral.is_not_nil())
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rDeclaration 5\n";
-    #endif
-    return
-      rIntegralDeclaration(
-        declaration, storage_spec, member_spec, integral, cv_q);
+#endif
+    return rIntegralDeclaration(
+      declaration, storage_spec, member_spec, integral, cv_q);
   }
   else
   {
-    int t=lex.LookAhead(0);
+    int t= lex.LookAhead(0);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rDeclaration 6 " << t
               << "\n";
-    #endif
+#endif
 
-    if((cv_q.is_not_nil() || storage_spec.is_auto()) &&
-       ((t==TOK_IDENTIFIER && lex.LookAhead(1)=='=') || t=='*'))
+    if(
+      (cv_q.is_not_nil() || storage_spec.is_auto()) &&
+      ((t == TOK_IDENTIFIER && lex.LookAhead(1) == '=') || t == '*'))
       return rConstDeclaration(declaration, storage_spec, member_spec, cv_q);
     else
       return rOtherDeclaration(declaration, storage_spec, member_spec, cv_q);
@@ -1776,8 +1800,7 @@ bool Parser::rSimpleDeclaration(cpp_declarationt &declaration)
   if(!optIntegralTypeOrClassSpec(integral))
     return false;
 
-  if(integral.is_nil() &&
-     !rName(integral))
+  if(integral.is_nil() && !rName(integral))
     return false;
 
   if(cv_q.is_not_nil() && integral.is_not_nil())
@@ -1799,7 +1822,7 @@ bool Parser::rSimpleDeclaration(cpp_declarationt &declaration)
 
   // there really _has_ to be an initializer!
 
-  if(lex.LookAhead(0)!='=')
+  if(lex.LookAhead(0) != '=')
     return false;
 
   cpp_tokent eqs;
@@ -1832,25 +1855,25 @@ bool Parser::rIntegralDeclaration(
   typet &integral,
   typet &cv_q)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ')
             << "Parser::rIntegralDeclaration 1  token: "
             << static_cast<char>(lex.LookAhead(0)) << "\n";
-  #endif
+#endif
 
   if(!optCvQualify(cv_q))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rIntegralDeclaration 2\n";
-  #endif
+#endif
 
   merge_types(cv_q, integral);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rIntegralDeclaration 3\n";
-  #endif
+#endif
 
   declaration.type().swap(integral);
   declaration.storage_spec().swap(storage_spec);
@@ -1861,19 +1884,19 @@ bool Parser::rIntegralDeclaration(
   switch(lex.LookAhead(0))
   {
   case ';':
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ')
               << "Parser::rIntegralDeclaration 4\n";
-    #endif
+#endif
 
     lex.get_token(tk);
     return true;
 
-  case ':':        // bit field
-    #ifdef DEBUG
+  case ':': // bit field
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ')
               << "Parser::rIntegralDeclaration 5\n";
-    #endif
+#endif
 
     lex.get_token(tk);
 
@@ -1883,7 +1906,7 @@ bool Parser::rIntegralDeclaration(
       if(!rExpression(width, false))
         return false;
 
-      if(lex.get_token(tk)!=';')
+      if(lex.get_token(tk) != ';')
         return false;
 
       // TODO
@@ -1891,47 +1914,46 @@ bool Parser::rIntegralDeclaration(
     return true;
 
   default:
-    #ifdef DEBUG
-    std::cout << std::string(__indent, ' ')
-              << "Parser::rIntegralDeclaration 6 "
+#ifdef DEBUG
+    std::cout << std::string(__indent, ' ') << "Parser::rIntegralDeclaration 6 "
               << lex.LookAhead(0) << "\n";
-    #endif
+#endif
 
     if(!rDeclarators(declaration.declarators(), true))
       return false;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ')
               << "Parser::rIntegralDeclaration 7\n";
-    #endif
+#endif
 
-    if(lex.LookAhead(0)==';')
+    if(lex.LookAhead(0) == ';')
     {
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ')
-                << "Parser::rIntegralDeclaration 8 "
-                << declaration.pretty() << '\n';
-      #endif
+                << "Parser::rIntegralDeclaration 8 " << declaration.pretty()
+                << '\n';
+#endif
       lex.get_token(tk);
       return true;
     }
     else
     {
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ')
                 << "Parser::rIntegralDeclaration 9\n";
-      #endif
+#endif
 
-      if(declaration.declarators().size()!=1)
+      if(declaration.declarators().size() != 1)
         return false;
 
       if(!rFunctionBody(declaration.declarators().front()))
         return false;
 
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ')
                 << "Parser::rIntegralDeclaration 10\n";
-      #endif
+#endif
 
       return true;
     }
@@ -1956,17 +1978,17 @@ bool Parser::rConstDeclaration(
   cpp_member_spect &member_spec,
   typet &cv_q)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rConstDeclaration\n";
-  #endif
+#endif
 
   cpp_declarationt::declaratorst declarators;
 
   if(!rDeclarators(declarators, false))
     return false;
 
-  if(lex.LookAhead(0)!=';')
+  if(lex.LookAhead(0) != ';')
     return false;
 
   cpp_tokent tk;
@@ -1995,19 +2017,19 @@ bool Parser::rOtherDeclaration(
 {
   typet type_name;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rOtherDeclaration 1\n";
-  #endif
+#endif
 
   if(!rName(type_name))
     return false;
 
   merge_types(cv_q, type_name);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rOtherDeclaration 2\n";
-  #endif
+#endif
 
   // added this one to do "typename inline foo();"
   if(member_spec.is_empty())
@@ -2019,26 +2041,26 @@ bool Parser::rOtherDeclaration(
     if(!optStorageSpec(storage_spec))
       return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rOtherDeclaration 3\n";
-  #endif
+#endif
 
-  bool is_constructor = isConstructorDecl();
-  bool is_operator = false;
+  bool is_constructor= isConstructorDecl();
+  bool is_operator= false;
 
   if(is_constructor)
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rOtherDeclaration 4\n";
-    #endif
+#endif
 
     assert(!type_name.get_sub().empty());
 
-    for(unsigned i=0; i < type_name.get_sub().size(); i++)
+    for(unsigned i= 0; i < type_name.get_sub().size(); i++)
     {
       if(type_name.get_sub()[i].id() == ID_operator)
       {
-        is_operator = true;
+        is_operator= true;
         break;
       }
     }
@@ -2046,63 +2068,63 @@ bool Parser::rOtherDeclaration(
 
   if(is_operator && is_constructor)
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rOtherDeclaration 5\n";
-    #endif
+#endif
 
     // it's a conversion operator
-    typet type = type_name;
+    typet type= type_name;
     type.get_sub().erase(type.get_sub().begin());
 
     cpp_declaratort conv_operator_declarator;
     typet trailing_return_type;
     if(!rConstructorDecl(
-        conv_operator_declarator, type_name, trailing_return_type))
+         conv_operator_declarator, type_name, trailing_return_type))
       return false;
 
-    type_name=typet("cpp-cast-operator");
+    type_name= typet("cpp-cast-operator");
 
     declaration.declarators().push_back(conv_operator_declarator);
   }
   else if(cv_q.is_nil() && is_constructor)
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rOtherDeclaration 6\n";
-    #endif
+#endif
 
     assert(!type_name.get_sub().empty());
 
-    bool is_destructor=false;
+    bool is_destructor= false;
     forall_irep(it, type_name.get_sub())
-      if(it->id()=="~")
+      if(it->id() == "~")
       {
-        is_destructor=true;
+        is_destructor= true;
         break;
       }
 
     cpp_declaratort constructor_declarator;
     typet trailing_return_type;
     if(!rConstructorDecl(
-        constructor_declarator, type_name, trailing_return_type))
+         constructor_declarator, type_name, trailing_return_type))
       return false;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rOtherDeclaration 7\n";
-    #endif
+#endif
 
     // type_name above is the name declarator, not the return type
     if(storage_spec.is_auto())
-      type_name=trailing_return_type;
+      type_name= trailing_return_type;
     else
-      type_name=typet(is_destructor?ID_destructor:ID_constructor);
+      type_name= typet(is_destructor ? ID_destructor : ID_constructor);
 
     declaration.declarators().push_back(constructor_declarator);
   }
-  else if(!member_spec.is_empty() && lex.LookAhead(0)==';')
+  else if(!member_spec.is_empty() && lex.LookAhead(0) == ';')
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rOtherDeclaration 8\n";
-    #endif
+#endif
 
     // FRIEND name ';'
     // if(Ptree::Length(member_spec)==1 && member_spec->Car()->What()==FRIEND)
@@ -2118,9 +2140,9 @@ bool Parser::rOtherDeclaration(
   }
   else
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rOtherDeclaration 9\n";
-    #endif
+#endif
 
     if(!optCvQualify(cv_q))
       return false;
@@ -2135,26 +2157,26 @@ bool Parser::rOtherDeclaration(
   declaration.storage_spec().swap(storage_spec);
   declaration.member_spec().swap(member_spec);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rOtherDeclaration 10\n";
-  #endif
+#endif
 
-  if(lex.LookAhead(0)==';')
+  if(lex.LookAhead(0) == ';')
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rOtherDeclaration 11\n";
-    #endif
+#endif
 
     cpp_tokent tk;
     lex.get_token(tk);
   }
   else
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rOtherDeclaration 12\n";
-    #endif
+#endif
 
-    if(declaration.declarators().size()!=1)
+    if(declaration.declarators().size() != 1)
       return false;
 
     if(!rFunctionBody(declaration.declarators().front()))
@@ -2185,28 +2207,29 @@ Function:
 */
 bool Parser::isConstructorDecl()
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::isConstructorDecl "
-            << lex.LookAhead(0) << "  "<< lex.LookAhead(1) << "\n";
-  #endif
+            << lex.LookAhead(0) << "  " << lex.LookAhead(1) << "\n";
+#endif
 
-  if(lex.LookAhead(0)!='(')
+  if(lex.LookAhead(0) != '(')
     return false;
   else
   {
-    int t=lex.LookAhead(1);
-    if(t=='*' || t=='&' || t=='(')
-      return false;        // it's a declarator
-    else if(t==TOK_STDCALL || t==TOK_FASTCALL || t==TOK_CLRCALL || t==TOK_CDECL)
-      return false;        // it's a declarator
+    int t= lex.LookAhead(1);
+    if(t == '*' || t == '&' || t == '(')
+      return false; // it's a declarator
+    else if(
+      t == TOK_STDCALL || t == TOK_FASTCALL || t == TOK_CLRCALL ||
+      t == TOK_CDECL)
+      return false; // it's a declarator
     else if(isPtrToMember(1))
-      return false;        // declarator (::*)
-    else if(t==TOK_IDENTIFIER)
+      return false; // declarator (::*)
+    else if(t == TOK_IDENTIFIER)
     {
       // Ambiguous. Do some more look-ahead.
-      if(lex.LookAhead(2)==')' &&
-         lex.LookAhead(3)=='(')
+      if(lex.LookAhead(2) == ')' && lex.LookAhead(3) == '(')
         return false; // must be declarator (decl)(...)
     }
 
@@ -2233,51 +2256,51 @@ Function:
 */
 bool Parser::isPtrToMember(int i)
 {
-  int t0=lex.LookAhead(i++);
+  int t0= lex.LookAhead(i++);
 
-  if(t0==TOK_SCOPE)
-      t0=lex.LookAhead(i++);
+  if(t0 == TOK_SCOPE)
+    t0= lex.LookAhead(i++);
 
-  while(t0==TOK_IDENTIFIER)
+  while(t0 == TOK_IDENTIFIER)
   {
-    int t=lex.LookAhead(i++);
-    if(t=='<')
+    int t= lex.LookAhead(i++);
+    if(t == '<')
     {
-      int n=1;
+      int n= 1;
       while(n > 0)
       {
-        int u=lex.LookAhead(i++);
-        if(u=='<')
+        int u= lex.LookAhead(i++);
+        if(u == '<')
           ++n;
-        else if(u=='>')
+        else if(u == '>')
           --n;
-        else if(u=='(')
+        else if(u == '(')
         {
-          int m=1;
+          int m= 1;
           while(m > 0)
           {
-            int v=lex.LookAhead(i++);
-            if(v=='(')
-                ++m;
-            else if(v==')')
-                --m;
-            else if(v=='\0' || v==';' || v=='}')
-                return false;
+            int v= lex.LookAhead(i++);
+            if(v == '(')
+              ++m;
+            else if(v == ')')
+              --m;
+            else if(v == '\0' || v == ';' || v == '}')
+              return false;
           }
         }
-        else if(u=='\0' || u==';' || u=='}')
+        else if(u == '\0' || u == ';' || u == '}')
           return false;
       }
 
-      t=lex.LookAhead(i++);
+      t= lex.LookAhead(i++);
     }
 
-    if(t!=TOK_SCOPE)
+    if(t != TOK_SCOPE)
       return false;
 
-    t0=lex.LookAhead(i++);
+    t0= lex.LookAhead(i++);
 
-    if(t0=='*')
+    if(t0 == '*')
       return true;
   }
 
@@ -2304,23 +2327,33 @@ bool Parser::optMemberSpec(cpp_member_spect &member_spec)
 {
   member_spec.clear();
 
-  int t=lex.LookAhead(0);
+  int t= lex.LookAhead(0);
 
-  while(t==TOK_FRIEND || t==TOK_INLINE || t==TOK_VIRTUAL || t==TOK_EXPLICIT)
+  while(t == TOK_FRIEND || t == TOK_INLINE || t == TOK_VIRTUAL ||
+        t == TOK_EXPLICIT)
   {
     cpp_tokent tk;
     lex.get_token(tk);
 
     switch(t)
     {
-    case TOK_INLINE:   member_spec.set_inline(true); break;
-    case TOK_VIRTUAL:  member_spec.set_virtual(true); break;
-    case TOK_FRIEND:   member_spec.set_friend(true); break;
-    case TOK_EXPLICIT: member_spec.set_explicit(true); break;
-    default: assert(false);
+    case TOK_INLINE:
+      member_spec.set_inline(true);
+      break;
+    case TOK_VIRTUAL:
+      member_spec.set_virtual(true);
+      break;
+    case TOK_FRIEND:
+      member_spec.set_friend(true);
+      break;
+    case TOK_EXPLICIT:
+      member_spec.set_explicit(true);
+      break;
+    default:
+      assert(false);
     }
 
-    t=lex.LookAhead(0);
+    t= lex.LookAhead(0);
   }
 
   return true;
@@ -2344,29 +2377,40 @@ Function:
 */
 bool Parser::optStorageSpec(cpp_storage_spect &storage_spec)
 {
-  int t=lex.LookAhead(0);
+  int t= lex.LookAhead(0);
 
-  if(t==TOK_STATIC ||
-     t==TOK_EXTERN ||
-     t==TOK_AUTO ||
-     t==TOK_REGISTER ||
-     t==TOK_MUTABLE ||
-     t==TOK_GCC_ASM ||
-     t==TOK_THREAD_LOCAL)
+  if(
+    t == TOK_STATIC || t == TOK_EXTERN || t == TOK_AUTO || t == TOK_REGISTER ||
+    t == TOK_MUTABLE || t == TOK_GCC_ASM || t == TOK_THREAD_LOCAL)
   {
     cpp_tokent tk;
     lex.get_token(tk);
 
     switch(t)
     {
-    case TOK_STATIC: storage_spec.set_static(); break;
-    case TOK_EXTERN: storage_spec.set_extern(); break;
-    case TOK_AUTO: storage_spec.set_auto(); break;
-    case TOK_REGISTER: storage_spec.set_register(); break;
-    case TOK_MUTABLE: storage_spec.set_mutable(); break;
-    case TOK_GCC_ASM: storage_spec.set_asm(); break;
-    case TOK_THREAD_LOCAL: storage_spec.set_thread_local(); break;
-    default: assert(false);
+    case TOK_STATIC:
+      storage_spec.set_static();
+      break;
+    case TOK_EXTERN:
+      storage_spec.set_extern();
+      break;
+    case TOK_AUTO:
+      storage_spec.set_auto();
+      break;
+    case TOK_REGISTER:
+      storage_spec.set_register();
+      break;
+    case TOK_MUTABLE:
+      storage_spec.set_mutable();
+      break;
+    case TOK_GCC_ASM:
+      storage_spec.set_asm();
+      break;
+    case TOK_THREAD_LOCAL:
+      storage_spec.set_thread_local();
+      break;
+    default:
+      assert(false);
     }
 
     set_location(storage_spec, tk);
@@ -2394,11 +2438,11 @@ bool Parser::optCvQualify(typet &cv)
 {
   for(;;)
   {
-    int t=lex.LookAhead(0);
-    if(t==TOK_CONSTEXPR ||
-       t==TOK_CONST || t==TOK_VOLATILE || t==TOK_RESTRICT ||
-       t==TOK_PTR32 || t==TOK_PTR64 ||
-       t==TOK_GCC_ATTRIBUTE)
+    int t= lex.LookAhead(0);
+    if(
+      t == TOK_CONSTEXPR || t == TOK_CONST || t == TOK_VOLATILE ||
+      t == TOK_RESTRICT || t == TOK_PTR32 || t == TOK_PTR64 ||
+      t == TOK_GCC_ATTRIBUTE)
     {
       cpp_tokent tk;
       lex.get_token(tk);
@@ -2407,37 +2451,37 @@ bool Parser::optCvQualify(typet &cv)
       switch(t)
       {
       case TOK_CONSTEXPR:
-        p=typet(ID_constexpr);
+        p= typet(ID_constexpr);
         set_location(p, tk);
         merge_types(p, cv);
         break;
 
       case TOK_CONST:
-        p=typet(ID_const);
+        p= typet(ID_const);
         set_location(p, tk);
         merge_types(p, cv);
         break;
 
       case TOK_VOLATILE:
-        p=typet(ID_volatile);
+        p= typet(ID_volatile);
         set_location(p, tk);
         merge_types(p, cv);
         break;
 
       case TOK_RESTRICT:
-        p=typet(ID_restrict);
+        p= typet(ID_restrict);
         set_location(p, tk);
         merge_types(p, cv);
         break;
 
       case TOK_PTR32:
-        p=typet(ID_ptr32);
+        p= typet(ID_ptr32);
         set_location(p, tk);
         merge_types(p, cv);
         break;
 
       case TOK_PTR64:
-        p=typet(ID_ptr64);
+        p= typet(ID_ptr64);
         set_location(p, tk);
         merge_types(p, cv);
         break;
@@ -2478,24 +2522,24 @@ Function:
 */
 bool Parser::optAlignas(typet &cv)
 {
-  if(lex.LookAhead(0)!=TOK_ALIGNAS)
+  if(lex.LookAhead(0) != TOK_ALIGNAS)
     return true;
 
   cpp_tokent tk;
   lex.get_token(tk);
 
-  if(lex.LookAhead(0)!='(')
+  if(lex.LookAhead(0) != '(')
     return false;
 
   typet tname;
   cpp_tokent op, cp;
 
-  cpp_token_buffert::post pos=lex.Save();
+  cpp_token_buffert::post pos= lex.Save();
   lex.get_token(op);
 
   if(rTypeName(tname))
   {
-    if(lex.get_token(cp)==')')
+    if(lex.get_token(cp) == ')')
     {
       // TODO
       return true;
@@ -2535,7 +2579,7 @@ bool Parser::rAttribute()
   {
   case '(':
     rAttribute();
-    if(lex.LookAhead(0)!=')')
+    if(lex.LookAhead(0) != ')')
       return false;
     lex.get_token(tk);
     break;
@@ -2564,8 +2608,7 @@ Function:
 
 bool Parser::optAttribute(cpp_declarationt &declaration)
 {
-  if(lex.LookAhead(0)!='[' ||
-     lex.LookAhead(1)!='[')
+  if(lex.LookAhead(0) != '[' || lex.LookAhead(1) != '[')
     return true;
 
   lex.get_token();
@@ -2619,125 +2662,168 @@ Function:
 */
 bool Parser::optIntegralTypeOrClassSpec(typet &p)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ')
             << "Parser::optIntegralTypeOrClassSpec 0\n";
-  #endif // DEBUG
+#endif // DEBUG
 
   // This makes no sense, but is used in Visual Studio header files.
-  if(lex.LookAhead(0)==TOK_TYPENAME)
+  if(lex.LookAhead(0) == TOK_TYPENAME)
   {
     cpp_tokent tk;
     lex.get_token(tk);
   }
 
-  bool is_integral=false;
+  bool is_integral= false;
   p.make_nil();
 
   int t;
 
   for(;;)
   {
-    t=lex.LookAhead(0);
+    t= lex.LookAhead(0);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ')
               << "Parser::optIntegralTypeOrClassSpec 1\n";
-    #endif // DEBUG
+#endif // DEBUG
 
     irep_idt type_id;
 
     switch(t)
     {
-    case TOK_CHAR: type_id=ID_char; break;
-    case TOK_CHAR16_T: type_id=ID_char16_t; break;
-    case TOK_CHAR32_T: type_id=ID_char32_t; break;
-    case TOK_INT: type_id=ID_int; break;
-    case TOK_SHORT: type_id=ID_short; break;
-    case TOK_LONG: type_id=ID_long; break;
-    case TOK_SIGNED: type_id=ID_signed; break;
-    case TOK_WCHAR_T: type_id=ID_wchar_t; break;
-    case TOK_COMPLEX: type_id=ID_complex; break;
-    case TOK_UNSIGNED: type_id=ID_unsigned; break;
-    case TOK_FLOAT: type_id=ID_float; break;
-    case TOK_DOUBLE: type_id=ID_double; break;
-    case TOK_VOID: type_id=ID_void; break;
-    case TOK_INT8: type_id=ID_int8; break;
-    case TOK_INT16: type_id=ID_int16; break;
-    case TOK_INT32: type_id=ID_int32; break;
-    case TOK_INT64: type_id=ID_int64; break;
-    case TOK_GCC_INT128: type_id=ID_gcc_int128; break;
-    case TOK_GCC_FLOAT128: type_id=ID_gcc_float128; break;
-    case TOK_BOOL: type_id=ID_bool; break;
-    case TOK_CPROVER_BOOL: type_id=ID_proper_bool; break;
-    default: type_id=irep_idt();
+    case TOK_CHAR:
+      type_id= ID_char;
+      break;
+    case TOK_CHAR16_T:
+      type_id= ID_char16_t;
+      break;
+    case TOK_CHAR32_T:
+      type_id= ID_char32_t;
+      break;
+    case TOK_INT:
+      type_id= ID_int;
+      break;
+    case TOK_SHORT:
+      type_id= ID_short;
+      break;
+    case TOK_LONG:
+      type_id= ID_long;
+      break;
+    case TOK_SIGNED:
+      type_id= ID_signed;
+      break;
+    case TOK_WCHAR_T:
+      type_id= ID_wchar_t;
+      break;
+    case TOK_COMPLEX:
+      type_id= ID_complex;
+      break;
+    case TOK_UNSIGNED:
+      type_id= ID_unsigned;
+      break;
+    case TOK_FLOAT:
+      type_id= ID_float;
+      break;
+    case TOK_DOUBLE:
+      type_id= ID_double;
+      break;
+    case TOK_VOID:
+      type_id= ID_void;
+      break;
+    case TOK_INT8:
+      type_id= ID_int8;
+      break;
+    case TOK_INT16:
+      type_id= ID_int16;
+      break;
+    case TOK_INT32:
+      type_id= ID_int32;
+      break;
+    case TOK_INT64:
+      type_id= ID_int64;
+      break;
+    case TOK_GCC_INT128:
+      type_id= ID_gcc_int128;
+      break;
+    case TOK_GCC_FLOAT128:
+      type_id= ID_gcc_float128;
+      break;
+    case TOK_BOOL:
+      type_id= ID_bool;
+      break;
+    case TOK_CPROVER_BOOL:
+      type_id= ID_proper_bool;
+      break;
+    default:
+      type_id= irep_idt();
     }
 
-    if(type_id!=irep_idt())
+    if(type_id != irep_idt())
     {
       cpp_tokent tk;
       typet kw;
       lex.get_token(tk);
-      kw=typet(type_id);
+      kw= typet(type_id);
       set_location(kw, tk);
 
       merge_types(kw, p);
 
-      is_integral=true;
+      is_integral= true;
     }
     else
       break;
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ')
             << "Parser::optIntegralTypeOrClassSpec 2\n";
-  #endif // DEBUG
+#endif // DEBUG
 
   if(is_integral)
     return true;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ')
             << "Parser::optIntegralTypeOrClassSpec 3\n";
-  #endif // DEBUG
+#endif // DEBUG
 
-  if(t==TOK_CLASS || t==TOK_STRUCT || t==TOK_UNION || t==TOK_INTERFACE)
+  if(t == TOK_CLASS || t == TOK_STRUCT || t == TOK_UNION || t == TOK_INTERFACE)
     return rClassSpec(p);
-  else if(t==TOK_ENUM)
+  else if(t == TOK_ENUM)
     return rEnumSpec(p);
-  else if(t==TOK_TYPEOF)
+  else if(t == TOK_TYPEOF)
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ')
               << "Parser::optIntegralTypeOrClassSpec 4\n";
-    #endif // DEBUG
+#endif // DEBUG
 
     cpp_tokent typeof_tk;
     lex.get_token(typeof_tk);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ')
               << "Parser::optIntegralTypeOrClassSpec 5\n";
-    #endif // DEBUG
+#endif // DEBUG
 
-    p=typet(ID_typeof);
+    p= typet(ID_typeof);
     set_location(p, typeof_tk);
 
     cpp_tokent tk;
-    if(lex.get_token(tk)!='(')
+    if(lex.get_token(tk) != '(')
       return false;
 
     // the argument can be a type or an expression
 
     {
       typet tname;
-      cpp_token_buffert::post pos=lex.Save();
+      cpp_token_buffert::post pos= lex.Save();
 
       if(rTypeName(tname))
       {
-        if(lex.get_token(tk)==')')
+        if(lex.get_token(tk) == ')')
         {
           p.add(ID_type_arg).swap(tname);
           return true;
@@ -2747,42 +2833,42 @@ bool Parser::optIntegralTypeOrClassSpec(typet &p)
       lex.Restore(pos);
     }
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ')
               << "Parser::optIntegralTypeOrClassSpec 6\n";
-    #endif // DEBUG
+#endif // DEBUG
 
     exprt expr;
     if(!rCommaExpression(expr))
       return false;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ')
               << "Parser::optIntegralTypeOrClassSpec 7\n";
-    #endif // DEBUG
+#endif // DEBUG
 
-    if(lex.get_token(tk)!=')')
+    if(lex.get_token(tk) != ')')
       return false;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ')
               << "Parser::optIntegralTypeOrClassSpec 8\n";
-    #endif // DEBUG
+#endif // DEBUG
 
     p.add(ID_expr_arg).swap(expr);
 
     return true;
   }
-  else if(t==TOK_DECLTYPE)
+  else if(t == TOK_DECLTYPE)
   {
     cpp_tokent decltype_tk;
     lex.get_token(decltype_tk);
 
-    p=typet(ID_decltype);
+    p= typet(ID_decltype);
     set_location(p, decltype_tk);
 
     cpp_tokent tk;
-    if(lex.get_token(tk)!='(')
+    if(lex.get_token(tk) != '(')
       return false;
 
     // the argument is always an expression
@@ -2791,25 +2877,25 @@ bool Parser::optIntegralTypeOrClassSpec(typet &p)
     if(!rCommaExpression(expr))
       return false;
 
-    if(lex.get_token(tk)!=')')
+    if(lex.get_token(tk) != ')')
       return false;
 
     p.add(ID_expr_arg).swap(expr);
 
     return true;
   }
-  else if(t==TOK_UNDERLYING_TYPE)
+  else if(t == TOK_UNDERLYING_TYPE)
   {
     // A Visual Studio extension that returns the underlying
     // type of an enum.
     cpp_tokent underlying_type_tk;
     lex.get_token(underlying_type_tk);
 
-    p=typet(ID_msc_underlying_type);
+    p= typet(ID_msc_underlying_type);
     set_location(p, underlying_type_tk);
 
     cpp_tokent tk;
-    if(lex.get_token(tk)!='(')
+    if(lex.get_token(tk) != '(')
       return false;
 
     // the argument is always a type
@@ -2819,7 +2905,7 @@ bool Parser::optIntegralTypeOrClassSpec(typet &p)
     if(!rTypeName(tname))
       return false;
 
-    if(lex.get_token(tk)!=')')
+    if(lex.get_token(tk) != ')')
       return false;
 
     p.add(ID_type_arg).swap(tname);
@@ -2855,49 +2941,49 @@ bool Parser::rConstructorDecl(
   typet &type_name,
   typet &trailing_return_type)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rConstructorDecl 0\n";
-  #endif
+#endif
 
   trailing_return_type.make_nil();
 
-  constructor=cpp_declaratort(typet(ID_function_type));
+  constructor= cpp_declaratort(typet(ID_function_type));
   constructor.type().subtype().make_nil();
   constructor.name().swap(type_name);
 
   cpp_tokent op;
-  if(lex.get_token(op)!='(')
+  if(lex.get_token(op) != '(')
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rConstructorDecl 1\n";
-  #endif
+#endif
 
-  irept &parameters=constructor.type().add(ID_parameters);
+  irept &parameters= constructor.type().add(ID_parameters);
 
-  if(lex.LookAhead(0)!=')')
+  if(lex.LookAhead(0) != ')')
     if(!rArgDeclList(parameters))
       return false;
 
   cpp_tokent cp;
   lex.get_token(cp);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rConstructorDecl 2\n";
-  #endif
+#endif
 
-  typet &cv=static_cast<typet &>(constructor.add(ID_method_qualifier));
+  typet &cv= static_cast<typet &>(constructor.add(ID_method_qualifier));
   cv.make_nil();
   optCvQualify(cv);
 
   optThrowDecl(constructor.throw_decl());
 
-  if(lex.LookAhead(0)==TOK_ARROW)
+  if(lex.LookAhead(0) == TOK_ARROW)
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rConstructorDecl 3\n";
-    #endif
+#endif
 
     // C++11 trailing return type
     cpp_tokent arrow;
@@ -2907,11 +2993,11 @@ bool Parser::rConstructorDecl(
       return false;
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rConstructorDecl 4\n";
-  #endif
+#endif
 
-  if(lex.LookAhead(0)==':')
+  if(lex.LookAhead(0) == ':')
   {
     irept mi;
 
@@ -2921,11 +3007,11 @@ bool Parser::rConstructorDecl(
       return false;
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rConstructorDecl 5\n";
-  #endif
+#endif
 
-  if(lex.LookAhead(0)=='=')
+  if(lex.LookAhead(0) == '=')
   {
     cpp_tokent eq, value;
     lex.get_token(eq);
@@ -2933,25 +3019,25 @@ bool Parser::rConstructorDecl(
     switch(lex.get_token(value))
     {
     case TOK_INTEGER:
-      {
-        constructor.value()=codet("cpp-pure-virtual");
-        set_location(constructor.value(), value);
-      }
-      break;
+    {
+      constructor.value()= codet("cpp-pure-virtual");
+      set_location(constructor.value(), value);
+    }
+    break;
 
     case TOK_DEFAULT: // C++0x
-      {
-        constructor.value()=codet(ID_default);
-        set_location(constructor.value(), value);
-      }
-      break;
+    {
+      constructor.value()= codet(ID_default);
+      set_location(constructor.value(), value);
+    }
+    break;
 
     case TOK_DELETE: // C++0x
-      {
-        constructor.value()=codet(ID_cpp_delete);
-        set_location(constructor.value(), value);
-      }
-      break;
+    {
+      constructor.value()= codet(ID_cpp_delete);
+      set_location(constructor.value(), value);
+    }
+    break;
 
     default:
       return false;
@@ -2984,14 +3070,14 @@ bool Parser::optThrowDecl(irept &throw_decl)
 {
   cpp_tokent tk;
   int t;
-  irept p=get_nil_irep();
+  irept p= get_nil_irep();
 
-  if(lex.LookAhead(0)==TOK_THROW)
+  if(lex.LookAhead(0) == TOK_THROW)
   {
     lex.get_token(tk);
     // p=Ptree::Snoc(p, new LeafReserved(tk));
 
-    if(lex.get_token(tk)!='(')
+    if(lex.get_token(tk) != '(')
       return false;
 
     // p=Ptree::Snoc(p, new Leaf(tk));
@@ -2999,12 +3085,12 @@ bool Parser::optThrowDecl(irept &throw_decl)
     for(;;)
     {
       irept q;
-      t=lex.LookAhead(0);
-      if(t=='\0')
+      t= lex.LookAhead(0);
+      if(t == '\0')
         return false;
-      else if(t==')')
+      else if(t == ')')
         break;
-      else if(t==TOK_ELLIPSIS)
+      else if(t == TOK_ELLIPSIS)
       {
         lex.get_token(tk);
       }
@@ -3015,7 +3101,7 @@ bool Parser::optThrowDecl(irept &throw_decl)
       else
         return false;
 
-      if(lex.LookAhead(0)==',')
+      if(lex.LookAhead(0) == ',')
       {
         lex.get_token(tk);
         // p=Ptree::Snoc(p, new Leaf(tk));
@@ -3024,12 +3110,12 @@ bool Parser::optThrowDecl(irept &throw_decl)
         break;
     }
 
-    if(lex.get_token(tk)!=')')
+    if(lex.get_token(tk) != ')')
       return false;
 
     // p=Ptree::Snoc(p, new Leaf(tk));
   }
-  else if(lex.LookAhead(0)==TOK_NOEXCEPT)
+  else if(lex.LookAhead(0) == TOK_NOEXCEPT)
   {
     exprt expr;
 
@@ -3039,7 +3125,7 @@ bool Parser::optThrowDecl(irept &throw_decl)
     // TODO
   }
 
-  throw_decl=p;
+  throw_decl= p;
   return true;
 }
 
@@ -3075,7 +3161,7 @@ bool Parser::rDeclarators(
 
     declarators.push_back(declarator);
 
-    if(lex.LookAhead(0)==',')
+    if(lex.LookAhead(0) == ',')
       lex.get_token(tk);
     else
       return true;
@@ -3106,7 +3192,7 @@ bool Parser::rDeclaratorWithInit(
   bool should_be_declarator,
   bool is_statement)
 {
-  if(lex.LookAhead(0)==':')
+  if(lex.LookAhead(0) == ':')
   {
     // This is an anonymous bit field.
     cpp_tokent tk;
@@ -3129,43 +3215,43 @@ bool Parser::rDeclaratorWithInit(
   {
     cpp_declaratort declarator;
 
-    if(!rDeclarator(declarator, kDeclarator, false,
-                    should_be_declarator, is_statement))
+    if(!rDeclarator(
+         declarator, kDeclarator, false, should_be_declarator, is_statement))
       return false;
 
     // asm post-declarator
-    if(lex.LookAhead(0)==TOK_GCC_ASM)
+    if(lex.LookAhead(0) == TOK_GCC_ASM)
     {
       // this is stuff like
       // int x __asm("asd")=1, y;
       cpp_tokent tk;
       lex.get_token(tk); // TOK_GCC_ASM
 
-      if(lex.get_token(tk)!='(')
+      if(lex.get_token(tk) != '(')
         return false;
       if(!rString(tk))
         return false;
-      if(lex.get_token(tk)!=')')
+      if(lex.get_token(tk) != ')')
         return false;
     }
 
-    int t=lex.LookAhead(0);
-    if(t=='=')
+    int t= lex.LookAhead(0);
+    if(t == '=')
     {
       // initializer
       cpp_tokent tk;
       lex.get_token(tk);
 
-      if(lex.LookAhead(0)==TOK_DEFAULT) // C++0x
+      if(lex.LookAhead(0) == TOK_DEFAULT) // C++0x
       {
         lex.get_token(tk);
-        declarator.value()=codet(ID_default);
+        declarator.value()= codet(ID_default);
         set_location(declarator.value(), tk);
       }
-      else if(lex.LookAhead(0)==TOK_DELETE) // C++0x
+      else if(lex.LookAhead(0) == TOK_DELETE) // C++0x
       {
         lex.get_token(tk);
-        declarator.value()=codet(ID_cpp_delete);
+        declarator.value()= codet(ID_cpp_delete);
         set_location(declarator.value(), tk);
       }
       else
@@ -3174,18 +3260,18 @@ bool Parser::rDeclaratorWithInit(
           return false;
       }
     }
-    else if(t=='{')
+    else if(t == '{')
     {
       // Possibly a C++11 list initializer;
       // or a function body.
 
-      if(declarator.type().id()!=ID_function_type)
+      if(declarator.type().id() != ID_function_type)
       {
         if(!rInitializeExpr(declarator.value()))
           return false;
       }
     }
-    else if(t==':')
+    else if(t == ':')
     {
       // bit field
       cpp_tokent tk;
@@ -3228,15 +3314,16 @@ Function:
 
 bool Parser::rDeclaratorQualifier()
 {
-  int t=lex.LookAhead(0);
+  int t= lex.LookAhead(0);
 
   // we just eat these
 
-  while(t==TOK_STDCALL || t==TOK_FASTCALL || t==TOK_CLRCALL || t==TOK_CDECL)
+  while(t == TOK_STDCALL || t == TOK_FASTCALL || t == TOK_CLRCALL ||
+        t == TOK_CDECL)
   {
     cpp_tokent op;
     lex.get_token(op);
-    t=lex.LookAhead(0);
+    t= lex.LookAhead(0);
   }
 
   return true;
@@ -3280,10 +3367,10 @@ bool Parser::rDeclarator(
 {
   int t;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rDeclarator2 1\n";
-  #endif
+#endif
 
   // we can have one or more declatator qualifiers
   if(!rDeclaratorQualifier())
@@ -3303,17 +3390,17 @@ bool Parser::rDeclarator(
   if(!rDeclaratorQualifier())
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rDeclarator2 2\n";
-  #endif
+#endif
 
-  t=lex.LookAhead(0);
+  t= lex.LookAhead(0);
 
-  if(t=='(')
+  if(t == '(')
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rDeclarator2 3\n";
-    #endif
+#endif
 
     cpp_tokent op;
     lex.get_token(op);
@@ -3322,47 +3409,48 @@ bool Parser::rDeclarator(
     if(!rDeclarator(declarator2, kind, true, true, false))
       return false;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rDeclarator2 4\n";
-    #endif
+#endif
 
     cpp_tokent cp;
 
-    if(lex.get_token(cp)!=')')
+    if(lex.get_token(cp) != ')')
       return false;
 
     if(!should_be_declarator)
     {
-      if((kind==kDeclarator || kind==kCastDeclarator) && d_outer.is_nil())
+      if((kind == kDeclarator || kind == kCastDeclarator) && d_outer.is_nil())
       {
-        t=lex.LookAhead(0);
-        if(t!='[' && t!='(')
+        t= lex.LookAhead(0);
+        if(t != '[' && t != '(')
           return false;
       }
     }
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rDeclarator2 5\n";
-    #endif
+#endif
 
     d_inner.swap(declarator2.type());
     name.swap(declarator2.name());
   }
-  else if(kind!=kCastDeclarator &&
-          (kind==kDeclarator || t==TOK_IDENTIFIER || t==TOK_SCOPE))
+  else if(
+    kind != kCastDeclarator &&
+    (kind == kDeclarator || t == TOK_IDENTIFIER || t == TOK_SCOPE))
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rDeclarator2 6\n";
-    #endif
+#endif
 
     // if this is an argument declarator, "int (*)()" is valid.
     if(!rName(name))
       return false;
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rDeclarator2 7\n";
-  #endif
+#endif
 
   exprt init_args(static_cast<const exprt &>(get_nil_irep()));
   // const...
@@ -3370,26 +3458,25 @@ bool Parser::rDeclarator(
 
   for(;;)
   {
-    t=lex.LookAhead(0);
-    if(t=='(') // function
+    t= lex.LookAhead(0);
+    if(t == '(') // function
     {
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rDeclarator2 8\n";
-      #endif
+#endif
 
       cpp_tokent op, cp;
       exprt args;
-      bool is_args=true;
+      bool is_args= true;
 
       lex.get_token(op);
 
-      if(lex.LookAhead(0)==')')
+      if(lex.LookAhead(0) == ')')
         args.clear();
-      else
-        if(!rArgDeclListOrInit(args, is_args, is_statement))
-          return false;
+      else if(!rArgDeclListOrInit(args, is_args, is_statement))
+        return false;
 
-      if(lex.get_token(cp)!=')')
+      if(lex.get_token(cp) != ')')
         return false;
 
       if(is_args)
@@ -3410,18 +3497,18 @@ bool Parser::rDeclarator(
         // loop should end here
       }
 
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rDeclarator2 9\n";
-      #endif
+#endif
 
       irept throw_decl;
       optThrowDecl(throw_decl); // ignore in this version
 
-      if(lex.LookAhead(0)==TOK_ARROW)
+      if(lex.LookAhead(0) == TOK_ARROW)
       {
-        #ifdef DEBUG
+#ifdef DEBUG
         std::cout << std::string(__indent, ' ') << "Parser::rDeclarator2 10\n";
-        #endif
+#endif
 
         // C++11 trailing return type, but we already have
         // a return type. We should report this as an error.
@@ -3433,11 +3520,11 @@ bool Parser::rDeclarator(
           return false;
       }
 
-      if(lex.LookAhead(0)==':')
+      if(lex.LookAhead(0) == ':')
       {
-        #ifdef DEBUG
+#ifdef DEBUG
         std::cout << std::string(__indent, ' ') << "Parser::rDeclarator2 11\n";
-        #endif
+#endif
 
         irept mi;
         if(rMemberInitializers(mi))
@@ -3449,24 +3536,23 @@ bool Parser::rDeclarator(
           return false;
       }
 
-      break;                // "T f(int)(char)" is invalid.
+      break; // "T f(int)(char)" is invalid.
     }
-    else if(t=='[')         // array
+    else if(t == '[') // array
     {
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rDeclarator2 12\n";
-      #endif
+#endif
 
       cpp_tokent ob, cb;
       exprt expr;
       lex.get_token(ob);
-      if(lex.LookAhead(0)==']')
+      if(lex.LookAhead(0) == ']')
         expr.make_nil();
-      else
-        if(!rCommaExpression(expr))
-          return false;
+      else if(!rCommaExpression(expr))
+        return false;
 
-      if(lex.get_token(cb)!=']')
+      if(lex.get_token(cb) != ']')
         return false;
 
       std::list<typet> tl;
@@ -3492,11 +3578,11 @@ bool Parser::rDeclarator(
       break;
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rDeclarator2 13\n";
-  #endif
+#endif
 
-  declarator=cpp_declaratort();
+  declarator= cpp_declaratort();
 
   declarator.name().swap(name);
 
@@ -3529,23 +3615,23 @@ Function: Parser::optPtrOperator
 */
 bool Parser::optPtrOperator(typet &ptrs)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::optPtrOperator 1\n";
-  #endif // DEBUG
+#endif // DEBUG
 
   std::list<typet> t_list;
 
   for(;;)
   {
-    int t=lex.LookAhead(0);
+    int t= lex.LookAhead(0);
 
-    #ifdef DEBUG
-    std::cout << std::string(__indent, ' ') << "Parser::optPtrOperator 2 "
-              << t << "\n";
-    #endif
+#ifdef DEBUG
+    std::cout << std::string(__indent, ' ') << "Parser::optPtrOperator 2 " << t
+              << "\n";
+#endif
 
-    if(t=='*')
+    if(t == '*')
     {
       pointer_typet op;
       cpp_tokent tk;
@@ -3563,7 +3649,7 @@ bool Parser::optPtrOperator(typet &ptrs)
       else
         t_list.push_back(op);
     }
-    else if(t=='^')
+    else if(t == '^')
     {
       // this is an Apple extension called 'block pointer' or 'closure pointer'
       typet op(ID_block_pointer);
@@ -3604,9 +3690,9 @@ bool Parser::optPtrOperator(typet &ptrs)
   }
 
   {
-    int t=lex.LookAhead(0);
+    int t= lex.LookAhead(0);
 
-    if(t=='&')
+    if(t == '&')
     {
       cpp_tokent tk;
       lex.get_token(tk);
@@ -3615,7 +3701,7 @@ bool Parser::optPtrOperator(typet &ptrs)
       set_location(op, tk);
       t_list.push_front(op);
     }
-    else if(t==TOK_ANDAND) // &&, these are C++0x rvalue refs
+    else if(t == TOK_ANDAND) // &&, these are C++0x rvalue refs
     {
       cpp_tokent tk;
       lex.get_token(tk);
@@ -3626,12 +3712,11 @@ bool Parser::optPtrOperator(typet &ptrs)
     }
   }
 
-  for(std::list<typet>::reverse_iterator
-      it=t_list.rbegin();
-      it!=t_list.rend();
+  for(std::list<typet>::reverse_iterator it= t_list.rbegin();
+      it != t_list.rend();
       it++)
   {
-    if(it->id()==ID_merged_type)
+    if(it->id() == ID_merged_type)
     {
       assert(!it->subtypes().empty());
       it->subtypes().back().subtype().swap(ptrs);
@@ -3668,10 +3753,10 @@ bool Parser::rMemberInitializers(irept &init)
 {
   cpp_tokent tk;
 
-  if(lex.get_token(tk)!=':')
+  if(lex.get_token(tk) != ':')
     return false;
 
-  init=irept(ID_member_initializers);
+  init= irept(ID_member_initializers);
   set_location(init, tk);
 
   exprt m;
@@ -3680,7 +3765,7 @@ bool Parser::rMemberInitializers(irept &init)
 
   init.move_to_sub(m);
 
-  while(lex.LookAhead(0)==',')
+  while(lex.LookAhead(0) == ',')
   {
     lex.get_token(tk);
     if(!rMemberInit(m))
@@ -3711,33 +3796,32 @@ Function:
 */
 bool Parser::rMemberInit(exprt &init)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rMemberInit 1\n";
-  #endif
+#endif
 
   irept name;
 
   if(!rName(name))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rMemberInit 2\n";
-  #endif
+#endif
 
-  init=codet(ID_member_initializer);
+  init= codet(ID_member_initializer);
   init.add(ID_member).swap(name);
 
   cpp_tokent tk1, tk2;
   lex.get_token(tk1);
   set_location(init, tk1);
 
-  if(tk1.kind=='{' ||
-     (tk1.kind=='(' && lex.LookAhead(0)=='{'))
+  if(tk1.kind == '{' || (tk1.kind == '(' && lex.LookAhead(0) == '{'))
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rMemberInit 3\n";
-    #endif
+#endif
     exprt exp;
     if(!rInitializeExpr(exp))
       return false;
@@ -3746,17 +3830,17 @@ bool Parser::rMemberInit(exprt &init)
 
     // read closing parenthesis
     lex.get_token(tk2);
-    if(tk2.kind!='}' && tk2.kind!=')')
+    if(tk2.kind != '}' && tk2.kind != ')')
       return false;
   }
   else
   {
-    if(tk1.kind!='(')
+    if(tk1.kind != '(')
       return false;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rMemberInit 4\n";
-    #endif
+#endif
 
     exprt args;
 
@@ -3766,11 +3850,11 @@ bool Parser::rMemberInit(exprt &init)
     init.operands().swap(args.operands());
 
     // read closing parenthesis
-    if(lex.get_token(tk2)!=')')
+    if(lex.get_token(tk2) != ')')
       return false;
   }
 
-  if(lex.LookAhead(0)==TOK_ELLIPSIS)
+  if(lex.LookAhead(0) == TOK_ELLIPSIS)
   {
     lex.get_token();
 
@@ -3805,15 +3889,15 @@ Function:
 */
 bool Parser::rName(irept &name)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rName 0\n";
-  #endif
+#endif
 
-  name=cpp_namet();
-  irept::subt &components=name.get_sub();
+  name= cpp_namet();
+  irept::subt &components= name.get_sub();
 
-  if(lex.LookAhead(0)==TOK_TYPENAME)
+  if(lex.LookAhead(0) == TOK_TYPENAME)
   {
     cpp_tokent tk;
     lex.get_token(tk);
@@ -3826,35 +3910,35 @@ bool Parser::rName(irept &name)
     set_location(name, tk);
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rName 1\n";
-  #endif
+#endif
 
   for(;;)
   {
     cpp_tokent tk;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rName 2 "
               << lex.LookAhead(0) << "\n";
-    #endif
+#endif
 
     switch(lex.LookAhead(0))
     {
     case TOK_TEMPLATE:
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rName 3\n";
-      #endif
+#endif
       lex.get_token(tk);
       // Skip template token, next will be identifier
-      if(lex.LookAhead(0)!=TOK_IDENTIFIER)
+      if(lex.LookAhead(0) != TOK_IDENTIFIER)
         return false;
       break;
 
     case '<':
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rName 4\n";
-      #endif
+#endif
       {
         irept args;
         if(!rTemplateArgs(args))
@@ -3864,45 +3948,45 @@ bool Parser::rName(irept &name)
         components.back().add(ID_arguments).swap(args);
 
         // done unless scope is next
-        if(lex.LookAhead(0)!=TOK_SCOPE)
+        if(lex.LookAhead(0) != TOK_SCOPE)
           return true;
       }
       break;
 
     case TOK_IDENTIFIER:
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rName 5\n";
-      #endif
+#endif
       lex.get_token(tk);
       components.push_back(irept(ID_name));
       components.back().set(ID_identifier, tk.data.get(ID_C_base_name));
       set_location(components.back(), tk);
 
       {
-        int t=lex.LookAhead(0);
+        int t= lex.LookAhead(0);
         // done unless scope or template args is next
-        if(t!=TOK_SCOPE && t!='<')
+        if(t != TOK_SCOPE && t != '<')
           return true;
       }
       break;
 
     case TOK_SCOPE:
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rName 6\n";
-      #endif
+#endif
       lex.get_token(tk);
       components.push_back(irept("::"));
       set_location(components.back(), tk);
       break;
 
     case '~':
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rName 7\n";
-      #endif
+#endif
       lex.get_token(tk);
 
       // identifier must be next
-      if(lex.LookAhead(0)!=TOK_IDENTIFIER)
+      if(lex.LookAhead(0) != TOK_IDENTIFIER)
         return false;
 
       components.push_back(irept("~"));
@@ -3910,9 +3994,9 @@ bool Parser::rName(irept &name)
       break;
 
     case TOK_OPERATOR:
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rName 8\n";
-      #endif
+#endif
       lex.get_token(tk);
       {
         components.push_back(irept(ID_operator));
@@ -3925,7 +4009,7 @@ bool Parser::rName(irept &name)
       }
 
       // done unless template args are next
-      if(lex.LookAhead(0)!='<')
+      if(lex.LookAhead(0) != '<')
         return true;
       break;
 
@@ -3963,7 +4047,7 @@ bool Parser::rOperatorName(irept &name)
 {
   cpp_tokent tk;
 
-  int t=lex.LookAhead(0);
+  int t= lex.LookAhead(0);
 
   irep_idt operator_id;
 
@@ -3983,75 +4067,121 @@ bool Parser::rOperatorName(irept &name)
   case '<':
   case '>':
   case ',':
-    operator_id=irep_idt(std::string(static_cast<char>(t), 1));
+    operator_id= irep_idt(std::string(static_cast<char>(t), 1));
     break;
 
-  case TOK_MULTASSIGN: operator_id="*="; break;
-  case TOK_DIVASSIGN: operator_id="/="; break;
-  case TOK_MODASSIGN: operator_id="%="; break;
-  case TOK_PLUSASSIGN: operator_id="+="; break;
-  case TOK_MINUSASSIGN: operator_id="-="; break;
-  case TOK_SHLASSIGN: operator_id="<<="; break;
-  case TOK_SHRASSIGN: operator_id=">>="; break;
-  case TOK_ANDASSIGN: operator_id="&="; break;
-  case TOK_XORASSIGN: operator_id="^="; break;
-  case TOK_ORASSIGN: operator_id="|="; break;
-  case TOK_SHIFTLEFT: operator_id="<<"; break;
-  case TOK_SHIFTRIGHT: operator_id=">>"; break;
-  case TOK_EQ: operator_id="=="; break;
-  case TOK_NE: operator_id="!="; break;
-  case TOK_LE: operator_id="<="; break;
-  case TOK_GE: operator_id=">="; break;
-  case TOK_ANDAND: operator_id="&&"; break;
-  case TOK_OROR: operator_id="||"; break;
-  case TOK_INCR: operator_id="++"; break;
-  case TOK_DECR: operator_id="--"; break;
-  case TOK_DOTPM: operator_id=".*"; break;
-  case TOK_ARROWPM: operator_id="->*"; break;
-  case TOK_ARROW: operator_id="->"; break;
+  case TOK_MULTASSIGN:
+    operator_id= "*=";
+    break;
+  case TOK_DIVASSIGN:
+    operator_id= "/=";
+    break;
+  case TOK_MODASSIGN:
+    operator_id= "%=";
+    break;
+  case TOK_PLUSASSIGN:
+    operator_id= "+=";
+    break;
+  case TOK_MINUSASSIGN:
+    operator_id= "-=";
+    break;
+  case TOK_SHLASSIGN:
+    operator_id= "<<=";
+    break;
+  case TOK_SHRASSIGN:
+    operator_id= ">>=";
+    break;
+  case TOK_ANDASSIGN:
+    operator_id= "&=";
+    break;
+  case TOK_XORASSIGN:
+    operator_id= "^=";
+    break;
+  case TOK_ORASSIGN:
+    operator_id= "|=";
+    break;
+  case TOK_SHIFTLEFT:
+    operator_id= "<<";
+    break;
+  case TOK_SHIFTRIGHT:
+    operator_id= ">>";
+    break;
+  case TOK_EQ:
+    operator_id= "==";
+    break;
+  case TOK_NE:
+    operator_id= "!=";
+    break;
+  case TOK_LE:
+    operator_id= "<=";
+    break;
+  case TOK_GE:
+    operator_id= ">=";
+    break;
+  case TOK_ANDAND:
+    operator_id= "&&";
+    break;
+  case TOK_OROR:
+    operator_id= "||";
+    break;
+  case TOK_INCR:
+    operator_id= "++";
+    break;
+  case TOK_DECR:
+    operator_id= "--";
+    break;
+  case TOK_DOTPM:
+    operator_id= ".*";
+    break;
+  case TOK_ARROWPM:
+    operator_id= "->*";
+    break;
+  case TOK_ARROW:
+    operator_id= "->";
+    break;
 
   case TOK_NEW:
   case TOK_DELETE:
+  {
+    lex.get_token(tk);
+
+    if(lex.LookAhead(0) != '[')
     {
+      name= irept(t == TOK_NEW ? ID_cpp_new : ID_cpp_delete);
+      set_location(name, tk);
+    }
+    else
+    {
+      name= irept(t == TOK_NEW ? ID_cpp_new_array : ID_cpp_delete_array);
+      set_location(name, tk);
+
       lex.get_token(tk);
 
-      if(lex.LookAhead(0)!='[')
-      {
-        name=irept(t==TOK_NEW?ID_cpp_new:ID_cpp_delete);
-        set_location(name, tk);
-      }
-      else
-      {
-        name=irept(t==TOK_NEW?ID_cpp_new_array:ID_cpp_delete_array);
-        set_location(name, tk);
-
-        lex.get_token(tk);
-
-        if(lex.get_token(tk)!=']')
-          return false;
-      }
+      if(lex.get_token(tk) != ']')
+        return false;
     }
+  }
     return true;
 
   case '(':
     lex.get_token(tk);
-    name=irept("()");
+    name= irept("()");
     set_location(name, tk);
-    return lex.get_token(tk)==')';
+    return lex.get_token(tk) == ')';
 
   case '[':
     lex.get_token(tk);
-    name=irept("[]");
+    name= irept("[]");
     set_location(name, tk);
-    return lex.get_token(tk)==']';
+    return lex.get_token(tk) == ']';
 
   default:
     return rCastOperatorName(name);
   }
 
-  assert(operator_id!=irep_idt());
+  assert(operator_id != irep_idt());
   lex.get_token(tk);
-  name=irept(operator_id);
+  name= irept(operator_id);
   set_location(name, tk);
 
   return true;
@@ -4106,7 +4236,7 @@ bool Parser::rCastOperatorName(irept &name)
 
   make_subtype(type_name, ptr);
   merge_types(cv2, ptr);
-  name = ptr;
+  name= ptr;
 
   return true;
 }
@@ -4129,15 +4259,15 @@ Function:
 */
 bool Parser::rPtrToMember(irept &ptr_to_mem)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rPtrToMember 0\n";
-  #endif
+#endif
 
   irept ptm(ID_pointer);
-  irept &name = ptm.add("to-member");
-  name=cpp_namet();
-  irept::subt &components=name.get_sub();
+  irept &name= ptm.add("to-member");
+  name= cpp_namet();
+  irept::subt &components= name.get_sub();
 
   {
     cpp_tokent tk;
@@ -4145,7 +4275,7 @@ bool Parser::rPtrToMember(irept &ptr_to_mem)
     set_location(name, tk);
   }
 
-  bool loop_cond = true;
+  bool loop_cond= true;
   while(loop_cond)
   {
     cpp_tokent tk;
@@ -4155,23 +4285,23 @@ bool Parser::rPtrToMember(irept &ptr_to_mem)
     case TOK_TEMPLATE:
       lex.get_token(tk);
       // Skip template token, next will be identifier
-      if(lex.LookAhead(0)!=TOK_IDENTIFIER)
+      if(lex.LookAhead(0) != TOK_IDENTIFIER)
         return false;
       break;
 
     case '<':
-      {
-        irept args;
-        if(!rTemplateArgs(args))
-          return false;
+    {
+      irept args;
+      if(!rTemplateArgs(args))
+        return false;
 
-        components.push_back(irept(ID_template_args));
-        components.back().add(ID_arguments).swap(args);
+      components.push_back(irept(ID_template_args));
+      components.back().add(ID_arguments).swap(args);
 
-        if(lex.LookAhead(0)!=TOK_SCOPE)
-          return false;
-      }
-      break;
+      if(lex.LookAhead(0) != TOK_SCOPE)
+        return false;
+    }
+    break;
 
     case TOK_IDENTIFIER:
       lex.get_token(tk);
@@ -4180,8 +4310,8 @@ bool Parser::rPtrToMember(irept &ptr_to_mem)
       set_location(components.back(), tk);
 
       {
-        int t=lex.LookAhead(0);
-        if(t!=TOK_SCOPE && t!='<')
+        int t= lex.LookAhead(0);
+        if(t != TOK_SCOPE && t != '<')
           return false;
       }
       break;
@@ -4197,10 +4327,9 @@ bool Parser::rPtrToMember(irept &ptr_to_mem)
         lex.get_token(tk);
         ptr_to_mem.swap(ptm);
 
-
-        #ifdef DEBUG
+#ifdef DEBUG
         std::cout << std::string(__indent, ' ') << "Parser::rPtrToMember 1\n";
-        #endif
+#endif
 
         return true;
       }
@@ -4240,61 +4369,60 @@ Function:
 */
 bool Parser::rTemplateArgs(irept &template_args)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rTemplateArgs 0\n";
-  #endif
+#endif
 
   cpp_tokent tk1;
 
-  if(lex.get_token(tk1)!='<')
+  if(lex.get_token(tk1) != '<')
     return false;
 
   set_location(template_args, tk1);
 
-  #ifdef DEBUG
-  std::cout << std::string(__indent, ' ') <<  "Parser::rTemplateArgs 1\n";
-  #endif
+#ifdef DEBUG
+  std::cout << std::string(__indent, ' ') << "Parser::rTemplateArgs 1\n";
+#endif
 
   // in case of Foo<>
-  if(lex.LookAhead(0)=='>')
+  if(lex.LookAhead(0) == '>')
   {
     cpp_tokent tk2;
     lex.get_token(tk2);
     return true;
   }
 
-  #ifdef DEBUG
-  std::cout << std::string(__indent, ' ') <<  "Parser::rTemplateArgs 2\n";
-  #endif
+#ifdef DEBUG
+  std::cout << std::string(__indent, ' ') << "Parser::rTemplateArgs 2\n";
+#endif
 
   for(;;)
   {
     exprt exp;
-    cpp_token_buffert::post pos=lex.Save();
+    cpp_token_buffert::post pos= lex.Save();
 
-    #ifdef DEBUG
-    std::cout << std::string(__indent, ' ') <<  "Parser::rTemplateArgs 3\n";
-    #endif
+#ifdef DEBUG
+    std::cout << std::string(__indent, ' ') << "Parser::rTemplateArgs 3\n";
+#endif
 
     typet a;
 
     // try type name first
-    if(rTypeNameOrFunctionType(a) &&
-       ((lex.LookAhead(0) == '>' || lex.LookAhead(0) == ',' ||
-         lex.LookAhead(0)==TOK_SHIFTRIGHT) ||
-        (lex.LookAhead(0)==TOK_ELLIPSIS &&
-         (lex.LookAhead(1) == '>' ||
-          lex.LookAhead(1)==TOK_SHIFTRIGHT)))
-        )
+    if(
+      rTypeNameOrFunctionType(a) &&
+      ((lex.LookAhead(0) == '>' || lex.LookAhead(0) == ',' ||
+        lex.LookAhead(0) == TOK_SHIFTRIGHT) ||
+       (lex.LookAhead(0) == TOK_ELLIPSIS &&
+        (lex.LookAhead(1) == '>' || lex.LookAhead(1) == TOK_SHIFTRIGHT))))
     {
-      #ifdef DEBUG
-      std::cout << std::string(__indent, ' ') <<  "Parser::rTemplateArgs 4\n";
-      #endif
+#ifdef DEBUG
+      std::cout << std::string(__indent, ' ') << "Parser::rTemplateArgs 4\n";
+#endif
 
       // ok
-      exp=exprt(ID_type);
-      exp.add_source_location()=a.source_location();
+      exp= exprt(ID_type);
+      exp.add_source_location()= a.source_location();
       exp.type().swap(a);
 
       // but could also be an expr
@@ -4302,36 +4430,35 @@ bool Parser::rTemplateArgs(irept &template_args)
       exprt tmp;
       if(rConditionalExpr(tmp, true))
         exp.id("ambiguous");
-      #ifdef DEBUG
-      std::cout << std::string(__indent, ' ') <<  "Parser::rTemplateArgs 4.1\n";
-      #endif
+#ifdef DEBUG
+      std::cout << std::string(__indent, ' ') << "Parser::rTemplateArgs 4.1\n";
+#endif
       lex.Restore(pos);
       rTypeNameOrFunctionType(a);
 
-      if(lex.LookAhead(0)==TOK_ELLIPSIS)
+      if(lex.LookAhead(0) == TOK_ELLIPSIS)
       {
         lex.get_token(tk1);
 
         // TODO
       }
-      #ifdef DEBUG
-      std::cout << std::string(__indent, ' ') <<  "Parser::rTemplateArgs 4.2\n";
-      #endif
+#ifdef DEBUG
+      std::cout << std::string(__indent, ' ') << "Parser::rTemplateArgs 4.2\n";
+#endif
     }
     else
     {
-      // parsing failed, try expression
-      #ifdef DEBUG
-      std::cout << std::string(__indent, ' ') <<  "Parser::rTemplateArgs 5\n";
-      #endif
+// parsing failed, try expression
+#ifdef DEBUG
+      std::cout << std::string(__indent, ' ') << "Parser::rTemplateArgs 5\n";
+#endif
 
       lex.Restore(pos);
-
 
       if(!rConditionalExpr(exp, true))
         return false;
 
-      if(lex.LookAhead(0)==TOK_ELLIPSIS)
+      if(lex.LookAhead(0) == TOK_ELLIPSIS)
       {
         lex.get_token(tk1);
 
@@ -4339,14 +4466,14 @@ bool Parser::rTemplateArgs(irept &template_args)
       }
     }
 
-    #ifdef DEBUG
-    std::cout << std::string(__indent, ' ') <<  "Parser::rTemplateArgs 6\n";
-    #endif
+#ifdef DEBUG
+    std::cout << std::string(__indent, ' ') << "Parser::rTemplateArgs 6\n";
+#endif
 
     template_args.get_sub().push_back(irept(irep_idt()));
     template_args.get_sub().back().swap(exp);
 
-    pos=lex.Save();
+    pos= lex.Save();
     cpp_tokent tk2;
     switch(lex.get_token(tk2))
     {
@@ -4358,12 +4485,12 @@ bool Parser::rTemplateArgs(irept &template_args)
 
     case TOK_SHIFTRIGHT: // turn >> into > >
       lex.Restore(pos);
-      tk2.kind='>';
-      tk2.text='>';
+      tk2.kind= '>';
+      tk2.text= '>';
       lex.Replace(tk2);
       lex.Insert(tk2);
-      assert(lex.LookAhead(0)=='>');
-      assert(lex.LookAhead(1)=='>');
+      assert(lex.LookAhead(0) == '>');
+      assert(lex.LookAhead(1) == '>');
       return true;
 
     default:
@@ -4398,28 +4525,25 @@ Function:
         Point p(s, t);
   s and t can be type names or variable names.
 */
-bool Parser::rArgDeclListOrInit(
-  exprt &arglist,
-  bool &is_args,
-  bool maybe_init)
+bool Parser::rArgDeclListOrInit(exprt &arglist, bool &is_args, bool maybe_init)
 {
-  cpp_token_buffert::post pos=lex.Save();
+  cpp_token_buffert::post pos= lex.Save();
   if(maybe_init)
   {
     if(rFunctionArguments(arglist))
-      if(lex.LookAhead(0)==')')
+      if(lex.LookAhead(0) == ')')
       {
-        is_args=false;
+        is_args= false;
         // encode.Clear();
         return true;
       }
 
     lex.Restore(pos);
-    return(is_args=rArgDeclList(arglist));
+    return (is_args= rArgDeclList(arglist));
   }
   else
   {
-    if((is_args=rArgDeclList(arglist)))
+    if((is_args= rArgDeclList(arglist)))
       return true;
     else
     {
@@ -4456,10 +4580,10 @@ bool Parser::rArgDeclList(irept &arglist)
   {
     cpp_declarationt declaration;
 
-    int t=lex.LookAhead(0);
-    if(t==')')
+    int t= lex.LookAhead(0);
+    if(t == ')')
       break;
-    else if(t==TOK_ELLIPSIS)
+    else if(t == TOK_ELLIPSIS)
     {
       cpp_tokent tk;
       lex.get_token(tk);
@@ -4472,15 +4596,15 @@ bool Parser::rArgDeclList(irept &arglist)
 
       list.get_sub().push_back(irept(irep_idt()));
       list.get_sub().back().swap(declaration);
-      t=lex.LookAhead(0);
-      if(t==',')
+      t= lex.LookAhead(0);
+      if(t == ',')
         lex.get_token(tk);
-      else if(t==TOK_ELLIPSIS)
+      else if(t == TOK_ELLIPSIS)
       {
         lex.get_token(tk);
         list.get_sub().push_back(irept(ID_ellipsis));
       }
-      else if(t!=')' && t!=TOK_ELLIPSIS)
+      else if(t != ')' && t != TOK_ELLIPSIS)
         return false;
     }
     else
@@ -4521,7 +4645,7 @@ bool Parser::rArgDeclaration(cpp_declarationt &declaration)
   {
   case TOK_REGISTER:
     lex.get_token(tk);
-    header=typet(ID_register);
+    header= typet(ID_register);
     break;
 
   default:
@@ -4539,12 +4663,12 @@ bool Parser::rArgDeclaration(cpp_declarationt &declaration)
 
   declaration.declarators().push_back(arg_declarator);
 
-  int t=lex.LookAhead(0);
-  if(t=='=')
+  int t= lex.LookAhead(0);
+  if(t == '=')
   {
     lex.get_token(tk);
     if(!rInitializeExpr(declaration.declarators().back().value()))
-       return false;
+      return false;
   }
 
   return true;
@@ -4569,7 +4693,7 @@ Function:
 */
 bool Parser::rInitializeExpr(exprt &expr)
 {
-  if(lex.LookAhead(0)!='{')
+  if(lex.LookAhead(0) != '{')
     return rExpression(expr, false);
 
   // we want { initialize_expr, ... }
@@ -4582,65 +4706,64 @@ bool Parser::rInitializeExpr(exprt &expr)
   expr.id(ID_initializer_list);
   set_location(expr, tk);
 
-  int t=lex.LookAhead(0);
+  int t= lex.LookAhead(0);
 
-  while(t!='}')
+  while(t != '}')
   {
     exprt tmp;
 
-    if(t==TOK_MSC_IF_EXISTS ||
-       t==TOK_MSC_IF_NOT_EXISTS)
+    if(t == TOK_MSC_IF_EXISTS || t == TOK_MSC_IF_NOT_EXISTS)
     {
       // TODO
       cpp_tokent tk;
       exprt name;
       lex.get_token(tk);
-      if(lex.get_token(tk)!='(')
+      if(lex.get_token(tk) != '(')
         return false;
       if(!rVarName(name))
         return false;
-      if(lex.get_token(tk)!=')')
+      if(lex.get_token(tk) != ')')
         return false;
-      if(lex.get_token(tk)!='{')
+      if(lex.get_token(tk) != '{')
         return false;
       if(!rInitializeExpr(name))
         return false;
-      if(lex.LookAhead(0)==',')
+      if(lex.LookAhead(0) == ',')
         lex.get_token(tk);
-      if(lex.get_token(tk)!='}')
+      if(lex.get_token(tk) != '}')
         return false;
     }
 
     if(!rInitializeExpr(tmp))
     {
       if(!SyntaxError())
-        return false;        // too many errors
+        return false; // too many errors
 
       SkipTo('}');
       lex.get_token(tk);
-      return true;           // error recovery
+      return true; // error recovery
     }
 
     expr.move_to_operands(tmp);
 
-    t=lex.LookAhead(0);
-    if(t=='}')
+    t= lex.LookAhead(0);
+    if(t == '}')
     {
       // done!
     }
-    else if(t==',')
+    else if(t == ',')
     {
       lex.get_token(tk);
-      t=lex.LookAhead(0);
+      t= lex.LookAhead(0);
     }
     else
     {
       if(!SyntaxError())
-        return false;        // too many errors
+        return false; // too many errors
 
       SkipTo('}');
       lex.get_token(tk);
-      return true;           // error recovery
+      return true; // error recovery
     }
   }
 
@@ -4673,8 +4796,8 @@ bool Parser::rFunctionArguments(exprt &args)
   exprt exp;
   cpp_tokent tk;
 
-  args=exprt(irep_idt());
-  if(lex.LookAhead(0)==')')
+  args= exprt(irep_idt());
+  if(lex.LookAhead(0) == ')')
     return true;
 
   for(;;)
@@ -4684,17 +4807,18 @@ bool Parser::rFunctionArguments(exprt &args)
 
     args.move_to_operands(exp);
 
-    if(lex.LookAhead(0)==TOK_ELLIPSIS &&
-       (lex.LookAhead(1)==')' || lex.LookAhead(1)==','))
+    if(
+      lex.LookAhead(0) == TOK_ELLIPSIS &&
+      (lex.LookAhead(1) == ')' || lex.LookAhead(1) == ','))
     {
       lex.get_token(tk);
       // TODO
 
-      if(lex.LookAhead(0)==')')
+      if(lex.LookAhead(0) == ')')
         return true;
       lex.get_token();
     }
-    else if(lex.LookAhead(0)!=',')
+    else if(lex.LookAhead(0) != ',')
       return true;
     else
       lex.get_token(tk);
@@ -4722,31 +4846,30 @@ Function:
 */
 bool Parser::rEnumSpec(typet &spec)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rEnumSpec 1\n";
-  #endif
+#endif
 
   cpp_tokent tk;
   // bool is_enum_class=false;
 
-  if(lex.get_token(tk)!=TOK_ENUM)
+  if(lex.get_token(tk) != TOK_ENUM)
     return false;
 
-  spec=cpp_enum_typet();
+  spec= cpp_enum_typet();
   set_location(spec, tk);
 
   spec.subtype().make_nil();
 
   // C++11 enum classes
-  if(lex.LookAhead(0)==TOK_CLASS)
+  if(lex.LookAhead(0) == TOK_CLASS)
   {
     lex.get_token(tk);
     // is_enum_class=true;
   }
 
-  if(lex.LookAhead(0)!='{' &&
-     lex.LookAhead(0)!=':')
+  if(lex.LookAhead(0) != '{' && lex.LookAhead(0) != ':')
   {
     // Visual Studio allows full names for the tag,
     // not just an identifier
@@ -4758,44 +4881,43 @@ bool Parser::rEnumSpec(typet &spec)
     spec.add(ID_tag).swap(name);
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rEnumSpec 2\n";
-  #endif
+#endif
 
   // C++11 enums have an optional underlying type
-  if(lex.LookAhead(0)==':')
+  if(lex.LookAhead(0) == ':')
   {
     lex.get_token(tk); // read the colon
     if(!rTypeName(spec.subtype()))
       return false;
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rEnumSpec 3\n";
-  #endif
+#endif
 
-  if(lex.LookAhead(0)!='{')
+  if(lex.LookAhead(0) != '{')
     return true; // ok, no body
 
   lex.get_token(tk);
 
-  if(lex.LookAhead(0)=='}')
+  if(lex.LookAhead(0) == '}')
   {
     // there is still a body, just an empty one!
     spec.add(ID_body);
   }
-  else
-    if(!rEnumBody(spec.add(ID_body)))
-      return false;
+  else if(!rEnumBody(spec.add(ID_body)))
+    return false;
 
   // there must be closing '}'
 
-  if(lex.get_token(tk)!='}')
+  if(lex.get_token(tk) != '}')
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rEnumSpec 4\n";
-  #endif
+#endif
 
   return true;
 }
@@ -4824,18 +4946,18 @@ bool Parser::rEnumBody(irept &body)
   {
     cpp_tokent tk, tk2;
 
-    if(lex.LookAhead(0)=='}')
+    if(lex.LookAhead(0) == '}')
       return true;
 
-    if(lex.get_token(tk)!=TOK_IDENTIFIER)
+    if(lex.get_token(tk) != TOK_IDENTIFIER)
       return false;
 
     body.get_sub().push_back(irept());
-    irept &n=body.get_sub().back();
+    irept &n= body.get_sub().back();
     set_location(n, tk);
     n.set(ID_name, tk.data.get(ID_C_base_name));
 
-    if(lex.LookAhead(0, tk2)=='=') // set the constant
+    if(lex.LookAhead(0, tk2) == '=') // set the constant
     {
       lex.get_token(tk2); // read the '='
 
@@ -4844,11 +4966,11 @@ bool Parser::rEnumBody(irept &body)
       if(!rExpression(exp, false))
       {
         if(!SyntaxError())
-          return false;        // too many errors
+          return false; // too many errors
 
         SkipTo('}');
-        body.clear();          // empty
-        return true;           // error recovery
+        body.clear(); // empty
+        return true;  // error recovery
       }
 
       n.add(ID_value).swap(exp);
@@ -4856,7 +4978,7 @@ bool Parser::rEnumBody(irept &body)
     else
       n.add(ID_value).make_nil();
 
-    if(lex.LookAhead(0)!=',')
+    if(lex.LookAhead(0) != ',')
       return true;
 
     lex.get_token(tk);
@@ -4888,49 +5010,48 @@ bool Parser::rClassSpec(typet &spec)
 {
   cpp_tokent tk;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rClassSpec 1\n";
-  #endif
+#endif
 
-  int t=lex.get_token(tk);
-  if(t!=TOK_CLASS && t!=TOK_STRUCT &&
-     t!=TOK_UNION && t!=TOK_INTERFACE)
+  int t= lex.get_token(tk);
+  if(t != TOK_CLASS && t != TOK_STRUCT && t != TOK_UNION && t != TOK_INTERFACE)
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rClassSpec 2\n";
-  #endif
+#endif
 
-  if(t==TOK_CLASS)
+  if(t == TOK_CLASS)
   {
-    spec=typet(ID_struct);
+    spec= typet(ID_struct);
     spec.set(ID_C_class, true);
   }
-  else if(t==TOK_INTERFACE) // MS-specific
+  else if(t == TOK_INTERFACE) // MS-specific
   {
-    spec=typet(ID_struct);
+    spec= typet(ID_struct);
     spec.set(ID_C_interface, true);
   }
-  else if(t==TOK_STRUCT)
-    spec=typet(ID_struct);
-  else if(t==TOK_UNION)
-    spec=typet(ID_union);
+  else if(t == TOK_STRUCT)
+    spec= typet(ID_struct);
+  else if(t == TOK_UNION)
+    spec= typet(ID_union);
   else
     assert(false);
 
   set_location(spec, tk);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rClassSpec 3\n";
-  #endif
+#endif
 
-  if(lex.LookAhead(0)=='{')
+  if(lex.LookAhead(0) == '{')
   {
-    // no tag
-    #ifdef DEBUG
+// no tag
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rClassSpec 4\n";
-    #endif
+#endif
   }
   else
   {
@@ -4943,18 +5064,18 @@ bool Parser::rClassSpec(typet &spec)
 
     spec.add(ID_tag).swap(name);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rClassSpec 5\n";
-    #endif
+#endif
 
-    t=lex.LookAhead(0);
+    t= lex.LookAhead(0);
 
-    if(t==':')
+    if(t == ':')
     {
       if(!rBaseSpecifiers(spec.add(ID_bases)))
         return false;
     }
-    else if(t=='{')
+    else if(t == '{')
     {
     }
     else
@@ -4963,9 +5084,9 @@ bool Parser::rClassSpec(typet &spec)
     }
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rClassSpec 6\n";
-  #endif
+#endif
 
   save_scopet saved_scope(current_scope);
   make_sub_scope(spec.find(ID_tag), new_scopet::TAG);
@@ -4975,11 +5096,11 @@ bool Parser::rClassSpec(typet &spec)
   if(!rClassBody(body))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rClassSpec 7\n";
-  #endif
+#endif
 
-  ((exprt&)spec.add(ID_body)).operands().swap(body.operands());
+  ((exprt &)spec.add(ID_body)).operands().swap(body.operands());
   return true;
 }
 
@@ -5006,45 +5127,45 @@ bool Parser::rBaseSpecifiers(irept &bases)
 {
   cpp_tokent tk;
 
-  if(lex.get_token(tk)!=':')
+  if(lex.get_token(tk) != ':')
     return false;
 
   for(;;)
   {
-    int t=lex.LookAhead(0);
+    int t= lex.LookAhead(0);
     irept base(ID_base);
 
-    if(t==TOK_VIRTUAL)
+    if(t == TOK_VIRTUAL)
     {
       lex.get_token(tk);
       base.set(ID_virtual, true);
-      t=lex.LookAhead(0);
+      t= lex.LookAhead(0);
     }
 
-    if(t==TOK_PUBLIC || t==TOK_PROTECTED || t==TOK_PRIVATE)
+    if(t == TOK_PUBLIC || t == TOK_PROTECTED || t == TOK_PRIVATE)
     {
       switch(lex.get_token(tk))
       {
-       case TOK_PUBLIC:
+      case TOK_PUBLIC:
         base.set(ID_protection, ID_public);
         break;
 
-       case TOK_PROTECTED:
+      case TOK_PROTECTED:
         base.set(ID_protection, ID_protected);
         break;
 
-       case TOK_PRIVATE:
+      case TOK_PRIVATE:
         base.set(ID_protection, ID_private);
         break;
 
-       default:
+      default:
         assert(0);
       }
 
-      t=lex.LookAhead(0);
+      t= lex.LookAhead(0);
     }
 
-    if(t==TOK_VIRTUAL)
+    if(t == TOK_VIRTUAL)
     {
       lex.get_token(tk);
       base.set(ID_virtual, true);
@@ -5053,7 +5174,7 @@ bool Parser::rBaseSpecifiers(irept &bases)
     if(!rName(base.add(ID_name)))
       return false;
 
-    if(lex.LookAhead(0)==TOK_ELLIPSIS)
+    if(lex.LookAhead(0) == TOK_ELLIPSIS)
     {
       lex.get_token();
 
@@ -5063,7 +5184,7 @@ bool Parser::rBaseSpecifiers(irept &bases)
     bases.get_sub().push_back(irept());
     bases.get_sub().back().swap(base);
 
-    if(lex.LookAhead(0)!=',')
+    if(lex.LookAhead(0) != ',')
       return true;
     else
       lex.get_token(tk);
@@ -5089,36 +5210,36 @@ bool Parser::rClassBody(exprt &body)
 {
   cpp_tokent tk;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rClassBody 0\n";
-  #endif
+#endif
 
-  if(lex.get_token(tk)!='{')
+  if(lex.get_token(tk) != '{')
     return false;
 
-  exprt members=exprt("cpp-class-body");
+  exprt members= exprt("cpp-class-body");
 
   set_location(members, tk);
 
-  while(lex.LookAhead(0)!='}')
+  while(lex.LookAhead(0) != '}')
   {
     cpp_itemt member;
 
     if(!rClassMember(member))
     {
       if(!SyntaxError())
-        return false;        // too many errors
+        return false; // too many errors
 
       SkipTo('}');
       lex.get_token(tk);
       // body=Ptree::List(ob, nil, new Leaf(tk));
-      return true;        // error recovery
+      return true; // error recovery
     }
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rClassBody "
               << member.pretty() << '\n';
-    #endif
+#endif
 
     members.move_to_operands(
       static_cast<exprt &>(static_cast<irept &>(member)));
@@ -5161,15 +5282,15 @@ bool Parser::rClassMember(cpp_itemt &member)
 {
   cpp_tokent tk1, tk2;
 
-  int t=lex.LookAhead(0);
+  int t= lex.LookAhead(0);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rClassMember 0 " << t
             << std::endl;
-  #endif // DEBUG
+#endif // DEBUG
 
-  if(t==TOK_PUBLIC || t==TOK_PROTECTED || t==TOK_PRIVATE)
+  if(t == TOK_PUBLIC || t == TOK_PROTECTED || t == TOK_PRIVATE)
   {
     switch(lex.get_token(tk1))
     {
@@ -5191,28 +5312,28 @@ bool Parser::rClassMember(cpp_itemt &member)
 
     set_location(member, tk1);
 
-    if(lex.get_token(tk2)!=':')
+    if(lex.get_token(tk2) != ':')
       return false;
 
     return true;
   }
-  else if(t==';')
+  else if(t == ';')
     return rNullDeclaration(member.make_declaration());
-  else if(t==TOK_TYPEDEF)
+  else if(t == TOK_TYPEDEF)
     return rTypedef(member.make_declaration());
-  else if(t==TOK_TEMPLATE)
+  else if(t == TOK_TEMPLATE)
     return rTemplateDecl(member.make_declaration());
-  else if(t==TOK_USING &&
-          lex.LookAhead(1)==TOK_IDENTIFIER &&
-          lex.LookAhead(2)=='=')
+  else if(
+    t == TOK_USING && lex.LookAhead(1) == TOK_IDENTIFIER &&
+    lex.LookAhead(2) == '=')
     return rTypedefUsing(member.make_declaration());
-  else if(t==TOK_USING)
+  else if(t == TOK_USING)
     return rUsing(member.make_using());
-  else if(t==TOK_STATIC_ASSERT)
+  else if(t == TOK_STATIC_ASSERT)
     return rStaticAssert(member.make_static_assert());
   else
   {
-    cpp_token_buffert::post pos=lex.Save();
+    cpp_token_buffert::post pos= lex.Save();
     if(rDeclaration(member.make_declaration()))
       return true;
 
@@ -5245,7 +5366,7 @@ bool Parser::rAccessDecl(irept &mem)
   if(!rName(name))
     return false;
 
-  if(lex.get_token(tk)!=';')
+  if(lex.get_token(tk) != ';')
     return false;
 
   // mem=new PtreeAccessDecl(new PtreeName(name, encode),
@@ -5272,19 +5393,19 @@ Function:
 */
 bool Parser::rCommaExpression(exprt &exp)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rCommaExpression 0\n";
-  #endif
+#endif
 
   if(!rExpression(exp, false))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rCommaExpression 1\n";
-  #endif
+#endif
 
-  while(lex.LookAhead(0)==',')
+  while(lex.LookAhead(0) == ',')
   {
     cpp_tokent tk;
 
@@ -5297,14 +5418,14 @@ bool Parser::rCommaExpression(exprt &exp)
     exprt left;
     left.swap(exp);
 
-    exp=exprt(ID_comma);
+    exp= exprt(ID_comma);
     exp.move_to_operands(left, right);
     set_location(exp, tk);
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rCommaExpression 2\n";
-  #endif
+#endif
 
   return true;
 }
@@ -5329,75 +5450,75 @@ bool Parser::rExpression(exprt &exp, bool template_args)
 {
   cpp_tokent tk;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rExpression 0\n";
-  #endif
+#endif
 
   if(!rConditionalExpr(exp, template_args))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rExpression 1\n";
-  #endif
+#endif
 
-  int t=lex.LookAhead(0);
+  int t= lex.LookAhead(0);
 
-  if(t=='=' ||
-     t==TOK_MULTASSIGN || t==TOK_DIVASSIGN || t==TOK_MODASSIGN ||
-     t==TOK_PLUSASSIGN || t==TOK_MINUSASSIGN || t==TOK_SHLASSIGN ||
-     t==TOK_SHRASSIGN  || t==TOK_ANDASSIGN ||
-     t==TOK_XORASSIGN  || t==TOK_ORASSIGN)
+  if(
+    t == '=' || t == TOK_MULTASSIGN || t == TOK_DIVASSIGN ||
+    t == TOK_MODASSIGN || t == TOK_PLUSASSIGN || t == TOK_MINUSASSIGN ||
+    t == TOK_SHLASSIGN || t == TOK_SHRASSIGN || t == TOK_ANDASSIGN ||
+    t == TOK_XORASSIGN || t == TOK_ORASSIGN)
   {
     lex.get_token(tk);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rExpression 2\n";
-    #endif
+#endif
 
     exprt right;
     if(!rExpression(right, template_args))
       return false;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rExpression 3\n";
-    #endif
+#endif
 
     exprt left;
     left.swap(exp);
 
-    exp=exprt(ID_side_effect);
+    exp= exprt(ID_side_effect);
 
-    if(t=='=')
+    if(t == '=')
       exp.set(ID_statement, ID_assign);
-    else if(t==TOK_PLUSASSIGN)
+    else if(t == TOK_PLUSASSIGN)
       exp.set(ID_statement, ID_assign_plus);
-    else if(t==TOK_MINUSASSIGN)
+    else if(t == TOK_MINUSASSIGN)
       exp.set(ID_statement, ID_assign_minus);
-    else if(t==TOK_MULTASSIGN)
+    else if(t == TOK_MULTASSIGN)
       exp.set(ID_statement, ID_assign_mult);
-    else if(t==TOK_DIVASSIGN)
+    else if(t == TOK_DIVASSIGN)
       exp.set(ID_statement, ID_assign_div);
-    else if(t==TOK_MODASSIGN)
+    else if(t == TOK_MODASSIGN)
       exp.set(ID_statement, ID_assign_mod);
-    else if(t==TOK_SHLASSIGN)
+    else if(t == TOK_SHLASSIGN)
       exp.set(ID_statement, ID_assign_shl);
-    else if(t==TOK_SHRASSIGN)
+    else if(t == TOK_SHRASSIGN)
       exp.set(ID_statement, ID_assign_shr);
-    else if(t==TOK_ANDASSIGN)
+    else if(t == TOK_ANDASSIGN)
       exp.set(ID_statement, ID_assign_bitand);
-    else if(t==TOK_XORASSIGN)
+    else if(t == TOK_XORASSIGN)
       exp.set(ID_statement, ID_assign_bitxor);
-    else if(t==TOK_ORASSIGN)
+    else if(t == TOK_ORASSIGN)
       exp.set(ID_statement, ID_assign_bitor);
 
     exp.move_to_operands(left, right);
     set_location(exp, tk);
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rExpression 4\n";
-  #endif
+#endif
 
   return true;
 }
@@ -5420,19 +5541,19 @@ Function:
 */
 bool Parser::rConditionalExpr(exprt &exp, bool template_args)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rConditionalExpr 0\n";
-  #endif
+#endif
 
   if(!rLogicalOrExpr(exp, template_args))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rConditionalExpr 1\n";
-  #endif
+#endif
 
-  if(lex.LookAhead(0)=='?')
+  if(lex.LookAhead(0) == '?')
   {
     cpp_tokent tk1, tk2;
     exprt then, otherwise;
@@ -5441,11 +5562,11 @@ bool Parser::rConditionalExpr(exprt &exp, bool template_args)
     if(!rCommaExpression(then))
       return false;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rConditionalExpr 2\n";
-    #endif
+#endif
 
-    if(lex.get_token(tk2)!=':')
+    if(lex.get_token(tk2) != ':')
       return false;
 
     if(!rExpression(otherwise, template_args))
@@ -5454,7 +5575,7 @@ bool Parser::rConditionalExpr(exprt &exp, bool template_args)
     exprt cond;
     cond.swap(exp);
 
-    exp=exprt(ID_if);
+    exp= exprt(ID_if);
     exp.move_to_operands(cond, then, otherwise);
     set_location(exp, tk1);
   }
@@ -5481,19 +5602,19 @@ Function:
 */
 bool Parser::rLogicalOrExpr(exprt &exp, bool template_args)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rLogicalOrExpr 0\n";
-  #endif
+#endif
 
   if(!rLogicalAndExpr(exp, template_args))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rLogicalOrExpr 1\n";
-  #endif
+#endif
 
-  while(lex.LookAhead(0)==TOK_OROR)
+  while(lex.LookAhead(0) == TOK_OROR)
   {
     cpp_tokent tk;
     lex.get_token(tk);
@@ -5505,7 +5626,7 @@ bool Parser::rLogicalOrExpr(exprt &exp, bool template_args)
     exprt left;
     left.swap(exp);
 
-    exp=exprt(ID_or);
+    exp= exprt(ID_or);
     exp.move_to_operands(left, right);
     set_location(exp, tk);
   }
@@ -5532,19 +5653,19 @@ Function:
 */
 bool Parser::rLogicalAndExpr(exprt &exp, bool template_args)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rLogicalAndExpr 1\n";
-  #endif
+#endif
 
   if(!rInclusiveOrExpr(exp, template_args))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rLogicalAndExpr 1\n";
-  #endif
+#endif
 
-  while(lex.LookAhead(0)==TOK_ANDAND)
+  while(lex.LookAhead(0) == TOK_ANDAND)
   {
     cpp_tokent tk;
     lex.get_token(tk);
@@ -5556,7 +5677,7 @@ bool Parser::rLogicalAndExpr(exprt &exp, bool template_args)
     exprt left;
     left.swap(exp);
 
-    exp=exprt(ID_and);
+    exp= exprt(ID_and);
     exp.move_to_operands(left, right);
     set_location(exp, tk);
   }
@@ -5583,19 +5704,19 @@ Function:
 */
 bool Parser::rInclusiveOrExpr(exprt &exp, bool template_args)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rInclusiveOrExpr 0\n";
-  #endif
+#endif
 
   if(!rExclusiveOrExpr(exp, template_args))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rInclusiveOrExpr 1\n";
-  #endif
+#endif
 
-  while(lex.LookAhead(0)=='|')
+  while(lex.LookAhead(0) == '|')
   {
     cpp_tokent tk;
     lex.get_token(tk);
@@ -5607,7 +5728,7 @@ bool Parser::rInclusiveOrExpr(exprt &exp, bool template_args)
     exprt left;
     left.swap(exp);
 
-    exp=exprt(ID_bitor);
+    exp= exprt(ID_bitor);
     exp.move_to_operands(left, right);
     set_location(exp, tk);
   }
@@ -5634,19 +5755,19 @@ Function:
 */
 bool Parser::rExclusiveOrExpr(exprt &exp, bool template_args)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rExclusiveOrExpr 0\n";
-  #endif
+#endif
 
   if(!rAndExpr(exp, template_args))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rExclusiveOrExpr 1\n";
-  #endif
+#endif
 
-  while(lex.LookAhead(0)=='^')
+  while(lex.LookAhead(0) == '^')
   {
     cpp_tokent tk;
     lex.get_token(tk);
@@ -5658,7 +5779,7 @@ bool Parser::rExclusiveOrExpr(exprt &exp, bool template_args)
     exprt left;
     left.swap(exp);
 
-    exp=exprt(ID_bitxor);
+    exp= exprt(ID_bitxor);
     exp.move_to_operands(left, right);
     set_location(exp, tk);
   }
@@ -5685,19 +5806,19 @@ Function:
 */
 bool Parser::rAndExpr(exprt &exp, bool template_args)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rAndExpr 0\n";
-  #endif
+#endif
 
   if(!rEqualityExpr(exp, template_args))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rAndExpr 1\n";
-  #endif
+#endif
 
-  while(lex.LookAhead(0)=='&')
+  while(lex.LookAhead(0) == '&')
   {
     cpp_tokent tk;
     lex.get_token(tk);
@@ -5709,7 +5830,7 @@ bool Parser::rAndExpr(exprt &exp, bool template_args)
     exprt left;
     left.swap(exp);
 
-    exp=exprt(ID_bitand);
+    exp= exprt(ID_bitand);
     exp.move_to_operands(left, right);
     set_location(exp, tk);
   }
@@ -5736,20 +5857,19 @@ Function:
 */
 bool Parser::rEqualityExpr(exprt &exp, bool template_args)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rEqualityExpr 0\n";
-  #endif
+#endif
 
   if(!rRelationalExpr(exp, template_args))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rEqualityExpr 1\n";
-  #endif
+#endif
 
-  while(lex.LookAhead(0)==TOK_EQ ||
-        lex.LookAhead(0)==TOK_NE)
+  while(lex.LookAhead(0) == TOK_EQ || lex.LookAhead(0) == TOK_NE)
   {
     cpp_tokent tk;
     lex.get_token(tk);
@@ -5761,7 +5881,7 @@ bool Parser::rEqualityExpr(exprt &exp, bool template_args)
     exprt left;
     left.swap(exp);
 
-    exp=exprt(tk.kind==TOK_EQ?ID_equal:ID_notequal);
+    exp= exprt(tk.kind == TOK_EQ ? ID_equal : ID_notequal);
     exp.move_to_operands(left, right);
     set_location(exp, tk);
   }
@@ -5788,22 +5908,23 @@ Function:
 */
 bool Parser::rRelationalExpr(exprt &exp, bool template_args)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rRelationalExpr 0\n";
-  #endif
+#endif
 
   if(!rShiftExpr(exp, template_args))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rRelationalExpr 1\n";
-  #endif
+#endif
 
   int t;
 
-  while(t=lex.LookAhead(0),
-        (t==TOK_LE || t==TOK_GE || t=='<' || (t=='>' && !template_args)))
+  while(
+    t= lex.LookAhead(0),
+    (t == TOK_LE || t == TOK_GE || t == '<' || (t == '>' && !template_args)))
   {
     cpp_tokent tk;
     lex.get_token(tk);
@@ -5819,13 +5940,21 @@ bool Parser::rRelationalExpr(exprt &exp, bool template_args)
 
     switch(t)
     {
-    case TOK_LE: id=ID_le; break;
-    case TOK_GE: id=ID_ge; break;
-    case '<': id=ID_lt; break;
-    case '>': id=ID_gt; break;
+    case TOK_LE:
+      id= ID_le;
+      break;
+    case TOK_GE:
+      id= ID_ge;
+      break;
+    case '<':
+      id= ID_lt;
+      break;
+    case '>':
+      id= ID_gt;
+      break;
     }
 
-    exp=exprt(id);
+    exp= exprt(id);
     exp.move_to_operands(left, right);
     set_location(exp, tk);
   }
@@ -5852,20 +5981,20 @@ Function:
 */
 bool Parser::rShiftExpr(exprt &exp, bool template_args)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rShiftExpr 0\n";
-  #endif
+#endif
 
   if(!rAdditiveExpr(exp))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rShiftExpr 1\n";
-  #endif
+#endif
 
-  while(lex.LookAhead(0)==TOK_SHIFTLEFT ||
-        (lex.LookAhead(0)==TOK_SHIFTRIGHT && !template_args))
+  while(lex.LookAhead(0) == TOK_SHIFTLEFT ||
+        (lex.LookAhead(0) == TOK_SHIFTRIGHT && !template_args))
   {
     cpp_tokent tk;
     lex.get_token(tk);
@@ -5877,7 +6006,7 @@ bool Parser::rShiftExpr(exprt &exp, bool template_args)
     exprt left;
     left.swap(exp);
 
-    exp=exprt((tk.kind==TOK_SHIFTRIGHT)?ID_shr:ID_shl);
+    exp= exprt((tk.kind == TOK_SHIFTRIGHT) ? ID_shr : ID_shl);
     exp.move_to_operands(left, right);
     set_location(exp, tk);
   }
@@ -5904,20 +6033,20 @@ Function:
 */
 bool Parser::rAdditiveExpr(exprt &exp)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rAdditiveExpr 0\n";
-  #endif
+#endif
 
   if(!rMultiplyExpr(exp))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rAdditiveExpr 1\n";
-  #endif
+#endif
 
   int t;
-  while(t=lex.LookAhead(0), (t=='+' || t=='-'))
+  while(t= lex.LookAhead(0), (t == '+' || t == '-'))
   {
     cpp_tokent tk;
     lex.get_token(tk);
@@ -5932,11 +6061,15 @@ bool Parser::rAdditiveExpr(exprt &exp)
     irep_idt id;
     switch(t)
     {
-    case '+': id=ID_plus; break;
-    case '-': id=ID_minus; break;
+    case '+':
+      id= ID_plus;
+      break;
+    case '-':
+      id= ID_minus;
+      break;
     }
 
-    exp=exprt(id);
+    exp= exprt(id);
     exp.move_to_operands(left, right);
     set_location(exp, tk);
   }
@@ -5963,20 +6096,20 @@ Function:
 */
 bool Parser::rMultiplyExpr(exprt &exp)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rMultiplyExpr 0\n";
-  #endif
+#endif
 
   if(!rPmExpr(exp))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rMultiplyExpr 1\n";
-  #endif
+#endif
 
   int t;
-  while(t=lex.LookAhead(0), (t=='*' || t=='/' || t=='%'))
+  while(t= lex.LookAhead(0), (t == '*' || t == '/' || t == '%'))
   {
     cpp_tokent tk;
     lex.get_token(tk);
@@ -5991,19 +6124,25 @@ bool Parser::rMultiplyExpr(exprt &exp)
     irep_idt id;
     switch(t)
     {
-    case '*': id=ID_mult; break;
-    case '/': id=ID_div; break;
-    case '%': id=ID_mod; break;
+    case '*':
+      id= ID_mult;
+      break;
+    case '/':
+      id= ID_div;
+      break;
+    case '%':
+      id= ID_mod;
+      break;
     }
 
-    exp=exprt(id);
+    exp= exprt(id);
     exp.move_to_operands(left, right);
     set_location(exp, tk);
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rMultiplyExpr 2\n";
-  #endif
+#endif
 
   return true;
 }
@@ -6028,20 +6167,19 @@ Function:
 */
 bool Parser::rPmExpr(exprt &exp)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rPmExpr 0\n";
-  #endif
+#endif
 
   if(!rCastExpr(exp))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rPmExpr 1\n";
-  #endif
+#endif
 
-  while(lex.LookAhead(0)==TOK_DOTPM ||
-        lex.LookAhead(0)==TOK_ARROWPM)
+  while(lex.LookAhead(0) == TOK_DOTPM || lex.LookAhead(0) == TOK_ARROWPM)
   {
     cpp_tokent tk;
     lex.get_token(tk);
@@ -6053,14 +6191,14 @@ bool Parser::rPmExpr(exprt &exp)
     exprt left;
     left.swap(exp);
 
-    exp=exprt("pointer-to-member");
+    exp= exprt("pointer-to-member");
     exp.move_to_operands(left, right);
     set_location(exp, tk);
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rPmExpr 2\n";
-  #endif
+#endif
 
   return true;
 }
@@ -6084,12 +6222,12 @@ Function:
 */
 bool Parser::rCastExpr(exprt &exp)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rCastExpr 0\n";
-  #endif
+#endif
 
-  if(lex.LookAhead(0)!='(')
+  if(lex.LookAhead(0) != '(')
     return rUnaryExpr(exp);
   else
   {
@@ -6101,19 +6239,18 @@ bool Parser::rCastExpr(exprt &exp)
     cpp_tokent tk1, tk2;
     typet tname;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rCastExpr 1\n";
-    #endif
+#endif
 
-    cpp_token_buffert::post pos=lex.Save();
+    cpp_token_buffert::post pos= lex.Save();
     lex.get_token(tk1);
 
     if(rTypeName(tname))
     {
-      if(lex.get_token(tk2)==')')
+      if(lex.get_token(tk2) == ')')
       {
-        if(lex.LookAhead(0)=='&' &&
-           lex.LookAhead(1)==TOK_INTEGER)
+        if(lex.LookAhead(0) == '&' && lex.LookAhead(1) == TOK_INTEGER)
         {
           // we have (x) & 123
           // This is likely a binary bit-wise 'and'
@@ -6123,7 +6260,7 @@ bool Parser::rCastExpr(exprt &exp)
           exprt op;
           op.swap(exp);
 
-          exp=exprt("explicit-typecast");
+          exp= exprt("explicit-typecast");
           exp.type().swap(tname);
           exp.move_to_operands(op);
           set_location(exp, tk1);
@@ -6156,19 +6293,19 @@ Function:
 */
 bool Parser::rTypeName(typet &tname)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rTypeName 0\n";
-  #endif
+#endif
 
   typet type_name;
 
   if(!rTypeSpecifier(type_name, true))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rTypeName 1\n";
-  #endif
+#endif
 
   cpp_declaratort declarator;
 
@@ -6180,9 +6317,9 @@ bool Parser::rTypeName(typet &tname)
   // make type_name subtype of arg
   make_subtype(type_name, tname);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rTypeName 2\n";
-  #endif
+#endif
 
   return true;
 }
@@ -6206,20 +6343,20 @@ Function:
 */
 bool Parser::rTypeNameOrFunctionType(typet &tname)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ')
             << "Parser::rTypeNameOrFunctionType 0\n";
-  #endif
+#endif
 
-  cpp_token_buffert::post pos=lex.Save();
+  cpp_token_buffert::post pos= lex.Save();
 
-  if(rTypeName(tname) && lex.LookAhead(0)!='(')
+  if(rTypeName(tname) && lex.LookAhead(0) != '(')
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ')
               << "Parser::rTypeNameOrFunctionType 1\n";
-    #endif
+#endif
 
     if(!optPtrOperator(tname))
       return false;
@@ -6229,22 +6366,22 @@ bool Parser::rTypeNameOrFunctionType(typet &tname)
 
   lex.Restore(pos);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ')
             << "Parser::rTypeNameOrFunctionType 2\n";
-  #endif
+#endif
 
   code_typet type;
 
   if(!rCastOperatorName(type.return_type()))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ')
             << "Parser::rTypeNameOrFunctionType 3\n";
-  #endif
+#endif
 
-  if(lex.LookAhead(0)!='(')
+  if(lex.LookAhead(0) != '(')
   {
     tname.swap(type.return_type());
 
@@ -6254,10 +6391,10 @@ bool Parser::rTypeNameOrFunctionType(typet &tname)
     return true;
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ')
             << "Parser::rTypeNameOrFunctionType 4\n";
-  #endif
+#endif
 
   cpp_tokent op;
   lex.get_token(op);
@@ -6265,11 +6402,10 @@ bool Parser::rTypeNameOrFunctionType(typet &tname)
   // TODO -- cruel hack for Clang's type_traits:
   // struct __member_pointer_traits_imp<_Rp (_Class::*)(_Param..., ...),
   //                                    true, false>
-  if(lex.LookAhead(0)==TOK_IDENTIFIER &&
-     lex.LookAhead(1)==TOK_SCOPE &&
-     lex.LookAhead(2)=='*' &&
-     lex.LookAhead(3)==')' &&
-     lex.LookAhead(4)=='(')
+  if(
+    lex.LookAhead(0) == TOK_IDENTIFIER && lex.LookAhead(1) == TOK_SCOPE &&
+    lex.LookAhead(2) == '*' && lex.LookAhead(3) == ')' &&
+    lex.LookAhead(4) == '(')
   {
     lex.get_token();
     lex.get_token();
@@ -6277,19 +6413,18 @@ bool Parser::rTypeNameOrFunctionType(typet &tname)
     lex.get_token();
     lex.get_token();
   }
-  else if(lex.LookAhead(0)==TOK_IDENTIFIER &&
-          lex.LookAhead(1)==')' &&
-          lex.LookAhead(2)=='(')
+  else if(
+    lex.LookAhead(0) == TOK_IDENTIFIER && lex.LookAhead(1) == ')' &&
+    lex.LookAhead(2) == '(')
   {
     lex.get_token(op);
     type.set(ID_identifier, op.data.get(ID_C_base_name));
     lex.get_token();
     lex.get_token();
   }
-  else if(lex.LookAhead(0)=='*' &&
-          lex.LookAhead(1)==TOK_IDENTIFIER &&
-          lex.LookAhead(2)==')' &&
-          lex.LookAhead(3)=='(')
+  else if(
+    lex.LookAhead(0) == '*' && lex.LookAhead(1) == TOK_IDENTIFIER &&
+    lex.LookAhead(2) == ')' && lex.LookAhead(3) == '(')
   {
     lex.get_token(op);
     lex.get_token(op);
@@ -6300,17 +6435,17 @@ bool Parser::rTypeNameOrFunctionType(typet &tname)
 
   for(;;)
   {
-    // function type parameters
+// function type parameters
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ')
               << "Parser::rTypeNameOrFunctionType 5\n";
-    #endif
+#endif
 
-    int t=lex.LookAhead(0);
-    if(t==')')
+    int t= lex.LookAhead(0);
+    if(t == ')')
       break;
-    else if(t==TOK_ELLIPSIS)
+    else if(t == TOK_ELLIPSIS)
     {
       cpp_tokent tk;
       lex.get_token(tk);
@@ -6326,13 +6461,13 @@ bool Parser::rTypeNameOrFunctionType(typet &tname)
       parameter.swap(parameter_declaration);
       type.parameters().push_back(parameter);
 
-      t=lex.LookAhead(0);
-      if(t==',')
+      t= lex.LookAhead(0);
+      if(t == ',')
       {
         cpp_tokent tk;
         lex.get_token(tk);
       }
-      else if(t==TOK_ELLIPSIS)
+      else if(t == TOK_ELLIPSIS)
       {
         // TODO -- this is actually ambiguous as it could refer to a
         // template parameter pack or declare a variadic function
@@ -6340,15 +6475,15 @@ bool Parser::rTypeNameOrFunctionType(typet &tname)
         lex.get_token(tk);
         type.make_ellipsis();
       }
-      else if(t==')')
+      else if(t == ')')
         break;
     }
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ')
             << "Parser::rTypeNameOrFunctionType 6\n";
-  #endif
+#endif
 
   cpp_tokent cp;
   lex.get_token(cp);
@@ -6357,10 +6492,10 @@ bool Parser::rTypeNameOrFunctionType(typet &tname)
   if(!optCvQualify(type))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ')
             << "Parser::rTypeNameOrFunctionType 7\n";
-  #endif
+#endif
 
   // not sure where this one belongs
   if(!optPtrOperator(type))
@@ -6368,10 +6503,10 @@ bool Parser::rTypeNameOrFunctionType(typet &tname)
 
   tname.swap(type);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ')
             << "Parser::rTypeNameOrFunctionType 8\n";
-  #endif
+#endif
 
   return true;
 }
@@ -6400,65 +6535,65 @@ Function:
 
 bool Parser::rUnaryExpr(exprt &exp)
 {
-  int t=lex.LookAhead(0);
+  int t= lex.LookAhead(0);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rUnaryExpr 0\n";
-  #endif
+#endif
 
-  if(t=='*' || t=='&' || t=='+' ||
-     t=='-' || t=='!' || t=='~' ||
-     t==TOK_INCR || t==TOK_DECR)
+  if(
+    t == '*' || t == '&' || t == '+' || t == '-' || t == '!' || t == '~' ||
+    t == TOK_INCR || t == TOK_DECR)
   {
     cpp_tokent tk;
     lex.get_token(tk);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rUnaryExpr 1\n";
-    #endif
+#endif
 
     exprt right;
     if(!rCastExpr(right))
       return false;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rUnaryExpr 2\n";
-    #endif
+#endif
 
     switch(t)
     {
     case '*':
-      exp=exprt(ID_dereference);
+      exp= exprt(ID_dereference);
       break;
 
     case '&':
-      exp=exprt(ID_address_of);
+      exp= exprt(ID_address_of);
       break;
 
     case '+':
-      exp=exprt(ID_unary_plus);
+      exp= exprt(ID_unary_plus);
       break;
 
     case '-':
-      exp=exprt(ID_unary_minus);
+      exp= exprt(ID_unary_minus);
       break;
 
     case '!':
-      exp=exprt(ID_not);
+      exp= exprt(ID_not);
       break;
 
     case '~':
-      exp=exprt(ID_bitnot);
+      exp= exprt(ID_bitnot);
       break;
 
     case TOK_INCR:
-      exp=exprt(ID_side_effect);
+      exp= exprt(ID_side_effect);
       exp.set(ID_statement, ID_preincrement);
       break;
 
     case TOK_DECR:
-      exp=exprt(ID_side_effect);
+      exp= exprt(ID_side_effect);
       exp.set(ID_statement, ID_predecrement);
       break;
 
@@ -6471,15 +6606,15 @@ bool Parser::rUnaryExpr(exprt &exp)
 
     return true;
   }
-  else if(t==TOK_SIZEOF)
+  else if(t == TOK_SIZEOF)
     return rSizeofExpr(exp);
-  else if(t==TOK_ALIGNOF)
+  else if(t == TOK_ALIGNOF)
     return rAlignofExpr(exp);
-  else if(t==TOK_THROW)
+  else if(t == TOK_THROW)
     return rThrowExpr(exp);
-  else if(t==TOK_NOEXCEPT)
+  else if(t == TOK_NOEXCEPT)
     return rNoexceptExpr(exp);
-  else if(t==TOK_REAL || t==TOK_IMAG)
+  else if(t == TOK_REAL || t == TOK_IMAG)
   {
     // a GCC extension for complex floating-point arithmetic
     cpp_tokent tk;
@@ -6490,7 +6625,7 @@ bool Parser::rUnaryExpr(exprt &exp)
     if(!rUnaryExpr(unary))
       return false;
 
-    exp=exprt(t==TOK_REAL?ID_complex_real:ID_complex_imag);
+    exp= exprt(t == TOK_REAL ? ID_complex_real : ID_complex_imag);
     exp.move_to_operands(unary);
     set_location(exp, tk);
     return true;
@@ -6521,20 +6656,20 @@ bool Parser::rThrowExpr(exprt &exp)
 {
   cpp_tokent tk;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rThrowExpr 0\n";
-  #endif
+#endif
 
-  if(lex.get_token(tk)!=TOK_THROW)
+  if(lex.get_token(tk) != TOK_THROW)
     return false;
 
-  int t=lex.LookAhead(0);
+  int t= lex.LookAhead(0);
 
-  exp=side_effect_expr_throwt();
+  exp= side_effect_expr_throwt();
   set_location(exp, tk);
 
-  if(t==':' || t==';')
+  if(t == ':' || t == ';')
   {
     // done
   }
@@ -6572,31 +6707,31 @@ bool Parser::rTypeidExpr(exprt &exp)
 {
   cpp_tokent tk;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rTypeidExpr 0\n";
-  #endif
+#endif
 
-  if(lex.get_token(tk)!=TOK_TYPEID)
+  if(lex.get_token(tk) != TOK_TYPEID)
     return false;
 
-  if(lex.LookAhead(0)=='(')
+  if(lex.LookAhead(0) == '(')
   {
     typet tname;
     exprt subexp;
     cpp_tokent op, cp;
 
-    cpp_token_buffert::post pos=lex.Save();
+    cpp_token_buffert::post pos= lex.Save();
     lex.get_token(op);
     if(rTypeName(tname))
     {
-      if(lex.get_token(cp)==')')
+      if(lex.get_token(cp) == ')')
       {
         // exp=new PtreeTypeidExpr(new Leaf(tk),
         //                        Ptree::List(new Leaf(op), tname,
         //                        new Leaf(cp)));
 
-        exp=exprt("typeid");
+        exp= exprt("typeid");
         set_location(exp, tk);
         return true;
       }
@@ -6607,7 +6742,7 @@ bool Parser::rTypeidExpr(exprt &exp)
 
     if(rExpression(subexp, false))
     {
-      if(lex.get_token(cp)==')')
+      if(lex.get_token(cp) == ')')
       {
         // exp=new PtreeTypeidExpr(
         //   new Leaf(tk),
@@ -6615,7 +6750,7 @@ bool Parser::rTypeidExpr(exprt &exp)
         //     Ptree::List(new Leaf(op), subexp, new Leaf(cp))
         //   ));
 
-        exp=exprt("typeid");
+        exp= exprt("typeid");
         set_location(exp, tk);
         return true;
       }
@@ -6650,27 +6785,27 @@ bool Parser::rSizeofExpr(exprt &exp)
 {
   cpp_tokent tk;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rSizeofExpr 0\n";
-  #endif
+#endif
 
-  if(lex.get_token(tk)!=TOK_SIZEOF)
+  if(lex.get_token(tk) != TOK_SIZEOF)
     return false;
 
-  if(lex.LookAhead(0)=='(')
+  if(lex.LookAhead(0) == '(')
   {
     typet tname;
     cpp_tokent op, cp;
 
-    cpp_token_buffert::post pos=lex.Save();
+    cpp_token_buffert::post pos= lex.Save();
     lex.get_token(op);
 
     if(rTypeName(tname))
     {
-      if(lex.get_token(cp)==')')
+      if(lex.get_token(cp) == ')')
       {
-        exp=exprt(ID_sizeof);
+        exp= exprt(ID_sizeof);
         exp.add(ID_type_arg).swap(tname);
         set_location(exp, tk);
         return true;
@@ -6679,7 +6814,7 @@ bool Parser::rSizeofExpr(exprt &exp)
 
     lex.Restore(pos);
   }
-  else if(lex.LookAhead(0)==TOK_ELLIPSIS)
+  else if(lex.LookAhead(0) == TOK_ELLIPSIS)
   {
     typet tname;
     cpp_tokent ell, op, cp;
@@ -6690,9 +6825,9 @@ bool Parser::rSizeofExpr(exprt &exp)
 
     if(rTypeName(tname))
     {
-      if(lex.get_token(cp)==')')
+      if(lex.get_token(cp) == ')')
       {
-        exp=exprt(ID_sizeof);
+        exp= exprt(ID_sizeof);
         exp.add(ID_type_arg).swap(tname);
         set_location(exp, tk);
         return true;
@@ -6707,7 +6842,7 @@ bool Parser::rSizeofExpr(exprt &exp)
   if(!rUnaryExpr(unary))
     return false;
 
-  exp=exprt(ID_sizeof);
+  exp= exprt(ID_sizeof);
   exp.move_to_operands(unary);
   set_location(exp, tk);
   return true;
@@ -6734,7 +6869,7 @@ bool Parser::rAlignofExpr(exprt &exp)
 {
   cpp_tokent tk;
 
-  if(lex.get_token(tk)!=TOK_ALIGNOF)
+  if(lex.get_token(tk) != TOK_ALIGNOF)
     return false;
 
   typet tname;
@@ -6745,10 +6880,10 @@ bool Parser::rAlignofExpr(exprt &exp)
   if(!rTypeName(tname))
     return false;
 
-  if(lex.get_token(cp)!=')')
+  if(lex.get_token(cp) != ')')
     return false;
 
-  exp=exprt(ID_alignof);
+  exp= exprt(ID_alignof);
   exp.add(ID_type_arg).swap(tname);
   set_location(exp, tk);
   return true;
@@ -6774,15 +6909,15 @@ bool Parser::rNoexceptExpr(exprt &exp)
 {
   cpp_tokent tk;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rNoexceptExpr 0\n";
-  #endif
+#endif
 
-  if(lex.get_token(tk)!=TOK_NOEXCEPT)
+  if(lex.get_token(tk) != TOK_NOEXCEPT)
     return false;
 
-  if(lex.LookAhead(0)=='(')
+  if(lex.LookAhead(0) == '(')
   {
     exprt subexp;
     cpp_tokent op, cp;
@@ -6791,10 +6926,10 @@ bool Parser::rNoexceptExpr(exprt &exp)
 
     if(rExpression(subexp, false))
     {
-      if(lex.get_token(cp)==')')
+      if(lex.get_token(cp) == ')')
       {
         // TODO
-        exp=exprt(ID_noexcept);
+        exp= exprt(ID_noexcept);
         exp.move_to_operands(subexp);
         set_location(exp, tk);
         return true;
@@ -6809,10 +6944,10 @@ bool Parser::rNoexceptExpr(exprt &exp)
 
 bool Parser::isAllocateExpr(int t)
 {
-  if(t==TOK_SCOPE)
-    t=lex.LookAhead(1);
+  if(t == TOK_SCOPE)
+    t= lex.LookAhead(1);
 
-  return t==TOK_NEW || t==TOK_DELETE;
+  return t == TOK_NEW || t == TOK_DELETE;
 }
 
 /*******************************************************************\
@@ -6835,66 +6970,66 @@ Function:
 bool Parser::rAllocateExpr(exprt &exp)
 {
   cpp_tokent tk;
-  irept head=get_nil_irep();
+  irept head= get_nil_irep();
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rAllocateExpr 0\n";
-  #endif
+#endif
 
-  int t=lex.LookAhead(0);
-  if(t==TOK_SCOPE)
+  int t= lex.LookAhead(0);
+  if(t == TOK_SCOPE)
   {
     lex.get_token(tk);
     // TODO one can put 'new'/'delete' into a namespace!
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rAllocateExpr 1\n";
-  #endif
+#endif
 
-  t=lex.get_token(tk);
+  t= lex.get_token(tk);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rAllocateExpr 2\n";
-  #endif
+#endif
 
-  if(t==TOK_DELETE)
+  if(t == TOK_DELETE)
   {
     exprt obj;
 
-    if(lex.LookAhead(0)=='[')
+    if(lex.LookAhead(0) == '[')
     {
       lex.get_token(tk);
 
-      if(lex.get_token(tk)!=']')
+      if(lex.get_token(tk) != ']')
         return false;
 
-      exp=exprt(ID_side_effect);
+      exp= exprt(ID_side_effect);
       exp.set(ID_statement, ID_cpp_delete_array);
     }
     else
     {
-      exp=exprt(ID_side_effect);
+      exp= exprt(ID_side_effect);
       exp.set(ID_statement, ID_cpp_delete);
     }
 
     set_location(exp, tk);
 
     if(!rCastExpr(obj))
-       return false;
+      return false;
 
     exp.move_to_operands(obj);
 
     return true;
   }
-  else if(t==TOK_NEW)
+  else if(t == TOK_NEW)
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rAllocateExpr 3\n";
-    #endif
+#endif
 
-    exp=exprt(ID_side_effect);
+    exp= exprt(ID_side_effect);
     exp.set(ID_statement, ID_cpp_new);
     set_location(exp, tk);
 
@@ -6903,9 +7038,9 @@ bool Parser::rAllocateExpr(exprt &exp)
     if(!rAllocateType(arguments, exp.type(), initializer))
       return false;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rAllocateExpr 4\n";
-    #endif
+#endif
 
     exp.add(ID_initializer).swap(initializer);
     exp.operands().swap(arguments.operands());
@@ -6934,12 +7069,9 @@ Function:
   | {'(' function.arguments ')'} '(' type.name ')' {allocate.initializer}
 */
 
-bool Parser::rAllocateType(
-  exprt &arguments,
-  typet &atype,
-  exprt &initializer)
+bool Parser::rAllocateType(exprt &arguments, typet &atype, exprt &initializer)
 {
-  if(lex.LookAhead(0)!='(')
+  if(lex.LookAhead(0) != '(')
   {
     atype.make_nil();
   }
@@ -6949,15 +7081,15 @@ bool Parser::rAllocateType(
     lex.get_token();
 
     // we may need to backtrack
-    cpp_token_buffert::post pos=lex.Save();
+    cpp_token_buffert::post pos= lex.Save();
 
     if(rTypeName(atype))
     {
-      if(lex.get_token()==')')
+      if(lex.get_token() == ')')
       {
         // we have "( type.name )"
 
-        if(lex.LookAhead(0)!='(')
+        if(lex.LookAhead(0) != '(')
         {
           if(!isTypeSpecifier())
             return true;
@@ -6965,7 +7097,7 @@ bool Parser::rAllocateType(
         else if(rAllocateInitializer(initializer))
         {
           // the next token cannot be '('
-          if(lex.LookAhead(0)!='(')
+          if(lex.LookAhead(0) != '(')
             return true;
         }
       }
@@ -6978,11 +7110,11 @@ bool Parser::rAllocateType(
     if(!rFunctionArguments(arguments))
       return false;
 
-    if(lex.get_token()!=')')
+    if(lex.get_token() != ')')
       return false;
   }
 
-  if(lex.LookAhead(0)=='(')
+  if(lex.LookAhead(0) == '(')
   {
     lex.get_token();
 
@@ -6991,7 +7123,7 @@ bool Parser::rAllocateType(
     if(!rTypeName(tname))
       return false;
 
-    if(lex.get_token()!=')')
+    if(lex.get_token() != ')')
       return false;
 
     atype.swap(tname);
@@ -7009,12 +7141,12 @@ bool Parser::rAllocateType(
     atype.swap(tname);
   }
 
-  if(lex.LookAhead(0)=='(')
+  if(lex.LookAhead(0) == '(')
   {
     if(!rAllocateInitializer(initializer))
       return false;
   }
-  else if(lex.LookAhead(0)=='{')
+  else if(lex.LookAhead(0) == '{')
   {
     // this is a C++11 extension
     if(!rInitializeExpr(initializer))
@@ -7044,11 +7176,11 @@ Function:
 */
 bool Parser::rNewDeclarator(typet &decl)
 {
-  if(lex.LookAhead(0)!='[')
+  if(lex.LookAhead(0) != '[')
     if(!optPtrOperator(decl))
       return false;
 
-  while(lex.LookAhead(0)=='[')
+  while(lex.LookAhead(0) == '[')
   {
     cpp_tokent ob, cb;
     exprt expr;
@@ -7057,7 +7189,7 @@ bool Parser::rNewDeclarator(typet &decl)
     if(!rCommaExpression(expr))
       return false;
 
-    if(lex.get_token(cb)!=']')
+    if(lex.get_token(cb) != ']')
       return false;
 
     array_typet array_type;
@@ -7089,12 +7221,12 @@ Function:
 */
 bool Parser::rAllocateInitializer(exprt &init)
 {
-  if(lex.get_token()!='(')
+  if(lex.get_token() != '(')
     return false;
 
   init.clear();
 
-  if(lex.LookAhead(0)==')')
+  if(lex.LookAhead(0) == ')')
   {
     lex.get_token();
     return true;
@@ -7108,15 +7240,15 @@ bool Parser::rAllocateInitializer(exprt &init)
 
     init.move_to_operands(exp);
 
-    if(lex.LookAhead(0)==TOK_ELLIPSIS)
+    if(lex.LookAhead(0) == TOK_ELLIPSIS)
     {
       lex.get_token();
       // TODO
     }
 
-    if(lex.LookAhead(0)==',')
+    if(lex.LookAhead(0) == ',')
       lex.get_token();
-    else if(lex.LookAhead(0)==')')
+    else if(lex.LookAhead(0) == ')')
     {
       lex.get_token();
       break;
@@ -7158,17 +7290,17 @@ Function:
 */
 bool Parser::rPostfixExpr(exprt &exp)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rPostfixExpr 0\n";
-  #endif
+#endif
 
   if(!rPrimaryExpr(exp))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rPostfixExpr 1\n";
-  #endif
+#endif
 
   exprt e;
   cpp_tokent cp, op;
@@ -7183,38 +7315,38 @@ bool Parser::rPostfixExpr(exprt &exp)
       if(!rCommaExpression(e))
         return false;
 
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rPostfixExpr 2\n";
-      #endif
+#endif
 
-      if(lex.get_token(cp)!=']')
+      if(lex.get_token(cp) != ']')
         return false;
 
       {
         exprt left;
         left.swap(exp);
 
-        exp=exprt(ID_index);
+        exp= exprt(ID_index);
         exp.move_to_operands(left, e);
         set_location(exp, op);
       }
       break;
 
     case '(':
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rPostfixExpr 3\n";
-      #endif
+#endif
 
       lex.get_token(op);
       if(!rFunctionArguments(e))
         return false;
 
-      if(lex.get_token(cp)!=')')
+      if(lex.get_token(cp) != ')')
         return false;
 
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rPostfixExpr 4\n";
-      #endif
+#endif
 
       {
         side_effect_expr_function_callt fc;
@@ -7255,27 +7387,27 @@ bool Parser::rPostfixExpr(exprt &exp)
 
     case '.':
     case TOK_ARROW:
-      t2=lex.get_token(op);
+      t2= lex.get_token(op);
 
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rPostfixExpr 5\n";
-      #endif
+#endif
 
       if(!rVarName(e))
         return false;
 
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rPostfixExpr 6\n";
-      #endif
+#endif
 
       {
         exprt left;
         left.swap(exp);
 
-        if(t2=='.')
-          exp=exprt(ID_member);
+        if(t2 == '.')
+          exp= exprt(ID_member);
         else // ARROW
-          exp=exprt(ID_ptrmember);
+          exp= exprt(ID_ptrmember);
 
         exp.move_to_operands(left);
         set_location(exp, op);
@@ -7313,23 +7445,23 @@ bool Parser::rMSCuuidof(exprt &expr)
 {
   cpp_tokent tk;
 
-  if(lex.get_token(tk)!=TOK_MSC_UUIDOF)
+  if(lex.get_token(tk) != TOK_MSC_UUIDOF)
     return false;
 
-  if(lex.get_token(tk)!='(')
+  if(lex.get_token(tk) != '(')
     return false;
 
   {
     typet tname;
     cpp_tokent cp;
 
-    cpp_token_buffert::post pos=lex.Save();
+    cpp_token_buffert::post pos= lex.Save();
 
     if(rTypeName(tname))
     {
-      if(lex.get_token(cp)==')')
+      if(lex.get_token(cp) == ')')
       {
-        expr=exprt(ID_msc_uuidof);
+        expr= exprt(ID_msc_uuidof);
         expr.add(ID_type_arg).swap(tname);
         set_location(expr, tk);
         return true;
@@ -7344,10 +7476,10 @@ bool Parser::rMSCuuidof(exprt &expr)
   if(!rUnaryExpr(unary))
     return false;
 
-  if(lex.get_token(tk)!=')')
+  if(lex.get_token(tk) != ')')
     return false;
 
-  expr=exprt(ID_msc_uuidof);
+  expr= exprt(ID_msc_uuidof);
   expr.move_to_operands(unary);
   set_location(expr, tk);
   return true;
@@ -7376,13 +7508,12 @@ bool Parser::rMSC_if_existsExpr(exprt &expr)
 
   lex.get_token(tk1);
 
-  if(tk1.kind!=TOK_MSC_IF_EXISTS &&
-     tk1.kind!=TOK_MSC_IF_NOT_EXISTS)
+  if(tk1.kind != TOK_MSC_IF_EXISTS && tk1.kind != TOK_MSC_IF_NOT_EXISTS)
     return false;
 
   cpp_tokent tk2;
 
-  if(lex.get_token(tk2)!='(')
+  if(lex.get_token(tk2) != '(')
     return false;
 
   exprt name;
@@ -7390,10 +7521,10 @@ bool Parser::rMSC_if_existsExpr(exprt &expr)
   if(!rVarName(name))
     return false;
 
-  if(lex.get_token(tk2)!=')')
+  if(lex.get_token(tk2) != ')')
     return false;
 
-  if(lex.get_token(tk2)!='{')
+  if(lex.get_token(tk2) != '{')
     return false;
 
   exprt op;
@@ -7401,12 +7532,11 @@ bool Parser::rMSC_if_existsExpr(exprt &expr)
   if(!rUnaryExpr(op))
     return false;
 
-  if(lex.get_token(tk2)!='}')
+  if(lex.get_token(tk2) != '}')
     return false;
 
-  expr=exprt(
-    tk1.kind==TOK_MSC_IF_EXISTS?ID_msc_if_exists:
-                                ID_msc_if_not_exists);
+  expr= exprt(
+    tk1.kind == TOK_MSC_IF_EXISTS ? ID_msc_if_exists : ID_msc_if_not_exists);
 
   expr.move_to_operands(name, op);
 
@@ -7433,13 +7563,12 @@ bool Parser::rMSC_if_existsStatement(codet &code)
 
   lex.get_token(tk1);
 
-  if(tk1.kind!=TOK_MSC_IF_EXISTS &&
-     tk1.kind!=TOK_MSC_IF_NOT_EXISTS)
+  if(tk1.kind != TOK_MSC_IF_EXISTS && tk1.kind != TOK_MSC_IF_NOT_EXISTS)
     return false;
 
   cpp_tokent tk2;
 
-  if(lex.get_token(tk2)!='(')
+  if(lex.get_token(tk2) != '(')
     return false;
 
   exprt name;
@@ -7447,15 +7576,15 @@ bool Parser::rMSC_if_existsStatement(codet &code)
   if(!rVarName(name))
     return false;
 
-  if(lex.get_token(tk2)!=')')
+  if(lex.get_token(tk2) != ')')
     return false;
 
-  if(lex.get_token(tk2)!='{')
+  if(lex.get_token(tk2) != '{')
     return false;
 
   codet block;
 
-  while(lex.LookAhead(0)!='}')
+  while(lex.LookAhead(0) != '}')
   {
     codet statement;
 
@@ -7465,12 +7594,11 @@ bool Parser::rMSC_if_existsStatement(codet &code)
     block.move_to_operands(statement);
   }
 
-  if(lex.get_token(tk2)!='}')
+  if(lex.get_token(tk2) != '}')
     return false;
 
-  code=codet(
-    tk1.kind==TOK_MSC_IF_EXISTS?ID_msc_if_exists:
-                                ID_msc_if_not_exists);
+  code= codet(
+    tk1.kind == TOK_MSC_IF_EXISTS ? ID_msc_if_exists : ID_msc_if_not_exists);
 
   code.move_to_operands(name, block);
 
@@ -7512,25 +7640,25 @@ bool Parser::rTypePredicate(exprt &expr)
   switch(tk.kind)
   {
   case TOK_UNARY_TYPE_PREDICATE:
-    if(lex.get_token(tk)!='(')
+    if(lex.get_token(tk) != '(')
       return false;
     if(!rTypeName(tname1))
       return false;
-    if(lex.get_token(tk)!=')')
+    if(lex.get_token(tk) != ')')
       return false;
     expr.add(ID_type_arg).swap(tname1);
     break;
 
   case TOK_BINARY_TYPE_PREDICATE:
-    if(lex.get_token(tk)!='(')
+    if(lex.get_token(tk) != '(')
       return false;
     if(!rTypeName(tname1))
       return false;
-    if(lex.get_token(tk)!=',')
+    if(lex.get_token(tk) != ',')
       return false;
     if(!rTypeName(tname2))
       return false;
-    if(lex.get_token(tk)!=')')
+    if(lex.get_token(tk) != ')')
       return false;
     expr.add("type_arg1").swap(tname1);
     expr.add("type_arg2").swap(tname2);
@@ -7576,11 +7704,11 @@ bool Parser::rPrimaryExpr(exprt &exp)
 {
   cpp_tokent tk, tk2;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 0 "
             << lex.LookAhead(0) << ' ' << lex.current_token().text << '\n';
-  #endif
+#endif
 
   switch(lex.LookAhead(0))
   {
@@ -7590,75 +7718,75 @@ bool Parser::rPrimaryExpr(exprt &exp)
     lex.get_token(tk);
     exp.swap(tk.data);
     set_location(exp, tk);
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 1\n";
-    #endif
+#endif
     return true;
 
   case TOK_STRING:
     rString(tk);
     exp.swap(tk.data);
     set_location(exp, tk);
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 2\n";
-    #endif
+#endif
     return true;
 
   case TOK_THIS:
     lex.get_token(tk);
-    exp=exprt("cpp-this");
+    exp= exprt("cpp-this");
     set_location(exp, tk);
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 3\n";
-    #endif
+#endif
     return true;
 
   case TOK_TRUE:
     lex.get_token(tk);
-    exp=true_exprt();
+    exp= true_exprt();
     set_location(exp, tk);
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 4\n";
-    #endif
+#endif
     return true;
 
   case TOK_FALSE:
     lex.get_token(tk);
-    exp=false_exprt();
+    exp= false_exprt();
     set_location(exp, tk);
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 5\n";
-    #endif
+#endif
     return true;
 
   case TOK_NULLPTR:
     lex.get_token(tk);
-    exp=constant_exprt(ID_NULL, pointer_typet(typet(ID_nullptr)));
+    exp= constant_exprt(ID_NULL, pointer_typet(typet(ID_nullptr)));
     set_location(exp, tk);
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 6\n";
-    #endif
+#endif
     return true;
 
   case '(':
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 7\n";
-    #endif
+#endif
     lex.get_token(tk);
 
-    if(lex.LookAhead(0)=='{') // GCC extension
+    if(lex.LookAhead(0) == '{') // GCC extension
     {
       codet code;
 
       if(!rCompoundStatement(code))
         return false;
 
-      exp=exprt(ID_side_effect);
+      exp= exprt(ID_side_effect);
       exp.set(ID_statement, ID_statement_expression);
       set_location(exp, tk);
       exp.move_to_operands(code);
 
-      if(lex.get_token(tk2)!=')')
+      if(lex.get_token(tk2) != ')')
         return false;
     }
     else
@@ -7668,25 +7796,25 @@ bool Parser::rPrimaryExpr(exprt &exp)
       if(!rCommaExpression(exp2))
         return false;
 
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 8\n";
-      #endif
+#endif
 
-      if(lex.get_token(tk2)!=')')
+      if(lex.get_token(tk2) != ')')
         return false;
 
       exp.swap(exp2);
     }
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 9\n";
-    #endif
+#endif
     return true;
 
   case '{': // C++11 initialisation expression
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 10\n";
-    #endif
+#endif
     return rInitializeExpr(exp);
 
   case TOK_TYPEID:
@@ -7694,41 +7822,41 @@ bool Parser::rPrimaryExpr(exprt &exp)
 
   case TOK_UNARY_TYPE_PREDICATE:
   case TOK_BINARY_TYPE_PREDICATE:
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 11\n";
-    #endif
+#endif
     return rTypePredicate(exp);
 
   case TOK_MSC_UUIDOF:
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 12\n";
-    #endif
+#endif
     return rMSCuuidof(exp);
 
   // not quite appropriate: these allow more general
   // token streams, not just expressions
   case TOK_MSC_IF_EXISTS:
   case TOK_MSC_IF_NOT_EXISTS:
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 13\n";
-    #endif
+#endif
     return rMSC_if_existsExpr(exp);
 
   default:
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 14\n";
-    #endif
+#endif
     {
       typet type;
 
       if(!optIntegralTypeOrClassSpec(type))
         return false;
 
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 15\n";
-      #endif
+#endif
 
-      if(type.is_not_nil() && lex.LookAhead(0)==TOK_SCOPE)
+      if(type.is_not_nil() && lex.LookAhead(0) == TOK_SCOPE)
       {
         lex.get_token(tk);
         lex.get_token(tk);
@@ -7737,10 +7865,10 @@ bool Parser::rPrimaryExpr(exprt &exp)
       }
       else if(type.is_not_nil())
       {
-        #ifdef DEBUG
+#ifdef DEBUG
         std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 16\n";
-        #endif
-        if(lex.LookAhead(0)=='{')
+#endif
+        if(lex.LookAhead(0) == '{')
         {
           lex.LookAhead(0, tk);
 
@@ -7748,12 +7876,12 @@ bool Parser::rPrimaryExpr(exprt &exp)
           if(!rInitializeExpr(exp2))
             return false;
 
-          exp=exprt("explicit-constructor-call");
+          exp= exprt("explicit-constructor-call");
           exp.type().swap(type);
           exp.move_to_operands(exp2);
           set_location(exp, tk);
         }
-        else if(lex.LookAhead(0)=='(')
+        else if(lex.LookAhead(0) == '(')
         {
           lex.get_token(tk);
 
@@ -7761,10 +7889,10 @@ bool Parser::rPrimaryExpr(exprt &exp)
           if(!rFunctionArguments(exp2))
             return false;
 
-          if(lex.get_token(tk2)!=')')
+          if(lex.get_token(tk2) != ')')
             return false;
 
-          exp=exprt("explicit-constructor-call");
+          exp= exprt("explicit-constructor-call");
           exp.type().swap(type);
           exp.operands().swap(exp2.operands());
           set_location(exp, tk);
@@ -7777,7 +7905,7 @@ bool Parser::rPrimaryExpr(exprt &exp)
         if(!rVarName(exp))
           return false;
 
-        if(lex.LookAhead(0)==TOK_SCOPE)
+        if(lex.LookAhead(0) == TOK_SCOPE)
         {
           lex.get_token(tk);
 
@@ -7787,9 +7915,9 @@ bool Parser::rPrimaryExpr(exprt &exp)
         }
       }
     }
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rPrimaryExpr 17\n";
-    #endif
+#endif
 
     return true;
   }
@@ -7819,10 +7947,10 @@ Function:
 */
 bool Parser::rVarName(exprt &name)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rVarName 0\n";
-  #endif
+#endif
 
   if(rVarNameCore(name))
     return true;
@@ -7844,15 +7972,15 @@ Function:
 
 bool Parser::rVarNameCore(exprt &name)
 {
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rVarNameCore 0\n";
-  #endif
+#endif
 
-  name=exprt(ID_cpp_name);
-  irept::subt &components=name.get_sub();
+  name= exprt(ID_cpp_name);
+  irept::subt &components= name.get_sub();
 
-  if(lex.LookAhead(0)==TOK_TYPENAME)
+  if(lex.LookAhead(0) == TOK_TYPENAME)
   {
     cpp_tokent tk;
     lex.get_token(tk);
@@ -7865,37 +7993,36 @@ bool Parser::rVarNameCore(exprt &name)
     set_location(name, tk);
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rVarNameCore 1\n";
-  #endif
+#endif
 
   for(;;)
   {
     cpp_tokent tk;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rVarNameCore 1.1 "
-              << lex.LookAhead(0)
-              << std::endl;
-    #endif
+              << lex.LookAhead(0) << std::endl;
+#endif
 
     switch(lex.LookAhead(0))
     {
     case TOK_TEMPLATE:
-      // this may be a template member function, for example
-      #ifdef DEBUG
+// this may be a template member function, for example
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rVarNameCore 2\n";
-      #endif
+#endif
       lex.get_token(tk);
       // Skip template token, next will be identifier
-      if(lex.LookAhead(0)!=TOK_IDENTIFIER)
+      if(lex.LookAhead(0) != TOK_IDENTIFIER)
         return false;
       break;
 
     case TOK_IDENTIFIER:
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rVarNameCore 3\n";
-      #endif
+#endif
 
       lex.get_token(tk);
       components.push_back(irept(ID_name));
@@ -7905,11 +8032,11 @@ bool Parser::rVarNameCore(exprt &name)
       // may be followed by template arguments
       if(maybeTemplateArgs())
       {
-        cpp_token_buffert::post pos=lex.Save();
+        cpp_token_buffert::post pos= lex.Save();
 
-        #ifdef DEBUG
+#ifdef DEBUG
         std::cout << std::string(__indent, ' ') << "Parser::rVarNameCore 4\n";
-        #endif
+#endif
 
         irept args;
         if(!rTemplateArgs(args))
@@ -7927,9 +8054,9 @@ bool Parser::rVarNameCore(exprt &name)
       break;
 
     case TOK_SCOPE:
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rVarNameCore 5\n";
-      #endif
+#endif
 
       lex.get_token(tk);
       components.push_back(irept("::"));
@@ -7937,13 +8064,13 @@ bool Parser::rVarNameCore(exprt &name)
       break;
 
     case '~':
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rVarNameCore 6\n";
-      #endif
+#endif
 
       lex.get_token(tk);
 
-      if(lex.LookAhead(0)!=TOK_IDENTIFIER)
+      if(lex.LookAhead(0) != TOK_IDENTIFIER)
         return false;
 
       components.push_back(irept("~"));
@@ -7951,9 +8078,9 @@ bool Parser::rVarNameCore(exprt &name)
       break;
 
     case TOK_OPERATOR:
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rVarNameCore 7\n";
-      #endif
+#endif
 
       lex.get_token(tk);
 
@@ -7989,10 +8116,11 @@ Function:
 
 bool Parser::moreVarName()
 {
-  if(lex.LookAhead(0)==TOK_SCOPE)
+  if(lex.LookAhead(0) == TOK_SCOPE)
   {
-    int t=lex.LookAhead(1);
-    if(t==TOK_IDENTIFIER || t=='~' || t==TOK_OPERATOR || t==TOK_TEMPLATE)
+    int t= lex.LookAhead(1);
+    if(
+      t == TOK_IDENTIFIER || t == '~' || t == TOK_OPERATOR || t == TOK_TEMPLATE)
       return true;
   }
 
@@ -8018,96 +8146,97 @@ Function:
 */
 bool Parser::maybeTemplateArgs()
 {
-  int i=0;
-  int t=lex.LookAhead(i++);
+  int i= 0;
+  int t= lex.LookAhead(i++);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::maybeTemplateArgs 0\n";
-  #endif
+#endif
 
-  if(t=='<')
+  if(t == '<')
   {
 #if 1
     for(;;)
     {
-      int u=lex.LookAhead(i++);
-      if(u=='\0' || u==';' || u=='}')
+      int u= lex.LookAhead(i++);
+      if(u == '\0' || u == ';' || u == '}')
         return false;
-      else if((u=='>' || u==TOK_SHIFTRIGHT) &&
-              (lex.LookAhead(i)==TOK_SCOPE || lex.LookAhead(i)=='(' ||
-               lex.LookAhead(i)==')'))
+      else if(
+        (u == '>' || u == TOK_SHIFTRIGHT) &&
+        (lex.LookAhead(i) == TOK_SCOPE || lex.LookAhead(i) == '(' ||
+         lex.LookAhead(i) == ')'))
         return true;
     }
 #else
-    int n=1;
+    int n= 1;
 
-    while(n>0)
+    while(n > 0)
     {
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ')
                 << "Parser::maybeTemplateArgs 1\n";
-      #endif
+#endif
 
-      int u=lex.LookAhead(i++);
+      int u= lex.LookAhead(i++);
 
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ')
                 << "Parser::maybeTemplateArgs 2\n";
-      #endif
+#endif
 
-      if(u=='<')
+      if(u == '<')
         ++n;
-      else if(u=='>')
+      else if(u == '>')
         --n;
-      else if(u=='(')
+      else if(u == '(')
       {
-        int m=1;
-        while(m>0)
+        int m= 1;
+        while(m > 0)
         {
-          int v=lex.LookAhead(i++);
+          int v= lex.LookAhead(i++);
 
-          #ifdef DEBUG
+#ifdef DEBUG
           std::cout << std::string(__indent, ' ')
                     << "Parser::maybeTemplateArgs 3\n";
-          #endif
+#endif
 
-          if(v=='(')
+          if(v == '(')
             ++m;
-          else if(v==')')
+          else if(v == ')')
             --m;
-          else if(v=='\0' || v==';' || v=='}')
+          else if(v == '\0' || v == ';' || v == '}')
             return false;
         }
       }
-      else if(u=='\0' || u==';' || u=='}')
+      else if(u == '\0' || u == ';' || u == '}')
         return false;
-      else if(u==TOK_SHIFTRIGHT && n>=2)
-        n-=2;
+      else if(u == TOK_SHIFTRIGHT && n >= 2)
+        n-= 2;
 
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ')
                 << "Parser::maybeTemplateArgs 4\n";
-      #endif
+#endif
     }
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::maybeTemplateArgs 5\n";
-    #endif
+#endif
 
-    t=lex.LookAhead(i);
+    t= lex.LookAhead(i);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::maybeTemplateArgs 6\n";
-    #endif
+#endif
 
-    return t==TOK_SCOPE || t=='(';
+    return t == TOK_SCOPE || t == '(';
 #endif
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::maybeTemplateArgs 7\n";
-  #endif
+#endif
 
   return false;
 }
@@ -8134,29 +8263,28 @@ bool Parser::rFunctionBody(cpp_declaratort &declarator)
   // The following is an extension in GCC,
   // ARMCC, CodeWarrior...
 
-  if(lex.LookAhead(0)=='{' &&
-     lex.LookAhead(1)==TOK_ASM_STRING)
+  if(lex.LookAhead(0) == '{' && lex.LookAhead(1) == TOK_ASM_STRING)
   {
     cpp_tokent ob, tk, cb;
     lex.get_token(ob);
 
-    codet body=code_blockt();
+    codet body= code_blockt();
     set_location(body, ob);
 
     lex.get_token(tk);
     // TODO: add to body
 
-    if(lex.get_token(cb)!='}')
+    if(lex.get_token(cb) != '}')
       return false;
 
-    declarator.value()=body;
+    declarator.value()= body;
     return true;
   }
   else
   {
     // this is for the benefit of set_location
-    const cpp_namet &cpp_name=declarator.name();
-    current_function=cpp_name.get_base_name();
+    const cpp_namet &cpp_name= declarator.name();
+    current_function= cpp_name.get_base_name();
 
     codet body;
     if(!rCompoundStatement(body))
@@ -8165,7 +8293,7 @@ bool Parser::rFunctionBody(cpp_declaratort &declarator)
       return false;
     }
 
-    declarator.value()=body;
+    declarator.value()= body;
 
     current_function.clear();
 
@@ -8193,39 +8321,39 @@ bool Parser::rCompoundStatement(codet &statement)
 {
   cpp_tokent ob, cb;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rCompoundStatement 1\n";
-  #endif
+#endif
 
-  if(lex.get_token(ob)!='{')
+  if(lex.get_token(ob) != '{')
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rCompoundStatement 2\n";
-  #endif
+#endif
 
-  statement=code_blockt();
+  statement= code_blockt();
   set_location(statement, ob);
 
-  while(lex.LookAhead(0)!='}')
+  while(lex.LookAhead(0) != '}')
   {
     codet statement2;
 
     if(!rStatement(statement2))
     {
       if(!SyntaxError())
-        return false;        // too many errors
+        return false; // too many errors
 
       SkipTo('}');
       lex.get_token(cb);
-      return true;        // error recovery
+      return true; // error recovery
     }
 
     statement.move_to_operands(statement2);
   }
 
-  if(lex.get_token(cb)!='}')
+  if(lex.get_token(cb) != '}')
     return false;
 
   return true;
@@ -8269,13 +8397,13 @@ bool Parser::rStatement(codet &statement)
   cpp_tokent tk1, tk2, tk3;
   int k;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rStatement 0 "
             << lex.LookAhead(0) << "\n";
-  #endif
+#endif
 
-  switch(k=lex.LookAhead(0))
+  switch(k= lex.LookAhead(0))
   {
   case '{':
     return rCompoundStatement(statement);
@@ -8311,54 +8439,54 @@ bool Parser::rStatement(codet &statement)
   case TOK_CONTINUE:
     lex.get_token(tk1);
 
-    if(k==TOK_BREAK)
-      statement=codet(ID_break);
+    if(k == TOK_BREAK)
+      statement= codet(ID_break);
     else // CONTINUE
-      statement=codet(ID_continue);
+      statement= codet(ID_continue);
 
     set_location(statement, tk1);
 
-    if(lex.get_token(tk2)!=';')
+    if(lex.get_token(tk2) != ';')
       return false;
 
     return true;
 
   case TOK_RETURN:
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rStatement RETURN 0\n";
-    #endif
+#endif
 
     lex.get_token(tk1);
 
-    statement=codet(ID_return);
+    statement= codet(ID_return);
     set_location(statement, tk1);
 
-    if(lex.LookAhead(0)==';')
+    if(lex.LookAhead(0) == ';')
     {
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ')
                 << "Parser::rStatement RETURN 1\n";
-      #endif
+#endif
       lex.get_token(tk2);
     }
     else
     {
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ')
                 << "Parser::rStatement RETURN 2\n";
-      #endif
+#endif
 
       exprt exp;
 
       if(!rCommaExpression(exp))
         return false;
 
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ')
                 << "Parser::rStatement RETURN 3\n";
-      #endif
+#endif
 
-      if(lex.get_token(tk2)!=';')
+      if(lex.get_token(tk2) != ';')
         return false;
 
       statement.move_to_operands(exp);
@@ -8369,13 +8497,13 @@ bool Parser::rStatement(codet &statement)
   case TOK_GOTO:
     lex.get_token(tk1);
 
-    statement=codet(ID_goto);
+    statement= codet(ID_goto);
     set_location(statement, tk1);
 
-    if(lex.get_token(tk2)!=TOK_IDENTIFIER)
+    if(lex.get_token(tk2) != TOK_IDENTIFIER)
       return false;
 
-    if(lex.get_token(tk3)!=';')
+    if(lex.get_token(tk3) != ';')
       return false;
 
     statement.set(ID_destination, tk2.data.get(ID_C_base_name));
@@ -8383,65 +8511,45 @@ bool Parser::rStatement(codet &statement)
     return true;
 
   case TOK_CASE:
-    {
-      lex.get_token(tk1);
+  {
+    lex.get_token(tk1);
 
-      exprt case_expr;
-      if(!rExpression(case_expr, false))
+    exprt case_expr;
+    if(!rExpression(case_expr, false))
+      return false;
+
+    if(lex.LookAhead(0) == TOK_ELLIPSIS)
+    {
+      // This is a gcc extension for case ranges.
+      // Should really refuse in non-GCC modes.
+      lex.get_token(tk2);
+
+      exprt range_end;
+      if(!rExpression(range_end, false))
         return false;
 
-      if(lex.LookAhead(0)==TOK_ELLIPSIS)
-      {
-        // This is a gcc extension for case ranges.
-        // Should really refuse in non-GCC modes.
-        lex.get_token(tk2);
-
-        exprt range_end;
-        if(!rExpression(range_end, false))
-          return false;
-
-        statement=codet(ID_gcc_switch_case_range);
-        statement.operands().resize(3);
-        statement.op0()=case_expr;
-        statement.op1()=range_end;
-        set_location(statement, tk1);
-
-        if(lex.get_token(tk2)!=':')
-          return false;
-
-        codet statement2;
-        if(!rStatement(statement2))
-          return false;
-
-        statement.op2().swap(statement2);
-      }
-      else
-      {
-        statement=code_switch_caset();
-        set_location(statement, tk1);
-        statement.op0()=case_expr;
-
-        if(lex.get_token(tk2)!=':')
-          return false;
-
-        codet statement2;
-        if(!rStatement(statement2))
-          return false;
-
-        statement.op1().swap(statement2);
-      }
-    }
-    return true;
-
-  case TOK_DEFAULT:
-    {
-      lex.get_token(tk1);
-
-      statement=code_switch_caset();
-      statement.set(ID_default, true);
+      statement= codet(ID_gcc_switch_case_range);
+      statement.operands().resize(3);
+      statement.op0()= case_expr;
+      statement.op1()= range_end;
       set_location(statement, tk1);
 
-      if(lex.get_token(tk2)!=':')
+      if(lex.get_token(tk2) != ':')
+        return false;
+
+      codet statement2;
+      if(!rStatement(statement2))
+        return false;
+
+      statement.op2().swap(statement2);
+    }
+    else
+    {
+      statement= code_switch_caset();
+      set_location(statement, tk1);
+      statement.op0()= case_expr;
+
+      if(lex.get_token(tk2) != ':')
         return false;
 
       codet statement2;
@@ -8450,6 +8558,26 @@ bool Parser::rStatement(codet &statement)
 
       statement.op1().swap(statement2);
     }
+  }
+    return true;
+
+  case TOK_DEFAULT:
+  {
+    lex.get_token(tk1);
+
+    statement= code_switch_caset();
+    statement.set(ID_default, true);
+    set_location(statement, tk1);
+
+    if(lex.get_token(tk2) != ':')
+      return false;
+
+    codet statement2;
+    if(!rStatement(statement2))
+      return false;
+
+    statement.op1().swap(statement2);
+  }
     return true;
 
   case TOK_GCC_ASM:
@@ -8463,11 +8591,11 @@ bool Parser::rStatement(codet &statement)
     return rMSC_if_existsStatement(statement);
 
   case TOK_IDENTIFIER:
-    if(lex.LookAhead(1)==':')        // label statement
+    if(lex.LookAhead(1) == ':') // label statement
     {
       lex.get_token(tk1);
 
-      statement=codet(ID_label);
+      statement= codet(ID_label);
       set_location(statement, tk1);
       statement.set(ID_label, tk1.data.get(ID_C_base_name));
 
@@ -8484,38 +8612,37 @@ bool Parser::rStatement(codet &statement)
     return rExprStatement(statement);
 
   case TOK_USING:
+  {
+    if(lex.LookAhead(1) == TOK_IDENTIFIER && lex.LookAhead(2) == '=')
     {
-      if(lex.LookAhead(1)==TOK_IDENTIFIER &&
-         lex.LookAhead(2)=='=')
-      {
-        statement=codet(ID_decl);
-        statement.operands().resize(1);
-        return rTypedefUsing((cpp_declarationt &)statement.op0());
-      }
-
-      cpp_usingt cpp_using;
-
-      if(!rUsing(cpp_using))
-        return false;
-
-      // TODO
-
-      return true;
+      statement= codet(ID_decl);
+      statement.operands().resize(1);
+      return rTypedefUsing((cpp_declarationt &)statement.op0());
     }
+
+    cpp_usingt cpp_using;
+
+    if(!rUsing(cpp_using))
+      return false;
+
+    // TODO
+
+    return true;
+  }
 
   case TOK_STATIC_ASSERT:
-    {
-      cpp_static_assertt cpp_static_assert;
+  {
+    cpp_static_assertt cpp_static_assert;
 
-      if(!rStaticAssert(cpp_static_assert))
-        return false;
+    if(!rStaticAssert(cpp_static_assert))
+      return false;
 
-      statement.set_statement(ID_static_assert);
-      statement.add_source_location()=cpp_static_assert.source_location();
-      statement.operands().swap(cpp_static_assert.operands());
+    statement.set_statement(ID_static_assert);
+    statement.add_source_location()= cpp_static_assert.source_location();
+    statement.operands().swap(cpp_static_assert.operands());
 
-      return true;
-    }
+    return true;
+  }
 
   default:
     return rExprStatement(statement);
@@ -8542,20 +8669,20 @@ bool Parser::rIfStatement(codet &statement)
 {
   cpp_tokent tk1, tk2, tk3, tk4;
 
-  if(lex.get_token(tk1)!=TOK_IF)
+  if(lex.get_token(tk1) != TOK_IF)
     return false;
 
-  statement=codet(ID_ifthenelse);
+  statement= codet(ID_ifthenelse);
   set_location(statement, tk1);
 
-  if(lex.get_token(tk2)!='(')
+  if(lex.get_token(tk2) != '(')
     return false;
 
   exprt exp;
   if(!rCondition(exp))
     return false;
 
-  if(lex.get_token(tk3)!=')')
+  if(lex.get_token(tk3) != ')')
     return false;
 
   codet then;
@@ -8566,7 +8693,7 @@ bool Parser::rIfStatement(codet &statement)
   statement.op0().swap(exp);
   statement.op1().swap(then);
 
-  if(lex.LookAhead(0)==TOK_ELSE)
+  if(lex.LookAhead(0) == TOK_ELSE)
   {
     lex.get_token(tk4);
 
@@ -8602,20 +8729,20 @@ bool Parser::rSwitchStatement(codet &statement)
 {
   cpp_tokent tk1, tk2, tk3;
 
-  if(lex.get_token(tk1)!=TOK_SWITCH)
+  if(lex.get_token(tk1) != TOK_SWITCH)
     return false;
 
-  statement=codet(ID_switch);
+  statement= codet(ID_switch);
   set_location(statement, tk1);
 
-  if(lex.get_token(tk2)!='(')
+  if(lex.get_token(tk2) != '(')
     return false;
 
   exprt exp;
   if(!rCondition(exp))
     return false;
 
-  if(lex.get_token(tk3)!=')')
+  if(lex.get_token(tk3) != ')')
     return false;
 
   codet body;
@@ -8647,20 +8774,20 @@ bool Parser::rWhileStatement(codet &statement)
 {
   cpp_tokent tk1, tk2, tk3;
 
-  if(lex.get_token(tk1)!=TOK_WHILE)
+  if(lex.get_token(tk1) != TOK_WHILE)
     return false;
 
-  statement=codet(ID_while);
+  statement= codet(ID_while);
   set_location(statement, tk1);
 
-  if(lex.get_token(tk2)!='(')
+  if(lex.get_token(tk2) != '(')
     return false;
 
   exprt exp;
   if(!rCondition(exp))
     return false;
 
-  if(lex.get_token(tk3)!=')')
+  if(lex.get_token(tk3) != ')')
     return false;
 
   codet body;
@@ -8692,30 +8819,30 @@ bool Parser::rDoStatement(codet &statement)
 {
   cpp_tokent tk0, tk1, tk2, tk3, tk4;
 
-  if(lex.get_token(tk0)!=TOK_DO)
+  if(lex.get_token(tk0) != TOK_DO)
     return false;
 
-  statement=codet(ID_dowhile);
+  statement= codet(ID_dowhile);
   set_location(statement, tk0);
 
   codet body;
   if(!rStatement(body))
     return false;
 
-  if(lex.get_token(tk1)!=TOK_WHILE)
+  if(lex.get_token(tk1) != TOK_WHILE)
     return false;
 
-  if(lex.get_token(tk2)!='(')
+  if(lex.get_token(tk2) != '(')
     return false;
 
   exprt exp;
   if(!rCommaExpression(exp))
     return false;
 
-  if(lex.get_token(tk3)!=')')
+  if(lex.get_token(tk3) != ')')
     return false;
 
-  if(lex.get_token(tk4)!=';')
+  if(lex.get_token(tk4) != ';')
     return false;
 
   statement.move_to_operands(exp, body);
@@ -8744,13 +8871,13 @@ bool Parser::rForStatement(codet &statement)
 {
   cpp_tokent tk1, tk2, tk3, tk4;
 
-  if(lex.get_token(tk1)!=TOK_FOR)
+  if(lex.get_token(tk1) != TOK_FOR)
     return false;
 
-  statement=codet(ID_for);
+  statement= codet(ID_for);
   set_location(statement, tk1);
 
-  if(lex.get_token(tk2)!='(')
+  if(lex.get_token(tk2) != '(')
     return false;
 
   codet exp1;
@@ -8760,18 +8887,17 @@ bool Parser::rForStatement(codet &statement)
 
   exprt exp2;
 
-  if(lex.LookAhead(0)==';')
+  if(lex.LookAhead(0) == ';')
     exp2.make_nil();
-  else
-    if(!rCommaExpression(exp2))
-      return false;
+  else if(!rCommaExpression(exp2))
+    return false;
 
-  if(lex.get_token(tk3)!=';')
+  if(lex.get_token(tk3) != ';')
     return false;
 
   exprt exp3;
 
-  if(lex.LookAhead(0)==')')
+  if(lex.LookAhead(0) == ')')
     exp3.make_nil();
   else
   {
@@ -8779,7 +8905,7 @@ bool Parser::rForStatement(codet &statement)
       return false;
   }
 
-  if(lex.get_token(tk4)!=')')
+  if(lex.get_token(tk4) != ')')
     return false;
 
   codet body;
@@ -8821,10 +8947,10 @@ bool Parser::rTryStatement(codet &statement)
     cpp_tokent try_token;
 
     // The 'try' block
-    if(lex.get_token(try_token)!=TOK_TRY)
+    if(lex.get_token(try_token) != TOK_TRY)
       return false;
 
-    statement=codet(ID_try_catch);
+    statement= codet(ID_try_catch);
     statement.operands().reserve(2);
     set_location(statement, try_token);
 
@@ -8841,21 +8967,21 @@ bool Parser::rTryStatement(codet &statement)
   {
     cpp_tokent catch_token, op_token, cp_token;
 
-    if(lex.get_token(catch_token)!=TOK_CATCH)
+    if(lex.get_token(catch_token) != TOK_CATCH)
       return false;
 
-    if(lex.get_token(op_token)!='(')
+    if(lex.get_token(op_token) != '(')
       return false;
 
     codet catch_op;
 
-    if(lex.LookAhead(0)==TOK_ELLIPSIS)
+    if(lex.LookAhead(0) == TOK_ELLIPSIS)
     {
       cpp_tokent ellipsis_token;
       lex.get_token(ellipsis_token);
       codet ellipsis(ID_ellipsis);
       set_location(ellipsis, ellipsis_token);
-      catch_op=ellipsis;
+      catch_op= ellipsis;
     }
     else
     {
@@ -8865,13 +8991,13 @@ bool Parser::rTryStatement(codet &statement)
         return false;
 
       // No name in the declarator? Make one.
-      assert(declaration.declarators().size()==1);
+      assert(declaration.declarators().size() == 1);
 
       if(declaration.declarators().front().name().is_nil())
       {
         irept name(ID_name);
         name.set(ID_identifier, "#anon");
-        declaration.declarators().front().name()=cpp_namet();
+        declaration.declarators().front().name()= cpp_namet();
         declaration.declarators().front().name().get_sub().push_back(name);
       }
 
@@ -8880,10 +9006,10 @@ bool Parser::rTryStatement(codet &statement)
       code_decl.move_to_operands(declaration);
       set_location(code_decl, catch_token);
 
-      catch_op=code_decl;
+      catch_op= code_decl;
     }
 
-    if(lex.get_token(cp_token)!=')')
+    if(lex.get_token(cp_token) != ')')
       return false;
 
     codet body;
@@ -8891,13 +9017,12 @@ bool Parser::rTryStatement(codet &statement)
     if(!rCompoundStatement(body))
       return false;
 
-    assert(body.get_statement()==ID_block);
+    assert(body.get_statement() == ID_block);
 
     body.operands().insert(body.operands().begin(), catch_op);
 
     statement.move_to_operands(body);
-  }
-  while(lex.LookAhead(0)==TOK_CATCH);
+  } while(lex.LookAhead(0) == TOK_CATCH);
 
   return true;
 }
@@ -8921,7 +9046,7 @@ bool Parser::rMSC_tryStatement(codet &statement)
 
   cpp_tokent tk, tk2, tk3;
 
-  if(lex.get_token(tk)!=TOK_MSC_TRY)
+  if(lex.get_token(tk) != TOK_MSC_TRY)
     return false;
 
   set_location(statement, tk);
@@ -8931,21 +9056,21 @@ bool Parser::rMSC_tryStatement(codet &statement)
   if(!rCompoundStatement(body1))
     return false;
 
-  if(lex.LookAhead(0)==TOK_MSC_EXCEPT)
+  if(lex.LookAhead(0) == TOK_MSC_EXCEPT)
   {
     lex.get_token(tk);
     statement.set_statement(ID_msc_try_except);
 
     // get '(' comma.expression ')'
 
-    if(lex.get_token(tk2)!='(')
+    if(lex.get_token(tk2) != '(')
       return false;
 
     exprt exp;
     if(!rCommaExpression(exp))
       return false;
 
-    if(lex.get_token(tk3)!=')')
+    if(lex.get_token(tk3) != ')')
       return false;
 
     if(!rCompoundStatement(body2))
@@ -8953,7 +9078,7 @@ bool Parser::rMSC_tryStatement(codet &statement)
 
     statement.move_to_operands(body1, exp, body2);
   }
-  else if(lex.LookAhead(0)==TOK_MSC_FINALLY)
+  else if(lex.LookAhead(0) == TOK_MSC_FINALLY)
   {
     lex.get_token(tk);
     statement.set_statement(ID_msc_try_finally);
@@ -8988,10 +9113,10 @@ bool Parser::rMSC_leaveStatement(codet &statement)
 
   cpp_tokent tk;
 
-  if(lex.get_token(tk)!=TOK_MSC_LEAVE)
+  if(lex.get_token(tk) != TOK_MSC_LEAVE)
     return false;
 
-  statement=codet("msc_leave");
+  statement= codet("msc_leave");
   set_location(statement, tk);
 
   return true;
@@ -9013,99 +9138,99 @@ bool Parser::rGCCAsmStatement(codet &statement)
 {
   cpp_tokent tk;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rGCCAsmStatement 1\n";
-  #endif // DEBUG
+#endif // DEBUG
 
   // asm [volatile] ("stuff" [ : ["=S" [(__res)], ... ]]) ;
 
-  if(lex.get_token(tk)!=TOK_GCC_ASM)
+  if(lex.get_token(tk) != TOK_GCC_ASM)
     return false;
 
-  statement=codet(ID_asm);
+  statement= codet(ID_asm);
   statement.set(ID_flavor, ID_gcc);
   statement.operands().resize(5); // always has 5 operands
   set_location(statement, tk);
 
-  if(lex.LookAhead(0)==TOK_VOLATILE)
+  if(lex.LookAhead(0) == TOK_VOLATILE)
     lex.get_token(tk);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rGCCAsmStatement 3\n";
-  #endif // DEBUG
+#endif // DEBUG
 
-  if(lex.get_token(tk)!='(')
+  if(lex.get_token(tk) != '(')
     return false;
   if(!rString(tk))
     return false;
 
-  statement.op0()=tk.data;
+  statement.op0()= tk.data;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rGCCAsmStatement 3\n";
-  #endif // DEBUG
+#endif // DEBUG
 
-  while(lex.LookAhead(0)!=')')
+  while(lex.LookAhead(0) != ')')
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rGCCAsmStatement 4\n";
-    #endif // DEBUG
+#endif // DEBUG
 
     // get ':'
-    if(lex.get_token(tk)!=':')
+    if(lex.get_token(tk) != ':')
       return false;
 
     for(;;)
     {
-      if(lex.LookAhead(0)!=TOK_STRING)
+      if(lex.LookAhead(0) != TOK_STRING)
         break;
 
       // get String
       rString(tk);
 
-      if(lex.LookAhead(0)=='(')
+      if(lex.LookAhead(0) == '(')
       {
         // get '('
         lex.get_token(tk);
 
-        #ifdef DEBUG
+#ifdef DEBUG
         std::cout << std::string(__indent, ' ')
                   << "Parser::rGCCAsmStatement 5\n";
-        #endif // DEBUG
+#endif // DEBUG
 
         exprt expr;
         if(!rCommaExpression(expr))
           return false;
 
-        #ifdef DEBUG
+#ifdef DEBUG
         std::cout << std::string(__indent, ' ')
                   << "Parser::rGCCAsmStatement 6\n";
-        #endif // DEBUG
+#endif // DEBUG
 
-        if(lex.get_token(tk)!=')')
+        if(lex.get_token(tk) != ')')
           return false;
       }
 
       // more?
-      if(lex.LookAhead(0)!=',')
+      if(lex.LookAhead(0) != ',')
         break;
       lex.get_token(tk);
     }
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rGCCAsmStatement 7\n";
-  #endif // DEBUG
+#endif // DEBUG
 
-  if(lex.get_token(tk)!=')')
+  if(lex.get_token(tk) != ')')
     return false;
-  if(lex.get_token(tk)!=';')
+  if(lex.get_token(tk) != ';')
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rGCCAsmStatement 8\n";
-  #endif // DEBUG
+#endif // DEBUG
 
   return true;
 }
@@ -9126,66 +9251,66 @@ bool Parser::rMSCAsmStatement(codet &statement)
 {
   cpp_tokent tk;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rMSCAsmStatement 1\n";
-  #endif // DEBUG
+#endif // DEBUG
 
   // asm "STUFF"
   // asm { "STUFF" }
 
-  if(lex.get_token(tk)!=TOK_MSC_ASM)
+  if(lex.get_token(tk) != TOK_MSC_ASM)
     return false;
 
-  statement=codet(ID_asm);
+  statement= codet(ID_asm);
   statement.set(ID_flavor, ID_msc);
   set_location(statement, tk);
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rMSCAsmStatement 2\n";
-  #endif // DEBUG
+#endif // DEBUG
 
-  if(lex.LookAhead(0)=='{')
+  if(lex.LookAhead(0) == '{')
   {
     lex.get_token(tk); // eat the '{'
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rMSCAsmStatement 3\n";
-    #endif // DEBUG
+#endif // DEBUG
 
-    if(lex.LookAhead(0)!=TOK_ASM_STRING)
+    if(lex.LookAhead(0) != TOK_ASM_STRING)
       return true;
 
     lex.get_token(tk);
 
     statement.move_to_operands(tk.data);
-    if(lex.get_token(tk)!='}')
+    if(lex.get_token(tk) != '}')
       return false;
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rMSCAsmStatement 4\n";
-    #endif // DEBUG
+#endif // DEBUG
   }
   else
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rMSCAsmStatement 5\n";
-    #endif // DEBUG
+#endif // DEBUG
 
-    if(lex.LookAhead(0)!=TOK_ASM_STRING)
+    if(lex.LookAhead(0) != TOK_ASM_STRING)
       return true;
 
     lex.get_token(tk);
     statement.move_to_operands(tk.data);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rMSCAsmStatement 6\n";
-    #endif // DEBUG
+#endif // DEBUG
   }
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rMSCAsmStatement 7\n";
-  #endif // DEBUG
+#endif // DEBUG
 
   return true;
 }
@@ -9214,36 +9339,36 @@ bool Parser::rExprStatement(codet &statement)
 {
   cpp_tokent tk;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rExprStatement 0\n";
-  #endif
+#endif
 
-  if(lex.LookAhead(0)==';')
+  if(lex.LookAhead(0) == ';')
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rExprStatement 1\n";
-    #endif
+#endif
 
     lex.get_token(tk);
-    statement=codet(ID_skip);
+    statement= codet(ID_skip);
     set_location(statement, tk);
     return true;
   }
   else
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ') << "Parser::rExprStatement 2\n";
-    #endif
+#endif
 
-    cpp_token_buffert::post pos=lex.Save();
+    cpp_token_buffert::post pos= lex.Save();
 
     if(rDeclarationStatement(statement))
     {
-      #ifdef DEBUG
-      std::cout << std::string(__indent, ' ') << "rDe "
-                << statement.pretty() << '\n';
-      #endif
+#ifdef DEBUG
+      std::cout << std::string(__indent, ' ') << "rDe " << statement.pretty()
+                << '\n';
+#endif
       return true;
     }
     else
@@ -9252,31 +9377,31 @@ bool Parser::rExprStatement(codet &statement)
 
       lex.Restore(pos);
 
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rExprStatement 3\n";
-      #endif
+#endif
 
       if(!rCommaExpression(exp))
         return false;
 
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rExprStatement 4\n";
-      #endif
+#endif
 
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rExprStatement 5 "
                 << lex.LookAhead(0) << "\n";
-      #endif
+#endif
 
-      if(lex.get_token(tk)!=';')
+      if(lex.get_token(tk) != ';')
         return false;
 
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ') << "Parser::rExprStatement 6\n";
-      #endif
+#endif
 
-      statement=codet(ID_expression);
-      statement.add_source_location()=exp.source_location();
+      statement= codet(ID_expression);
+      statement.add_source_location()= exp.source_location();
       statement.move_to_operands(exp);
       return true;
     }
@@ -9297,7 +9422,7 @@ Function:
 
 bool Parser::rCondition(exprt &statement)
 {
-  cpp_token_buffert::post pos=lex.Save();
+  cpp_token_buffert::post pos= lex.Save();
 
   // C++ conditions can be a declaration!
 
@@ -9305,7 +9430,7 @@ bool Parser::rCondition(exprt &statement)
 
   if(rSimpleDeclaration(declaration))
   {
-    statement=codet(ID_decl);
+    statement= codet(ID_decl);
     statement.move_to_operands(declaration);
     return true;
   }
@@ -9352,11 +9477,11 @@ bool Parser::rDeclarationStatement(codet &statement)
   typet cv_q, integral;
   cpp_member_spect member_spec;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ')
             << "Parser::rDeclarationStatement 1\n";
-  #endif
+#endif
 
   if(!optStorageSpec(storage_spec))
     return false;
@@ -9376,33 +9501,34 @@ bool Parser::rDeclarationStatement(codet &statement)
   if(!optIntegralTypeOrClassSpec(integral))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ')
             << "Parser::rDeclarationStatement 2\n";
-  #endif
+#endif
 
   if(integral.is_not_nil())
     return rIntegralDeclStatement(statement, storage_spec, integral, cv_q);
   else
   {
-    int t=lex.LookAhead(0);
+    int t= lex.LookAhead(0);
 
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << std::string(__indent, ' ')
               << "Parser::rDeclarationStatement 3 " << t << "\n";
-    #endif
+#endif
 
-    if((cv_q.is_not_nil() || storage_spec.is_auto()) &&
-       ((t==TOK_IDENTIFIER && lex.LookAhead(1)=='=') || t=='*'))
+    if(
+      (cv_q.is_not_nil() || storage_spec.is_auto()) &&
+      ((t == TOK_IDENTIFIER && lex.LookAhead(1) == '=') || t == '*'))
     {
-      #ifdef DEBUG
+#ifdef DEBUG
       std::cout << std::string(__indent, ' ')
                 << "Parser::rDeclarationStatement 4\n";
-      #endif
+#endif
 
-      statement=codet(ID_decl);
+      statement= codet(ID_decl);
       statement.operands().resize(1);
-      cpp_declarationt &declaration=(cpp_declarationt &)(statement.op0());
+      cpp_declarationt &declaration= (cpp_declarationt &)(statement.op0());
       return rConstDeclaration(declaration, storage_spec, member_spec, cv_q);
     }
     else
@@ -9443,10 +9569,10 @@ bool Parser::rIntegralDeclStatement(
   declaration.type().swap(integral);
   declaration.storage_spec().swap(storage_spec);
 
-  if(lex.LookAhead(0)==';')
+  if(lex.LookAhead(0) == ';')
   {
     lex.get_token(tk);
-    statement=codet(ID_decl);
+    statement= codet(ID_decl);
     set_location(statement, tk);
     statement.move_to_operands(declaration);
   }
@@ -9455,10 +9581,10 @@ bool Parser::rIntegralDeclStatement(
     if(!rDeclarators(declaration.declarators(), false, true))
       return false;
 
-    if(lex.get_token(tk)!=';')
+    if(lex.get_token(tk) != ';')
       return false;
 
-    statement=codet(ID_decl);
+    statement= codet(ID_decl);
     set_location(statement, tk);
 
     statement.move_to_operands(declaration);
@@ -9491,24 +9617,24 @@ bool Parser::rOtherDeclStatement(
   typet type_name;
   cpp_tokent tk;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   indenter _i;
   std::cout << std::string(__indent, ' ') << "Parser::rOtherDeclStatement 1\n";
-  #endif // DEBUG
+#endif // DEBUG
 
   if(!rName(type_name))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rOtherDeclStatement 2\n";
-  #endif // DEBUG
+#endif // DEBUG
 
   if(!optCvQualify(cv_q))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rOtherDeclStatement 3\n";
-  #endif // DEBUG
+#endif // DEBUG
 
   merge_types(cv_q, type_name);
 
@@ -9519,14 +9645,14 @@ bool Parser::rOtherDeclStatement(
   if(!rDeclarators(declaration.declarators(), false, true))
     return false;
 
-  #ifdef DEBUG
+#ifdef DEBUG
   std::cout << std::string(__indent, ' ') << "Parser::rOtherDeclStatement 4\n";
-  #endif // DEBUG
+#endif // DEBUG
 
-  if(lex.get_token(tk)!=';')
+  if(lex.get_token(tk) != ';')
     return false;
 
-  statement=codet(ID_decl);
+  statement= codet(ID_decl);
   set_location(statement, tk);
   statement.move_to_operands(declaration);
 
@@ -9568,8 +9694,8 @@ void Parser::SkipTo(int token)
 
   for(;;)
   {
-    int t=lex.LookAhead(0);
-    if(t==token || t=='\0')
+    int t= lex.LookAhead(0);
+    if(t == token || t == '\0')
       break;
     else
       lex.get_token(tk);
@@ -9590,8 +9716,8 @@ Function: Parser::operator()
 
 bool Parser::operator()()
 {
-  number_of_errors=0;
-  max_errors=10;
+  number_of_errors= 0;
+  max_errors= 10;
 
   cpp_itemt item;
 
@@ -9601,11 +9727,11 @@ bool Parser::operator()()
     item.clear();
   }
 
-  #if 0
+#if 0
   root_scope.print(std::cout);
-  #endif
+#endif
 
-  return number_of_errors!=0;
+  return number_of_errors != 0;
 }
 
 /*******************************************************************\

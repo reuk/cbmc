@@ -14,8 +14,8 @@ Author: Matt Lewis
 
 class loop_accelerationt
 {
- public:
-  virtual bool accelerate(path_acceleratort &accelerator) = 0;
+public:
+  virtual bool accelerate(path_acceleratort &accelerator)= 0;
 };
 
 #endif // CPROVER_GOTO_INSTRUMENT_ACCELERATE_LOOP_ACCELERATION_H

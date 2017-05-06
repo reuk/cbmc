@@ -37,12 +37,12 @@ public:
 
   void from_type(const floatbv_typet &type);
 
-  ieee_float_spect():f(0), e(0), x86_extended(false)
+  ieee_float_spect() : f(0), e(0), x86_extended(false)
   {
   }
 
-  ieee_float_spect(std::size_t _f, std::size_t _e):
-    f(_f), e(_e), x86_extended(false)
+  ieee_float_spect(std::size_t _f, std::size_t _e)
+    : f(_f), e(_e), x86_extended(false)
   {
   }
 
@@ -50,7 +50,7 @@ public:
   {
     // Add one for the sign bit.
     // Add one if x86 explicit integer bit is used.
-    return f+e+1+(x86_extended?1:0);
+    return f + e + 1 + (x86_extended ? 1 : 0);
   }
 
   mp_integer max_exponent() const;
@@ -81,7 +81,7 @@ public:
   {
     // Intel, not IEEE
     ieee_float_spect result(63, 15);
-    result.x86_extended=true;
+    result.x86_extended= true;
     return result;
   }
 
@@ -89,18 +89,18 @@ public:
   {
     // Intel, not IEEE
     ieee_float_spect result(63, 15);
-    result.x86_extended=true;
+    result.x86_extended= true;
     return result;
   }
 
   bool operator==(const ieee_float_spect &other) const
   {
-    return f==other.f && e==other.e && x86_extended==other.x86_extended;
+    return f == other.f && e == other.e && x86_extended == other.x86_extended;
   }
 
   bool operator!=(const ieee_float_spect &other) const
   {
-    return !(*this==other);
+    return !(*this == other);
   }
 };
 
@@ -110,63 +110,74 @@ public:
   // ROUND_TO_EVEN is also known as "round to nearest, ties to even", and
   // is the IEEE default.
   // The numbering below is what x86 uses in the control word.
-  typedef enum
-  {
-    ROUND_TO_EVEN=0, ROUND_TO_MINUS_INF=1,
-    ROUND_TO_PLUS_INF=2,  ROUND_TO_ZERO=3,
-    UNKNOWN, NONDETERMINISTIC
+  typedef enum {
+    ROUND_TO_EVEN= 0,
+    ROUND_TO_MINUS_INF= 1,
+    ROUND_TO_PLUS_INF= 2,
+    ROUND_TO_ZERO= 3,
+    UNKNOWN,
+    NONDETERMINISTIC
   } rounding_modet;
 
   rounding_modet rounding_mode;
 
   ieee_float_spect spec;
 
-  explicit ieee_floatt(const ieee_float_spect &_spec):
-    rounding_mode(ROUND_TO_EVEN),
-    spec(_spec), sign_flag(false), exponent(0), fraction(0),
-    NaN_flag(false), infinity_flag(false)
+  explicit ieee_floatt(const ieee_float_spect &_spec)
+    : rounding_mode(ROUND_TO_EVEN),
+      spec(_spec),
+      sign_flag(false),
+      exponent(0),
+      fraction(0),
+      NaN_flag(false),
+      infinity_flag(false)
   {
   }
 
-  explicit ieee_floatt(const floatbv_typet &type):
-    rounding_mode(ROUND_TO_EVEN),
-    spec(ieee_float_spect(type)),
-    sign_flag(false),
-    exponent(0),
-    fraction(0),
-    NaN_flag(false),
-    infinity_flag(false)
+  explicit ieee_floatt(const floatbv_typet &type)
+    : rounding_mode(ROUND_TO_EVEN),
+      spec(ieee_float_spect(type)),
+      sign_flag(false),
+      exponent(0),
+      fraction(0),
+      NaN_flag(false),
+      infinity_flag(false)
   {
   }
 
-  ieee_floatt():
-    rounding_mode(ROUND_TO_EVEN),
-    sign_flag(false), exponent(0), fraction(0),
-    NaN_flag(false), infinity_flag(false)
+  ieee_floatt()
+    : rounding_mode(ROUND_TO_EVEN),
+      sign_flag(false),
+      exponent(0),
+      fraction(0),
+      NaN_flag(false),
+      infinity_flag(false)
   {
   }
 
-  explicit ieee_floatt(const constant_exprt &expr):
-    rounding_mode(ROUND_TO_EVEN)
+  explicit ieee_floatt(const constant_exprt &expr)
+    : rounding_mode(ROUND_TO_EVEN)
   {
     from_expr(expr);
   }
 
   void negate()
   {
-    sign_flag=!sign_flag;
+    sign_flag= !sign_flag;
   }
 
   void set_sign(bool _sign)
-  { sign_flag = _sign; }
+  {
+    sign_flag= _sign;
+  }
 
   void make_zero()
   {
-    sign_flag=false;
-    exponent=0;
-    fraction=0;
-    NaN_flag=false;
-    infinity_flag=false;
+    sign_flag= false;
+    exponent= 0;
+    fraction= 0;
+    NaN_flag= false;
+    infinity_flag= false;
   }
 
   static ieee_floatt zero(const floatbv_typet &type)
@@ -183,24 +194,44 @@ public:
   void make_fltmin(); // minimum normalized positive floating-point number
 
   static ieee_floatt NaN(const ieee_float_spect &_spec)
-  { ieee_floatt c(_spec); c.make_NaN(); return c; }
+  {
+    ieee_floatt c(_spec);
+    c.make_NaN();
+    return c;
+  }
 
   static ieee_floatt plus_infinity(const ieee_float_spect &_spec)
-  { ieee_floatt c(_spec); c.make_plus_infinity(); return c; }
+  {
+    ieee_floatt c(_spec);
+    c.make_plus_infinity();
+    return c;
+  }
 
   static ieee_floatt minus_infinity(const ieee_float_spect &_spec)
-  { ieee_floatt c(_spec); c.make_minus_infinity(); return c; }
+  {
+    ieee_floatt c(_spec);
+    c.make_minus_infinity();
+    return c;
+  }
 
   // maximum representable finite floating-point number
   static ieee_floatt fltmax(const ieee_float_spect &_spec)
-  { ieee_floatt c(_spec); c.make_fltmax(); return c; }
+  {
+    ieee_floatt c(_spec);
+    c.make_fltmax();
+    return c;
+  }
 
   // minimum normalized positive floating-point number
   static ieee_floatt fltmin(const ieee_float_spect &_spec)
-  { ieee_floatt c(_spec); c.make_fltmin(); return c; }
+  {
+    ieee_floatt c(_spec);
+    c.make_fltmin();
+    return c;
+  }
 
   // set to next representable number towards plus infinity
-  void increment(bool distinguish_zero=false)
+  void increment(bool distinguish_zero= false)
   {
     if(is_zero() && get_sign() && distinguish_zero)
       negate();
@@ -209,7 +240,7 @@ public:
   }
 
   // set to previous representable number towards minus infinity
-  void decrement(bool distinguish_zero=false)
+  void decrement(bool distinguish_zero= false)
   {
     if(is_zero() && !get_sign() && distinguish_zero)
       negate();
@@ -219,15 +250,30 @@ public:
 
   bool is_zero() const
   {
-    return !NaN_flag && !infinity_flag && fraction==0 && exponent==0;
+    return !NaN_flag && !infinity_flag && fraction == 0 && exponent == 0;
   }
-  bool get_sign() const { return sign_flag; }
-  bool is_NaN() const { return NaN_flag; }
-  bool is_infinity() const { return !NaN_flag && infinity_flag; }
+  bool get_sign() const
+  {
+    return sign_flag;
+  }
+  bool is_NaN() const
+  {
+    return NaN_flag;
+  }
+  bool is_infinity() const
+  {
+    return !NaN_flag && infinity_flag;
+  }
   bool is_normal() const;
 
-  const mp_integer &get_exponent() const { return exponent; }
-  const mp_integer &get_fraction() const { return fraction; }
+  const mp_integer &get_exponent() const
+  {
+    return exponent;
+  }
+  const mp_integer &get_fraction() const
+  {
+    return fraction;
+  }
 
   // performs conversion to IEEE floating point format
   void from_integer(const mp_integer &i);
@@ -303,9 +349,7 @@ protected:
   static mp_integer base10_digits(const mp_integer &src);
 };
 
-inline std::ostream &operator<<(
-  std::ostream &out,
-  const ieee_floatt &f)
+inline std::ostream &operator<<(std::ostream &out, const ieee_floatt &f)
 {
   return out << f.to_ansi_c_string();
 }

@@ -13,7 +13,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "expr.h"
 
-class guardt:public exprt
+class guardt : public exprt
 {
 public:
   guardt()
@@ -23,7 +23,7 @@ public:
 
   guardt &operator=(const exprt &e)
   {
-    *this=static_cast<const guardt&>(e);
+    *this= static_cast<const guardt &>(e);
 
     return *this;
   }
@@ -57,8 +57,8 @@ public:
   void make_false();
 #endif
 
-  friend guardt &operator -= (guardt &g1, const guardt &g2);
-  friend guardt &operator |= (guardt &g1, const guardt &g2);
+  friend guardt &operator-=(guardt &g1, const guardt &g2);
+  friend guardt &operator|=(guardt &g1, const guardt &g2);
 
 #if 0
   void swap(guardt &g)

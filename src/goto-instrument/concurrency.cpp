@@ -21,9 +21,8 @@ class concurrency_instrumentationt
 public:
   concurrency_instrumentationt(
     value_setst &_value_sets,
-    symbol_tablet &_symbol_table):
-    value_sets(_value_sets),
-    symbol_table(_symbol_table)
+    symbol_tablet &_symbol_table)
+    : value_sets(_value_sets), symbol_table(_symbol_table)
   {
   }
 
@@ -38,15 +37,12 @@ protected:
 
   void instrument(goto_functionst &goto_functions);
 
-  void instrument(
-    goto_programt &goto_program,
-    const is_threadedt &is_threaded);
+  void instrument(goto_programt &goto_program, const is_threadedt &is_threaded);
 
   void instrument(exprt &expr);
 
-  void collect(
-    const goto_programt &goto_program,
-    const is_threadedt &is_threaded);
+  void
+  collect(const goto_programt &goto_program, const is_threadedt &is_threaded);
 
   void collect(const exprt &expr);
 
@@ -93,20 +89,17 @@ void concurrency_instrumentationt::instrument(exprt &expr)
 
   replace_symbolt replace_symbol;
 
-  for(std::set<exprt>::const_iterator
-      s_it=symbols.begin();
-      s_it!=symbols.end();
+  for(std::set<exprt>::const_iterator s_it= symbols.begin();
+      s_it != symbols.end();
       s_it++)
   {
-    if(s_it->id()==ID_symbol)
+    if(s_it->id() == ID_symbol)
     {
-      const irep_idt identifier=
-        to_symbol_expr(*s_it).get_identifier();
+      const irep_idt identifier= to_symbol_expr(*s_it).get_identifier();
 
-      shared_varst::const_iterator
-        v_it=shared_vars.find(identifier);
+      shared_varst::const_iterator v_it= shared_vars.find(identifier);
 
-      if(v_it!=shared_vars.end())
+      if(v_it != shared_vars.end())
       {
         index_exprt new_expr;
         // new_expr.array()=symbol_expr();
@@ -134,21 +127,21 @@ void concurrency_instrumentationt::instrument(
   goto_programt &goto_program,
   const is_threadedt &is_threaded)
 {
-  for(goto_programt::instructionst::iterator
-      it=goto_program.instructions.begin();
-      it!=goto_program.instructions.end();
+  for(goto_programt::instructionst::iterator it=
+        goto_program.instructions.begin();
+      it != goto_program.instructions.end();
       it++)
   {
     if(it->is_assign())
     {
-      code_assignt &code=to_code_assign(it->code);
+      code_assignt &code= to_code_assign(it->code);
       instrument(code.rhs());
     }
     else if(it->is_assume() || it->is_assert() || it->is_goto())
       instrument(it->guard);
     else if(it->is_function_call())
     {
-      code_function_callt &code=to_code_function_call(it->code);
+      code_function_callt &code= to_code_function_call(it->code);
       instrument(code.function());
 
       // instrument(code.lhs(), LHS);
@@ -176,37 +169,35 @@ void concurrency_instrumentationt::collect(const exprt &expr)
 
   find_symbols(expr, symbols);
 
-  for(std::set<exprt>::const_iterator
-      s_it=symbols.begin();
-      s_it!=symbols.end();
+  for(std::set<exprt>::const_iterator s_it= symbols.begin();
+      s_it != symbols.end();
       s_it++)
   {
-    if(s_it->id()==ID_symbol)
+    if(s_it->id() == ID_symbol)
     {
-      const irep_idt identifier=
-        to_symbol_expr(*s_it).get_identifier();
+      const irep_idt identifier= to_symbol_expr(*s_it).get_identifier();
 
       namespacet ns(symbol_table);
-      const symbolt &symbol=ns.lookup(identifier);
+      const symbolt &symbol= ns.lookup(identifier);
 
       if(!symbol.is_state_var)
         continue;
 
       if(symbol.is_thread_local)
       {
-        if(thread_local_vars.find(identifier)!=thread_local_vars.end())
+        if(thread_local_vars.find(identifier) != thread_local_vars.end())
           continue;
 
-        thread_local_vart &thread_local_var=thread_local_vars[identifier];
-        thread_local_var.type=symbol.type;
+        thread_local_vart &thread_local_var= thread_local_vars[identifier];
+        thread_local_var.type= symbol.type;
       }
       else
       {
-        if(shared_vars.find(identifier)!=shared_vars.end())
+        if(shared_vars.find(identifier) != shared_vars.end())
           continue;
 
-        shared_vart &shared_var=shared_vars[identifier];
-        shared_var.type=symbol.type;
+        shared_vart &shared_var= shared_vars[identifier];
+        shared_var.type= symbol.type;
       }
     }
   }
@@ -256,7 +247,7 @@ Function: concurrency_instrumentationt::add_array_symbols
 
 void concurrency_instrumentationt::add_array_symbols()
 {
-//  for(
+  //  for(
 }
 
 /*******************************************************************\
@@ -271,8 +262,7 @@ Function: concurrency_instrumentationt::instrument
 
 \*******************************************************************/
 
-void concurrency_instrumentationt::instrument(
-  goto_functionst &goto_functions)
+void concurrency_instrumentationt::instrument(goto_functionst &goto_functions)
 {
   namespacet ns(symbol_table);
   is_threadedt is_threaded(goto_functions);

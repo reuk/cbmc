@@ -23,11 +23,13 @@ Function: string_constraint_generatort::add_axioms_for_index_of
 \*******************************************************************/
 
 exprt string_constraint_generatort::add_axioms_for_index_of(
-  const string_exprt &str, const exprt &c, const exprt &from_index)
+  const string_exprt &str,
+  const exprt &c,
+  const exprt &from_index)
 {
-  const typet &index_type=str.length().type();
-  symbol_exprt index=fresh_exist_index("index_of", index_type);
-  symbol_exprt contains=fresh_boolean("contains_in_index_of");
+  const typet &index_type= str.length().type();
+  symbol_exprt index= fresh_exist_index("index_of", index_type);
+  symbol_exprt contains= fresh_boolean("contains_in_index_of");
 
   // We add axioms:
   // a1 : -1 <= index<|str|
@@ -36,7 +38,7 @@ exprt string_constraint_generatort::add_axioms_for_index_of(
   // a4 : forall n, from_index<=n<index. contains => str[n]!=c
   // a5 : forall m, from_index<=n<|str|. !contains => str[m]!=c
 
-  exprt minus1=from_integer(-1, index_type);
+  exprt minus1= from_integer(-1, index_type);
   and_exprt a1(
     binary_relation_exprt(index, ID_ge, minus1),
     binary_relation_exprt(index, ID_lt, str.length()));
@@ -52,12 +54,12 @@ exprt string_constraint_generatort::add_axioms_for_index_of(
       equal_exprt(str[index], c)));
   axioms.push_back(a3);
 
-  symbol_exprt n=fresh_univ_index("QA_index_of", index_type);
+  symbol_exprt n= fresh_univ_index("QA_index_of", index_type);
   string_constraintt a4(
     n, from_index, index, contains, not_exprt(equal_exprt(str[n], c)));
   axioms.push_back(a4);
 
-  symbol_exprt m=fresh_univ_index("QA_index_of", index_type);
+  symbol_exprt m= fresh_univ_index("QA_index_of", index_type);
   string_constraintt a5(
     m,
     from_index,
@@ -87,9 +89,9 @@ exprt string_constraint_generatort::add_axioms_for_index_of_string(
   const string_exprt &substring,
   const exprt &from_index)
 {
-  const typet &index_type=str.length().type();
-  symbol_exprt offset=fresh_exist_index("index_of", index_type);
-  symbol_exprt contains=fresh_boolean("contains_substring");
+  const typet &index_type= str.length().type();
+  symbol_exprt offset= fresh_exist_index("index_of", index_type);
+  symbol_exprt contains= fresh_boolean("contains_substring");
 
   // We add axioms:
   // a1 : contains => |substring|>=offset>=from_index
@@ -105,11 +107,10 @@ exprt string_constraint_generatort::add_axioms_for_index_of_string(
   axioms.push_back(a1);
 
   implies_exprt a2(
-    not_exprt(contains),
-    equal_exprt(offset, from_integer(-1, index_type)));
+    not_exprt(contains), equal_exprt(offset, from_integer(-1, index_type)));
   axioms.push_back(a2);
 
-  symbol_exprt qvar=fresh_univ_index("QA_index_of_string", index_type);
+  symbol_exprt qvar= fresh_univ_index("QA_index_of_string", index_type);
   string_constraintt a3(
     qvar,
     substring.length(),
@@ -125,9 +126,9 @@ exprt string_constraint_generatort::add_axioms_for_last_index_of_string(
   const string_exprt &substring,
   const exprt &from_index)
 {
-  const typet &index_type=str.length().type();
-  symbol_exprt offset=fresh_exist_index("index_of", index_type);
-  symbol_exprt contains=fresh_boolean("contains_substring");
+  const typet &index_type= str.length().type();
+  symbol_exprt offset= fresh_exist_index("index_of", index_type);
+  symbol_exprt contains= fresh_boolean("contains_substring");
 
   // We add axioms:
   // a1 : contains => |substring| >= length &&offset <= from_index
@@ -143,11 +144,10 @@ exprt string_constraint_generatort::add_axioms_for_last_index_of_string(
   axioms.push_back(a1);
 
   implies_exprt a2(
-    not_exprt(contains),
-    equal_exprt(offset, from_integer(-1, index_type)));
+    not_exprt(contains), equal_exprt(offset, from_integer(-1, index_type)));
   axioms.push_back(a2);
 
-  symbol_exprt qvar=fresh_univ_index("QA_index_of_string", index_type);
+  symbol_exprt qvar= fresh_univ_index("QA_index_of_string", index_type);
   equal_exprt constr3(str[plus_exprt(qvar, offset)], substring[qvar]);
   string_constraintt a3(qvar, substring.length(), contains, constr3);
   axioms.push_back(a3);
@@ -172,23 +172,23 @@ Function: string_constraint_generatort::add_axioms_for_index_of
 exprt string_constraint_generatort::add_axioms_for_index_of(
   const function_application_exprt &f)
 {
-  const function_application_exprt::argumentst &args=f.arguments();
-  string_exprt str=add_axioms_for_string_expr(args[0]);
-  const exprt &c=args[1];
-  const refined_string_typet &ref_type=to_refined_string_type(str.type());
-  assert(f.type()==ref_type.get_index_type());
+  const function_application_exprt::argumentst &args= f.arguments();
+  string_exprt str= add_axioms_for_string_expr(args[0]);
+  const exprt &c= args[1];
+  const refined_string_typet &ref_type= to_refined_string_type(str.type());
+  assert(f.type() == ref_type.get_index_type());
   exprt from_index;
 
-  if(args.size()==2)
-    from_index=from_integer(0, ref_type.get_index_type());
-  else if(args.size()==3)
-    from_index=args[2];
+  if(args.size() == 2)
+    from_index= from_integer(0, ref_type.get_index_type());
+  else if(args.size() == 3)
+    from_index= args[2];
   else
     assert(false);
 
   if(refined_string_typet::is_java_string_pointer_type(c.type()))
   {
-    string_exprt sub=add_axioms_for_string_expr(c);
+    string_exprt sub= add_axioms_for_string_expr(c);
     return add_axioms_for_index_of_string(str, sub, from_index);
   }
   else
@@ -197,12 +197,14 @@ exprt string_constraint_generatort::add_axioms_for_index_of(
 }
 
 exprt string_constraint_generatort::add_axioms_for_last_index_of(
-  const string_exprt &str, const exprt &c, const exprt &from_index)
+  const string_exprt &str,
+  const exprt &c,
+  const exprt &from_index)
 {
-  const refined_string_typet &ref_type=to_refined_string_type(str.type());
-  const typet &index_type=ref_type.get_index_type();
-  symbol_exprt index=fresh_exist_index("last_index_of", index_type);
-  symbol_exprt contains=fresh_boolean("contains_in_last_index_of");
+  const refined_string_typet &ref_type= to_refined_string_type(str.type());
+  const typet &index_type= ref_type.get_index_type();
+  symbol_exprt index= fresh_exist_index("last_index_of", index_type);
+  symbol_exprt contains= fresh_boolean("contains_in_last_index_of");
 
   // We add axioms:
   // a1 : -1 <= i <= from_index
@@ -211,9 +213,9 @@ exprt string_constraint_generatort::add_axioms_for_last_index_of(
   // a4 : forall n. i+1 <= n < from_index +1 &&contains => s[n]!=c
   // a5 : forall m. 0 <= m < from_index +1 &&!contains => s[m]!=c
 
-  exprt index1=from_integer(1, index_type);
-  exprt minus1=from_integer(-1, index_type);
-  exprt from_index_plus_one=plus_exprt(from_index, index1);
+  exprt index1= from_integer(1, index_type);
+  exprt minus1= from_integer(-1, index_type);
+  exprt from_index_plus_one= plus_exprt(from_index, index1);
   and_exprt a1(
     binary_relation_exprt(index, ID_ge, minus1),
     binary_relation_exprt(index, ID_lt, from_index_plus_one));
@@ -229,7 +231,7 @@ exprt string_constraint_generatort::add_axioms_for_last_index_of(
       equal_exprt(str[index], c)));
   axioms.push_back(a3);
 
-  symbol_exprt n=fresh_univ_index("QA_last_index_of", index_type);
+  symbol_exprt n= fresh_univ_index("QA_last_index_of", index_type);
   string_constraintt a4(
     n,
     plus_exprt(index, index1),
@@ -238,7 +240,7 @@ exprt string_constraint_generatort::add_axioms_for_last_index_of(
     not_exprt(equal_exprt(str[n], c)));
   axioms.push_back(a4);
 
-  symbol_exprt m=fresh_univ_index("QA_last_index_of", index_type);
+  symbol_exprt m= fresh_univ_index("QA_last_index_of", index_type);
   string_constraintt a5(
     m,
     from_index_plus_one,
@@ -266,23 +268,23 @@ Function: string_constraint_generatort::add_axioms_for_last_index_of
 exprt string_constraint_generatort::add_axioms_for_last_index_of(
   const function_application_exprt &f)
 {
-  const function_application_exprt::argumentst &args=f.arguments();
-  string_exprt str=add_axioms_for_string_expr(args[0]);
-  exprt c=args[1];
-  const refined_string_typet &ref_type=to_refined_string_type(str.type());
+  const function_application_exprt::argumentst &args= f.arguments();
+  string_exprt str= add_axioms_for_string_expr(args[0]);
+  exprt c= args[1];
+  const refined_string_typet &ref_type= to_refined_string_type(str.type());
   exprt from_index;
-  assert(f.type()==ref_type.get_index_type());
+  assert(f.type() == ref_type.get_index_type());
 
-  if(args.size()==2)
-    from_index=minus_exprt(str.length(), from_integer(1, str.length().type()));
-  else if(args.size()==3)
-    from_index=args[2];
+  if(args.size() == 2)
+    from_index= minus_exprt(str.length(), from_integer(1, str.length().type()));
+  else if(args.size() == 3)
+    from_index= args[2];
   else
     assert(false);
 
   if(refined_string_typet::is_java_string_pointer_type(c.type()))
   {
-    string_exprt sub=add_axioms_for_string_expr(c);
+    string_exprt sub= add_axioms_for_string_expr(c);
     return add_axioms_for_last_index_of_string(str, sub, from_index);
   }
   else

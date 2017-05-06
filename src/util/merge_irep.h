@@ -13,32 +13,35 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "irep.h"
 
-class merged_irept:public irept
+class merged_irept : public irept
 {
 public:
   bool operator==(const merged_irept &other) const
   {
     // We assume that both are in the same container,
     // which isn't checked.
-    return data==other.data;
+    return data == other.data;
   }
 
   bool operator<(const merged_irept &other) const
   {
     // again, assumes that both are in the same container
-    return ((std::size_t)data)<((std::size_t)other.data);
+    return ((std::size_t)data) < ((std::size_t)other.data);
   }
 
-  std::size_t hash() const { return (std::size_t)data; }
+  std::size_t hash() const
+  {
+    return (std::size_t)data;
+  }
 
   // copy constructor: will only copy from other merged_irepts
-  merged_irept(const merged_irept &_src):irept(_src)
+  merged_irept(const merged_irept &_src) : irept(_src)
   {
   }
 
 protected:
   // more general one can only be used by merged_irepst
-  explicit merged_irept(const irept &src):irept(src)
+  explicit merged_irept(const irept &src) : irept(src)
   {
   }
 
@@ -49,11 +52,13 @@ protected:
 struct merged_irep_hash
 {
   std::size_t operator()(const merged_irept &irep) const
-  { return irep.hash(); }
+  {
+    return irep.hash();
+  }
 };
 
 // internal, don't use me
-class to_be_merged_irept:public irept
+class to_be_merged_irept : public irept
 {
 public:
   bool operator==(const to_be_merged_irept &other) const;
@@ -61,7 +66,7 @@ public:
 
 protected:
   // can only be used by merged_irepst
-  explicit to_be_merged_irept(const irept &src):irept(src)
+  explicit to_be_merged_irept(const irept &src) : irept(src)
   {
   }
 
@@ -72,7 +77,9 @@ protected:
 struct to_be_merged_irep_hash
 {
   std::size_t operator()(const to_be_merged_irept &irep) const
-  { return irep.hash(); }
+  {
+    return irep.hash();
+  }
 };
 
 class merged_irepst

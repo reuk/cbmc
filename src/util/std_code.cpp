@@ -57,13 +57,13 @@ Function: codet::make_block
 
 code_blockt &codet::make_block()
 {
-  if(get_statement()==ID_block)
+  if(get_statement() == ID_block)
     return static_cast<code_blockt &>(*this);
 
   exprt tmp;
   tmp.swap(*this);
 
-  *this=codet();
+  *this= codet();
   set_statement(ID_block);
   move_to_operands(tmp);
 
@@ -84,13 +84,13 @@ Function: codet::first_statement
 
 codet &codet::first_statement()
 {
-  const irep_idt &statement=get_statement();
+  const irep_idt &statement= get_statement();
 
   if(has_operands())
   {
-    if(statement==ID_block)
+    if(statement == ID_block)
       return to_code(op0()).first_statement();
-    else if(statement==ID_label)
+    else if(statement == ID_label)
       return to_code(op0()).first_statement();
   }
 
@@ -111,13 +111,13 @@ Function: first_statement
 
 const codet &codet::first_statement() const
 {
-  const irep_idt &statement=get_statement();
+  const irep_idt &statement= get_statement();
 
   if(has_operands())
   {
-    if(statement==ID_block)
+    if(statement == ID_block)
       return to_code(op0()).first_statement();
-    else if(statement==ID_label)
+    else if(statement == ID_label)
       return to_code(op0()).first_statement();
   }
 
@@ -138,13 +138,13 @@ Function: codet::last_statement
 
 codet &codet::last_statement()
 {
-  const irep_idt &statement=get_statement();
+  const irep_idt &statement= get_statement();
 
   if(has_operands())
   {
-    if(statement==ID_block)
+    if(statement == ID_block)
       return to_code(operands().back()).last_statement();
-    else if(statement==ID_label)
+    else if(statement == ID_label)
       return to_code(operands().back()).last_statement();
   }
 
@@ -165,13 +165,13 @@ Function: codet::last_statement
 
 const codet &codet::last_statement() const
 {
-  const irep_idt &statement=get_statement();
+  const irep_idt &statement= get_statement();
 
   if(has_operands())
   {
-    if(statement==ID_block)
+    if(statement == ID_block)
       return to_code(operands().back()).last_statement();
-    else if(statement==ID_label)
+    else if(statement == ID_label)
       return to_code(operands().back()).last_statement();
   }
 
@@ -194,7 +194,7 @@ Function: code_blockt::append
 
 void code_blockt::append(const code_blockt &extra_block)
 {
-  operands().reserve(operands().size()+extra_block.operands().size());
+  operands().reserve(operands().size() + extra_block.operands().size());
 
   for(const auto &operand : extra_block.operands())
   {

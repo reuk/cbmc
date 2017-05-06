@@ -58,20 +58,24 @@ void mmio(
 
   Forall_goto_program_instructions(i_it, goto_program)
   {
-    goto_programt::instructiont &instruction=*i_it;
+    goto_programt::instructiont &instruction= *i_it;
 
     if(instruction.is_assign())
     {
-      rw_set_loct rw_set(ns, value_sets, i_it
+      rw_set_loct rw_set(
+        ns,
+        value_sets,
+        i_it
 #ifdef LOCAL_MAY
-        , local_may
+        ,
+        local_may
 #endif
-      ); // NOLINT(whitespace/parens)
+        ); // NOLINT(whitespace/parens)
 
       if(rw_set.empty())
         continue;
 
-      #if 0
+#if 0
       goto_programt::instructiont original_instruction;
       original_instruction.swap(instruction);
       const locationt &location=original_instruction.location;
@@ -166,7 +170,7 @@ void mmio(
       i_it++;
 
       i_it--; // the for loop already counts us up
-      #endif
+#endif
     }
   }
 }
@@ -190,14 +194,15 @@ void mmio(
 {
   // we first figure out which objects are read/written by the ISR
 
-
-
   // now instrument
 
   Forall_goto_functions(f_it, goto_functions)
-    if(f_it->first!=CPROVER_PREFIX "initialize" &&
-       f_it->first!=goto_functionst::entry_point())
-      mmio(value_sets, symbol_table,
+    if(
+      f_it->first != CPROVER_PREFIX "initialize" &&
+      f_it->first != goto_functionst::entry_point())
+      mmio(
+        value_sets,
+        symbol_table,
 #ifdef LOCAL_MAY
         f_it->second,
 #endif

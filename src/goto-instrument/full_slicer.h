@@ -11,9 +11,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <goto-programs/goto_functions.h>
 
-void full_slicer(
-  goto_functionst &goto_functions,
-  const namespacet &ns);
+void full_slicer(goto_functionst &goto_functions, const namespacet &ns);
 
 void property_slicer(
   goto_functionst &goto_functions,
@@ -24,7 +22,7 @@ class slicing_criteriont
 {
 public:
   virtual ~slicing_criteriont();
-  virtual bool operator()(goto_programt::const_targett)=0;
+  virtual bool operator()(goto_programt::const_targett)= 0;
 };
 
 void full_slicer(

@@ -22,9 +22,9 @@ Function: goto_symext::symex_catch
 
 void goto_symext::symex_catch(statet &state)
 {
-  // there are two variants: 'push' and 'pop'
+// there are two variants: 'push' and 'pop'
 
-  #if 0
+#if 0
   const goto_programt::instructiont &instruction=*state.source.pc;
 
   if(instruction.targets.empty()) // pop
@@ -57,5 +57,5 @@ void goto_symext::symex_catch(statet &state)
         it++, i++)
       frame.target_map[exception_list[i].id()]=*it;
   }
-  #endif
+#endif
 }

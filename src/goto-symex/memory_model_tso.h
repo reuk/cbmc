@@ -11,11 +11,10 @@ Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
 
 #include "memory_model_sc.h"
 
-class memory_model_tsot:public memory_model_sct
+class memory_model_tsot : public memory_model_sct
 {
 public:
-  explicit memory_model_tsot(const namespacet &_ns):
-    memory_model_sct(_ns)
+  explicit memory_model_tsot(const namespacet &_ns) : memory_model_sct(_ns)
   {
   }
 

@@ -13,11 +13,11 @@ Date: July 2016
 
 #include "goto_cc_cmdline.h"
 
-class as86_cmdlinet:public goto_cc_cmdlinet
+class as86_cmdlinet : public goto_cc_cmdlinet
 {
 public:
   // overload
-  virtual bool parse(int, const char**);
+  virtual bool parse(int, const char **);
 
   as86_cmdlinet()
   {

@@ -33,17 +33,17 @@ Solver factory
 
 \*******************************************************************/
 
-class cbmc_solverst:public messaget
+class cbmc_solverst : public messaget
 {
 public:
   cbmc_solverst(
     const optionst &_options,
     const symbol_tablet &_symbol_table,
-    message_handlert &_message_handler):
-    messaget(_message_handler),
-    options(_options),
-    symbol_table(_symbol_table),
-    ns(_symbol_table)
+    message_handlert &_message_handler)
+    : messaget(_message_handler),
+      options(_options),
+      symbol_table(_symbol_table),
+      ns(_symbol_table)
   {
   }
 
@@ -56,47 +56,44 @@ public:
     {
     }
 
-    explicit solvert(prop_convt *p):prop_conv_ptr(p)
+    explicit solvert(prop_convt *p) : prop_conv_ptr(p)
     {
     }
 
-    solvert(prop_convt *p1, propt *p2):
-      prop_ptr(p2),
-      prop_conv_ptr(p1)
+    solvert(prop_convt *p1, propt *p2) : prop_ptr(p2), prop_conv_ptr(p1)
     {
     }
 
-    solvert(prop_convt *p1, std::ofstream *p2):
-      ofstream_ptr(p2),
-      prop_conv_ptr(p1)
+    solvert(prop_convt *p1, std::ofstream *p2)
+      : ofstream_ptr(p2), prop_conv_ptr(p1)
     {
     }
 
     prop_convt &prop_conv() const
     {
-      assert(prop_conv_ptr!=nullptr);
+      assert(prop_conv_ptr != nullptr);
       return *prop_conv_ptr;
     }
 
     propt &prop() const
     {
-      assert(prop_ptr!=nullptr);
+      assert(prop_ptr != nullptr);
       return *prop_ptr;
     }
 
     void set_prop_conv(prop_convt *p)
     {
-      prop_conv_ptr=std::unique_ptr<prop_convt>(p);
+      prop_conv_ptr= std::unique_ptr<prop_convt>(p);
     }
 
     void set_prop(propt *p)
     {
-      prop_ptr=std::unique_ptr<propt>(p);
+      prop_ptr= std::unique_ptr<propt>(p);
     }
 
     void set_ofstream(std::ofstream *p)
     {
-      ofstream_ptr=std::unique_ptr<std::ofstream>(p);
+      ofstream_ptr= std::unique_ptr<std::ofstream>(p);
     }
 
     // the objects are deleted in the opposite order they appear below
@@ -111,15 +108,15 @@ public:
     solvert *solver;
 
     if(options.get_bool_option("dimacs"))
-      solver = get_dimacs();
+      solver= get_dimacs();
     else if(options.get_bool_option("refine"))
-      solver = get_bv_refinement();
+      solver= get_bv_refinement();
     else if(options.get_bool_option("smt1"))
-      solver = get_smt1(get_smt1_solver_type());
+      solver= get_smt1(get_smt1_solver_type());
     else if(options.get_bool_option("smt2"))
-      solver = get_smt2(get_smt2_solver_type());
+      solver= get_smt2(get_smt2_solver_type());
     else
-      solver = get_default();
+      solver= get_default();
 
     return std::unique_ptr<solvert>(solver);
   }
@@ -128,7 +125,10 @@ public:
   {
   }
 
-  void set_ui(language_uit::uit _ui) { ui=_ui; }
+  void set_ui(language_uit::uit _ui)
+  {
+    ui= _ui;
+  }
 
 protected:
   const optionst &options;

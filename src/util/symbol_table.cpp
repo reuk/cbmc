@@ -76,7 +76,7 @@ bool symbol_tablet::move(symbolt &symbol, symbolt *&new_symbol)
 
   if(!result.second)
   {
-    new_symbol=&result.first->second;
+    new_symbol= &result.first->second;
     return true;
   }
 
@@ -86,7 +86,7 @@ bool symbol_tablet::move(symbolt &symbol, symbolt *&new_symbol)
     std::pair<irep_idt, irep_idt>(symbol.module, symbol.name));
 
   result.first->second.swap(symbol);
-  new_symbol=&result.first->second;
+  new_symbol= &result.first->second;
 
   return false;
 }
@@ -106,28 +106,28 @@ Function: symbol_tablet::remove
 
 bool symbol_tablet::remove(const irep_idt &name)
 {
-  symbolst::iterator entry=symbols.find(name);
+  symbolst::iterator entry= symbols.find(name);
 
-  if(entry==symbols.end())
+  if(entry == symbols.end())
     return true;
 
   for(symbol_base_mapt::iterator
-      it=symbol_base_map.lower_bound(entry->second.base_name),
-      it_end=symbol_base_map.upper_bound(entry->second.base_name);
-      it!=it_end;
+        it= symbol_base_map.lower_bound(entry->second.base_name),
+        it_end= symbol_base_map.upper_bound(entry->second.base_name);
+      it != it_end;
       ++it)
-    if(it->second==name)
+    if(it->second == name)
     {
       symbol_base_map.erase(it);
       break;
     }
 
   for(symbol_module_mapt::iterator
-      it=symbol_module_map.lower_bound(entry->second.module),
-      it_end=symbol_module_map.upper_bound(entry->second.module);
-      it!=it_end;
+        it= symbol_module_map.lower_bound(entry->second.module),
+        it_end= symbol_module_map.upper_bound(entry->second.module);
+      it != it_end;
       ++it)
-    if(it->second==name)
+    if(it->second == name)
     {
       symbol_module_map.erase(it);
       break;
@@ -153,7 +153,9 @@ Function: symbol_tablet::show
 
 void symbol_tablet::show(std::ostream &out) const
 {
-  out << "\n" << "Symbols:" << "\n";
+  out << "\n"
+      << "Symbols:"
+      << "\n";
 
   forall_symbols(it, symbols)
     out << it->second;
@@ -175,10 +177,10 @@ Function: symbol_tablet::lookup
 
 const symbolt &symbol_tablet::lookup(const irep_idt &identifier) const
 {
-  symbolst::const_iterator it=symbols.find(identifier);
+  symbolst::const_iterator it= symbols.find(identifier);
 
-  if(it==symbols.end())
-    throw "symbol "+id2string(identifier)+" not found";
+  if(it == symbols.end())
+    throw "symbol " + id2string(identifier) + " not found";
 
   return it->second;
 }
@@ -199,10 +201,10 @@ Function: symbol_tablet::lookup
 
 symbolt &symbol_tablet::lookup(const irep_idt &identifier)
 {
-  symbolst::iterator it=symbols.find(identifier);
+  symbolst::iterator it= symbols.find(identifier);
 
-  if(it==symbols.end())
-    throw "symbol "+id2string(identifier)+" not found";
+  if(it == symbols.end())
+    throw "symbol " + id2string(identifier) + " not found";
 
   return it->second;
 }
@@ -221,7 +223,7 @@ Function: operator <<
 
 \*******************************************************************/
 
-std::ostream &operator << (std::ostream &out, const symbol_tablet &symbol_table)
+std::ostream &operator<<(std::ostream &out, const symbol_tablet &symbol_table)
 {
   symbol_table.show(out);
   return out;

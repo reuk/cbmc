@@ -34,52 +34,52 @@ static void MetaChar(std::string &out, char c, bool inString)
   {
   case '\'':
     if(inString)
-      out+="'";
+      out+= "'";
     else
-      out+="\\'";
+      out+= "\\'";
     break;
 
   case '"':
     if(inString)
-      out+="\\\"";
+      out+= "\\\"";
     else
-      out+="\"";
+      out+= "\"";
     break;
 
   case '\0':
-    out+="\\0";
+    out+= "\\0";
     break;
 
   case '\\':
-    out+="\\\\";
+    out+= "\\\\";
     break;
 
   case '\n':
-    out+="\\n";
+    out+= "\\n";
     break;
 
   case '\t':
-    out+="\\t";
+    out+= "\\t";
     break;
 
   case '\r':
-    out+="\\r";
+    out+= "\\r";
     break;
 
   case '\f':
-    out+="\\f";
+    out+= "\\f";
     break;
 
   case '\b':
-    out+="\\b";
+    out+= "\\b";
     break;
 
   case '\v':
-    out+="\\v";
+    out+= "\\v";
     break;
 
   case '\a':
-    out+="\\a";
+    out+= "\\a";
     break;
 
   default:
@@ -87,14 +87,14 @@ static void MetaChar(std::string &out, char c, bool inString)
     if(((unsigned char)c < ' ') || (c == 127))
     {
       char octbuf[8];
-      snprintf(octbuf, sizeof(octbuf), "%03o", (unsigned char) c);
-      out+="\\";
-      out+=octbuf;
+      snprintf(octbuf, sizeof(octbuf), "%03o", (unsigned char)c);
+      out+= "\\";
+      out+= octbuf;
     }
     else
     {
       // leave everything else to permit UTF-8 and 8-bit codepages
-      out+=c;
+      out+= c;
     }
 
     break;

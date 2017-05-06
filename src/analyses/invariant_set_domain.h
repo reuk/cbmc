@@ -14,10 +14,10 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "ai.h"
 #include "invariant_set.h"
 
-class invariant_set_domaint:public ai_domain_baset
+class invariant_set_domaint : public ai_domain_baset
 {
 public:
-  invariant_set_domaint():has_values(false)
+  invariant_set_domaint() : has_values(false)
   {
   }
 
@@ -26,22 +26,17 @@ public:
 
   // overloading
 
-  bool merge(
-    const invariant_set_domaint &other,
-    locationt from,
-    locationt to)
+  bool merge(const invariant_set_domaint &other, locationt from, locationt to)
   {
-    bool changed=invariant_set.make_union(other.invariant_set) ||
-                 has_values.is_false();
-    has_values=tvt::unknown();
+    bool changed=
+      invariant_set.make_union(other.invariant_set) || has_values.is_false();
+    has_values= tvt::unknown();
 
     return changed;
   }
 
-  void output(
-    std::ostream &out,
-    const ai_baset &ai,
-    const namespacet &ns) const final
+  void output(std::ostream &out, const ai_baset &ai, const namespacet &ns)
+    const final
   {
     if(has_values.is_known())
       out << has_values.to_string() << '\n';
@@ -58,19 +53,19 @@ public:
   void make_top() final
   {
     invariant_set.make_true();
-    has_values=tvt(true);
+    has_values= tvt(true);
   }
 
   void make_bottom() final
   {
     invariant_set.make_false();
-    has_values=tvt(false);
+    has_values= tvt(false);
   }
 
   void make_entry() final
   {
     invariant_set.make_true();
-    has_values=tvt(true);
+    has_values= tvt(true);
   }
 };
 

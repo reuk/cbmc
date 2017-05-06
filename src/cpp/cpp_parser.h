@@ -20,7 +20,7 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 #include "cpp_parse_tree.h"
 #include "cpp_token_buffer.h"
 
-class cpp_parsert:public parsert
+class cpp_parsert : public parsert
 {
 public:
   cpp_parse_treet parse_tree;
@@ -32,13 +32,13 @@ public:
     parsert::clear();
     parse_tree.clear();
     token_buffer.clear();
-    asm_block_following=false;
+    asm_block_following= false;
   }
 
-  cpp_parsert():
-    mode(configt::ansi_ct::flavourt::ANSI),
-    recognize_wchar_t(true),
-    asm_block_following(false)
+  cpp_parsert()
+    : mode(configt::ansi_ct::flavourt::ANSI),
+      recognize_wchar_t(true),
+      asm_block_following(false)
   {
   }
 
@@ -59,8 +59,8 @@ public:
 
   void add_location()
   {
-    token_buffer.current_token().line_no=get_line_no()-1;
-    token_buffer.current_token().filename=source_location.get_file();
+    token_buffer.current_token().line_no= get_line_no() - 1;
+    token_buffer.current_token().filename= source_location.get_file();
   }
 
   // scanner

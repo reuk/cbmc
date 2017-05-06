@@ -17,7 +17,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "goto_functions.h"
 
-class goto_inlinet:public messaget
+class goto_inlinet : public messaget
 {
 public:
   goto_inlinet(
@@ -25,12 +25,12 @@ public:
     const namespacet &ns,
     message_handlert &message_handler,
     bool adjust_function,
-    bool caching=true):
-    messaget(message_handler),
-    goto_functions(goto_functions),
-    ns(ns),
-    adjust_function(adjust_function),
-    caching(caching)
+    bool caching= true)
+    : messaget(message_handler),
+      goto_functions(goto_functions),
+      ns(ns),
+      adjust_function(adjust_function),
+      caching(caching)
   {
   }
 
@@ -55,16 +55,12 @@ public:
     const irep_idt identifier,
     goto_functiont &goto_function,
     const inline_mapt &inline_map,
-    const bool force_full=false);
+    const bool force_full= false);
 
   // handle all functions
-  void goto_inline(
-    const inline_mapt &inline_map,
-    const bool force_full=false);
+  void goto_inline(const inline_mapt &inline_map, const bool force_full= false);
 
-  void output_inline_map(
-    std::ostream &out,
-    const inline_mapt &inline_map);
+  void output_inline_map(std::ostream &out, const inline_mapt &inline_map);
 
   void output_cache(std::ostream &out) const;
 
@@ -97,7 +93,7 @@ public:
       unsigned begin_location_number;
       unsigned end_location_number;
       unsigned call_location_number; // original call location number
-      irep_idt function; // function from which segment was inlined
+      irep_idt function;             // function from which segment was inlined
       goto_programt::const_targett end; // segment end
     };
 
@@ -119,9 +115,8 @@ public:
     jsont output_inline_log_json() const;
 
     // map from segment start to inline info
-    typedef std::map<
-      goto_programt::const_targett,
-      goto_inline_log_infot> log_mapt;
+    typedef std::map<goto_programt::const_targett, goto_inline_log_infot>
+      log_mapt;
 
     log_mapt log_map;
   };
@@ -184,10 +179,8 @@ protected:
     const symbol_exprt &function,
     const exprt::operandst &arguments);
 
-  void replace_return(
-    goto_programt &body,
-    const exprt &lhs,
-    const exprt &constrain);
+  void
+  replace_return(goto_programt &body, const exprt &lhs, const exprt &constrain);
 
   void parameter_assignments(
     const goto_programt::targett target,

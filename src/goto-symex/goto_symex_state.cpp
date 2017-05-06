@@ -29,12 +29,12 @@ Function: goto_symex_statet::goto_symex_statet
 
 \*******************************************************************/
 
-goto_symex_statet::goto_symex_statet():
-  depth(0),
-  symex_target(NULL),
-  atomic_section_id(0),
-  record_events(true),
-  dirty(0)
+goto_symex_statet::goto_symex_statet()
+  : depth(0),
+    symex_target(NULL),
+    atomic_section_id(0),
+    record_events(true),
+    dirty(0)
 {
   threads.resize(1);
   new_frame();
@@ -57,14 +57,14 @@ void goto_symex_statet::initialize(const goto_functionst &goto_functions)
   goto_functionst::function_mapt::const_iterator it=
     goto_functions.function_map.find(goto_functionst::entry_point());
 
-  if(it==goto_functions.function_map.end())
+  if(it == goto_functions.function_map.end())
     throw "program has no entry point";
 
-  const goto_programt &body=it->second.body;
+  const goto_programt &body= it->second.body;
 
-  source=symex_targett::sourcet(body);
-  top().end_of_function=--body.instructions.end();
-  top().calling_location.pc=top().end_of_function;
+  source= symex_targett::sourcet(body);
+  top().end_of_function= --body.instructions.end();
+  top().calling_location.pc= top().end_of_function;
 }
 
 /*******************************************************************\
@@ -79,19 +79,17 @@ Function: goto_symex_statet::level0t::operator()
 
 \*******************************************************************/
 
-void goto_symex_statet::level0t::operator()(
-  ssa_exprt &ssa_expr,
-  const namespacet &ns,
-  unsigned thread_nr)
+void goto_symex_statet::level0t::
+operator()(ssa_exprt &ssa_expr, const namespacet &ns, unsigned thread_nr)
 {
   // already renamed?
   if(!ssa_expr.get_level_0().empty())
     return;
 
-  const irep_idt &obj_identifier=ssa_expr.get_object_name();
+  const irep_idt &obj_identifier= ssa_expr.get_object_name();
 
   // guards are not L0-renamed
-  if(obj_identifier=="goto_symex::\\guard")
+  if(obj_identifier == "goto_symex::\\guard")
     return;
 
   const symbolt *s;
@@ -103,8 +101,7 @@ void goto_symex_statet::level0t::operator()(
   }
 
   // don't rename shared variables or functions
-  if(s->type.id()==ID_code ||
-     s->is_shared())
+  if(s->type.id() == ID_code || s->is_shared())
     return;
 
   // rename!
@@ -129,10 +126,10 @@ void goto_symex_statet::level1t::operator()(ssa_exprt &ssa_expr)
   if(!ssa_expr.get_level_1().empty())
     return;
 
-  const irep_idt l0_name=ssa_expr.get_l1_object_identifier();
+  const irep_idt l0_name= ssa_expr.get_l1_object_identifier();
 
-  current_namest::const_iterator it=current_names.find(l0_name);
-  if(it==current_names.end())
+  current_namest::const_iterator it= current_names.find(l0_name);
+  if(it == current_names.end())
     return;
 
   // rename!
@@ -157,19 +154,19 @@ bool goto_symex_statet::constant_propagation(const exprt &expr) const
   if(expr.is_constant())
     return true;
 
-  if(expr.id()==ID_address_of)
+  if(expr.id() == ID_address_of)
   {
-    const address_of_exprt &address_of_expr=to_address_of_expr(expr);
+    const address_of_exprt &address_of_expr= to_address_of_expr(expr);
 
     return constant_propagation_reference(address_of_expr.object());
   }
-  else if(expr.id()==ID_typecast)
+  else if(expr.id() == ID_typecast)
   {
-    const typecast_exprt &typecast_expr=to_typecast_expr(expr);
+    const typecast_exprt &typecast_expr= to_typecast_expr(expr);
 
     return constant_propagation(typecast_expr.op());
   }
-  else if(expr.id()==ID_plus)
+  else if(expr.id() == ID_plus)
   {
     forall_operands(it, expr)
       if(!constant_propagation(*it))
@@ -177,7 +174,7 @@ bool goto_symex_statet::constant_propagation(const exprt &expr) const
 
     return true;
   }
-  else if(expr.id()==ID_mult)
+  else if(expr.id() == ID_mult)
   {
     // propagate stuff with sizeof in it
     forall_operands(it, expr)
@@ -186,7 +183,7 @@ bool goto_symex_statet::constant_propagation(const exprt &expr) const
 
     return true;
   }
-  else if(expr.id()==ID_array)
+  else if(expr.id() == ID_array)
   {
     forall_operands(it, expr)
       if(!constant_propagation(*it))
@@ -194,11 +191,11 @@ bool goto_symex_statet::constant_propagation(const exprt &expr) const
 
     return true;
   }
-  else if(expr.id()==ID_array_of)
+  else if(expr.id() == ID_array_of)
   {
     return constant_propagation(expr.op0());
   }
-  else if(expr.id()==ID_with)
+  else if(expr.id() == ID_with)
   {
     // this is bad
     /*
@@ -210,7 +207,7 @@ bool goto_symex_statet::constant_propagation(const exprt &expr) const
     */
     return false;
   }
-  else if(expr.id()==ID_struct)
+  else if(expr.id() == ID_struct)
   {
     forall_operands(it, expr)
       if(!constant_propagation(*it))
@@ -218,7 +215,7 @@ bool goto_symex_statet::constant_propagation(const exprt &expr) const
 
     return true;
   }
-  else if(expr.id()==ID_union)
+  else if(expr.id() == ID_union)
   {
     forall_operands(it, expr)
       if(!constant_propagation(*it))
@@ -227,8 +224,9 @@ bool goto_symex_statet::constant_propagation(const exprt &expr) const
     return true;
   }
   // byte_update works, byte_extract may be out-of-bounds
-  else if(expr.id()==ID_byte_update_big_endian ||
-          expr.id()==ID_byte_update_little_endian)
+  else if(
+    expr.id() == ID_byte_update_big_endian ||
+    expr.id() == ID_byte_update_little_endian)
   {
     forall_operands(it, expr)
       if(!constant_propagation(*it))
@@ -255,23 +253,23 @@ Function: goto_symex_statet::constant_propagation_reference
 
 bool goto_symex_statet::constant_propagation_reference(const exprt &expr) const
 {
-  if(expr.id()==ID_symbol)
+  if(expr.id() == ID_symbol)
     return true;
-  else if(expr.id()==ID_index)
+  else if(expr.id() == ID_index)
   {
-    const index_exprt &index_expr=to_index_expr(expr);
+    const index_exprt &index_expr= to_index_expr(expr);
 
     return constant_propagation_reference(index_expr.array()) &&
            constant_propagation(index_expr.index());
   }
-  else if(expr.id()==ID_member)
+  else if(expr.id() == ID_member)
   {
-    if(expr.operands().size()!=1)
+    if(expr.operands().size() != 1)
       throw "member expects one operand";
 
     return constant_propagation_reference(expr.op0());
   }
-  else if(expr.id()==ID_string_constant)
+  else if(expr.id() == ID_string_constant)
     return true;
 
   return false;
@@ -293,18 +291,16 @@ static bool check_renaming(const exprt &expr);
 
 static bool check_renaming(const typet &type)
 {
-  if(type.id()==ID_array)
+  if(type.id() == ID_array)
     return check_renaming(to_array_type(type).size());
-  else if(type.id()==ID_struct ||
-          type.id()==ID_union ||
-          type.id()==ID_class)
+  else if(
+    type.id() == ID_struct || type.id() == ID_union || type.id() == ID_class)
   {
-    const struct_union_typet &s_u_type=to_struct_union_type(type);
-    const struct_union_typet::componentst &components=s_u_type.components();
+    const struct_union_typet &s_u_type= to_struct_union_type(type);
+    const struct_union_typet::componentst &components= s_u_type.components();
 
-    for(struct_union_typet::componentst::const_iterator
-        it=components.begin();
-        it!=components.end();
+    for(struct_union_typet::componentst::const_iterator it= components.begin();
+        it != components.end();
         ++it)
       if(check_renaming(it->type()))
         return true;
@@ -320,13 +316,13 @@ static bool check_renaming_l1(const exprt &expr)
   if(check_renaming(expr.type()))
     return true;
 
-  if(expr.id()==ID_symbol)
+  if(expr.id() == ID_symbol)
   {
     if(!expr.get_bool(ID_C_SSA_symbol))
-      return expr.type().id()!=ID_code;
+      return expr.type().id() != ID_code;
     if(!to_ssa_expr(expr).get_level_2().empty())
       return true;
-    if(to_ssa_expr(expr).get_original_expr().type()!=expr.type())
+    if(to_ssa_expr(expr).get_original_expr().type() != expr.type())
       return true;
   }
   else
@@ -344,20 +340,18 @@ static bool check_renaming(const exprt &expr)
   if(check_renaming(expr.type()))
     return true;
 
-  if(expr.id()==ID_address_of &&
-     expr.op0().id()==ID_symbol)
+  if(expr.id() == ID_address_of && expr.op0().id() == ID_symbol)
     return check_renaming_l1(expr.op0());
-  else if(expr.id()==ID_address_of &&
-          expr.op0().id()==ID_index)
+  else if(expr.id() == ID_address_of && expr.op0().id() == ID_index)
     return check_renaming_l1(expr.op0().op0()) ||
            check_renaming(expr.op0().op1());
-  else if(expr.id()==ID_symbol)
+  else if(expr.id() == ID_symbol)
   {
     if(!expr.get_bool(ID_C_SSA_symbol))
-      return expr.type().id()!=ID_code;
+      return expr.type().id() != ID_code;
     if(to_ssa_expr(expr).get_level_2().empty())
       return true;
-    if(to_ssa_expr(expr).get_original_expr().type()!=expr.type())
+    if(to_ssa_expr(expr).get_original_expr().type() != expr.type())
       return true;
   }
   else
@@ -372,62 +366,62 @@ static bool check_renaming(const exprt &expr)
 
 static void assert_l1_renaming(const exprt &expr)
 {
-  #if 1
+#if 1
   if(check_renaming_l1(expr))
   {
     std::cerr << expr.pretty() << std::endl;
     assert(false);
   }
-  #else
+#else
   (void)expr;
-  #endif
+#endif
 }
 
 static void assert_l2_renaming(const exprt &expr)
 {
-  #if 1
+#if 1
   if(check_renaming(expr))
   {
     std::cerr << expr.pretty() << std::endl;
     assert(false);
   }
-  #else
+#else
   (void)expr;
-  #endif
+#endif
 }
 
 void goto_symex_statet::assignment(
-  ssa_exprt &lhs, // L0/L1
-  const exprt &rhs,  // L2
+  ssa_exprt &lhs,   // L0/L1
+  const exprt &rhs, // L2
   const namespacet &ns,
   bool rhs_is_simplified,
   bool record_value)
 {
   // identifier should be l0 or l1, make sure it's l1
   rename(lhs, ns, L1);
-  irep_idt l1_identifier=lhs.get_identifier();
+  irep_idt l1_identifier= lhs.get_identifier();
 
   // the type might need renaming
   rename(lhs.type(), l1_identifier, ns);
   lhs.update_type();
   assert_l1_renaming(lhs);
 
-  #if 0
+#if 0
   assert(l1_identifier != get_original_name(l1_identifier)
       || l1_identifier=="goto_symex::\\guard"
       || ns.lookup(l1_identifier).is_shared()
       || has_prefix(id2string(l1_identifier), "symex::invalid_object")
       || has_prefix(id2string(l1_identifier), "symex_dynamic::dynamic_object"));
-  #endif
+#endif
 
   // do the l2 renaming
-  if(level2.current_names.find(l1_identifier)==level2.current_names.end())
-    level2.current_names[l1_identifier]=std::make_pair(lhs, 0);
+  if(level2.current_names.find(l1_identifier) == level2.current_names.end())
+    level2.current_names[l1_identifier]= std::make_pair(lhs, 0);
   level2.increase_counter(l1_identifier);
   set_ssa_indices(lhs, ns, L2);
 
   // in case we happen to be multi-threaded, record the memory access
-  bool is_shared=l2_thread_write_encoding(lhs, ns);
+  bool is_shared= l2_thread_write_encoding(lhs, ns);
 
   assert_l2_renaming(lhs);
   assert_l2_renaming(rhs);
@@ -435,7 +429,7 @@ void goto_symex_statet::assignment(
   // for value propagation -- the RHS is L2
 
   if(!is_shared && record_value && constant_propagation(rhs))
-    propagation.values[l1_identifier]=rhs;
+    propagation.values[l1_identifier]= rhs;
   else
     propagation.remove(l1_identifier);
 
@@ -454,11 +448,11 @@ void goto_symex_statet::assignment(
     value_set.assign(l1_lhs, l1_rhs, ns, rhs_is_simplified, is_shared);
   }
 
-  #if 0
+#if 0
   std::cout << "Assigning " << l1_identifier << std::endl;
   value_set.output(ns, std::cout);
   std::cout << "**********************" << std::endl;
-  #endif
+#endif
 }
 
 /*******************************************************************\
@@ -475,14 +469,13 @@ Function: goto_symex_statet::propagationt::operator()
 
 void goto_symex_statet::propagationt::operator()(exprt &expr)
 {
-  if(expr.id()==ID_symbol)
+  if(expr.id() == ID_symbol)
   {
-    valuest::const_iterator it=
-      values.find(expr.get(ID_identifier));
-    if(it!=values.end())
-      expr=it->second;
+    valuest::const_iterator it= values.find(expr.get(ID_identifier));
+    if(it != values.end())
+      expr= it->second;
   }
-  else if(expr.id()==ID_address_of)
+  else if(expr.id() == ID_address_of)
   {
     // ignore
   }
@@ -551,25 +544,21 @@ Function: goto_symex_statet::rename
 
 \*******************************************************************/
 
-void goto_symex_statet::rename(
-  exprt &expr,
-  const namespacet &ns,
-  levelt level)
+void goto_symex_statet::rename(exprt &expr, const namespacet &ns, levelt level)
 {
   // rename all the symbols with their last known value
 
-  if(expr.id()==ID_symbol &&
-     expr.get_bool(ID_C_SSA_symbol))
+  if(expr.id() == ID_symbol && expr.get_bool(ID_C_SSA_symbol))
   {
-    ssa_exprt &ssa=to_ssa_expr(expr);
+    ssa_exprt &ssa= to_ssa_expr(expr);
 
-    if(level==L0 || level==L1)
+    if(level == L0 || level == L1)
     {
       set_ssa_indices(ssa, ns, level);
       rename(expr.type(), ssa.get_identifier(), ns, level);
       ssa.update_type();
     }
-    else if(level==L2)
+    else if(level == L2)
     {
       set_ssa_indices(ssa, ns, L1);
       rename(expr.type(), ssa.get_identifier(), ns, level);
@@ -590,36 +579,32 @@ void goto_symex_statet::rename(
         propagationt::valuest::const_iterator p_it=
           propagation.values.find(ssa.get_identifier());
 
-        if(p_it!=propagation.values.end())
-          expr=p_it->second; // already L2
+        if(p_it != propagation.values.end())
+          expr= p_it->second; // already L2
         else
           set_ssa_indices(ssa, ns, L2);
       }
     }
   }
-  else if(expr.id()==ID_symbol)
+  else if(expr.id() == ID_symbol)
   {
     // we never rename function symbols
-    if(ns.follow(expr.type()).id()==ID_code)
+    if(ns.follow(expr.type()).id() == ID_code)
     {
-      rename(
-        expr.type(),
-        to_symbol_expr(expr).get_identifier(),
-        ns,
-        level);
+      rename(expr.type(), to_symbol_expr(expr).get_identifier(), ns, level);
 
       return;
     }
 
-    expr=ssa_exprt(expr);
+    expr= ssa_exprt(expr);
     rename(expr, ns, level);
   }
-  else if(expr.id()==ID_address_of)
+  else if(expr.id() == ID_address_of)
   {
-    assert(expr.operands().size()==1);
+    assert(expr.operands().size() == 1);
     rename_address(expr.op0(), ns, level);
-    assert(expr.type().id()==ID_pointer);
-    expr.type().subtype()=expr.op0().type();
+    assert(expr.type().id() == ID_pointer);
+    expr.type().subtype()= expr.op0().type();
   }
   else
   {
@@ -631,13 +616,14 @@ void goto_symex_statet::rename(
       rename(*it, ns, level);
 
     // some fixes
-    if(expr.id()==ID_with)
-      expr.type()=to_with_expr(expr).old().type();
-    else if(expr.id()==ID_if)
+    if(expr.id() == ID_with)
+      expr.type()= to_with_expr(expr).old().type();
+    else if(expr.id() == ID_if)
     {
-      assert(to_if_expr(expr).true_case().type()==
-             to_if_expr(expr).false_case().type());
-      expr.type()=to_if_expr(expr).true_case().type();
+      assert(
+        to_if_expr(expr).true_case().type() ==
+        to_if_expr(expr).false_case().type());
+      expr.type()= to_if_expr(expr).true_case().type();
     }
   }
 }
@@ -659,44 +645,44 @@ bool goto_symex_statet::l2_thread_read_encoding(
   const namespacet &ns)
 {
   // do we have threads?
-  if(threads.size()<=1)
+  if(threads.size() <= 1)
     return false;
 
   // is it a shared object?
-  assert(dirty!=0);
-  const irep_idt &obj_identifier=expr.get_object_name();
-  if(obj_identifier=="goto_symex::\\guard" ||
-     (!ns.lookup(obj_identifier).is_shared() &&
-      !(*dirty)(obj_identifier)))
+  assert(dirty != 0);
+  const irep_idt &obj_identifier= expr.get_object_name();
+  if(
+    obj_identifier == "goto_symex::\\guard" ||
+    (!ns.lookup(obj_identifier).is_shared() && !(*dirty)(obj_identifier)))
     return false;
 
-  ssa_exprt ssa_l1=expr;
+  ssa_exprt ssa_l1= expr;
   ssa_l1.remove_level_2();
-  const irep_idt &l1_identifier=ssa_l1.get_identifier();
+  const irep_idt &l1_identifier= ssa_l1.get_identifier();
 
   // see whether we are within an atomic section
-  if(atomic_section_id!=0)
+  if(atomic_section_id != 0)
   {
     guardt write_guard;
     write_guard.add(false_exprt());
 
     written_in_atomic_sectiont::const_iterator a_s_writes=
       written_in_atomic_section.find(ssa_l1);
-    if(a_s_writes!=written_in_atomic_section.end())
+    if(a_s_writes != written_in_atomic_section.end())
     {
-      for(a_s_w_entryt::const_iterator it=a_s_writes->second.begin();
-          it!=a_s_writes->second.end();
+      for(a_s_w_entryt::const_iterator it= a_s_writes->second.begin();
+          it != a_s_writes->second.end();
           ++it)
       {
-        guardt g=*it;
-        g-=guard;
+        guardt g= *it;
+        g-= guard;
         if(g.is_true())
           // there has already been a write to l1_identifier within
           // this atomic section under the same guard, or a guard
           // that implies the current one
           return false;
 
-        write_guard|=*it;
+        write_guard|= *it;
       }
     }
 
@@ -708,49 +694,49 @@ bool goto_symex_statet::l2_thread_read_encoding(
     guardt read_guard;
     read_guard.add(false_exprt());
 
-    a_s_r_entryt &a_s_read=read_in_atomic_section[ssa_l1];
-    for(std::list<guardt>::const_iterator it=a_s_read.second.begin();
-        it!=a_s_read.second.end();
+    a_s_r_entryt &a_s_read= read_in_atomic_section[ssa_l1];
+    for(std::list<guardt>::const_iterator it= a_s_read.second.begin();
+        it != a_s_read.second.end();
         ++it)
     {
-      guardt g=*it;
-      g-=guard;
+      guardt g= *it;
+      g-= guard;
       if(g.is_true())
         // there has already been a read l1_identifier within
         // this atomic section under the same guard, or a guard
         // that implies the current one
         return false;
 
-      read_guard|=*it;
+      read_guard|= *it;
     }
 
-    exprt cond=read_guard.as_expr();
+    exprt cond= read_guard.as_expr();
     if(!no_write.op().is_false())
-      cond=or_exprt(no_write.op(), cond);
+      cond= or_exprt(no_write.op(), cond);
 
     if_exprt tmp(cond, ssa_l1, ssa_l1);
     set_ssa_indices(to_ssa_expr(tmp.true_case()), ns, L2);
 
     if(a_s_read.second.empty())
     {
-      if(level2.current_names.find(l1_identifier)==level2.current_names.end())
-        level2.current_names[l1_identifier]=std::make_pair(ssa_l1, 0);
+      if(level2.current_names.find(l1_identifier) == level2.current_names.end())
+        level2.current_names[l1_identifier]= std::make_pair(ssa_l1, 0);
       level2.increase_counter(l1_identifier);
-      a_s_read.first=level2.current_count(l1_identifier);
+      a_s_read.first= level2.current_count(l1_identifier);
     }
 
     to_ssa_expr(tmp.false_case()).set_level_2(a_s_read.first);
 
     if(cond.is_false())
     {
-      exprt t=tmp.false_case();
+      exprt t= tmp.false_case();
       t.swap(tmp);
     }
 
-    const bool record_events_bak=record_events;
-    record_events=false;
+    const bool record_events_bak= record_events;
+    record_events= false;
     assignment(ssa_l1, tmp, ns, true, true);
-    record_events=record_events_bak;
+    record_events= record_events_bak;
 
     symex_target->assignment(
       guard.as_expr(),
@@ -762,7 +748,7 @@ bool goto_symex_statet::l2_thread_read_encoding(
       symex_targett::PHI);
 
     set_ssa_indices(ssa_l1, ns, L2);
-    expr=ssa_l1;
+    expr= ssa_l1;
 
     a_s_read.second.push_back(guard);
     if(!no_write.op().is_false())
@@ -771,29 +757,25 @@ bool goto_symex_statet::l2_thread_read_encoding(
     return true;
   }
 
-  if(level2.current_names.find(l1_identifier)==level2.current_names.end())
-    level2.current_names[l1_identifier]=std::make_pair(ssa_l1, 0);
+  if(level2.current_names.find(l1_identifier) == level2.current_names.end())
+    level2.current_names[l1_identifier]= std::make_pair(ssa_l1, 0);
 
   // No event and no fresh index, but avoid constant propagation
   if(!record_events)
   {
     set_ssa_indices(ssa_l1, ns, L2);
-    expr=ssa_l1;
+    expr= ssa_l1;
     return true;
   }
 
   // produce a fresh L2 name
   level2.increase_counter(l1_identifier);
   set_ssa_indices(ssa_l1, ns, L2);
-  expr=ssa_l1;
+  expr= ssa_l1;
 
   // and record that
-  assert(symex_target!=NULL);
-  symex_target->shared_read(
-    guard.as_expr(),
-    expr,
-    atomic_section_id,
-    source);
+  assert(symex_target != NULL);
+  symex_target->shared_read(guard.as_expr(), expr, atomic_section_id, source);
 
   return true;
 }
@@ -818,17 +800,17 @@ bool goto_symex_statet::l2_thread_write_encoding(
     return false;
 
   // is it a shared object?
-  assert(dirty!=0);
-  const irep_idt &obj_identifier=expr.get_object_name();
-  if(obj_identifier=="goto_symex::\\guard" ||
-     (!ns.lookup(obj_identifier).is_shared() &&
-      !(*dirty)(obj_identifier)))
+  assert(dirty != 0);
+  const irep_idt &obj_identifier= expr.get_object_name();
+  if(
+    obj_identifier == "goto_symex::\\guard" ||
+    (!ns.lookup(obj_identifier).is_shared() && !(*dirty)(obj_identifier)))
     return false; // not shared
 
   // see whether we are within an atomic section
-  if(atomic_section_id!=0)
+  if(atomic_section_id != 0)
   {
-    ssa_exprt ssa_l1=expr;
+    ssa_exprt ssa_l1= expr;
     ssa_l1.remove_level_2();
 
     written_in_atomic_section[ssa_l1].push_back(guard);
@@ -836,14 +818,10 @@ bool goto_symex_statet::l2_thread_write_encoding(
   }
 
   // record a shared write
-  symex_target->shared_write(
-    guard.as_expr(),
-    expr,
-    atomic_section_id,
-    source);
+  symex_target->shared_write(guard.as_expr(), expr, atomic_section_id, source);
 
   // do we have threads?
-  return threads.size()>1;
+  return threads.size() > 1;
 }
 
 /*******************************************************************\
@@ -863,10 +841,9 @@ void goto_symex_statet::rename_address(
   const namespacet &ns,
   levelt level)
 {
-  if(expr.id()==ID_symbol &&
-     expr.get_bool(ID_C_SSA_symbol))
+  if(expr.id() == ID_symbol && expr.get_bool(ID_C_SSA_symbol))
   {
-    ssa_exprt &ssa=to_ssa_expr(expr);
+    ssa_exprt &ssa= to_ssa_expr(expr);
 
     // only do L1!
     set_ssa_indices(ssa, ns, L1);
@@ -874,50 +851,50 @@ void goto_symex_statet::rename_address(
     rename(expr.type(), ssa.get_identifier(), ns, level);
     ssa.update_type();
   }
-  else if(expr.id()==ID_symbol)
+  else if(expr.id() == ID_symbol)
   {
-    expr=ssa_exprt(expr);
+    expr= ssa_exprt(expr);
     rename_address(expr, ns, level);
   }
   else
   {
-    if(expr.id()==ID_index)
+    if(expr.id() == ID_index)
     {
-      index_exprt &index_expr=to_index_expr(expr);
+      index_exprt &index_expr= to_index_expr(expr);
 
       rename_address(index_expr.array(), ns, level);
-      assert(index_expr.array().type().id()==ID_array);
-      expr.type()=index_expr.array().type().subtype();
+      assert(index_expr.array().type().id() == ID_array);
+      expr.type()= index_expr.array().type().subtype();
 
       // the index is not an address
       rename(index_expr.index(), ns, level);
     }
-    else if(expr.id()==ID_if)
+    else if(expr.id() == ID_if)
     {
       // the condition is not an address
-      if_exprt &if_expr=to_if_expr(expr);
+      if_exprt &if_expr= to_if_expr(expr);
       rename(if_expr.cond(), ns, level);
       rename_address(if_expr.true_case(), ns, level);
       rename_address(if_expr.false_case(), ns, level);
 
-      if_expr.type()=if_expr.true_case().type();
+      if_expr.type()= if_expr.true_case().type();
     }
-    else if(expr.id()==ID_member)
+    else if(expr.id() == ID_member)
     {
-      member_exprt &member_expr=to_member_expr(expr);
+      member_exprt &member_expr= to_member_expr(expr);
 
       rename_address(member_expr.struct_op(), ns, level);
 
       // type might not have been renamed in case of nesting of
       // structs and pointers/arrays
-      if(member_expr.struct_op().type().id()!=ID_symbol)
+      if(member_expr.struct_op().type().id() != ID_symbol)
       {
         const struct_union_typet &su_type=
           to_struct_union_type(member_expr.struct_op().type());
         const struct_union_typet::componentt &comp=
           su_type.get_component(member_expr.get_component_name());
         assert(comp.is_not_nil());
-        expr.type()=comp.type();
+        expr.type()= comp.type();
       }
       else
         rename(expr.type(), irep_idt(), ns, level);
@@ -957,65 +934,60 @@ void goto_symex_statet::rename(
   // to the given level
 
   std::pair<l1_typest::iterator, bool> l1_type_entry;
-  if(level==L2 &&
-     !l1_identifier.empty())
+  if(level == L2 && !l1_identifier.empty())
   {
-    l1_type_entry=l1_types.insert(std::make_pair(l1_identifier, type));
+    l1_type_entry= l1_types.insert(std::make_pair(l1_identifier, type));
 
     if(!l1_type_entry.second) // was already in map
     {
       // do not change a complete array type to an incomplete one
 
-      const typet &type_prev=l1_type_entry.first->second;
+      const typet &type_prev= l1_type_entry.first->second;
 
-      if(type.id()!=ID_array ||
-         type_prev.id()!=ID_array ||
-         to_array_type(type).is_incomplete() ||
-         to_array_type(type_prev).is_complete())
+      if(
+        type.id() != ID_array || type_prev.id() != ID_array ||
+        to_array_type(type).is_incomplete() ||
+        to_array_type(type_prev).is_complete())
       {
-        type=l1_type_entry.first->second;
+        type= l1_type_entry.first->second;
         return;
       }
     }
   }
 
-  if(type.id()==ID_array)
+  if(type.id() == ID_array)
   {
     rename(type.subtype(), irep_idt(), ns, level);
     rename(to_array_type(type).size(), ns, level);
   }
-  else if(type.id()==ID_struct ||
-          type.id()==ID_union ||
-          type.id()==ID_class)
+  else if(
+    type.id() == ID_struct || type.id() == ID_union || type.id() == ID_class)
   {
-    struct_union_typet &s_u_type=to_struct_union_type(type);
-    struct_union_typet::componentst &components=s_u_type.components();
+    struct_union_typet &s_u_type= to_struct_union_type(type);
+    struct_union_typet::componentst &components= s_u_type.components();
 
-    for(struct_union_typet::componentst::iterator
-        it=components.begin();
-        it!=components.end();
+    for(struct_union_typet::componentst::iterator it= components.begin();
+        it != components.end();
         ++it)
       // be careful, or it might get cyclic
-      if(it->type().id()==ID_array)
+      if(it->type().id() == ID_array)
         rename(to_array_type(it->type()).size(), ns, level);
-      else if(it->type().id()!=ID_pointer)
+      else if(it->type().id() != ID_pointer)
         rename(it->type(), irep_idt(), ns, level);
   }
-  else if(type.id()==ID_pointer)
+  else if(type.id() == ID_pointer)
   {
     rename(type.subtype(), irep_idt(), ns, level);
   }
-  else if(type.id()==ID_symbol)
+  else if(type.id() == ID_symbol)
   {
-    const symbolt &symbol=
-      ns.lookup(to_symbol_type(type).get_identifier());
-    type=symbol.type;
+    const symbolt &symbol= ns.lookup(to_symbol_type(type).get_identifier());
+    type= symbol.type;
     rename(type, l1_identifier, ns, level);
   }
 
-  if(level==L2 &&
-     !l1_identifier.empty())
-    l1_type_entry.first->second=type;
+  if(level == L2 && !l1_identifier.empty())
+    l1_type_entry.first->second= type;
 }
 
 /*******************************************************************\
@@ -1034,9 +1006,8 @@ void goto_symex_statet::get_original_name(exprt &expr) const
 {
   get_original_name(expr.type());
 
-  if(expr.id()==ID_symbol &&
-     expr.get_bool(ID_C_SSA_symbol))
-    expr=to_ssa_expr(expr).get_original_expr();
+  if(expr.id() == ID_symbol && expr.get_bool(ID_C_SSA_symbol))
+    expr= to_ssa_expr(expr).get_original_expr();
   else
     Forall_operands(it, expr)
       get_original_name(*it);
@@ -1058,25 +1029,23 @@ void goto_symex_statet::get_original_name(typet &type) const
 {
   // rename all the symbols with their last known value
 
-  if(type.id()==ID_array)
+  if(type.id() == ID_array)
   {
     get_original_name(type.subtype());
     get_original_name(to_array_type(type).size());
   }
-  else if(type.id()==ID_struct ||
-          type.id()==ID_union ||
-          type.id()==ID_class)
+  else if(
+    type.id() == ID_struct || type.id() == ID_union || type.id() == ID_class)
   {
-    struct_union_typet &s_u_type=to_struct_union_type(type);
-    struct_union_typet::componentst &components=s_u_type.components();
+    struct_union_typet &s_u_type= to_struct_union_type(type);
+    struct_union_typet::componentst &components= s_u_type.components();
 
-    for(struct_union_typet::componentst::iterator
-        it=components.begin();
-        it!=components.end();
+    for(struct_union_typet::componentst::iterator it= components.begin();
+        it != components.end();
         ++it)
       get_original_name(it->type());
   }
-  else if(type.id()==ID_pointer)
+  else if(type.id() == ID_pointer)
   {
     get_original_name(type.subtype());
   }
@@ -1098,8 +1067,7 @@ void goto_symex_statet::get_l1_name(exprt &expr) const
 {
   // do not reset the type !
 
-  if(expr.id()==ID_symbol &&
-     expr.get_bool(ID_C_SSA_symbol))
+  if(expr.id() == ID_symbol && expr.get_bool(ID_C_SSA_symbol))
     to_ssa_expr(expr).remove_level_2();
   else
     Forall_operands(it, expr)
@@ -1120,16 +1088,16 @@ Function: goto_symex_statet::switch_to_thread
 
 void goto_symex_statet::switch_to_thread(unsigned t)
 {
-  assert(source.thread_nr<threads.size());
-  assert(t<threads.size());
+  assert(source.thread_nr < threads.size());
+  assert(t < threads.size());
 
   // save PC
-  threads[source.thread_nr].pc=source.pc;
-  threads[source.thread_nr].atomic_section_id=atomic_section_id;
+  threads[source.thread_nr].pc= source.pc;
+  threads[source.thread_nr].atomic_section_id= atomic_section_id;
 
   // get new PC
-  source.thread_nr=t;
-  source.pc=threads[t].pc;
+  source.thread_nr= t;
+  source.pc= threads[t].pc;
 
-  guard=threads[t].guard;
+  guard= threads[t].guard;
 }

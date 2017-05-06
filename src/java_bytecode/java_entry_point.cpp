@@ -49,13 +49,13 @@ Function: create_initialize
 static void create_initialize(symbol_tablet &symbol_table)
 {
   symbolt initialize;
-  initialize.name=INITIALIZE;
-  initialize.base_name=INITIALIZE;
-  initialize.mode=ID_java;
+  initialize.name= INITIALIZE;
+  initialize.base_name= INITIALIZE;
+  initialize.mode= ID_java;
 
   code_typet type;
-  type.return_type()=empty_typet();
-  initialize.type=type;
+  type.return_type()= empty_typet();
+  initialize.type= type;
 
   code_blockt init_code;
 
@@ -67,20 +67,17 @@ static void create_initialize(symbol_tablet &symbol_table)
   init_code.add(
     code_assignt(rounding_mode, from_integer(0, rounding_mode.type())));
 
-  initialize.value=init_code;
+  initialize.value= init_code;
 
   if(symbol_table.add(initialize))
-    throw "failed to add "+std::string(INITIALIZE);
+    throw "failed to add " + std::string(INITIALIZE);
 }
-
 
 static bool should_init_symbol(const symbolt &sym)
 {
-  if(sym.type.id()!=ID_code &&
-     sym.is_lvalue &&
-     sym.is_state_var &&
-     sym.is_static_lifetime &&
-     sym.mode==ID_java)
+  if(
+    sym.type.id() != ID_code && sym.is_lvalue && sym.is_state_var &&
+    sym.is_static_lifetime && sym.mode == ID_java)
     return true;
 
   return has_prefix(id2string(sym.name), "java::java.lang.String.Literal");
@@ -105,8 +102,8 @@ bool java_static_lifetime_init(
   bool assume_init_pointers_not_null,
   unsigned max_nondet_array_length)
 {
-  symbolt &initialize_symbol=symbol_table.lookup(INITIALIZE);
-  code_blockt &code_block=to_code_block(to_code(initialize_symbol.value));
+  symbolt &initialize_symbol= symbol_table.lookup(INITIALIZE);
+  code_blockt &code_block= to_code_block(to_code(initialize_symbol.value));
 
   // We need to zero out all static variables, or nondet-initialize if they're
   // external. Iterate over a copy of the symtab, as its iterators are
@@ -118,25 +115,24 @@ bool java_static_lifetime_init(
 
   for(const auto &symname : symbol_names)
   {
-    const symbolt &sym=symbol_table.lookup(symname);
+    const symbolt &sym= symbol_table.lookup(symname);
     if(should_init_symbol(sym))
     {
-      if(sym.value.is_nil() && sym.type!=empty_typet())
+      if(sym.value.is_nil() && sym.type != empty_typet())
       {
-        bool allow_null=!assume_init_pointers_not_null;
+        bool allow_null= !assume_init_pointers_not_null;
         if(allow_null)
         {
-          std::string namestr=id2string(sym.symbol_expr().get_identifier());
-          const std::string suffix="@class_model";
+          std::string namestr= id2string(sym.symbol_expr().get_identifier());
+          const std::string suffix= "@class_model";
           // Static '.class' fields are always non-null.
           if(has_suffix(namestr, suffix))
-            allow_null=false;
-          if(allow_null && has_prefix(
-               namestr,
-               "java::java.lang.String.Literal"))
-            allow_null=false;
+            allow_null= false;
+          if(
+            allow_null && has_prefix(namestr, "java::java.lang.String.Literal"))
+            allow_null= false;
         }
-        auto newsym=object_factory(
+        auto newsym= object_factory(
           sym.type,
           code_block,
           allow_null,
@@ -149,7 +145,7 @@ bool java_static_lifetime_init(
       else if(sym.value.is_not_nil())
       {
         code_assignt assignment(sym.symbol_expr(), sym.value);
-        assignment.add_source_location()=source_location;
+        assignment.add_source_location()= source_location;
         code_block.add(assignment);
       }
     }
@@ -157,19 +153,18 @@ bool java_static_lifetime_init(
 
   // we now need to run all the <clinit> methods
 
-  for(symbol_tablet::symbolst::const_iterator
-      it=symbol_table.symbols.begin();
-      it!=symbol_table.symbols.end();
+  for(symbol_tablet::symbolst::const_iterator it= symbol_table.symbols.begin();
+      it != symbol_table.symbols.end();
       it++)
   {
-    if(it->second.base_name=="<clinit>" &&
-       it->second.type.id()==ID_code &&
-       it->second.mode==ID_java)
+    if(
+      it->second.base_name == "<clinit>" && it->second.type.id() == ID_code &&
+      it->second.mode == ID_java)
     {
       code_function_callt function_call;
-      function_call.lhs()=nil_exprt();
-      function_call.function()=it->second.symbol_expr();
-      function_call.add_source_location()=source_location;
+      function_call.lhs()= nil_exprt();
+      function_call.function()= it->second.symbol_expr();
+      function_call.add_source_location()= source_location;
       code_block.add(function_call);
     }
   }
@@ -203,37 +198,33 @@ exprt::operandst java_build_arguments(
   exprt::operandst main_arguments;
   main_arguments.resize(parameters.size());
 
-  for(std::size_t param_number=0;
-      param_number<parameters.size();
+  for(std::size_t param_number= 0; param_number < parameters.size();
       param_number++)
   {
-    bool is_this=(param_number==0) &&
-                 parameters[param_number].get_this();
+    bool is_this= (param_number == 0) && parameters[param_number].get_this();
     bool is_default_entry_point(config.main.empty());
-    bool is_main=is_default_entry_point;
+    bool is_main= is_default_entry_point;
     if(!is_main)
     {
-      bool named_main=has_suffix(config.main, ".main");
+      bool named_main= has_suffix(config.main, ".main");
       const typet &string_array_type=
         java_type_from_string("[Ljava.lang.String;");
       bool has_correct_type=
-        to_code_type(function.type).return_type().id()==ID_empty &&
-        (!to_code_type(function.type).has_this()) &&
-        parameters.size()==1 &&
+        to_code_type(function.type).return_type().id() == ID_empty &&
+        (!to_code_type(function.type).has_this()) && parameters.size() == 1 &&
         parameters[0].type().full_eq(string_array_type);
-      is_main=(named_main && has_correct_type);
+      is_main= (named_main && has_correct_type);
     }
 
-    bool allow_null=(!is_main) && (!is_this) && !assume_init_pointers_not_null;
+    bool allow_null= (!is_main) && (!is_this) && !assume_init_pointers_not_null;
 
-    main_arguments[param_number]=
-      object_factory(
-        parameters[param_number].type(),
-        init_code,
-        allow_null,
-        symbol_table,
-        max_nondet_array_length,
-        function.location);
+    main_arguments[param_number]= object_factory(
+      parameters[param_number].type(),
+      init_code,
+      allow_null,
+      symbol_table,
+      max_nondet_array_length,
+      function.location);
 
     const symbolt &p_symbol=
       symbol_table.lookup(parameters[param_number].get_identifier());
@@ -241,13 +232,10 @@ exprt::operandst java_build_arguments(
     // record as an input
     codet input(ID_input);
     input.operands().resize(2);
-    input.op0()=
-      address_of_exprt(
-        index_exprt(
-          string_constantt(p_symbol.base_name),
-          from_integer(0, index_type())));
-    input.op1()=main_arguments[param_number];
-    input.add_source_location()=function.location;
+    input.op0()= address_of_exprt(index_exprt(
+      string_constantt(p_symbol.base_name), from_integer(0, index_type())));
+    input.op1()= main_arguments[param_number];
+    input.add_source_location()= function.location;
 
     init_code.move_to_operands(input);
   }
@@ -277,10 +265,10 @@ void java_record_outputs(
     to_code_type(function.type).parameters();
 
   exprt::operandst result;
-  result.reserve(parameters.size()+1);
+  result.reserve(parameters.size() + 1);
 
   bool has_return_value=
-    to_code_type(function.type).return_type()!=empty_typet();
+    to_code_type(function.type).return_type() != empty_typet();
 
   if(has_return_value)
   {
@@ -288,38 +276,32 @@ void java_record_outputs(
     codet output(ID_output);
     output.operands().resize(2);
 
-    const symbolt &return_symbol=symbol_table.lookup("return'");
+    const symbolt &return_symbol= symbol_table.lookup("return'");
 
-    output.op0()=
-      address_of_exprt(
-        index_exprt(
-          string_constantt(return_symbol.base_name),
-          from_integer(0, index_type())));
-    output.op1()=return_symbol.symbol_expr();
-    output.add_source_location()=function.location;
+    output.op0()= address_of_exprt(index_exprt(
+      string_constantt(return_symbol.base_name),
+      from_integer(0, index_type())));
+    output.op1()= return_symbol.symbol_expr();
+    output.add_source_location()= function.location;
 
     init_code.move_to_operands(output);
   }
 
-  for(std::size_t param_number=0;
-      param_number<parameters.size();
+  for(std::size_t param_number= 0; param_number < parameters.size();
       param_number++)
   {
     const symbolt &p_symbol=
       symbol_table.lookup(parameters[param_number].get_identifier());
 
-    if(p_symbol.type.id()==ID_pointer)
+    if(p_symbol.type.id() == ID_pointer)
     {
       // record as an output
       codet output(ID_output);
       output.operands().resize(2);
-      output.op0()=
-        address_of_exprt(
-          index_exprt(
-            string_constantt(p_symbol.base_name),
-            from_integer(0, index_type())));
-      output.op1()=main_arguments[param_number];
-      output.add_source_location()=function.location;
+      output.op0()= address_of_exprt(index_exprt(
+        string_constantt(p_symbol.base_name), from_integer(0, index_type())));
+      output.op1()= main_arguments[param_number];
+      output.add_source_location()= function.location;
 
       init_code.move_to_operands(output);
     }
@@ -329,17 +311,16 @@ void java_record_outputs(
   codet output(ID_output);
   output.operands().resize(2);
 
-  assert(symbol_table.has_symbol(id2string(function.name)+EXC_SUFFIX));
+  assert(symbol_table.has_symbol(id2string(function.name) + EXC_SUFFIX));
 
   // retrieve the exception variable
-  const symbolt exc_symbol=symbol_table.lookup(
-    id2string(function.name)+EXC_SUFFIX);
+  const symbolt exc_symbol=
+    symbol_table.lookup(id2string(function.name) + EXC_SUFFIX);
 
-  output.op0()=address_of_exprt(
-    index_exprt(string_constantt(exc_symbol.base_name),
-                from_integer(0, index_type())));
-  output.op1()=exc_symbol.symbol_expr();
-  output.add_source_location()=function.location;
+  output.op0()= address_of_exprt(index_exprt(
+    string_constantt(exc_symbol.base_name), from_integer(0, index_type())));
+  output.op1()= exc_symbol.symbol_expr();
+  output.add_source_location()= function.location;
 
   init_code.move_to_operands(output);
 }
@@ -356,37 +337,38 @@ main_function_resultt get_main_symbol(
   messaget message(message_handler);
 
   // find main symbol
-  if(config.main!="")
+  if(config.main != "")
   {
     // Add java:: prefix
-    std::string main_identifier="java::"+config.main;
+    std::string main_identifier= "java::" + config.main;
 
     symbol_tablet::symbolst::const_iterator s_it;
 
     // Does it have a type signature? (':' suffix)
-    if(config.main.rfind(':')==std::string::npos)
+    if(config.main.rfind(':') == std::string::npos)
     {
-      std::string prefix=main_identifier+':';
+      std::string prefix= main_identifier + ':';
       std::set<irep_idt> matches;
 
       for(const auto &s : symbol_table.symbols)
-        if(has_prefix(id2string(s.first), prefix) &&
-           s.second.type.id()==ID_code)
+        if(
+          has_prefix(id2string(s.first), prefix) &&
+          s.second.type.id() == ID_code)
           matches.insert(s.first);
 
       if(matches.empty())
       {
-        message.error() << "main symbol `" << config.main
-                        << "' not found" << messaget::eom;
-        res.main_function=symbol;
-        res.error_found=true;
-        res.stop_convert=true;
+        message.error() << "main symbol `" << config.main << "' not found"
+                        << messaget::eom;
+        res.main_function= symbol;
+        res.error_found= true;
+        res.stop_convert= true;
         return res;
       }
-      else if(matches.size()==1)
+      else if(matches.size() == 1)
       {
-        s_it=symbol_table.symbols.find(*matches.begin());
-        assert(s_it!=symbol_table.symbols.end());
+        s_it= symbol_table.symbols.find(*matches.begin());
+        assert(s_it != symbol_table.symbols.end());
       }
       else
       {
@@ -397,121 +379,121 @@ main_function_resultt get_main_symbol(
           message.error() << "  " << s << '\n';
 
         message.error() << messaget::eom;
-        res.main_function=symbol;
-        res.error_found=true;
-        res.stop_convert=true;
+        res.main_function= symbol;
+        res.error_found= true;
+        res.stop_convert= true;
         return res;
       }
     }
     else
     {
       // just look it up
-      s_it=symbol_table.symbols.find(main_identifier);
+      s_it= symbol_table.symbols.find(main_identifier);
 
-      if(s_it==symbol_table.symbols.end())
+      if(s_it == symbol_table.symbols.end())
       {
-        message.error() << "main symbol `" << config.main
-                        << "' not found" << messaget::eom;
-        res.main_function=symbol;
-        res.error_found=true;
-        res.stop_convert=true;
+        message.error() << "main symbol `" << config.main << "' not found"
+                        << messaget::eom;
+        res.main_function= symbol;
+        res.error_found= true;
+        res.stop_convert= true;
         return res;
       }
     }
     // function symbol
-    symbol=s_it->second;
+    symbol= s_it->second;
 
-    if(symbol.type.id()!=ID_code)
+    if(symbol.type.id() != ID_code)
     {
-      message.error() << "main symbol `" << config.main
-                      << "' not a function" << messaget::eom;
-      res.main_function=symbol;
-      res.error_found=true;
-      res.stop_convert=true;
+      message.error() << "main symbol `" << config.main << "' not a function"
+                      << messaget::eom;
+      res.main_function= symbol;
+      res.error_found= true;
+      res.stop_convert= true;
       return res;
     }
 
     // check if it has a body
     if(symbol.value.is_nil() && !allow_no_body)
     {
-      message.error() << "main method `" << main_class
-                      << "' has no body" << messaget::eom;
-      res.main_function=symbol;
-      res.error_found=true;
-      res.stop_convert=true;
+      message.error() << "main method `" << main_class << "' has no body"
+                      << messaget::eom;
+      res.main_function= symbol;
+      res.error_found= true;
+      res.stop_convert= true;
       return res;
     }
   }
   else
   {
     // no function given, we look for the main class
-    assert(config.main=="");
+    assert(config.main == "");
 
     // are we given a main class?
     if(main_class.empty())
     {
-      res.main_function=symbol;
-      res.error_found=false;
-      res.stop_convert=true;
+      res.main_function= symbol;
+      res.error_found= false;
+      res.stop_convert= true;
       return res; // silently ignore
     }
 
-    std::string entry_method=
-      id2string(main_class)+".main";
+    std::string entry_method= id2string(main_class) + ".main";
 
-    std::string prefix="java::"+entry_method+":";
+    std::string prefix= "java::" + entry_method + ":";
 
     // look it up
     std::set<irep_idt> matches;
 
-    for(symbol_tablet::symbolst::const_iterator
-        s_it=symbol_table.symbols.begin();
-        s_it!=symbol_table.symbols.end();
+    for(symbol_tablet::symbolst::const_iterator s_it=
+          symbol_table.symbols.begin();
+        s_it != symbol_table.symbols.end();
         s_it++)
     {
-      if(s_it->second.type.id()==ID_code &&
-         has_prefix(id2string(s_it->first), prefix))
+      if(
+        s_it->second.type.id() == ID_code &&
+        has_prefix(id2string(s_it->first), prefix))
         matches.insert(s_it->first);
     }
 
     if(matches.empty())
     {
       // Not found, silently ignore
-      res.main_function=symbol;
-      res.error_found=false;
-      res.stop_convert=true;
+      res.main_function= symbol;
+      res.error_found= false;
+      res.stop_convert= true;
       return res;
     }
 
-    if(matches.size()>=2)
+    if(matches.size() >= 2)
     {
-      message.error() << "main method in `" << main_class
-                      << "' is ambiguous" << messaget::eom;
-      res.main_function=symbolt();
-      res.error_found=true;
-      res.stop_convert=true;
-      return res;  // give up with error, no main
+      message.error() << "main method in `" << main_class << "' is ambiguous"
+                      << messaget::eom;
+      res.main_function= symbolt();
+      res.error_found= true;
+      res.stop_convert= true;
+      return res; // give up with error, no main
     }
 
     // function symbol
-    symbol=symbol_table.symbols.find(*matches.begin())->second;
+    symbol= symbol_table.symbols.find(*matches.begin())->second;
 
     // check if it has a body
     if(symbol.value.is_nil() && !allow_no_body)
     {
-      message.error() << "main method `" << main_class
-                      << "' has no body" << messaget::eom;
-      res.main_function=symbol;
-      res.error_found=true;
-      res.stop_convert=true;
-      return res;  // give up with error
+      message.error() << "main method `" << main_class << "' has no body"
+                      << messaget::eom;
+      res.main_function= symbol;
+      res.error_found= true;
+      res.stop_convert= true;
+      return res; // give up with error
     }
   }
 
-  res.main_function=symbol;
-  res.error_found=false;
-  res.stop_convert=false;
-  return res;  // give up with error
+  res.main_function= symbol;
+  res.error_found= false;
+  res.stop_convert= false;
+  return res; // give up with error
 }
 
 /*******************************************************************\
@@ -540,8 +522,9 @@ bool java_entry_point(
   size_t max_nondet_array_length)
 {
   // check if the entry point is already there
-  if(symbol_table.symbols.find(goto_functionst::entry_point())!=
-     symbol_table.symbols.end())
+  if(
+    symbol_table.symbols.find(goto_functionst::entry_point()) !=
+    symbol_table.symbols.end())
     return false; // silently ignore
 
   messaget message(message_handler);
@@ -549,10 +532,10 @@ bool java_entry_point(
     get_main_symbol(symbol_table, main_class, message_handler);
   if(res.stop_convert)
     return res.stop_convert;
-  symbolt symbol=res.main_function;
+  symbolt symbol= res.main_function;
 
   assert(!symbol.value.is_nil());
-  assert(symbol.type.id()==ID_code);
+  assert(symbol.type.id() == ID_code);
 
   create_initialize(symbol_table);
 
@@ -571,7 +554,7 @@ bool java_entry_point(
     symbol_tablet::symbolst::iterator init_it=
       symbol_table.symbols.find(INITIALIZE);
 
-    if(init_it==symbol_table.symbols.end())
+    if(init_it == symbol_table.symbols.end())
     {
       message.error() << "failed to find " INITIALIZE " symbol"
                       << messaget::eom;
@@ -580,8 +563,8 @@ bool java_entry_point(
 
     code_function_callt call_init;
     call_init.lhs().make_nil();
-    call_init.add_source_location()=symbol.location;
-    call_init.function()=init_it->second.symbol_expr();
+    call_init.add_source_location()= symbol.location;
+    call_init.function()= init_it->second.symbol_expr();
 
     init_code.move_to_operands(call_init);
   }
@@ -590,45 +573,44 @@ bool java_entry_point(
 
   code_function_callt call_main;
 
-  source_locationt loc=symbol.location;
+  source_locationt loc= symbol.location;
   loc.set_function(symbol.name);
-  source_locationt &dloc=loc;
+  source_locationt &dloc= loc;
 
-  call_main.add_source_location()=dloc;
-  call_main.function()=symbol.symbol_expr();
-  call_main.function().add_source_location()=dloc;
+  call_main.add_source_location()= dloc;
+  call_main.function()= symbol.symbol_expr();
+  call_main.function().add_source_location()= dloc;
 
-  if(to_code_type(symbol.type).return_type()!=empty_typet())
+  if(to_code_type(symbol.type).return_type() != empty_typet())
   {
     auxiliary_symbolt return_symbol;
-    return_symbol.mode=ID_C;
-    return_symbol.is_static_lifetime=false;
-    return_symbol.name="return'";
-    return_symbol.base_name="return";
-    return_symbol.type=to_code_type(symbol.type).return_type();
+    return_symbol.mode= ID_C;
+    return_symbol.is_static_lifetime= false;
+    return_symbol.name= "return'";
+    return_symbol.base_name= "return";
+    return_symbol.type= to_code_type(symbol.type).return_type();
 
     symbol_table.add(return_symbol);
-    call_main.lhs()=return_symbol.symbol_expr();
+    call_main.lhs()= return_symbol.symbol_expr();
   }
 
   // add the exceptional return value
   auxiliary_symbolt exc_symbol;
-  exc_symbol.mode=ID_C;
-  exc_symbol.is_static_lifetime=false;
-  exc_symbol.name=id2string(symbol.name)+EXC_SUFFIX;
-  exc_symbol.base_name=id2string(symbol.name)+EXC_SUFFIX;
-  exc_symbol.type=typet(ID_pointer, empty_typet());
+  exc_symbol.mode= ID_C;
+  exc_symbol.is_static_lifetime= false;
+  exc_symbol.name= id2string(symbol.name) + EXC_SUFFIX;
+  exc_symbol.base_name= id2string(symbol.name) + EXC_SUFFIX;
+  exc_symbol.type= typet(ID_pointer, empty_typet());
   symbol_table.add(exc_symbol);
 
-  exprt::operandst main_arguments=
-    java_build_arguments(
-      symbol,
-      init_code,
-      symbol_table,
-      assume_init_pointers_not_null,
-      max_nondet_array_length,
-      message_handler);
-  call_main.arguments()=main_arguments;
+  exprt::operandst main_arguments= java_build_arguments(
+    symbol,
+    init_code,
+    symbol_table,
+    assume_init_pointers_not_null,
+    max_nondet_array_length,
+    message_handler);
+  call_main.arguments()= main_arguments;
 
   init_code.move_to_operands(call_main);
 
@@ -638,12 +620,12 @@ bool java_entry_point(
   symbolt new_symbol;
 
   code_typet main_type;
-  main_type.return_type()=empty_typet();
+  main_type.return_type()= empty_typet();
 
-  new_symbol.name=goto_functionst::entry_point();
+  new_symbol.name= goto_functionst::entry_point();
   new_symbol.type.swap(main_type);
   new_symbol.value.swap(init_code);
-  new_symbol.mode=ID_java;
+  new_symbol.mode= ID_java;
 
   if(symbol_table.move(new_symbol))
   {

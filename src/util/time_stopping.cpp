@@ -27,17 +27,16 @@ struct timezone
 };
 
 // NOLINTNEXTLINE(readability/identifiers)
-void gettimeofday(struct timeval* p, struct timezone *tz)
+void gettimeofday(struct timeval *p, struct timezone *tz)
 {
-  union
-  {
+  union {
     long long ns100; /*time since 1 Jan 1601 in 100ns units */
     FILETIME ft;
   } _now;
 
   GetSystemTimeAsFileTime(&(_now.ft));
-  p->tv_usec=(long)((_now.ns100 / 10LL) % 1000000LL);
-  p->tv_sec= (long)((_now.ns100-(116444736000000000LL))/10000000LL);
+  p->tv_usec= (long)((_now.ns100 / 10LL) % 1000000LL);
+  p->tv_sec= (long)((_now.ns100 - (116444736000000000LL)) / 10000000LL);
 }
 #endif
 
@@ -62,7 +61,8 @@ absolute_timet current_time()
 
   gettimeofday(&tv, &tz);
 
-  return absolute_timet(tv.tv_usec/1000+(unsigned long long)tv.tv_sec*1000);
+  return absolute_timet(
+    tv.tv_usec / 1000 + (unsigned long long)tv.tv_sec * 1000);
 }
 
 /*******************************************************************\
@@ -77,9 +77,9 @@ Function: operator <<
 
 \*******************************************************************/
 
-std::ostream &operator << (std::ostream &out, const time_periodt &period)
+std::ostream &operator<<(std::ostream &out, const time_periodt &period)
 {
-  return out << static_cast<double>(period.get_t())/1000;
+  return out << static_cast<double>(period.get_t()) / 1000;
 }
 
 /*******************************************************************\

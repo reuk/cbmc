@@ -15,7 +15,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #define MAX_STATE 10000
 
-class bv_refinementt:public bv_pointerst
+class bv_refinementt : public bv_pointerst
 {
 public:
   bv_refinementt(const namespacet &_ns, propt &_prop);
@@ -25,7 +25,7 @@ public:
 
   virtual std::string decision_procedure_text() const
   {
-    return "refinement loop with "+prop.solver_text();
+    return "refinement loop with " + prop.solver_text();
   }
 
   // NOLINTNEXTLINE(readability/identifiers)
@@ -39,7 +39,10 @@ public:
 
   using bv_pointerst::is_in_conflict;
 
-  void set_ui(language_uit::uit _ui) { ui=_ui; }
+  void set_ui(language_uit::uit _ui)
+  {
+    ui= _ui;
+  }
 
 protected:
   resultt prop_solve();
@@ -48,7 +51,7 @@ protected:
   struct approximationt
   {
   public:
-    explicit approximationt(std::size_t _id_nr):id_nr(_id_nr)
+    explicit approximationt(std::size_t _id_nr) : id_nr(_id_nr)
     {
     }
 
@@ -64,7 +67,7 @@ protected:
     // the kind of under- or over-approximation
     unsigned under_state, over_state;
 
-    approximationt():under_state(0), over_state(0)
+    approximationt() : under_state(0), over_state(0)
     {
     }
 

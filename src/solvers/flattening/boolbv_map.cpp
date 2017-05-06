@@ -35,23 +35,23 @@ std::string boolbv_mapt::map_entryt::get_value(const propt &prop) const
 
   result.reserve(literal_map.size());
 
-  for(std::size_t i=0; i<literal_map.size(); i++)
+  for(std::size_t i= 0; i < literal_map.size(); i++)
   {
-    char ch='*';
+    char ch= '*';
 
     if(literal_map[i].is_set)
     {
-      tvt value=prop.l_get(literal_map[i].l);
+      tvt value= prop.l_get(literal_map[i].l);
 
       if(value.is_true())
-        ch='1';
+        ch= '1';
       else if(value.is_false())
-        ch='0';
+        ch= '0';
       else
-        ch='?';
+        ch= '?';
     }
 
-    result=result+ch;
+    result= result + ch;
   }
 
   return result;
@@ -69,28 +69,26 @@ Function: boolbv_mapt::get_map_entry
 
 \*******************************************************************/
 
-boolbv_mapt::map_entryt &boolbv_mapt::get_map_entry(
-  const irep_idt &identifier,
-  const typet &type)
+boolbv_mapt::map_entryt &
+boolbv_mapt::get_map_entry(const irep_idt &identifier, const typet &type)
 {
-  if(type.id()==ID_symbol)
+  if(type.id() == ID_symbol)
     return get_map_entry(identifier, ns.follow(type));
 
   std::pair<mappingt::iterator, bool> result=
-    mapping.insert(std::pair<irep_idt, map_entryt>(
-      identifier, map_entryt()));
+    mapping.insert(std::pair<irep_idt, map_entryt>(identifier, map_entryt()));
 
-  map_entryt &map_entry=result.first->second;
+  map_entryt &map_entry= result.first->second;
 
   if(result.second)
   { // actually inserted
-    map_entry.type=type;
-    map_entry.width=boolbv_width(type);
-    map_entry.bvtype=get_bvtype(type);
+    map_entry.type= type;
+    map_entry.width= boolbv_width(type);
+    map_entry.bvtype= get_bvtype(type);
     map_entry.literal_map.resize(map_entry.width);
   }
 
-  assert(map_entry.literal_map.size()==map_entry.width);
+  assert(map_entry.literal_map.size() == map_entry.width);
 
   return map_entry;
 }
@@ -109,9 +107,7 @@ Function: boolbv_mapt::show
 
 void boolbv_mapt::show() const
 {
-  for(mappingt::const_iterator it=mapping.begin();
-      it!=mapping.end();
-      it++)
+  for(mappingt::const_iterator it= mapping.begin(); it != mapping.end(); it++)
   {
   }
 }
@@ -134,34 +130,33 @@ void boolbv_mapt::get_literals(
   const std::size_t width,
   bvt &literals)
 {
-  map_entryt &map_entry=get_map_entry(identifier, type);
+  map_entryt &map_entry= get_map_entry(identifier, type);
 
-  assert(literals.size()==width);
-  assert(map_entry.literal_map.size()==width);
+  assert(literals.size() == width);
+  assert(map_entry.literal_map.size() == width);
 
   Forall_literals(it, literals)
   {
-    literalt &l=*it;
-    const std::size_t bit=it-literals.begin();
+    literalt &l= *it;
+    const std::size_t bit= it - literals.begin();
 
-    assert(bit<map_entry.literal_map.size());
-    map_bitt &mb=map_entry.literal_map[bit];
+    assert(bit < map_entry.literal_map.size());
+    map_bitt &mb= map_entry.literal_map[bit];
 
     if(mb.is_set)
     {
-      l=mb.l;
+      l= mb.l;
       continue;
     }
 
-    l=prop.new_variable();
+    l= prop.new_variable();
 
-    mb.is_set=true;
-    mb.l=l;
+    mb.is_set= true;
+    mb.l= l;
 
-    #ifdef DEBUG
-    std::cout << "NEW: " << identifier << ":" << bit
-              << "=" << l << std::endl;
-    #endif
+#ifdef DEBUG
+    std::cout << "NEW: " << identifier << ":" << bit << "=" << l << std::endl;
+#endif
   }
 }
 
@@ -182,18 +177,17 @@ void boolbv_mapt::set_literals(
   const typet &type,
   const bvt &literals)
 {
-  map_entryt &map_entry=get_map_entry(identifier, type);
+  map_entryt &map_entry= get_map_entry(identifier, type);
 
   forall_literals(it, literals)
   {
-    const literalt &literal=*it;
-    const std::size_t bit=it-literals.begin();
+    const literalt &literal= *it;
+    const std::size_t bit= it - literals.begin();
 
-    assert(literal.is_constant() ||
-           literal.var_no()<prop.no_variables());
+    assert(literal.is_constant() || literal.var_no() < prop.no_variables());
 
-    assert(bit<map_entry.literal_map.size());
-    map_bitt &mb=map_entry.literal_map[bit];
+    assert(bit < map_entry.literal_map.size());
+    map_bitt &mb= map_entry.literal_map[bit];
 
     if(mb.is_set)
     {
@@ -201,7 +195,7 @@ void boolbv_mapt::set_literals(
       continue;
     }
 
-    mb.is_set=true;
-    mb.l=literal;
+    mb.is_set= true;
+    mb.l= literal;
   }
 }

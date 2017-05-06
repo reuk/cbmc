@@ -36,15 +36,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-class bmc_covert:
-  public cover_goalst::observert,
-  public messaget
+class bmc_covert : public cover_goalst::observert, public messaget
 {
 public:
-  bmc_covert(
-    const goto_functionst &_goto_functions,
-    bmct &_bmc):
-    goto_functions(_goto_functions), solver(_bmc.prop_conv), bmc(_bmc)
+  bmc_covert(const goto_functionst &_goto_functions, bmct &_bmc)
+    : goto_functions(_goto_functions), solver(_bmc.prop_conv), bmc(_bmc)
   {
   }
 
@@ -70,8 +66,8 @@ public:
       literalt condition)
     {
       instances.push_back(instancet());
-      instances.back().step=step;
-      instances.back().condition=condition;
+      instances.back().step= step;
+      instances.back().condition= condition;
     }
 
     std::string description;
@@ -82,15 +78,14 @@ public:
 
     goalt(
       const std::string &_description,
-      const source_locationt &_source_location):
-      description(_description),
-      source_location(_source_location),
-      satisfied(false)
+      const source_locationt &_source_location)
+      : description(_description),
+        source_location(_source_location),
+        satisfied(false)
     {
     }
 
-    goalt():source_location(source_locationt::nil()),
-            satisfied(false)
+    goalt() : source_location(source_locationt::nil()), satisfied(false)
     {
     }
 
@@ -123,21 +118,21 @@ public:
 
   std::string get_test(const goto_tracet &goto_trace) const
   {
-    bool first=true;
+    bool first= true;
     std::string test;
     for(const auto &step : goto_trace.steps)
     {
       if(step.is_input())
       {
         if(first)
-          first=false;
+          first= false;
         else
-          test+=", ";
+          test+= ", ";
 
-        test+=id2string(step.io_id)+"=";
+        test+= id2string(step.io_id) + "=";
 
-        if(step.io_args.size()==1)
-          test+=from_expr(bmc.ns, "", step.io_args.front());
+        if(step.io_args.size() == 1)
+          test+= from_expr(bmc.ns, "", step.io_args.front());
       }
     }
     return test;
@@ -164,11 +159,11 @@ Function: bmc_covert::satisfying_assignment
 void bmc_covert::satisfying_assignment()
 {
   tests.push_back(testt());
-  testt &test = tests.back();
+  testt &test= tests.back();
 
   for(auto &goal_pair : goal_map)
   {
-    goalt &g=goal_pair.second;
+    goalt &g= goal_pair.second;
 
     // covered already?
     if(g.satisfied)
@@ -177,27 +172,30 @@ void bmc_covert::satisfying_assignment()
     // check whether satisfied
     for(const auto &goal_inst : g.instances)
     {
-      literalt cond=goal_inst.condition;
+      literalt cond= goal_inst.condition;
 
       if(solver.l_get(cond).is_true())
       {
         status() << "Covered " << g.description << messaget::eom;
-        g.satisfied=true;
+        g.satisfied= true;
         test.covered_goals.push_back(goal_pair.first);
         break;
       }
     }
   }
 
-  build_goto_trace(bmc.equation, bmc.equation.SSA_steps.end(),
-                   solver, bmc.ns, test.goto_trace);
+  build_goto_trace(
+    bmc.equation,
+    bmc.equation.SSA_steps.end(),
+    solver,
+    bmc.ns,
+    test.goto_trace);
 
-  goto_tracet &goto_trace=test.goto_trace;
+  goto_tracet &goto_trace= test.goto_trace;
 
   // Now delete anything after first failed assumption
-  for(goto_tracet::stepst::iterator
-      s_it1=goto_trace.steps.begin();
-      s_it1!=goto_trace.steps.end();
+  for(goto_tracet::stepst::iterator s_it1= goto_trace.steps.begin();
+      s_it1 != goto_trace.steps.end();
       s_it1++)
     if(s_it1->is_assume() && !s_it1->cond_value)
     {
@@ -205,9 +203,9 @@ void bmc_covert::satisfying_assignment()
       break;
     }
 
-  #if 0
+#if 0
   show_goto_trace(std::cout, bmc.ns, test.goto_trace);
-  #endif
+#endif
 }
 
 /*******************************************************************\
@@ -229,26 +227,26 @@ bool bmc_covert::operator()()
   solver.set_message_handler(get_message_handler());
 
   // stop the time
-  absolute_timet sat_start=current_time();
+  absolute_timet sat_start= current_time();
 
   // Collect _all_ goals in `goal_map'.
   // This maps property IDs to 'goalt'
   forall_goto_functions(f_it, goto_functions)
   {
     // Functions are already inlined.
-    if(f_it->second.is_inlined()) continue;
+    if(f_it->second.is_inlined())
+      continue;
     forall_goto_program_instructions(i_it, f_it->second.body)
     {
       if(i_it->is_assert())
-        goal_map[id(i_it)]=
-          goalt(
-            id2string(i_it->source_location.get_comment()),
-            i_it->source_location);
+        goal_map[id(i_it)]= goalt(
+          id2string(i_it->source_location.get_comment()),
+          i_it->source_location);
     }
   }
 
   for(auto &step : bmc.equation.SSA_steps)
-    step.cond_literal=literalt(0, 0);
+    step.cond_literal= literalt(0, 0);
 
   // Do conversion to next solver layer
 
@@ -258,18 +256,17 @@ bool bmc_covert::operator()()
 
   // get the conditions for these goals from formula
   // collect all 'instances' of the goals
-  for(auto it = bmc.equation.SSA_steps.begin();
-      it!=bmc.equation.SSA_steps.end();
+  for(auto it= bmc.equation.SSA_steps.begin();
+      it != bmc.equation.SSA_steps.end();
       it++)
   {
     if(it->is_assert())
     {
       assert(it->source.pc->is_assert());
-      exprt c=
-        conjunction({ // NOLINT(whitespace/braces)
-          literal_exprt(it->guard_literal),
-          literal_exprt(!it->cond_literal) });
-      literalt l_c=solver.convert(c);
+      exprt c= conjunction({// NOLINT(whitespace/braces)
+                            literal_exprt(it->guard_literal),
+                            literal_exprt(!it->cond_literal)});
+      literalt l_c= solver.convert(c);
       goal_map[id(it->source.pc)].add_instance(it, l_c);
     }
   }
@@ -282,11 +279,11 @@ bool bmc_covert::operator()()
 
   for(const auto &g : goal_map)
   {
-    literalt l=solver.convert(g.second.as_expr());
+    literalt l= solver.convert(g.second.as_expr());
     cover_goals.add(l);
   }
 
-  assert(cover_goals.size()==goal_map.size());
+  assert(cover_goals.size() == goal_map.size());
 
   status() << "Running " << solver.decision_procedure_text() << eom;
 
@@ -295,13 +292,13 @@ bool bmc_covert::operator()()
   // output runtime
 
   {
-    absolute_timet sat_stop=current_time();
-    status() << "Runtime decision procedure: "
-             << (sat_stop-sat_start) << "s" << eom;
+    absolute_timet sat_stop= current_time();
+    status() << "Runtime decision procedure: " << (sat_stop - sat_start) << "s"
+             << eom;
   }
 
   // report
-  unsigned goals_covered=0;
+  unsigned goals_covered= 0;
 
   for(const auto &g : goal_map)
     if(g.second.satisfied)
@@ -309,150 +306,147 @@ bool bmc_covert::operator()()
 
   switch(bmc.ui)
   {
-    case ui_message_handlert::PLAIN:
+  case ui_message_handlert::PLAIN:
+  {
+    status() << "\n** coverage results:" << eom;
+
+    for(const auto &g : goal_map)
     {
-      status() << "\n** coverage results:" << eom;
+      const goalt &goal= g.second;
 
-      for(const auto &g : goal_map)
-      {
-        const goalt &goal=g.second;
+      status() << "[" << g.first << "]";
 
-        status() << "[" << g.first << "]";
+      if(goal.source_location.is_not_nil())
+        status() << ' ' << goal.source_location;
 
-        if(goal.source_location.is_not_nil())
-          status() << ' ' << goal.source_location;
+      if(!goal.description.empty())
+        status() << ' ' << goal.description;
 
-        if(!goal.description.empty())
-          status() << ' ' << goal.description;
-
-        status() << ": " << (goal.satisfied?"SATISFIED":"FAILED")
-                 << eom;
-      }
-
-      status() << '\n';
-
-      break;
+      status() << ": " << (goal.satisfied ? "SATISFIED" : "FAILED") << eom;
     }
 
-    case ui_message_handlert::XML_UI:
-    {
-      for(const auto &goal_pair : goal_map)
-      {
-        const goalt &goal=goal_pair.second;
+    status() << '\n';
 
-        xmlt xml_result("goal");
-        xml_result.set_attribute("id", id2string(goal_pair.first));
-        xml_result.set_attribute("description", goal.description);
-        xml_result.set_attribute("status", goal.satisfied?"SATISFIED":"FAILED");
-
-        if(goal.source_location.is_not_nil())
-          xml_result.new_element()=xml(goal.source_location);
-
-        std::cout << xml_result << "\n";
-      }
-
-      for(const auto &test : tests)
-      {
-        xmlt xml_result("test");
-        if(bmc.options.get_bool_option("trace"))
-        {
-          convert(bmc.ns, test.goto_trace, xml_result.new_element());
-        }
-        else
-        {
-          xmlt &xml_test=xml_result.new_element("inputs");
-
-          for(const auto &step : test.goto_trace.steps)
-          {
-            if(step.is_input())
-            {
-              xmlt &xml_input=xml_test.new_element("input");
-              xml_input.set_attribute("id", id2string(step.io_id));
-              if(step.io_args.size()==1)
-                xml_input.new_element("value")=
-                  xml(step.io_args.front(), bmc.ns);
-            }
-          }
-        }
-
-        for(const auto &goal_id : test.covered_goals)
-        {
-          xmlt &xml_goal=xml_result.new_element("goal");
-          xml_goal.set_attribute("id", id2string(goal_id));
-        }
-
-        std::cout << xml_result << "\n";
-      }
-      break;
-    }
-
-    case ui_message_handlert::JSON_UI:
-    {
-      json_objectt json_result;
-      json_arrayt &goals_array=json_result["goals"].make_array();
-      for(const auto &goal_pair : goal_map)
-      {
-        const goalt &goal=goal_pair.second;
-
-        json_objectt &result=goals_array.push_back().make_object();
-        result["status"]=json_stringt(goal.satisfied?"satisfied":"failed");
-        result["goal"]=json_stringt(id2string(goal_pair.first));
-        result["description"]=json_stringt(goal.description);
-
-        if(goal.source_location.is_not_nil())
-          result["sourceLocation"]=json(goal.source_location);
-      }
-      json_result["totalGoals"]=json_numbert(std::to_string(goal_map.size()));
-      json_result["goalsCovered"]=json_numbert(std::to_string(goals_covered));
-
-      json_arrayt &tests_array=json_result["tests"].make_array();
-      for(const auto &test : tests)
-      {
-        json_objectt &result=tests_array.push_back().make_object();
-        if(bmc.options.get_bool_option("trace"))
-        {
-          jsont &json_trace=result["trace"];
-          convert(bmc.ns, test.goto_trace, json_trace);
-        }
-        else
-        {
-          json_arrayt &json_test=result["inputs"].make_array();
-
-          for(const auto &step : test.goto_trace.steps)
-          {
-            if(step.is_input())
-            {
-              json_objectt json_input;
-              json_input["id"]=json_stringt(id2string(step.io_id));
-              if(step.io_args.size()==1)
-                json_input["value"]=json(step.io_args.front(), bmc.ns);
-              json_test.push_back(json_input);
-            }
-          }
-        }
-        json_arrayt &goal_refs=result["coveredGoals"].make_array();
-        for(const auto &goal_id : test.covered_goals)
-        {
-          goal_refs.push_back(json_stringt(id2string(goal_id)));
-        }
-      }
-      std::cout << ",\n" << json_result;
-      break;
-    }
+    break;
   }
 
-  status() << "** " << goals_covered
-           << " of " << goal_map.size() << " covered ("
-           << std::fixed << std::setw(1) << std::setprecision(1)
-           << (goal_map.empty()?100.0:100.0*goals_covered/goal_map.size())
+  case ui_message_handlert::XML_UI:
+  {
+    for(const auto &goal_pair : goal_map)
+    {
+      const goalt &goal= goal_pair.second;
+
+      xmlt xml_result("goal");
+      xml_result.set_attribute("id", id2string(goal_pair.first));
+      xml_result.set_attribute("description", goal.description);
+      xml_result.set_attribute(
+        "status", goal.satisfied ? "SATISFIED" : "FAILED");
+
+      if(goal.source_location.is_not_nil())
+        xml_result.new_element()= xml(goal.source_location);
+
+      std::cout << xml_result << "\n";
+    }
+
+    for(const auto &test : tests)
+    {
+      xmlt xml_result("test");
+      if(bmc.options.get_bool_option("trace"))
+      {
+        convert(bmc.ns, test.goto_trace, xml_result.new_element());
+      }
+      else
+      {
+        xmlt &xml_test= xml_result.new_element("inputs");
+
+        for(const auto &step : test.goto_trace.steps)
+        {
+          if(step.is_input())
+          {
+            xmlt &xml_input= xml_test.new_element("input");
+            xml_input.set_attribute("id", id2string(step.io_id));
+            if(step.io_args.size() == 1)
+              xml_input.new_element("value")= xml(step.io_args.front(), bmc.ns);
+          }
+        }
+      }
+
+      for(const auto &goal_id : test.covered_goals)
+      {
+        xmlt &xml_goal= xml_result.new_element("goal");
+        xml_goal.set_attribute("id", id2string(goal_id));
+      }
+
+      std::cout << xml_result << "\n";
+    }
+    break;
+  }
+
+  case ui_message_handlert::JSON_UI:
+  {
+    json_objectt json_result;
+    json_arrayt &goals_array= json_result["goals"].make_array();
+    for(const auto &goal_pair : goal_map)
+    {
+      const goalt &goal= goal_pair.second;
+
+      json_objectt &result= goals_array.push_back().make_object();
+      result["status"]= json_stringt(goal.satisfied ? "satisfied" : "failed");
+      result["goal"]= json_stringt(id2string(goal_pair.first));
+      result["description"]= json_stringt(goal.description);
+
+      if(goal.source_location.is_not_nil())
+        result["sourceLocation"]= json(goal.source_location);
+    }
+    json_result["totalGoals"]= json_numbert(std::to_string(goal_map.size()));
+    json_result["goalsCovered"]= json_numbert(std::to_string(goals_covered));
+
+    json_arrayt &tests_array= json_result["tests"].make_array();
+    for(const auto &test : tests)
+    {
+      json_objectt &result= tests_array.push_back().make_object();
+      if(bmc.options.get_bool_option("trace"))
+      {
+        jsont &json_trace= result["trace"];
+        convert(bmc.ns, test.goto_trace, json_trace);
+      }
+      else
+      {
+        json_arrayt &json_test= result["inputs"].make_array();
+
+        for(const auto &step : test.goto_trace.steps)
+        {
+          if(step.is_input())
+          {
+            json_objectt json_input;
+            json_input["id"]= json_stringt(id2string(step.io_id));
+            if(step.io_args.size() == 1)
+              json_input["value"]= json(step.io_args.front(), bmc.ns);
+            json_test.push_back(json_input);
+          }
+        }
+      }
+      json_arrayt &goal_refs= result["coveredGoals"].make_array();
+      for(const auto &goal_id : test.covered_goals)
+      {
+        goal_refs.push_back(json_stringt(id2string(goal_id)));
+      }
+    }
+    std::cout << ",\n" << json_result;
+    break;
+  }
+  }
+
+  status() << "** " << goals_covered << " of " << goal_map.size()
+           << " covered (" << std::fixed << std::setw(1) << std::setprecision(1)
+           << (goal_map.empty() ? 100.0
+                                : 100.0 * goals_covered / goal_map.size())
            << "%)" << eom;
 
-  statistics() << "** Used "
-               << cover_goals.iterations() << " iteration"
-               << (cover_goals.iterations()==1?"":"s")
-               << eom;
+  statistics() << "** Used " << cover_goals.iterations() << " iteration"
+               << (cover_goals.iterations() == 1 ? "" : "s") << eom;
 
-  if(bmc.ui==ui_message_handlert::PLAIN)
+  if(bmc.ui == ui_message_handlert::PLAIN)
   {
     std::cout << "Test suite:" << '\n';
 

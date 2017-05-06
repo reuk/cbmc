@@ -10,7 +10,6 @@ Revisions: Roberto Bruttomesso, roberto.bruttomesso@unisi.ch
 
 #include <cassert>
 
-
 #include "smt1_prop.h"
 
 /*******************************************************************\
@@ -29,13 +28,17 @@ smt1_propt::smt1_propt(
   const std::string &benchmark,
   const std::string &source,
   const std::string &logic,
-  std::ostream &_out):out(_out)
+  std::ostream &_out)
+  : out(_out)
 {
   out << "(benchmark " << benchmark << "\n";
-  out << ":source { " << source << " }" << "\n";
-  out << ":status unknown" << "\n";
-  out << ":logic " << logic << " ; SMT1" << "\n";
-  _no_variables=0;
+  out << ":source { " << source << " }"
+      << "\n";
+  out << ":status unknown"
+      << "\n";
+  out << ":logic " << logic << " ; SMT1"
+      << "\n";
+  _no_variables= 0;
 }
 
 /*******************************************************************\
@@ -69,8 +72,10 @@ Function: smt1_propt::finalize
 void smt1_propt::finalize()
 {
   out << "\n";
-  out << ":formula true" << "\n";
-  out << ") ; benchmark" << "\n";
+  out << ":formula true"
+      << "\n";
+  out << ") ; benchmark"
+      << "\n";
 }
 
 /*******************************************************************\
@@ -89,15 +94,17 @@ literalt smt1_propt::land(const bvt &bv)
 {
   out << "\n";
 
-  literalt l=new_variable();
+  literalt l= new_variable();
 
-  out << ":assumption ; land" << "\n";
+  out << ":assumption ; land"
+      << "\n";
   out << " (iff " << smt1_literal(l) << " (and";
 
   forall_literals(it, bv)
     out << " " << smt1_literal(*it);
 
-  out << "))" << "\n";
+  out << "))"
+      << "\n";
 
   return l;
 }
@@ -118,15 +125,17 @@ literalt smt1_propt::lor(const bvt &bv)
 {
   out << "\n";
 
-  literalt l=new_variable();
+  literalt l= new_variable();
 
-  out << ":assumption ; lor" << "\n";
+  out << ":assumption ; lor"
+      << "\n";
   out << " (iff " << smt1_literal(l) << " (or";
 
   forall_literals(it, bv)
     out << " " << smt1_literal(*it);
 
-  out << "))" << "\n";
+  out << "))"
+      << "\n";
 
   return l;
 }
@@ -147,20 +156,22 @@ literalt smt1_propt::lxor(const bvt &bv)
 {
   if(bv.empty())
     return const_literal(false);
-  if(bv.size()==1)
+  if(bv.size() == 1)
     return bv[0];
 
   out << "\n";
 
-  literalt l=new_variable();
+  literalt l= new_variable();
 
-  out << ":assumption ; lxor" << "\n";
+  out << ":assumption ; lxor"
+      << "\n";
   out << " (iff " << smt1_literal(l) << " (xor";
 
   forall_literals(it, bv)
     out << " " << smt1_literal(*it);
 
-  out << "))" << "\n";
+  out << "))"
+      << "\n";
 
   return l;
 }
@@ -179,26 +190,28 @@ Function: smt1_propt::land
 
 literalt smt1_propt::land(literalt a, literalt b)
 {
-  if(a==const_literal(true))
+  if(a == const_literal(true))
     return b;
-  if(b==const_literal(true))
+  if(b == const_literal(true))
     return a;
-  if(a==const_literal(false))
+  if(a == const_literal(false))
     return const_literal(false);
-  if(b==const_literal(false))
+  if(b == const_literal(false))
     return const_literal(false);
-  if(a==b)
+  if(a == b)
     return a;
 
   out << "\n";
 
-  literalt l=new_variable();
+  literalt l= new_variable();
 
-  out << ":assumption ; land" << "\n";
+  out << ":assumption ; land"
+      << "\n";
   out << " (iff " << smt1_literal(l) << " (and";
   out << " " << smt1_literal(a);
   out << " " << smt1_literal(b);
-  out << "))" << "\n";
+  out << "))"
+      << "\n";
 
   return l;
 }
@@ -217,26 +230,28 @@ Function: smt1_propt::lor
 
 literalt smt1_propt::lor(literalt a, literalt b)
 {
-  if(a==const_literal(false))
+  if(a == const_literal(false))
     return b;
-  if(b==const_literal(false))
+  if(b == const_literal(false))
     return a;
-  if(a==const_literal(true))
+  if(a == const_literal(true))
     return const_literal(true);
-  if(b==const_literal(true))
+  if(b == const_literal(true))
     return const_literal(true);
-  if(a==b)
+  if(a == b)
     return a;
 
   out << "\n";
 
-  literalt l=new_variable();
+  literalt l= new_variable();
 
-  out << ":assumption ; lor" << "\n";
+  out << ":assumption ; lor"
+      << "\n";
   out << " (iff " << smt1_literal(l) << " (or";
   out << " " << smt1_literal(a);
   out << " " << smt1_literal(b);
-  out << "))" << "\n";
+  out << "))"
+      << "\n";
 
   return l;
 }
@@ -255,24 +270,26 @@ Function: smt1_propt::lxor
 
 literalt smt1_propt::lxor(literalt a, literalt b)
 {
-  if(a==const_literal(false))
+  if(a == const_literal(false))
     return b;
-  if(b==const_literal(false))
+  if(b == const_literal(false))
     return a;
-  if(a==const_literal(true))
+  if(a == const_literal(true))
     return !b;
-  if(b==const_literal(true))
+  if(b == const_literal(true))
     return !a;
 
   out << "\n";
 
-  literalt l=new_variable();
+  literalt l= new_variable();
 
-  out << ":assumption ; lxor" << "\n";
+  out << ":assumption ; lxor"
+      << "\n";
   out << " (iff " << smt1_literal(l) << " (xor";
   out << " " << smt1_literal(a);
   out << " " << smt1_literal(b);
-  out << "))" << "\n";
+  out << "))"
+      << "\n";
 
   return l;
 }
@@ -359,30 +376,31 @@ Function: smt1_propt::lselect
 
 literalt smt1_propt::lselect(literalt a, literalt b, literalt c)
 {
-  if(a==const_literal(true))
+  if(a == const_literal(true))
     return b;
-  if(a==const_literal(false))
+  if(a == const_literal(false))
     return c;
-  if(b==c)
+  if(b == c)
     return b;
 
-  if(a==const_literal(false))
+  if(a == const_literal(false))
     return b;
-  if(b==const_literal(false))
+  if(b == const_literal(false))
     return a;
-  if(a==const_literal(true))
+  if(a == const_literal(true))
     return !b;
-  if(b==const_literal(true))
+  if(b == const_literal(true))
     return !a;
 
   out << "\n";
 
-  literalt l=new_variable();
+  literalt l= new_variable();
 
-  out << ":assumption ; lselect" << "\n";
-  out << " (iff " << smt1_literal(l) << "(if_then_else "
-      << smt1_literal(a) << " " << smt1_literal(b) << " "
-      << smt1_literal(c) << ")" << "\n";
+  out << ":assumption ; lselect"
+      << "\n";
+  out << " (iff " << smt1_literal(l) << "(if_then_else " << smt1_literal(a)
+      << " " << smt1_literal(b) << " " << smt1_literal(c) << ")"
+      << "\n";
 
   return l;
 }
@@ -405,7 +423,8 @@ literalt smt1_propt::new_variable()
   l.set(_no_variables, false);
   _no_variables++;
 
-  out << ":extrapreds((" << smt1_literal(l) << "))" << "\n";
+  out << ":extrapreds((" << smt1_literal(l) << "))"
+      << "\n";
 
   return l;
 }
@@ -425,18 +444,19 @@ Function: smt1_propt::lcnf
 void smt1_propt::lcnf(const bvt &bv)
 {
   out << "\n";
-  out << ":assumption ; lcnf" << "\n";
+  out << ":assumption ; lcnf"
+      << "\n";
   out << " ";
 
   if(bv.empty())
     out << "false ; the empty clause";
-  else if(bv.size()==1)
+  else if(bv.size() == 1)
     out << smt1_literal(bv.front());
   else
   {
     out << "(or";
 
-    for(bvt::const_iterator it=bv.begin(); it!=bv.end(); it++)
+    for(bvt::const_iterator it= bv.begin(); it != bv.end(); it++)
       out << " " << smt1_literal(*it);
 
     out << ")";
@@ -459,15 +479,15 @@ Function: smt1_propt::smt1_literal
 
 std::string smt1_propt::smt1_literal(literalt l)
 {
-  if(l==const_literal(false))
+  if(l == const_literal(false))
     return "false";
-  else if(l==const_literal(true))
+  else if(l == const_literal(true))
     return "true";
 
-  std::string v="B"+std::to_string(l.var_no());
+  std::string v= "B" + std::to_string(l.var_no());
 
   if(l.sign())
-    return "(not "+v+")";
+    return "(not " + v + ")";
 
   return v;
 }
@@ -491,11 +511,11 @@ tvt smt1_propt::l_get(literalt literal) const
   if(literal.is_false())
     return tvt(false);
 
-  unsigned v=literal.var_no();
-  if(v>=assignment.size())
+  unsigned v= literal.var_no();
+  if(v >= assignment.size())
     return tvt(tvt::tv_enumt::TV_UNKNOWN);
-  tvt r=assignment[v];
-  return literal.sign()?!r:r;
+  tvt r= assignment[v];
+  return literal.sign() ? !r : r;
 }
 
 /*******************************************************************\
@@ -515,9 +535,9 @@ void smt1_propt::set_assignment(literalt literal, bool value)
   if(literal.is_true() || literal.is_false())
     return;
 
-  unsigned v=literal.var_no();
-  assert(v<assignment.size());
-  assignment[v]=tvt(value);
+  unsigned v= literal.var_no();
+  assert(v < assignment.size());
+  assignment[v]= tvt(value);
 }
 
 /*******************************************************************\

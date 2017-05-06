@@ -46,15 +46,15 @@ public:
   void unwind(
     goto_programt &goto_program,
     const unwind_sett &unwind_set,
-    const int k=-1, // -1: no global bound
-    const unwind_strategyt unwind_strategy=PARTIAL);
+    const int k= -1, // -1: no global bound
+    const unwind_strategyt unwind_strategy= PARTIAL);
 
   // unwind all functions
 
   void operator()(
     goto_functionst &goto_functions,
     const unsigned k, // global bound
-    const unwind_strategyt unwind_strategy=PARTIAL)
+    const unwind_strategyt unwind_strategy= PARTIAL)
   {
     const unwind_sett unwind_set;
     operator()(goto_functions, unwind_set, k, unwind_strategy);
@@ -63,8 +63,8 @@ public:
   void operator()(
     goto_functionst &goto_functions,
     const unwind_sett &unwind_set,
-    const int k=-1, // -1: no global bound
-    const unwind_strategyt unwind_strategy=PARTIAL);
+    const int k= -1, // -1: no global bound
+    const unwind_strategyt unwind_strategy= PARTIAL);
 
   // unwind log
 
@@ -94,7 +94,7 @@ public:
       const goto_programt::const_targett target,
       const unsigned location_number)
     {
-      auto r=location_map.insert(std::make_pair(target, location_number));
+      auto r= location_map.insert(std::make_pair(target, location_number));
       assert(r.second); // did not exist yet
     }
 
@@ -115,7 +115,7 @@ protected:
   void copy_segment(
     const goto_programt::const_targett start,
     const goto_programt::const_targett end, // exclusive
-    goto_programt &goto_program); // result
+    goto_programt &goto_program);           // result
 };
 
 #endif // CPROVER_GOTO_INSTRUMENT_UNWIND_H

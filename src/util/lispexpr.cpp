@@ -28,34 +28,34 @@ std::string lispexprt::expr2string() const
 
   switch(type)
   {
-    case Number:
-    case Symbol:
-      result=value;
-      break;
+  case Number:
+  case Symbol:
+    result= value;
+    break;
 
-    case List:
-      result="(";
-      for(unsigned j=0; j<size(); j++)
+  case List:
+    result= "(";
+    for(unsigned j= 0; j < size(); j++)
+    {
+      if((j + 1) == size() && size() != 1)
       {
-        if((j+1)==size() && size()!=1)
-        {
-          if((*this)[j].is_nil())
-            break;
-          result+=" . ";
-        }
-        else if(j!=0)
-          result+=' ';
-
-        result+=(*this)[j].expr2string();
+        if((*this)[j].is_nil())
+          break;
+        result+= " . ";
       }
-      result+=')';
-      break;
+      else if(j != 0)
+        result+= ' ';
 
-    case String:
-      result="\"";
-      result+=escape(value);
-      result+="\"";
-      break;
+      result+= (*this)[j].expr2string();
+    }
+    result+= ')';
+    break;
+
+  case String:
+    result= "\"";
+    result+= escape(value);
+    result+= "\"";
+    break;
   }
 
   return result;
@@ -75,7 +75,7 @@ Function: lispexprt::parse
 
 bool lispexprt::parse(const std::string &s)
 {
-  std::string::size_type ptr=0;
+  std::string::size_type ptr= 0;
   return parse(s, ptr);
 }
 
@@ -91,33 +91,31 @@ Function: lispexprt::parse
 
 \*******************************************************************/
 
-bool lispexprt::parse(
-  const std::string &s,
-  std::string::size_type &ptr)
+bool lispexprt::parse(const std::string &s, std::string::size_type &ptr)
 {
   clear();
-  value="";
+  value= "";
 
-  if(ptr==std::string::npos || ptr>=s.size())
+  if(ptr == std::string::npos || ptr >= s.size())
     return true;
 
   // we ignore whitespace
-  ptr=s.find_first_not_of(" \t", ptr);
-  if(ptr==std::string::npos)
+  ptr= s.find_first_not_of(" \t", ptr);
+  if(ptr == std::string::npos)
     return true;
 
-  if(s[ptr]=='(') // LispCons
+  if(s[ptr] == '(') // LispCons
   {
-    type=List;
+    type= List;
     lispexprt expr;
 
-    for(ptr++; ptr<s.size();)
+    for(ptr++; ptr < s.size();)
     {
-      bool dot=false;
+      bool dot= false;
 
-      if(ptr<s.size() && s[ptr]=='.')
+      if(ptr < s.size() && s[ptr] == '.')
       {
-        dot=true;
+        dot= true;
         ptr++;
       }
 
@@ -125,9 +123,9 @@ bool lispexprt::parse(
         return true;
       push_back(expr);
 
-      if(ptr<s.size() && s[ptr]==')')
+      if(ptr < s.size() && s[ptr] == ')')
       {
-        if(!dot && size()>1)
+        if(!dot && size() > 1)
         {
           expr.parse("nil");
           push_back(expr);
@@ -138,47 +136,48 @@ bool lispexprt::parse(
       }
     }
   }
-  else if(s[ptr]=='"') // LispString
+  else if(s[ptr] == '"') // LispString
   {
-    type=String;
-    bool quoted=false;
+    type= String;
+    bool quoted= false;
 
     value.reserve(50); // guessing - will be adjusted automatically
 
-    for(ptr++; ptr<s.size() && (s[ptr]!='"' && !quoted); ptr++)
+    for(ptr++; ptr < s.size() && (s[ptr] != '"' && !quoted); ptr++)
     {
-      if(!quoted && s[ptr]=='\\')
-        quoted=true;
+      if(!quoted && s[ptr] == '\\')
+        quoted= true;
       else
       {
-        quoted=false;
-        value+=s[ptr];
+        quoted= false;
+        value+= s[ptr];
       }
     }
 
-    if(ptr<s.size())
+    if(ptr < s.size())
       ptr++;
   }
   else if(isdigit(s[ptr])) // LispNumber
   {
     value.reserve(10); // guessing - will be adjusted automatically
 
-    type=Number;
-    for(; ptr<s.size() && (isdigit(s[ptr]) || s[ptr]=='.'); ptr++)
-      value+=s[ptr];
+    type= Number;
+    for(; ptr < s.size() && (isdigit(s[ptr]) || s[ptr] == '.'); ptr++)
+      value+= s[ptr];
   }
   else // must be LispSymbol
   {
     value.reserve(20); // guessing - will be adjusted automatically
 
-    type=Symbol;
-    for(; ptr<s.size() && s[ptr]!=' ' && s[ptr]!='\t' &&
-        s[ptr]!=')' && s[ptr]!='.'; ptr++)
-      value+=s[ptr];
+    type= Symbol;
+    for(; ptr < s.size() && s[ptr] != ' ' && s[ptr] != '\t' && s[ptr] != ')' &&
+          s[ptr] != '.';
+        ptr++)
+      value+= s[ptr];
   }
 
   // we ignore whitespace
-  ptr=s.find_first_not_of(" \t", ptr);
+  ptr= s.find_first_not_of(" \t", ptr);
 
   return false;
 }
@@ -199,12 +198,12 @@ std::string escape(const std::string &s)
 {
   std::string result;
 
-  for(unsigned i=0; i<s.size(); i++)
+  for(unsigned i= 0; i < s.size(); i++)
   {
-    if(s[i]=='\\' || s[i]=='"')
-      result+='\\';
+    if(s[i] == '\\' || s[i] == '"')
+      result+= '\\';
 
-    result+=s[i];
+    result+= s[i];
   }
 
   return result;
@@ -229,14 +228,14 @@ int test_lispexpr()
 
   while(true)
   {
-    line="";
+    line= "";
 
     while(true)
     {
       if(!std::cin.read(&ch, 1))
         return 0;
 
-      if(ch=='\n')
+      if(ch == '\n')
       {
         lispexprt expr;
         if(expr.parse(line))
@@ -247,7 +246,7 @@ int test_lispexpr()
         break;
       }
 
-      line+=ch;
+      line+= ch;
     }
   }
 

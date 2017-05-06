@@ -25,8 +25,8 @@ Function: fixedbv_typet::get_integer_bits
 
 std::size_t fixedbv_typet::get_integer_bits() const
 {
-  const irep_idt integer_bits=get(ID_integer_bits);
-  assert(integer_bits!=irep_idt());
+  const irep_idt integer_bits= get(ID_integer_bits);
+  assert(integer_bits != irep_idt());
   return unsafe_string2unsigned(id2string(integer_bits));
 }
 
@@ -44,8 +44,8 @@ Function: floatbv_typet::get_f
 
 std::size_t floatbv_typet::get_f() const
 {
-  const irep_idt &f=get(ID_f);
-  assert(f!=irep_idt());
+  const irep_idt &f= get(ID_f);
+  assert(f != irep_idt());
   return unsafe_string2unsigned(id2string(f));
 }
 
@@ -61,19 +61,16 @@ Function: struct_union_typet::component_number
 
 \*******************************************************************/
 
-std::size_t struct_union_typet::component_number(
-  const irep_idt &component_name) const
+std::size_t
+struct_union_typet::component_number(const irep_idt &component_name) const
 {
-  const componentst &c=components();
+  const componentst &c= components();
 
-  std::size_t number=0;
+  std::size_t number= 0;
 
-  for(componentst::const_iterator
-      it=c.begin();
-      it!=c.end();
-      it++)
+  for(componentst::const_iterator it= c.begin(); it != c.end(); it++)
   {
-    if(it->get_name()==component_name)
+    if(it->get_name() == component_name)
       return number;
 
     number++;
@@ -95,17 +92,14 @@ Function: struct_union_typet::get_component
 
 \*******************************************************************/
 
-const struct_union_typet::componentt &struct_union_typet::get_component(
-  const irep_idt &component_name) const
+const struct_union_typet::componentt &
+struct_union_typet::get_component(const irep_idt &component_name) const
 {
-  const componentst &c=components();
+  const componentst &c= components();
 
-  for(componentst::const_iterator
-      it=c.begin();
-      it!=c.end();
-      it++)
+  for(componentst::const_iterator it= c.begin(); it != c.end(); it++)
   {
-    if(it->get_name()==component_name)
+    if(it->get_name() == component_name)
       return *it;
   }
 
@@ -124,10 +118,9 @@ Function: struct_union_typet::component_type
 
 \*******************************************************************/
 
-typet struct_union_typet::component_type(
-  const irep_idt &component_name) const
+typet struct_union_typet::component_type(const irep_idt &component_name) const
 {
-  const exprt c=get_component(component_name);
+  const exprt c= get_component(component_name);
   assert(c.is_not_nil());
   return c.type();
 }
@@ -146,23 +139,21 @@ Function: struct_typet::is_prefix_of
 
 bool struct_typet::is_prefix_of(const struct_typet &other) const
 {
-  const componentst &ot_components=other.components();
-  const componentst &tt_components=components();
+  const componentst &ot_components= other.components();
+  const componentst &tt_components= components();
 
-  if(ot_components.size()<
-     tt_components.size())
+  if(ot_components.size() < tt_components.size())
     return false;
 
-  componentst::const_iterator
-    ot_it=ot_components.begin();
+  componentst::const_iterator ot_it= ot_components.begin();
 
-  for(componentst::const_iterator tt_it=
-      tt_components.begin();
-      tt_it!=tt_components.end();
+  for(componentst::const_iterator tt_it= tt_components.begin();
+      tt_it != tt_components.end();
       tt_it++)
   {
-    if(ot_it->type()!=tt_it->type() ||
-       ot_it->get(ID_name)!=tt_it->get(ID_name))
+    if(
+      ot_it->type() != tt_it->type() ||
+      ot_it->get(ID_name) != tt_it->get(ID_name))
     {
       return false; // they just don't match
     }
@@ -187,8 +178,7 @@ Function: is_reference
 
 bool is_reference(const typet &type)
 {
-  return type.id()==ID_pointer &&
-         type.get_bool(ID_C_reference);
+  return type.id() == ID_pointer && type.get_bool(ID_C_reference);
 }
 
 /*******************************************************************\
@@ -205,8 +195,7 @@ Function: is_rvalue_reference
 
 bool is_rvalue_reference(const typet &type)
 {
-  return type.id()==ID_pointer &&
-         type.get_bool(ID_C_rvalue_reference);
+  return type.id() == ID_pointer && type.get_bool(ID_C_rvalue_reference);
 }
 
 /*******************************************************************\
@@ -291,7 +280,7 @@ Function: signedbv_typet::smallest
 
 mp_integer signedbv_typet::smallest() const
 {
-  return -power(2, get_width()-1);
+  return -power(2, get_width() - 1);
 }
 
 /*******************************************************************\
@@ -308,7 +297,7 @@ Function: signedbv_typet::largest
 
 mp_integer signedbv_typet::largest() const
 {
-  return power(2, get_width()-1)-1;
+  return power(2, get_width() - 1) - 1;
 }
 
 /*******************************************************************\
@@ -393,7 +382,7 @@ Function: unsignedbv_typet::largest
 
 mp_integer unsignedbv_typet::largest() const
 {
-  return power(2, get_width())-1;
+  return power(2, get_width()) - 1;
 }
 
 /*******************************************************************\

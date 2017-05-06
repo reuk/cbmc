@@ -45,7 +45,7 @@ public:
   }
 
   // copying is likely too expensive
-  goto_modelt(const goto_modelt &) = delete;
+  goto_modelt(const goto_modelt &)= delete;
 };
 
 #endif // CPROVER_GOTO_PROGRAMS_GOTO_MODEL_H

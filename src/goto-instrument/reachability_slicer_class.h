@@ -27,9 +27,8 @@ class slicing_criteriont;
 class reachability_slicert
 {
 public:
-  void operator()(
-    goto_functionst &goto_functions,
-    slicing_criteriont &criterion)
+  void
+  operator()(goto_functionst &goto_functions, slicing_criteriont &criterion)
   {
     cfg(goto_functions);
     is_threadedt is_threaded(goto_functions);
@@ -40,7 +39,7 @@ public:
 protected:
   struct slicer_entryt
   {
-    slicer_entryt():reaches_assertion(false)
+    slicer_entryt() : reaches_assertion(false)
     {
     }
 

@@ -53,9 +53,7 @@ Function: xml_interfacet::get_xml_options
 
 \*******************************************************************/
 
-void xml_interfacet::get_xml_options(
-  const xmlt &xml,
-  cmdlinet &cmdline)
+void xml_interfacet::get_xml_options(const xmlt &xml, cmdlinet &cmdline)
 {
   for(const auto &e : xml.elements)
   {
@@ -63,19 +61,19 @@ void xml_interfacet::get_xml_options(
     get_xml_options(e, cmdline);
   }
 
-  if(xml.name=="valueOption")
+  if(xml.name == "valueOption")
   {
-    std::string name=xml.get_attribute("name");
-    std::string value=xml.get_attribute("actual");
+    std::string name= xml.get_attribute("name");
+    std::string value= xml.get_attribute("actual");
 
-    if(name=="")
+    if(name == "")
       cmdline.args.push_back(value);
     else
       cmdline.set(name, value);
   }
-  else if(xml.name=="flagOption")
+  else if(xml.name == "flagOption")
   {
-    if(xml.get_attribute("actual")=="on")
+    if(xml.get_attribute("actual") == "on")
     {
       cmdline.set(xml.get_attribute("name"));
     }

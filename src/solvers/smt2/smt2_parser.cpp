@@ -29,11 +29,10 @@ bool smt2_parsert::is_simple_symbol_character(char ch)
   // ~ ! @ $ % ^ & * _ - + = < > . ? /
   // that does not start with a digit and is not a reserved word.
 
-  return isalnum(ch) ||
-     ch=='~' || ch=='!' || ch=='@' || ch=='$' || ch=='%' ||
-     ch=='^' || ch=='&' || ch=='*' || ch=='_' || ch=='-' ||
-     ch=='+' || ch=='=' || ch=='<' || ch=='>' || ch=='.' ||
-     ch=='?' || ch=='/';
+  return isalnum(ch) || ch == '~' || ch == '!' || ch == '@' || ch == '$' ||
+         ch == '%' || ch == '^' || ch == '&' || ch == '*' || ch == '_' ||
+         ch == '-' || ch == '+' || ch == '=' || ch == '<' || ch == '>' ||
+         ch == '.' || ch == '?' || ch == '/';
 }
 
 /*******************************************************************\
@@ -61,7 +60,7 @@ void smt2_parsert::get_simple_symbol()
   {
     if(is_simple_symbol_character(ch))
     {
-      buffer+=ch;
+      buffer+= ch;
     }
     else
     {
@@ -94,9 +93,9 @@ void smt2_parsert::get_decimal_numeral()
   char ch;
   while(in.get(ch))
   {
-    if(isdigit(ch) || ch=='.')
+    if(isdigit(ch) || ch == '.')
     {
-      buffer+=ch;
+      buffer+= ch;
     }
     else
     {
@@ -125,15 +124,15 @@ void smt2_parsert::get_bin_numeral()
   // we accept any sequence of '0' or '1'
 
   buffer.clear();
-  buffer+='#';
-  buffer+='b';
+  buffer+= '#';
+  buffer+= 'b';
 
   char ch;
   while(in.get(ch))
   {
-    if(ch=='0' || ch=='1')
+    if(ch == '0' || ch == '1')
     {
-      buffer+=ch;
+      buffer+= ch;
     }
     else
     {
@@ -162,15 +161,15 @@ void smt2_parsert::get_hex_numeral()
   // we accept any sequence of '0'-'9', 'a'-'f', 'A'-'F'
 
   buffer.clear();
-  buffer+='#';
-  buffer+='x';
+  buffer+= '#';
+  buffer+= 'x';
 
   char ch;
   while(in.get(ch))
   {
     if(isxdigit(ch))
     {
-      buffer+=ch;
+      buffer+= ch;
     }
     else
     {
@@ -206,9 +205,9 @@ void smt2_parsert::get_quoted_symbol()
   char ch;
   while(in.get(ch))
   {
-    if(ch=='|')
+    if(ch == '|')
       return; // done
-    buffer+=ch;
+    buffer+= ch;
   }
 
   // Hmpf. Eof before end of quoted string. This is an error.
@@ -233,12 +232,12 @@ void smt2_parsert::get_string_literal()
   char ch;
   while(in.get(ch))
   {
-    if(ch=='"')
+    if(ch == '"')
     {
       // quotes may be escaped by repeating
       if(in.get(ch))
       {
-        if(ch=='"')
+        if(ch == '"')
         {
         }
         else
@@ -250,7 +249,7 @@ void smt2_parsert::get_string_literal()
       else
         return; // done
     }
-    buffer+=ch;
+    buffer+= ch;
   }
 
   // Hmpf. Eof before end of string literal. This is an error.
@@ -272,7 +271,7 @@ Function: smt2_parsert::operator()
 void smt2_parsert::operator()()
 {
   char ch;
-  unsigned open_parentheses=0;
+  unsigned open_parentheses= 0;
 
   while(in.get(ch))
   {
@@ -288,7 +287,7 @@ void smt2_parsert::operator()()
 
     case ';': // comment
       // skip until newline
-      while(in.get(ch) && ch!='\n')
+      while(in.get(ch) && ch != '\n')
       {
         // ignore
       }
@@ -302,7 +301,7 @@ void smt2_parsert::operator()()
 
     case ')':
       // done with sub-expression
-      if(open_parentheses==0) // unexpected ')'. This is an error.
+      if(open_parentheses == 0) // unexpected ')'. This is an error.
       {
         error("unexpected closing parenthesis");
         return;
@@ -312,7 +311,7 @@ void smt2_parsert::operator()()
 
       close_expression();
 
-      if(open_parentheses==0)
+      if(open_parentheses == 0)
         return; // done
 
       break;
@@ -320,33 +319,33 @@ void smt2_parsert::operator()()
     case '|': // quoted symbol
       get_quoted_symbol();
       symbol();
-      if(open_parentheses==0)
+      if(open_parentheses == 0)
         return; // done
       break;
 
     case '"': // string literal
       get_string_literal();
       string_literal();
-      if(open_parentheses==0)
+      if(open_parentheses == 0)
         return; // done
       break;
 
     case ':': // keyword
       get_simple_symbol();
       keyword();
-      if(open_parentheses==0)
+      if(open_parentheses == 0)
         return; // done
       break;
 
     case '#':
       if(in.get(ch))
       {
-        if(ch=='b')
+        if(ch == 'b')
         {
           get_bin_numeral();
           numeral();
         }
-        else if(ch=='x')
+        else if(ch == 'x')
         {
           get_hex_numeral();
           numeral();
@@ -357,7 +356,7 @@ void smt2_parsert::operator()()
           return;
         }
 
-        if(open_parentheses==0)
+        if(open_parentheses == 0)
           return; // done
       }
       else
@@ -373,7 +372,7 @@ void smt2_parsert::operator()()
         in.unget();
         get_decimal_numeral();
         numeral();
-        if(open_parentheses==0)
+        if(open_parentheses == 0)
           return; // done
       }
       else if(is_simple_symbol_character(ch))
@@ -381,7 +380,7 @@ void smt2_parsert::operator()()
         in.unget();
         get_simple_symbol();
         symbol();
-        if(open_parentheses==0)
+        if(open_parentheses == 0)
           return; // done
       }
       else
@@ -393,7 +392,7 @@ void smt2_parsert::operator()()
     }
   }
 
-  if(open_parentheses==0)
+  if(open_parentheses == 0)
   {
     // Hmpf, eof before we got anything. Blank file!
   }

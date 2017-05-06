@@ -17,10 +17,10 @@ Author: Michael Tautschnig, tautschn@amazon.com
 
 class symbolt;
 
-class jsil_declarationt:public exprt
+class jsil_declarationt : public exprt
 {
 public:
-  jsil_declarationt():exprt(ID_declaration)
+  jsil_declarationt() : exprt(ID_declaration)
   {
   }
 
@@ -39,9 +39,7 @@ public:
     return static_cast<symbol_exprt &>(add(ID_declarator));
   }
 
-  void add_returns(
-    const irep_idt &value,
-    const irep_idt &label)
+  void add_returns(const irep_idt &value, const irep_idt &label)
   {
     add(ID_return).set(ID_value, value);
     add(ID_return).set(ID_label, label);
@@ -57,9 +55,7 @@ public:
     return find(ID_return).get(ID_label);
   }
 
-  void add_throws(
-    const irep_idt &value,
-    const irep_idt &label)
+  void add_throws(const irep_idt &value, const irep_idt &label)
   {
     add(ID_throw).set(ID_value, value);
     add(ID_throw).set(ID_label, label);

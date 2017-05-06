@@ -25,26 +25,28 @@ Function: cpp_namet::get_base_name
 
 irep_idt cpp_namet::get_base_name() const
 {
-  const subt &sub=get_sub();
+  const subt &sub= get_sub();
 
   // find last "::"
-  unsigned base=0;
+  unsigned base= 0;
 
-  for(unsigned i=0; i<sub.size(); i++)
+  for(unsigned i= 0; i < sub.size(); i++)
   {
-    if(sub[i].id()=="::")
-      base=i+1;
+    if(sub[i].id() == "::")
+      base= i + 1;
   }
 
-  if(base>=sub.size())
+  if(base >= sub.size())
     return irep_idt();
 
-  if(sub[base].id()==ID_name)
+  if(sub[base].id() == ID_name)
     return sub[base].get(ID_identifier);
-  else if(base+1<sub.size() && sub[base].id()==ID_operator)
-    return "operator"+sub[base+1].id_string();
-  else if(base+1<sub.size() && sub[base].id()=="~" && sub[base+1].id()==ID_name)
-    return "~"+sub[base+1].get_string(ID_identifier);
+  else if(base + 1 < sub.size() && sub[base].id() == ID_operator)
+    return "operator" + sub[base + 1].id_string();
+  else if(
+    base + 1 < sub.size() && sub[base].id() == "~" &&
+    sub[base + 1].id() == ID_name)
+    return "~" + sub[base + 1].get_string(ID_identifier);
 
   return irep_idt();
 }
@@ -112,12 +114,12 @@ std::string cpp_namet::to_string() const
 
   forall_irep(it, get_sub())
   {
-    if(it->id()=="::")
-      str += it->id_string();
-    else if(it->id()==ID_template_args)
-      str += "<...>";
+    if(it->id() == "::")
+      str+= it->id_string();
+    else if(it->id() == ID_template_args)
+      str+= "<...>";
     else
-      str+=it->get_string(ID_identifier);
+      str+= it->get_string(ID_identifier);
   }
 
   return str;

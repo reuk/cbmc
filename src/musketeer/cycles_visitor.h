@@ -23,24 +23,29 @@ protected:
   fence_insertert &fence_inserter;
 
 public:
-  explicit cycles_visitort(fence_insertert &_fi)
-    : fence_inserter(_fi)
-  {}
+  explicit cycles_visitort(fence_insertert &_fi) : fence_inserter(_fi)
+  {
+  }
 
   /* computes po^+ edges in U{C_1, ..., C_j} */
   void po_edges(std::set<event_idt> &edges);
 
   /* computes pairs that will be protected for the
      TSO/PSO/RMO/Power/ARM by the constraints */
-  void powr_constraint(const event_grapht::critical_cyclet &C_j,
+  void powr_constraint(
+    const event_grapht::critical_cyclet &C_j,
     std::set<event_idt> &edges);
-  void poww_constraint(const event_grapht::critical_cyclet &C_j,
+  void poww_constraint(
+    const event_grapht::critical_cyclet &C_j,
     std::set<event_idt> &edges);
-  void porw_constraint(const event_grapht::critical_cyclet &C_j,
+  void porw_constraint(
+    const event_grapht::critical_cyclet &C_j,
     std::set<event_idt> &edges);
-  void porr_constraint(const event_grapht::critical_cyclet &C_j,
+  void porr_constraint(
+    const event_grapht::critical_cyclet &C_j,
     std::set<event_idt> &edges);
-  void com_constraint(const event_grapht::critical_cyclet &C_j,
+  void com_constraint(
+    const event_grapht::critical_cyclet &C_j,
     std::set<event_idt> &edges);
 };
 

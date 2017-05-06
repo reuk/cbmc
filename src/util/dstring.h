@@ -18,38 +18,40 @@ Author: Daniel Kroening, kroening@kroening.com
 class dstringt final
 {
 public:
-  // this is safe for static objects
-  #ifdef __GNUC__
+// this is safe for static objects
+#ifdef __GNUC__
   constexpr
-  #endif
-  dstringt():no(0)
+#endif
+    dstringt()
+    : no(0)
   {
   }
 
-  // this is safe for static objects
-  #ifdef __GNUC__
+// this is safe for static objects
+#ifdef __GNUC__
   constexpr
-  #endif
-  static dstringt make_from_table_index(unsigned no)
+#endif
+    static dstringt
+    make_from_table_index(unsigned no)
   {
     return dstringt(no);
   }
 
-  #if 0
+#if 0
   // This conversion allows the use of dstrings
   // in switch ... case statements.
   constexpr operator int() const { return no; }
-  #endif
+#endif
 
   // this one is not safe for static objects
   // NOLINTNEXTLINE(runtime/explicit)
-  dstringt(const char *s):no(string_container[s])
+  dstringt(const char *s) : no(string_container[s])
   {
   }
 
   // this one is not safe for static objects
   // NOLINTNEXTLINE(runtime/explicit)
-  dstringt(const std::string &s):no(string_container[s])
+  dstringt(const std::string &s) : no(string_container[s])
   {
   }
 
@@ -57,7 +59,7 @@ public:
 
   bool empty() const
   {
-    return no==0; // string 0 is exactly the empty string
+    return no == 0; // string 0 is exactly the empty string
   }
 
   char operator[](size_t i) const
@@ -78,31 +80,62 @@ public:
 
   // ordering -- not the same as lexicographical ordering
 
-  bool operator< (const dstringt &b) const { return no<b.no; }
+  bool operator<(const dstringt &b) const
+  {
+    return no < b.no;
+  }
 
   // comparison with same type
 
   bool operator==(const dstringt &b) const
-  { return no==b.no; } // really fast equality testing
+  {
+    return no == b.no;
+  } // really fast equality testing
 
   bool operator!=(const dstringt &b) const
-  { return no!=b.no; } // really fast equality testing
+  {
+    return no != b.no;
+  } // really fast equality testing
 
   // comparison with other types
 
-  bool operator==(const char *b) const { return as_string()==b; }
-  bool operator!=(const char *b) const { return as_string()!=b; }
+  bool operator==(const char *b) const
+  {
+    return as_string() == b;
+  }
+  bool operator!=(const char *b) const
+  {
+    return as_string() != b;
+  }
 
-  bool operator==(const std::string &b) const { return as_string()==b; }
-  bool operator!=(const std::string &b) const { return as_string()!=b; }
-  bool operator<(const std::string &b) const { return as_string()<b; }
-  bool operator>(const std::string &b) const { return as_string()>b; }
-  bool operator<=(const std::string &b) const { return as_string()<=b; }
-  bool operator>=(const std::string &b) const { return as_string()>=b; }
+  bool operator==(const std::string &b) const
+  {
+    return as_string() == b;
+  }
+  bool operator!=(const std::string &b) const
+  {
+    return as_string() != b;
+  }
+  bool operator<(const std::string &b) const
+  {
+    return as_string() < b;
+  }
+  bool operator>(const std::string &b) const
+  {
+    return as_string() > b;
+  }
+  bool operator<=(const std::string &b) const
+  {
+    return as_string() <= b;
+  }
+  bool operator>=(const std::string &b) const
+  {
+    return as_string() >= b;
+  }
 
   int compare(const dstringt &b) const
   {
-    if(no==b.no)
+    if(no == b.no)
       return 0; // equal
     return as_string().compare(b.as_string());
   }
@@ -110,13 +143,22 @@ public:
   // modifying
 
   void clear()
-  { no=0; }
+  {
+    no= 0;
+  }
 
   void swap(dstringt &b)
-  { unsigned t=no; no=b.no; b.no=t; }
+  {
+    unsigned t= no;
+    no= b.no;
+    b.no= t;
+  }
 
   dstringt &operator=(const dstringt &b)
-  { no=b.no; return *this; }
+  {
+    no= b.no;
+    return *this;
+  }
 
   // output
 
@@ -138,10 +180,11 @@ public:
   }
 
 private:
-  #ifdef __GNUC__
+#ifdef __GNUC__
   constexpr
-  #endif
-  explicit dstringt(unsigned _no):no(_no)
+#endif
+    explicit dstringt(unsigned _no)
+    : no(_no)
   {
   }
 
@@ -149,17 +192,24 @@ private:
 
   // the reference returned is guaranteed to be stable
   const std::string &as_string() const
-  { return string_container.get_string(no); }
+  {
+    return string_container.get_string(no);
+  }
 };
 
 // the reference returned is guaranteed to be stable
 inline const std::string &as_string(const dstringt &s)
-{ return string_container.get_string(s.get_no()); }
+{
+  return string_container.get_string(s.get_no());
+}
 
 // NOLINTNEXTLINE(readability/identifiers)
 struct dstring_hash
 {
-  size_t operator()(const dstringt &s) const { return s.hash(); }
+  size_t operator()(const dstringt &s) const
+  {
+    return s.hash();
+  }
 };
 
 inline size_t hash_string(const dstringt &s)

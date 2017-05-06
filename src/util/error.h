@@ -14,10 +14,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "location.h"
 
-class error_baset:public std::exception
+class error_baset : public std::exception
 {
 public:
-  virtual const char* what() const throw()
+  virtual const char *what() const throw()
   {
     return "";
   }
@@ -30,17 +30,17 @@ public:
   {
   }
 
-  explicit error_baset(const locationt &_location):location(_location)
+  explicit error_baset(const locationt &_location) : location(_location)
   {
   }
 
   locationt location;
 };
 
-class error_streamt:public error_baset, public std::ostringstream
+class error_streamt : public error_baset, public std::ostringstream
 {
 public:
-  virtual const char* what() const throw()
+  virtual const char *what() const throw()
   {
     return str().c_str();
   }
@@ -53,8 +53,8 @@ public:
   {
   }
 
-  explicit error_streamt(const locationt &_location):
-    error_baset(_location), std::ostringstream()
+  explicit error_streamt(const locationt &_location)
+    : error_baset(_location), std::ostringstream()
   {
   }
 
@@ -68,14 +68,14 @@ public:
     str(string);
   }
 
-  error_streamt(const error_streamt &other):std::ostringstream()
+  error_streamt(const error_streamt &other) : std::ostringstream()
   {
     str(other.str());
-    location=other.location;
+    location= other.location;
   }
 
-  error_streamt(const locationt &_location, const std::string &string):
-    error_baset(_location)
+  error_streamt(const locationt &_location, const std::string &string)
+    : error_baset(_location)
   {
     str(string);
   }

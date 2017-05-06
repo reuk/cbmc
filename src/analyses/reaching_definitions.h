@@ -23,19 +23,19 @@ class dirtyt;
 class reaching_definitions_analysist;
 
 // requirement: V has a member "identifier" of type irep_idt
-template<typename V>
+template <typename V>
 class sparse_bitvector_analysist
 {
 public:
   const V &get(const std::size_t value_index) const
   {
-    assert(value_index<values.size());
+    assert(value_index < values.size());
     return values[value_index]->first;
   }
 
   std::size_t add(const V &value)
   {
-    inner_mapt &m=value_map[value.identifier];
+    inner_mapt &m= value_map[value.identifier];
 
     std::pair<typename inner_mapt::iterator, bool> entry=
       m.insert(std::make_pair(value, values.size()));
@@ -66,58 +66,50 @@ struct reaching_definitiont
   range_spect bit_end;
 };
 
-inline bool operator<(
-  const reaching_definitiont &a,
-  const reaching_definitiont &b)
+inline bool
+operator<(const reaching_definitiont &a, const reaching_definitiont &b)
 {
-  if(a.definition_at<b.definition_at)
+  if(a.definition_at < b.definition_at)
     return true;
-  if(b.definition_at<a.definition_at)
+  if(b.definition_at < a.definition_at)
     return false;
 
-  if(a.bit_begin<b.bit_begin)
+  if(a.bit_begin < b.bit_begin)
     return true;
-  if(b.bit_begin<a.bit_begin)
+  if(b.bit_begin < a.bit_begin)
     return false;
 
-  if(a.bit_end<b.bit_end)
+  if(a.bit_end < b.bit_end)
     return true;
-  if(b.bit_end<a.bit_end)
+  if(b.bit_end < a.bit_end)
     return false;
 
   // we do not expect comparison of unrelated definitions
   // as this operator< is only used in sparse_bitvector_analysist
-  assert(a.identifier==b.identifier);
+  assert(a.identifier == b.identifier);
 
   return false;
 }
 
-class rd_range_domaint:public ai_domain_baset
+class rd_range_domaint : public ai_domain_baset
 {
 public:
-  rd_range_domaint():
-    ai_domain_baset(),
-    has_values(false),
-    bv_container(0)
+  rd_range_domaint() : ai_domain_baset(), has_values(false), bv_container(0)
   {
   }
 
   void set_bitvector_container(
     sparse_bitvector_analysist<reaching_definitiont> &_bv_container)
   {
-    bv_container=&_bv_container;
+    bv_container= &_bv_container;
   }
 
-  void transform(
-    locationt from,
-    locationt to,
-    ai_baset &ai,
-    const namespacet &ns) final;
+  void
+  transform(locationt from, locationt to, ai_baset &ai, const namespacet &ns)
+    final;
 
-  void output(
-    std::ostream &out,
-    const ai_baset &ai,
-    const namespacet &ns) const final
+  void output(std::ostream &out, const ai_baset &ai, const namespacet &ns)
+    const final
   {
     output(out);
   }
@@ -127,7 +119,7 @@ public:
     values.clear();
     if(bv_container)
       bv_container->clear();
-    has_values=tvt(true);
+    has_values= tvt(true);
   }
 
   void make_bottom() final
@@ -135,7 +127,7 @@ public:
     values.clear();
     if(bv_container)
       bv_container->clear();
-    has_values=tvt(false);
+    has_values= tvt(false);
   }
 
   void make_entry() final
@@ -144,10 +136,7 @@ public:
   }
 
   // returns true iff there is s.th. new
-  bool merge(
-    const rd_range_domaint &other,
-    locationt from,
-    locationt to);
+  bool merge(const rd_range_domaint &other, locationt from, locationt to);
 
   bool merge_shared(
     const rd_range_domaint &other,
@@ -171,26 +160,24 @@ private:
   sparse_bitvector_analysist<reaching_definitiont> *bv_container;
 
   typedef std::set<std::size_t> values_innert;
-  #ifdef USE_DSTRING
+#ifdef USE_DSTRING
   typedef std::map<irep_idt, values_innert> valuest;
-  #else
+#else
   typedef std::unordered_map<irep_idt, values_innert, irep_id_hash> valuest;
-  #endif
+#endif
   valuest values;
 
-  #ifdef USE_DSTRING
+#ifdef USE_DSTRING
   typedef std::map<irep_idt, ranges_at_loct> export_cachet;
-  #else
+#else
   typedef std::unordered_map<irep_idt, ranges_at_loct, irep_id_hash>
     export_cachet;
-  #endif
+#endif
   mutable export_cachet export_cache;
 
   void populate_cache(const irep_idt &identifier) const;
 
-  void transform_dead(
-    const namespacet &ns,
-    locationt from);
+  void transform_dead(const namespacet &ns, locationt from);
   void transform_start_thread(
     const namespacet &ns,
     reaching_definitions_analysist &rd);
@@ -214,9 +201,7 @@ private:
     const irep_idt &identifier,
     const range_spect &range_start,
     const range_spect &range_end);
-  void kill_inf(
-    const irep_idt &identifier,
-    const range_spect &range_start);
+  void kill_inf(const irep_idt &identifier, const range_spect &range_start);
   bool gen(
     locationt from,
     const irep_idt &identifier,
@@ -225,37 +210,34 @@ private:
 
   void output(std::ostream &out) const;
 
-  bool merge_inner(
-    values_innert &dest,
-    const values_innert &other);
+  bool merge_inner(values_innert &dest, const values_innert &other);
 };
 
-class reaching_definitions_analysist:
-  public concurrency_aware_ait<rd_range_domaint>,
-  public sparse_bitvector_analysist<reaching_definitiont>
+class reaching_definitions_analysist
+  : public concurrency_aware_ait<rd_range_domaint>,
+    public sparse_bitvector_analysist<reaching_definitiont>
 {
 public:
   // constructor
-  explicit reaching_definitions_analysist(const namespacet &_ns):
-    concurrency_aware_ait<rd_range_domaint>(),
-    ns(_ns),
-    value_sets(0),
-    is_threaded(0),
-    is_dirty(0)
+  explicit reaching_definitions_analysist(const namespacet &_ns)
+    : concurrency_aware_ait<rd_range_domaint>(),
+      ns(_ns),
+      value_sets(0),
+      is_threaded(0),
+      is_dirty(0)
   {
   }
 
   virtual ~reaching_definitions_analysist();
 
-  virtual void initialize(
-    const goto_functionst &goto_functions);
+  virtual void initialize(const goto_functionst &goto_functions);
 
   virtual statet &get_state(goto_programt::const_targett l)
   {
-    statet &s=concurrency_aware_ait<rd_range_domaint>::get_state(l);
+    statet &s= concurrency_aware_ait<rd_range_domaint>::get_state(l);
 
-    rd_range_domaint *rd_state=dynamic_cast<rd_range_domaint*>(&s);
-    assert(rd_state!=0);
+    rd_range_domaint *rd_state= dynamic_cast<rd_range_domaint *>(&s);
+    assert(rd_state != 0);
 
     rd_state->set_bitvector_container(*this);
 
@@ -282,9 +264,9 @@ public:
 
 protected:
   const namespacet &ns;
-  value_setst * value_sets;
-  is_threadedt * is_threaded;
-  dirtyt * is_dirty;
+  value_setst *value_sets;
+  is_threadedt *is_threaded;
+  dirtyt *is_dirty;
 };
 
 #endif // CPROVER_ANALYSES_REACHING_DEFINITIONS_H

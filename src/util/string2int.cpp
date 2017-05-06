@@ -28,22 +28,22 @@ Function: str2number
 template <typename T>
 inline T str2number(const char *str, int base, bool safe)
 {
-  int errno_bak=errno;
-  errno=0;
-  char * endptr;
+  int errno_bak= errno;
+  errno= 0;
+  char *endptr;
 // _strtoi64 is available in Visual Studio, but not yet in MINGW
 #ifdef _MSC_VER
-  const __int64 val=_strtoi64(str, &endptr, base);
+  const __int64 val= _strtoi64(str, &endptr, base);
 #else
-  const long long val=strtoll(str, &endptr, base);
+  const long long val= strtoll(str, &endptr, base);
 #endif
 
   if(safe)
   {
     assert(0 == errno);
-    errno=errno_bak;
-    assert(endptr!=str);
-    if(std::numeric_limits<T>::min()==0)
+    errno= errno_bak;
+    assert(endptr != str);
+    if(std::numeric_limits<T>::min() == 0)
     {
       // unsigned
       assert(val >= 0);
@@ -157,9 +157,8 @@ Function: unsafe_string2signedlonglong
 
 \*******************************************************************/
 
-signed long long int unsafe_string2signedlonglong(
-  const std::string &str,
-  int base)
+signed long long int
+unsafe_string2signedlonglong(const std::string &str, int base)
 {
   return str2number<signed long long int>(str.c_str(), base, false);
 }
@@ -176,9 +175,8 @@ Function: unsafe_string2unsignedlonglong
 
 \*******************************************************************/
 
-unsigned long long int unsafe_string2unsignedlonglong(
-  const std::string &str,
-  int base)
+unsigned long long int
+unsafe_string2unsignedlonglong(const std::string &str, int base)
 {
   return str2number<unsigned long long int>(str.c_str(), base, false);
 }

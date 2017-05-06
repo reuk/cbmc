@@ -15,15 +15,15 @@ Author: Alex Groce
 
 #include "dimacs_cnf.h"
 
-class pbs_dimacs_cnft:public dimacs_cnft
+class pbs_dimacs_cnft : public dimacs_cnft
 {
 public:
-  pbs_dimacs_cnft():
-    optimize(false),
-    maximize(false),
-    binary_search(false),
-    goal(0),
-    opt_sum(0)
+  pbs_dimacs_cnft()
+    : optimize(false),
+      maximize(false),
+      binary_search(false),
+      goal(0),
+      opt_sum(0)
   {
   }
 

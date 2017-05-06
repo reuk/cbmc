@@ -15,7 +15,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 int yyxmlparse();
 
-class xml_parsert:public parsert
+class xml_parsert : public parsert
 {
 public:
   xml_parse_treet parse_tree;
@@ -29,7 +29,7 @@ public:
 
   virtual bool parse()
   {
-    return yyxmlparse()!=0;
+    return yyxmlparse() != 0;
   }
 
   void new_level()

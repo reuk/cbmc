@@ -26,19 +26,19 @@ Author: Matt Lewis
 
 #include "path.h"
 
-class scratch_programt:public goto_programt
+class scratch_programt : public goto_programt
 {
 public:
-  explicit scratch_programt(symbol_tablet &_symbol_table):
-    constant_propagation(true),
-    symbol_table(_symbol_table),
-    ns(symbol_table),
-    equation(ns),
-    symex(ns, symbol_table, equation),
-    satcheck(new satcheckt),
-    satchecker(ns, *satcheck),
-    z3(ns, "accelerate", "", "", smt2_dect::Z3),
-    checker(&z3) // checker(&satchecker)
+  explicit scratch_programt(symbol_tablet &_symbol_table)
+    : constant_propagation(true),
+      symbol_table(_symbol_table),
+      ns(symbol_table),
+      equation(ns),
+      symex(ns, symbol_table, equation),
+      satcheck(new satcheckt),
+      satchecker(ns, *satcheck),
+      z3(ns, "accelerate", "", "", smt2_dect::Z3),
+      checker(&z3) // checker(&satchecker)
   {
   }
 

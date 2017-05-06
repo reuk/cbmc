@@ -24,26 +24,30 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "symbol.h"
 
-#define forall_symbols(it, expr) \
-  for(symbol_tablet::symbolst::const_iterator it=(expr).begin(); \
-      it!=(expr).end(); ++it)
+#define forall_symbols(it, expr)                                               \
+  for(symbol_tablet::symbolst::const_iterator it= (expr).begin();              \
+      it != (expr).end();                                                      \
+      ++it)
 
-#define Forall_symbols(it, expr) \
-  for(symbol_tablet::symbolst::iterator it=(expr).begin(); \
-      it!=(expr).end(); ++it)
+#define Forall_symbols(it, expr)                                               \
+  for(symbol_tablet::symbolst::iterator it= (expr).begin();                    \
+      it != (expr).end();                                                      \
+      ++it)
 
 typedef std::multimap<irep_idt, irep_idt> symbol_base_mapt;
 typedef std::multimap<irep_idt, irep_idt> symbol_module_mapt;
 
-#define forall_symbol_base_map(it, expr, base_name) \
-  for(symbol_base_mapt::const_iterator it=(expr).lower_bound(base_name), \
-                                       it_end=(expr).upper_bound(base_name); \
-      it!=it_end; ++it)
+#define forall_symbol_base_map(it, expr, base_name)                            \
+  for(symbol_base_mapt::const_iterator it= (expr).lower_bound(base_name),      \
+                                       it_end= (expr).upper_bound(base_name);  \
+      it != it_end;                                                            \
+      ++it)
 
-#define forall_symbol_module_map(it, expr, module) \
-  for(symbol_module_mapt::const_iterator it=(expr).lower_bound(module), \
-                                         it_end=(expr).upper_bound(module); \
-      it!=it_end; ++it)
+#define forall_symbol_module_map(it, expr, module)                             \
+  for(symbol_module_mapt::const_iterator it= (expr).lower_bound(module),       \
+                                         it_end= (expr).upper_bound(module);   \
+      it != it_end;                                                            \
+      ++it)
 
 /*! \brief The symbol table
     \ingroup gr_symbol_table
@@ -63,7 +67,10 @@ public:
 
   // this will go away, use add instead
   bool move(symbolt &symbol)
-  { symbolt *new_symbol; return move(symbol, new_symbol); }
+  {
+    symbolt *new_symbol;
+    return move(symbol, new_symbol);
+  }
 
   void clear()
   {
@@ -85,15 +92,13 @@ public:
 
   bool has_symbol(const irep_idt &name) const
   {
-    return symbols.find(name)!=symbols.end();
+    return symbols.find(name) != symbols.end();
   }
 
   symbolt &lookup(const irep_idt &identifier);
   const symbolt &lookup(const irep_idt &identifier) const;
 };
 
-std::ostream &operator << (
-  std::ostream &out,
-  const symbol_tablet &symbol_table);
+std::ostream &operator<<(std::ostream &out, const symbol_tablet &symbol_table);
 
 #endif // CPROVER_UTIL_SYMBOL_TABLE_H

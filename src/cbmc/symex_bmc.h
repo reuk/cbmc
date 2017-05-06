@@ -15,9 +15,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "symex_coverage.h"
 
-class symex_bmct:
-  public goto_symext,
-  public messaget
+class symex_bmct : public goto_symext, public messaget
 {
 public:
   symex_bmct(
@@ -32,8 +30,8 @@ public:
 
   void set_unwind_limit(unsigned limit)
   {
-    max_unwind=limit;
-    max_unwind_is_set=true;
+    max_unwind= limit;
+    max_unwind_is_set= true;
   }
 
   void set_unwind_thread_loop_limit(
@@ -41,14 +39,12 @@ public:
     const irep_idt &id,
     unsigned limit)
   {
-    thread_loop_limits[thread_nr][id]=limit;
+    thread_loop_limits[thread_nr][id]= limit;
   }
 
-  void set_unwind_loop_limit(
-    const irep_idt &id,
-    unsigned limit)
+  void set_unwind_loop_limit(const irep_idt &id, unsigned limit)
   {
-    loop_limits[id]=limit;
+    loop_limits[id]= limit;
   }
 
   bool output_coverage_report(
@@ -79,18 +75,13 @@ protected:
   //
   // overloaded from goto_symext
   //
-  virtual void symex_step(
-    const goto_functionst &goto_functions,
-    statet &state);
+  virtual void symex_step(const goto_functionst &goto_functions, statet &state);
 
-  virtual void merge_goto(
-    const statet::goto_statet &goto_state,
-    statet &state);
+  virtual void merge_goto(const statet::goto_statet &goto_state, statet &state);
 
   // for loop unwinding
-  virtual bool get_unwind(
-    const symex_targett::sourcet &source,
-    unsigned unwind);
+  virtual bool
+  get_unwind(const symex_targett::sourcet &source, unsigned unwind);
 
   virtual bool get_unwind_recursion(
     const irep_idt &identifier,

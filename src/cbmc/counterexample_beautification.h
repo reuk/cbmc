@@ -35,9 +35,7 @@ protected:
     const symex_target_equationt &equation,
     minimization_listt &minimization_list);
 
-  void minimize(
-    const exprt &expr,
-    class prop_minimizet &prop_minimize);
+  void minimize(const exprt &expr, class prop_minimizet &prop_minimize);
 
   symex_target_equationt::SSA_stepst::const_iterator get_failed_property(
     const prop_convt &prop_conv,

@@ -20,7 +20,7 @@ public:
   struct termt
   {
     exprt var;
-    unsigned int exp;   // This means exponent, not expression.
+    unsigned int exp; // This means exponent, not expression.
   };
 
   // Invariant: this vector is sorted lexicographically w.r.t. the variable.

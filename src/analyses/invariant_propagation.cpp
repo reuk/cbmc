@@ -61,8 +61,7 @@ Function: invariant_propagationt::add_objects
 
 \*******************************************************************/
 
-void invariant_propagationt::add_objects(
-  const goto_programt &goto_program)
+void invariant_propagationt::add_objects(const goto_programt &goto_program)
 {
   // get the globals
   object_listt globals;
@@ -79,31 +78,31 @@ void invariant_propagationt::add_objects(
 
   forall_goto_program_instructions(i_it, goto_program)
   {
-    #if 0
+#if 0
     invariant_sett &is=(*this)[i_it].invariant_set;
 
     is.add_objects(globals);
-    #endif
+#endif
 
     for(const auto &local : locals)
     {
       // cache hit?
-      object_cachet::const_iterator e_it=object_cache.find(local);
+      object_cachet::const_iterator e_it= object_cache.find(local);
 
-      if(e_it==object_cache.end())
+      if(e_it == object_cache.end())
       {
-        const symbolt &symbol=ns.lookup(local);
+        const symbolt &symbol= ns.lookup(local);
 
-        object_listt &objects=object_cache[local];
+        object_listt &objects= object_cache[local];
         get_objects(symbol, objects);
-        #if 0
+#if 0
         is.add_objects(objects);
-        #endif
+#endif
       }
-      #if 0
+#if 0
       else
         is.add_objects(e_it->second);
-      #endif
+#endif
     }
   }
 }
@@ -148,14 +147,13 @@ void invariant_propagationt::get_objects_rec(
   const exprt &src,
   std::list<exprt> &dest)
 {
-  const typet &t=ns.follow(src.type());
+  const typet &t= ns.follow(src.type());
 
-  if(t.id()==ID_struct ||
-     t.id()==ID_union)
+  if(t.id() == ID_struct || t.id() == ID_union)
   {
-    const struct_typet &struct_type=to_struct_type(t);
+    const struct_typet &struct_type= to_struct_type(t);
 
-    const struct_typet::componentst &c=struct_type.components();
+    const struct_typet::componentst &c= struct_type.components();
 
     exprt member_expr(ID_member);
     member_expr.copy_to_operands(src);
@@ -163,12 +161,12 @@ void invariant_propagationt::get_objects_rec(
     for(const auto &component : c)
     {
       member_expr.set(ID_component_name, component.get_name());
-      member_expr.type()=component.type();
+      member_expr.type()= component.type();
       // recursive call
       get_objects_rec(member_expr, dest);
     }
   }
-  else if(t.id()==ID_array)
+  else if(t.id() == ID_array)
   {
     // get_objects_rec(identifier, suffix+"[]", t.subtype(), dest);
     // we don't track these
@@ -191,8 +189,7 @@ Function: invariant_propagationt::add_vars
 
 \*******************************************************************/
 
-void invariant_propagationt::add_objects(
-  const goto_functionst &goto_functions)
+void invariant_propagationt::add_objects(const goto_functionst &goto_functions)
 {
   // get the globals
   object_listt globals;
@@ -204,7 +201,7 @@ void invariant_propagationt::add_objects(
     std::set<irep_idt> locals;
     get_local_identifiers(f_it->second, locals);
 
-    const goto_programt &goto_program=f_it->second.body;
+    const goto_programt &goto_program= f_it->second.body;
 
     // cache the list for the locals to speed things up
     typedef std::unordered_map<irep_idt, object_listt, irep_id_hash>
@@ -213,31 +210,31 @@ void invariant_propagationt::add_objects(
 
     forall_goto_program_instructions(i_it, goto_program)
     {
-      #if 0
+#if 0
       invariant_sett &is=(*this)[i_it].invariant_set;
 
       is.add_objects(globals);
-      #endif
+#endif
 
       for(const auto &local : locals)
       {
         // cache hit?
-        object_cachet::const_iterator e_it=object_cache.find(local);
+        object_cachet::const_iterator e_it= object_cache.find(local);
 
-        if(e_it==object_cache.end())
+        if(e_it == object_cache.end())
         {
-          const symbolt &symbol=ns.lookup(local);
+          const symbolt &symbol= ns.lookup(local);
 
-          object_listt &objects=object_cache[local];
+          object_listt &objects= object_cache[local];
           get_objects(symbol, objects);
-          #if 0
+#if 0
           is.add_objects(objects);
-          #endif
+#endif
         }
-        #if 0
+#if 0
         else
           is.add_objects(e_it->second);
-        #endif
+#endif
       }
     }
   }
@@ -255,13 +252,11 @@ Function: invariant_propagationt::get_globals
 
 \*******************************************************************/
 
-void invariant_propagationt::get_globals(
-  object_listt &dest)
+void invariant_propagationt::get_globals(object_listt &dest)
 {
   // static ones
   forall_symbols(it, ns.get_symbol_table().symbols)
-    if(it->second.is_lvalue &&
-       it->second.is_static_lifetime)
+    if(it->second.is_lvalue && it->second.is_static_lifetime)
       get_objects(it->second, dest);
 }
 
@@ -279,19 +274,17 @@ Function: invariant_propagationt::check_type
 
 bool invariant_propagationt::check_type(const typet &type) const
 {
-  if(type.id()==ID_pointer)
+  if(type.id() == ID_pointer)
     return true;
-  else if(type.id()==ID_struct ||
-          type.id()==ID_union)
+  else if(type.id() == ID_struct || type.id() == ID_union)
     return false;
-  else if(type.id()==ID_array)
+  else if(type.id() == ID_array)
     return false;
-  else if(type.id()==ID_symbol)
+  else if(type.id() == ID_symbol)
     return check_type(ns.follow(type));
-  else if(type.id()==ID_unsignedbv ||
-          type.id()==ID_signedbv)
+  else if(type.id() == ID_unsignedbv || type.id() == ID_signedbv)
     return true;
-  else if(type.id()==ID_bool)
+  else if(type.id() == ID_bool)
     return true;
 
   return false;
@@ -315,9 +308,9 @@ void invariant_propagationt::initialize(const goto_programt &goto_program)
 
   forall_goto_program_instructions(it, goto_program)
   {
-    invariant_sett &s=state_map[it].invariant_set;
+    invariant_sett &s= state_map[it].invariant_set;
 
-    if(it==goto_program.instructions.begin())
+    if(it == goto_program.instructions.begin())
       s.make_true();
     else
       s.make_false();
@@ -388,11 +381,11 @@ void invariant_propagationt::simplify(goto_programt &goto_program)
       continue;
 
     // find invariant set
-    state_mapt::const_iterator s_it=state_map.find(i_it);
-    if(s_it==state_map.end())
+    state_mapt::const_iterator s_it= state_map.find(i_it);
+    if(s_it == state_map.end())
       continue;
 
-    const invariant_sett &invariant_set=s_it->second.invariant_set;
+    const invariant_sett &invariant_set= s_it->second.invariant_set;
 
     exprt simplified_guard(i_it->guard);
 
@@ -400,6 +393,6 @@ void invariant_propagationt::simplify(goto_programt &goto_program)
     ::simplify(simplified_guard, ns);
 
     if(invariant_set.implies(simplified_guard).is_true())
-      i_it->guard=true_exprt();
+      i_it->guard= true_exprt();
   }
 }

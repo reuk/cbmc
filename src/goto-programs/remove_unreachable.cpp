@@ -32,11 +32,12 @@ void remove_unreachable(goto_programt &goto_program)
 
   while(!working.empty())
   {
-    goto_programt::targett t=working.top();
+    goto_programt::targett t= working.top();
     working.pop();
 
-    if(reachable.find(t)==reachable.end() &&
-       t!=goto_program.instructions.end())
+    if(
+      reachable.find(t) == reachable.end() &&
+      t != goto_program.instructions.end())
     {
       reachable.insert(t);
 
@@ -50,8 +51,7 @@ void remove_unreachable(goto_programt &goto_program)
 
   Forall_goto_program_instructions(it, goto_program)
   {
-    if(reachable.find(it)==reachable.end() &&
-       !it->is_end_function())
+    if(reachable.find(it) == reachable.end() && !it->is_end_function())
       it->make_skip();
   }
 }

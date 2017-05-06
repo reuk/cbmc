@@ -27,9 +27,10 @@ Function: json_irept::json_irept
 
 \*******************************************************************/
 
-json_irept::json_irept(bool include_comments):
-  include_comments(include_comments)
-{}
+json_irept::json_irept(bool include_comments)
+  : include_comments(include_comments)
+{
+}
 
 /*******************************************************************\
 
@@ -48,9 +49,9 @@ Function: json_irept::convert_from_irep
 
 void json_irept::convert_from_irep(const irept &irep, jsont &json) const
 {
-  json_objectt &irep_object=json.make_object();
-  if(irep.id()!=ID_nil)
-    irep_object["id"]=json_stringt(irep.id_string());
+  json_objectt &irep_object= json.make_object();
+  if(irep.id() != ID_nil)
+    irep_object["id"]= json_stringt(irep.id_string());
 
   convert_sub_tree("sub", irep.get_sub(), irep_object);
   convert_named_sub_tree("namedSub", irep.get_named_sub(), irep_object);
@@ -83,7 +84,7 @@ void json_irept::convert_sub_tree(
   const irept::subt &sub_trees,
   json_objectt &parent) const
 {
-  if(sub_trees.size()>0)
+  if(sub_trees.size() > 0)
   {
     json_arrayt sub_objects;
     for(const irept &sub_tree : sub_trees)
@@ -92,7 +93,7 @@ void json_irept::convert_sub_tree(
       convert_from_irep(sub_tree, sub_object);
       sub_objects.push_back(sub_object);
     }
-    parent[sub_tree_id]=sub_objects;
+    parent[sub_tree_id]= sub_objects;
   }
 }
 
@@ -120,16 +121,16 @@ void json_irept::convert_named_sub_tree(
   const irept::named_subt &sub_trees,
   json_objectt &parent) const
 {
-  if(sub_trees.size()>0)
+  if(sub_trees.size() > 0)
   {
     json_objectt sub_objects;
     for(const auto &sub_tree : sub_trees)
     {
       json_objectt sub_object;
       convert_from_irep(sub_tree.second, sub_object);
-      sub_objects[id2string(sub_tree.first)]=sub_object;
+      sub_objects[id2string(sub_tree.first)]= sub_object;
     }
-    parent[sub_tree_id]=sub_objects;
+    parent[sub_tree_id]= sub_objects;
   }
 }
 
@@ -151,7 +152,7 @@ void json_irept::convert_from_json(const jsont &in, irept &out) const
   for(const auto &keyval : in.object)
     have_keys.push_back(keyval.first);
   std::sort(have_keys.begin(), have_keys.end());
-  if(have_keys!=std::vector<std::string>{"comment", "id", "namedSub", "sub"})
+  if(have_keys != std::vector<std::string>{"comment", "id", "namedSub", "sub"})
     throw "irep JSON representation is missing one of needed keys: "
       "'id', 'sub', 'namedSub', 'comment'";
 

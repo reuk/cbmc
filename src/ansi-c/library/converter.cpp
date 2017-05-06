@@ -11,13 +11,13 @@ Author: Daniel Kroening, kroening@kroening.com
 
 bool has_prefix(const std::string &s, const std::string &prefix)
 {
-  return std::string(s, 0, prefix.size())==prefix;
+  return std::string(s, 0, prefix.size()) == prefix;
 }
 
 int main()
 {
   std::string line;
-  bool first=true;
+  bool first= true;
 
   std::cout << "{\n";
 
@@ -26,31 +26,31 @@ int main()
     if(has_prefix(line, "/* FUNCTION: "))
     {
       if(first)
-        first=false;
+        first= false;
       else
         std::cout << "},\n";
 
-      std::string function=std::string(line, 13, std::string::npos);
-      std::size_t pos=function.find(' ');
-      if(pos!=std::string::npos)
-        function=std::string(function, 0, pos);
+      std::string function= std::string(line, 13, std::string::npos);
+      std::size_t pos= function.find(' ');
+      if(pos != std::string::npos)
+        function= std::string(function, 0, pos);
 
       std::cout << "{ \"" << function << "\",\n";
-      std::cout << "  \"#line 1 \\\"<builtin-library-"
-                << function << ">\\\"\\n\"\n";
+      std::cout << "  \"#line 1 \\\"<builtin-library-" << function
+                << ">\\\"\\n\"\n";
     }
     else if(!first)
     {
       std::cout << "  \"";
 
-      for(unsigned i=0; i<line.size(); i++)
+      for(unsigned i= 0; i < line.size(); i++)
       {
-        const char ch=line[i];
-        if(ch=='\\')
+        const char ch= line[i];
+        if(ch == '\\')
           std::cout << "\\\\";
-        else if(ch=='"')
+        else if(ch == '"')
           std::cout << "\\\"";
-        else if(ch=='\r' || ch=='\n')
+        else if(ch == '\r' || ch == '\n')
         {
         }
         else
@@ -64,7 +64,6 @@ int main()
   if(!first)
     std::cout << "},\n";
 
-  std::cout <<
-    "{ 0, 0 }\n"
-    "}";
+  std::cout << "{ 0, 0 }\n"
+               "}";
 }

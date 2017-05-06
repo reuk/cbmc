@@ -29,7 +29,7 @@ protected:
 /*! \brief Decision procedure interface for various SMT 1.x solvers
     \ingroup gr_smt1
 */
-class smt1_dect:protected smt1_temp_filet, public smt1_convt
+class smt1_dect : protected smt1_temp_filet, public smt1_convt
 {
 public:
   smt1_dect(
@@ -37,11 +37,11 @@ public:
     const std::string &_benchmark,
     const std::string &_source,
     const std::string &_logic,
-    solvert _solver):
-    smt1_temp_filet(),
-    smt1_convt(_ns, _benchmark, _source, _logic, _solver, temp_out),
-    logic(_logic),
-    dec_solve_was_called(false)
+    solvert _solver)
+    : smt1_temp_filet(),
+      smt1_convt(_ns, _benchmark, _source, _logic, _solver, temp_out),
+      logic(_logic),
+      dec_solve_was_called(false)
   {
   }
 
@@ -59,9 +59,8 @@ protected:
   resultt read_result_yices(std::istream &in);
   resultt read_result_z3(std::istream &in);
 
-  bool string_to_expr_z3(
-    const typet &type,
-    const std::string &value, exprt &e) const;
+  bool string_to_expr_z3(const typet &type, const std::string &value, exprt &e)
+    const;
 
   std::string mathsat_value(const std::string &src);
 

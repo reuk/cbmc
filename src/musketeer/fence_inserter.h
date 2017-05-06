@@ -43,12 +43,12 @@ struct mip_vart
     {
       ++unique;
       map_to_e.insert(std::pair<unsigned, edget>(unique, e));
-      map_from_e[e] = unique;
+      map_from_e[e]= unique;
       return unique;
     }
   }
 
-  mip_vart():unique(0)
+  mip_vart() : unique(0)
   {
   }
 };
@@ -64,7 +64,10 @@ public:
   /* normal variables used almost everytime */
   std::map<unsigned, edget> &map_to_e;
   std::map<edget, unsigned> &map_from_e;
-  unsigned add_edge(const edget &e) { return var.add_edge(e); }
+  unsigned add_edge(const edget &e)
+  {
+    return var.add_edge(e);
+  }
   unsigned add_invisible_edge(const edget &e)
   {
     return invisible_var.add_edge(e);
@@ -100,18 +103,24 @@ protected:
   void preprocess();
   void solve();
 
-  typedef enum {Fence=0, Dp=1, Lwfence=2, Branching=3, Ctlfence=4} fence_typet;
+  typedef enum {
+    Fence= 0,
+    Dp= 1,
+    Lwfence= 2,
+    Branching= 3,
+    Ctlfence= 4
+  } fence_typet;
   virtual unsigned fence_cost(fence_typet e) const;
 
   std::string to_string(fence_typet f) const;
 
   /* for the preprocessing */
   std::set<event_idt> po;
-  std::list<std::set<event_idt> > powr_constraints;
-  std::list<std::set<event_idt> > poww_constraints;
-  std::list<std::set<event_idt> > porw_constraints;
-  std::list<std::set<event_idt> > porr_constraints;
-  std::list<std::set<event_idt> > com_constraints;
+  std::list<std::set<event_idt>> powr_constraints;
+  std::list<std::set<event_idt>> poww_constraints;
+  std::list<std::set<event_idt>> porw_constraints;
+  std::list<std::set<event_idt>> porr_constraints;
+  std::list<std::set<event_idt>> com_constraints;
 
   /* to retrieve the edges involved in the cycles */
   cycles_visitort cycles_visitor;
@@ -138,19 +147,33 @@ protected:
   std::map<edget, fence_typet> fenced_edges;
 
 public:
-  explicit fence_insertert(instrumentert &instr):
-    instrumenter(instr), map_to_e(var.map_to_e), map_from_e(var.map_from_e),
-    constraints_number(0), model(TSO),  const_graph_visitor(*this),
-    unique(var.unique), fence_options(0), cycles_visitor(*this),
-    epsilon(0.001), with_freq(false)
+  explicit fence_insertert(instrumentert &instr)
+    : instrumenter(instr),
+      map_to_e(var.map_to_e),
+      map_from_e(var.map_from_e),
+      constraints_number(0),
+      model(TSO),
+      const_graph_visitor(*this),
+      unique(var.unique),
+      fence_options(0),
+      cycles_visitor(*this),
+      epsilon(0.001),
+      with_freq(false)
   {
   }
 
-  fence_insertert(instrumentert &instr, memory_modelt _model):
-    instrumenter(instr), map_to_e(var.map_to_e), map_from_e(var.map_from_e),
-    constraints_number(0), model(_model),  const_graph_visitor(*this),
-    unique(var.unique), fence_options(0), cycles_visitor(*this),
-    epsilon(0.001), with_freq(false)
+  fence_insertert(instrumentert &instr, memory_modelt _model)
+    : instrumenter(instr),
+      map_to_e(var.map_to_e),
+      map_from_e(var.map_from_e),
+      constraints_number(0),
+      model(_model),
+      const_graph_visitor(*this),
+      unique(var.unique),
+      fence_options(0),
+      cycles_visitor(*this),
+      epsilon(0.001),
+      with_freq(false)
   {
   }
 
@@ -160,8 +183,13 @@ public:
   /* selection methods */
   // Note: process_selection updates the selection of cycles in instrumenter,
   // whereas filter just ignores some
-  virtual void process_cycles_selection() { }
-  virtual bool filter_cycles(unsigned cycle_id) const { return false; }
+  virtual void process_cycles_selection()
+  {
+  }
+  virtual bool filter_cycles(unsigned cycle_id) const
+  {
+    return false;
+  }
 
   /* prints final results */
   void print_to_file();
@@ -172,15 +200,15 @@ public:
   /* TODO: to be replaced eventually by ns.lookup and basename */
   static std::string remove_extra(const irep_idt &id)
   {
-     const std::string copy=id2string(id);
-     return remove_extra(copy);
+    const std::string copy= id2string(id);
+    return remove_extra(copy);
   }
 
   static std::string remove_extra(std::string copy)
   {
-     if(copy.find("::")==std::string::npos)
-       return copy;
-     return copy.substr(copy.find_last_of("::")+1);
+    if(copy.find("::") == std::string::npos)
+      return copy;
+    return copy.substr(copy.find_last_of("::") + 1);
   }
 
   typet get_type(const irep_idt &id);

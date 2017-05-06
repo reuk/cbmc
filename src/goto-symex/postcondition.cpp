@@ -31,11 +31,8 @@ public:
     const namespacet &_ns,
     const value_sett &_value_set,
     const symex_target_equationt::SSA_stept &_SSA_step,
-    const goto_symex_statet &_s):
-    ns(_ns),
-    value_set(_value_set),
-    SSA_step(_SSA_step),
-    s(_s)
+    const goto_symex_statet &_s)
+    : ns(_ns), value_set(_value_set), SSA_step(_SSA_step), s(_s)
   {
   }
 
@@ -74,9 +71,9 @@ void postcondition(
   const goto_symex_statet &s,
   exprt &dest)
 {
-  for(symex_target_equationt::SSA_stepst::const_iterator
-      it=equation.SSA_steps.begin();
-      it!=equation.SSA_steps.end();
+  for(symex_target_equationt::SSA_stepst::const_iterator it=
+        equation.SSA_steps.begin();
+      it != equation.SSA_steps.end();
       it++)
   {
     postconditiont postcondition(ns, value_set, *it, s);
@@ -102,26 +99,25 @@ bool postconditiont::is_used_address_of(
   const exprt &expr,
   const irep_idt &identifier)
 {
-  if(expr.id()==ID_symbol)
+  if(expr.id() == ID_symbol)
   {
     // leave alone
   }
-  else if(expr.id()==ID_index)
+  else if(expr.id() == ID_index)
   {
-    assert(expr.operands().size()==2);
+    assert(expr.operands().size() == 2);
 
-    return
-      is_used_address_of(expr.op0(), identifier) ||
-      is_used(expr.op1(), identifier);
+    return is_used_address_of(expr.op0(), identifier) ||
+           is_used(expr.op1(), identifier);
   }
-  else if(expr.id()==ID_member)
+  else if(expr.id() == ID_member)
   {
-    assert(expr.operands().size()==1);
+    assert(expr.operands().size() == 1);
     return is_used_address_of(expr.op0(), identifier);
   }
-  else if(expr.id()==ID_dereference)
+  else if(expr.id() == ID_dereference)
   {
-    assert(expr.operands().size()==1);
+    assert(expr.operands().size() == 1);
     return is_used(expr.op0(), identifier);
   }
 
@@ -163,8 +159,9 @@ Function: postconditiont::strengthen
 
 void postconditiont::weaken(exprt &dest)
 {
-  if(dest.id()==ID_and &&
-     dest.type()==bool_typet()) // this distributes over "and"
+  if(
+    dest.id() == ID_and &&
+    dest.type() == bool_typet()) // this distributes over "and"
   {
     Forall_operands(it, dest)
       weaken(*it);
@@ -175,10 +172,10 @@ void postconditiont::weaken(exprt &dest)
   // we are lazy:
   // if lhs is mentioned in dest, we use "true".
 
-  const irep_idt &lhs_identifier=SSA_step.ssa_lhs.get_object_name();
+  const irep_idt &lhs_identifier= SSA_step.ssa_lhs.get_object_name();
 
   if(is_used(dest, lhs_identifier))
-    dest=true_exprt();
+    dest= true_exprt();
 
   // otherwise, no weakening needed
 }
@@ -197,13 +194,14 @@ Function: postconditiont::strengthen
 
 void postconditiont::strengthen(exprt &dest)
 {
-  const irep_idt &lhs_identifier=SSA_step.ssa_lhs.get_object_name();
+  const irep_idt &lhs_identifier= SSA_step.ssa_lhs.get_object_name();
 
   if(!is_used(SSA_step.ssa_rhs, lhs_identifier))
   {
     // we don't do arrays or structs
-    if(SSA_step.ssa_lhs.type().id()==ID_array ||
-       SSA_step.ssa_lhs.type().id()==ID_struct)
+    if(
+      SSA_step.ssa_lhs.type().id() == ID_array ||
+      SSA_step.ssa_lhs.type().id() == ID_struct)
       return;
 
     equal_exprt equality(SSA_step.ssa_lhs, SSA_step.ssa_rhs);
@@ -212,7 +210,7 @@ void postconditiont::strengthen(exprt &dest)
     if(dest.is_true())
       dest.swap(equality);
     else
-      dest=and_exprt(dest, equality);
+      dest= and_exprt(dest, equality);
   }
 }
 
@@ -228,28 +226,25 @@ Function: postconditiont::is_used
 
 \*******************************************************************/
 
-bool postconditiont::is_used(
-  const exprt &expr,
-  const irep_idt &identifier)
+bool postconditiont::is_used(const exprt &expr, const irep_idt &identifier)
 {
-  if(expr.id()==ID_address_of)
+  if(expr.id() == ID_address_of)
   {
     // only do index!
-    assert(expr.operands().size()==1);
+    assert(expr.operands().size() == 1);
     return is_used_address_of(expr.op0(), identifier);
   }
-  else if(expr.id()==ID_symbol &&
-          expr.get_bool(ID_C_SSA_symbol))
+  else if(expr.id() == ID_symbol && expr.get_bool(ID_C_SSA_symbol))
   {
-    return to_ssa_expr(expr).get_object_name()==identifier;
+    return to_ssa_expr(expr).get_object_name() == identifier;
   }
-  else if(expr.id()==ID_symbol)
+  else if(expr.id() == ID_symbol)
   {
-    return expr.get(ID_identifier)==identifier;
+    return expr.get(ID_identifier) == identifier;
   }
-  else if(expr.id()==ID_dereference)
+  else if(expr.id() == ID_dereference)
   {
-    assert(expr.operands().size()==1);
+    assert(expr.operands().size() == 1);
 
     // aliasing may happen here
 
@@ -257,9 +252,8 @@ bool postconditiont::is_used(
     value_set.get_value_set(expr.op0(), expr_set, ns);
     std::unordered_set<irep_idt, irep_id_hash> symbols;
 
-    for(value_setst::valuest::const_iterator
-        it=expr_set.begin();
-        it!=expr_set.end();
+    for(value_setst::valuest::const_iterator it= expr_set.begin();
+        it != expr_set.end();
         it++)
     {
       exprt tmp(*it);
@@ -267,7 +261,7 @@ bool postconditiont::is_used(
       find_symbols(tmp, symbols);
     }
 
-    return symbols.find(identifier)!=symbols.end();
+    return symbols.find(identifier) != symbols.end();
   }
   else
     forall_operands(it, expr)

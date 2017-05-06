@@ -29,8 +29,8 @@ Function: mmcc_parse_optionst::mmcc_parse_optionst
 
 \*******************************************************************/
 
-mmcc_parse_optionst::mmcc_parse_optionst(int argc, const char **argv):
-  parse_options_baset(MMCC_OPTIONS, argc, argv)
+mmcc_parse_optionst::mmcc_parse_optionst(int argc, const char **argv)
+  : parse_options_baset(MMCC_OPTIONS, argc, argv)
 {
 }
 
@@ -56,7 +56,7 @@ int mmcc_parse_optionst::doit()
 
   try
   {
-    if(cmdline.args.size()==1)
+    if(cmdline.args.size() == 1)
     {
       std::ifstream in(cmdline.args[0].c_str());
 
@@ -68,7 +68,7 @@ int mmcc_parse_optionst::doit()
 
       return convert(in, cmdline.args[0]);
     }
-    else if(cmdline.args.size()==0)
+    else if(cmdline.args.size() == 0)
     {
       return convert(std::cin, "stdin");
     }
@@ -104,14 +104,12 @@ Function: mmcc_parse_optionst::convert
 
 \*******************************************************************/
 
-int mmcc_parse_optionst::convert(
-  std::istream &in,
-  const std::string &file)
+int mmcc_parse_optionst::convert(std::istream &in, const std::string &file)
 {
   console_message_handlert message_handler;
 
   mm_parser.set_message_handler(message_handler);
-  mm_parser.in=&in;
+  mm_parser.in= &in;
   mm_parser.set_file(file);
 
   if(mm_parser.parse())
@@ -139,16 +137,14 @@ Function: mmcc_parse_optionst::help
 
 void mmcc_parse_optionst::help()
 {
-  std::cout <<
-    "\n"
-    "* *   MMCC " CBMC_VERSION " - Copyright (C) 2015-2015    * *\n";
+  std::cout << "\n"
+               "* *   MMCC " CBMC_VERSION " - Copyright (C) 2015-2015    * *\n";
 
-  std::cout <<
-    "\n"
-    "Usage:                       Purpose:\n"
-    "\n"
-    " mmcc [-?] [-h] [--help]      show help\n"
-    " mmcc file.cat                convert given source file\n"
-    " mmcc                         convert from stdin\n"
-    "\n";
+  std::cout << "\n"
+               "Usage:                       Purpose:\n"
+               "\n"
+               " mmcc [-?] [-h] [--help]      show help\n"
+               " mmcc file.cat                convert given source file\n"
+               " mmcc                         convert from stdin\n"
+               "\n";
 }

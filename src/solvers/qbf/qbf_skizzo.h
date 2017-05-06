@@ -11,7 +11,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "qdimacs_cnf.h"
 
-class qbf_skizzot:public qdimacs_cnft
+class qbf_skizzot : public qdimacs_cnft
 {
 public:
   qbf_skizzot();

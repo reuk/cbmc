@@ -14,7 +14,6 @@ Author: Daniel Kroening, kroening@kroening.com
 // adds expected members for a root class,
 // which is usually java.lang.Object
 
-void java_root_class(
-  class symbolt &class_symbol);
+void java_root_class(class symbolt &class_symbol);
 
 #endif // CPROVER_JAVA_BYTECODE_JAVA_ROOT_CLASS_H

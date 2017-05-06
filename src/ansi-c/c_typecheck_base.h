@@ -19,20 +19,18 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "ansi_c_declaration.h"
 #include "designator.h"
 
-class c_typecheck_baset:
-  public typecheckt,
-  public namespacet
+class c_typecheck_baset : public typecheckt, public namespacet
 {
 public:
   c_typecheck_baset(
     symbol_tablet &_symbol_table,
     const std::string &_module,
-    message_handlert &_message_handler):
-    typecheckt(_message_handler),
-    namespacet(_symbol_table),
-    symbol_table(_symbol_table),
-    module(_module),
-    mode("C")
+    message_handlert &_message_handler)
+    : typecheckt(_message_handler),
+      namespacet(_symbol_table),
+      symbol_table(_symbol_table),
+      module(_module),
+      mode("C")
   {
   }
 
@@ -40,18 +38,20 @@ public:
     symbol_tablet &_symbol_table1,
     const symbol_tablet &_symbol_table2,
     const std::string &_module,
-    message_handlert &_message_handler):
-    typecheckt(_message_handler),
-    namespacet(_symbol_table1, _symbol_table2),
-    symbol_table(_symbol_table1),
-    module(_module),
-    mode("C")
+    message_handlert &_message_handler)
+    : typecheckt(_message_handler),
+      namespacet(_symbol_table1, _symbol_table2),
+      symbol_table(_symbol_table1),
+      module(_module),
+      mode("C")
   {
   }
 
-  virtual ~c_typecheck_baset() { }
+  virtual ~c_typecheck_baset()
+  {
+  }
 
-  virtual void typecheck()=0;
+  virtual void typecheck()= 0;
   virtual void typecheck_expr(exprt &expr);
 
 protected:
@@ -71,10 +71,8 @@ protected:
   // service functions
   //
 
-  virtual void do_initializer(
-    exprt &initializer,
-    const typet &type,
-    bool force_constant);
+  virtual void
+  do_initializer(exprt &initializer, const typet &type, bool force_constant);
 
   virtual exprt do_initializer_rec(
     const exprt &value,
@@ -175,15 +173,15 @@ protected:
   virtual void typecheck_expr_sizeof(exprt &expr);
   virtual void typecheck_expr_alignof(exprt &expr);
   virtual void typecheck_expr_function_identifier(exprt &expr);
-  virtual void typecheck_side_effect_gcc_conditional_expression(
-    side_effect_exprt &expr);
-  virtual void typecheck_side_effect_function_call(
-    side_effect_expr_function_callt &expr);
+  virtual void
+  typecheck_side_effect_gcc_conditional_expression(side_effect_exprt &expr);
+  virtual void
+  typecheck_side_effect_function_call(side_effect_expr_function_callt &expr);
   virtual void typecheck_side_effect_assignment(side_effect_exprt &expr);
-  virtual void typecheck_side_effect_statement_expression(
-    side_effect_exprt &expr);
-  virtual void typecheck_function_call_arguments(
-    side_effect_expr_function_callt &expr);
+  virtual void
+  typecheck_side_effect_statement_expression(side_effect_exprt &expr);
+  virtual void
+  typecheck_function_call_arguments(side_effect_expr_function_callt &expr);
   virtual exprt do_special_functions(side_effect_expr_function_callt &expr);
 
   virtual void make_index_type(exprt &expr);
@@ -209,11 +207,11 @@ protected:
   virtual void adjust_function_parameter(typet &type) const;
   virtual bool is_complete_type(const typet &type) const;
 
-  typet enum_constant_type(
-    const mp_integer &min, const mp_integer &max) const;
+  typet enum_constant_type(const mp_integer &min, const mp_integer &max) const;
 
   typet enum_underlying_type(
-    const mp_integer &min, const mp_integer &max,
+    const mp_integer &min,
+    const mp_integer &max,
     bool is_packed) const;
 
   void make_already_typechecked(typet &dest)
@@ -232,30 +230,29 @@ protected:
   // symbol table management
   void move_symbol(symbolt &symbol, symbolt *&new_symbol);
   void move_symbol(symbolt &symbol)
-  { symbolt *new_symbol; move_symbol(symbol, new_symbol); }
+  {
+    symbolt *new_symbol;
+    move_symbol(symbol, new_symbol);
+  }
 
   // top-level stuff
   void typecheck_declaration(ansi_c_declarationt &);
   void typecheck_symbol(symbolt &symbol);
   void typecheck_new_symbol(symbolt &symbol);
   void typecheck_redefinition_type(symbolt &old_symbol, symbolt &new_symbol);
-  void typecheck_redefinition_non_type(
-    symbolt &old_symbol, symbolt &new_symbol);
+  void
+  typecheck_redefinition_non_type(symbolt &old_symbol, symbolt &new_symbol);
   void typecheck_function_body(symbolt &symbol);
 
   virtual void do_initializer(symbolt &symbol);
 
   static bool is_numeric_type(const typet &src)
   {
-    return src.id()==ID_complex ||
-           src.id()==ID_unsignedbv ||
-           src.id()==ID_signedbv ||
-           src.id()==ID_floatbv ||
-           src.id()==ID_fixedbv ||
-           src.id()==ID_c_bool ||
-           src.id()==ID_bool ||
-           src.id()==ID_c_enum_tag ||
-           src.id()==ID_c_bit_field;
+    return src.id() == ID_complex || src.id() == ID_unsignedbv ||
+           src.id() == ID_signedbv || src.id() == ID_floatbv ||
+           src.id() == ID_fixedbv || src.id() == ID_c_bool ||
+           src.id() == ID_bool || src.id() == ID_c_enum_tag ||
+           src.id() == ID_c_bit_field;
   }
 
   typedef std::unordered_map<irep_idt, irep_idt, irep_id_hash> asm_label_mapt;

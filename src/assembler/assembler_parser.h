@@ -16,7 +16,7 @@ int yyassemblerlex();
 int yyassemblererror(const std::string &error);
 void assembler_scanner_init();
 
-class assembler_parsert:public parsert
+class assembler_parsert : public parsert
 {
 public:
   typedef std::vector<irept> instructiont;

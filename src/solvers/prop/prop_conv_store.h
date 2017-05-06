@@ -11,10 +11,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "prop_conv.h"
 
-class prop_conv_storet:public prop_convt
+class prop_conv_storet : public prop_convt
 {
 public:
-  explicit prop_conv_storet(const namespacet &_ns):prop_convt(_ns)
+  explicit prop_conv_storet(const namespacet &_ns) : prop_convt(_ns)
   {
   }
 

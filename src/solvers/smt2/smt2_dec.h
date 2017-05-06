@@ -34,7 +34,7 @@ protected:
 /*! \brief Decision procedure interface for various SMT 2.x solvers
     \ingroup gr_smt2
 */
-class smt2_dect:protected smt2_stringstreamt, public smt2_convt
+class smt2_dect : protected smt2_stringstreamt, public smt2_convt
 {
 public:
   smt2_dect(
@@ -42,8 +42,8 @@ public:
     const std::string &_benchmark,
     const std::string &_notes,
     const std::string &_logic,
-    solvert _solver):
-    smt2_convt(_ns, _benchmark, _notes, _logic, _solver, stringstream)
+    solvert _solver)
+    : smt2_convt(_ns, _benchmark, _notes, _logic, _solver, stringstream)
   {
   }
 
@@ -51,7 +51,10 @@ public:
   virtual std::string decision_procedure_text() const;
 
   // yes, we are incremental!
-  virtual bool has_set_assumptions() const { return true; }
+  virtual bool has_set_assumptions() const
+  {
+    return true;
+  }
 
 protected:
   resultt read_result(std::istream &in);

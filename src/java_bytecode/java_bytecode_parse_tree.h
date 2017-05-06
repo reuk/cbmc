@@ -58,16 +58,19 @@ public:
     bool is_public, is_protected, is_private, is_static, is_final;
     annotationst annotations;
 
-    virtual void output(std::ostream &out) const = 0;
+    virtual void output(std::ostream &out) const= 0;
 
-    membert():
-      is_public(false), is_protected(false), is_private(false),
-      is_static(false), is_final(false)
+    membert()
+      : is_public(false),
+        is_protected(false),
+        is_private(false),
+        is_static(false),
+        is_final(false)
     {
     }
   };
 
-  class methodt:public membert
+  class methodt : public membert
   {
   public:
     irep_idt base_name;
@@ -111,9 +114,18 @@ public:
     class verification_type_infot
     {
     public:
-      enum verification_type_info_type { TOP, INTEGER, FLOAT, LONG, DOUBLE,
-                                         ITEM_NULL, UNINITIALIZED_THIS,
-                                         OBJECT, UNINITIALIZED};
+      enum verification_type_info_type
+      {
+        TOP,
+        INTEGER,
+        FLOAT,
+        LONG,
+        DOUBLE,
+        ITEM_NULL,
+        UNINITIALIZED_THIS,
+        OBJECT,
+        UNINITIALIZED
+      };
       verification_type_info_type type;
       u1 tag;
       u2 cpool_index;
@@ -125,8 +137,13 @@ public:
     public:
       enum stack_frame_type
       {
-        SAME, SAME_LOCALS_ONE_STACK, SAME_LOCALS_ONE_STACK_EXTENDED,
-        CHOP, SAME_EXTENDED, APPEND, FULL
+        SAME,
+        SAME_LOCALS_ONE_STACK,
+        SAME_LOCALS_ONE_STACK_EXTENDED,
+        CHOP,
+        SAME_EXTENDED,
+        APPEND,
+        FULL
       };
       stack_frame_type type;
       size_t offset_delta;
@@ -147,15 +164,12 @@ public:
 
     virtual void output(std::ostream &out) const;
 
-    methodt():
-      is_native(false),
-      is_abstract(false),
-      is_synchronized(false)
+    methodt() : is_native(false), is_abstract(false), is_synchronized(false)
     {
     }
   };
 
-  class fieldt:public membert
+  class fieldt : public membert
   {
   public:
     virtual void output(std::ostream &out) const;
@@ -166,9 +180,9 @@ public:
   {
   public:
     irep_idt name, extends;
-    bool is_abstract=false;
-    bool is_enum=false;
-    size_t enum_elements=0;
+    bool is_abstract= false;
+    bool is_enum= false;
+    size_t enum_elements= 0;
 
     typedef std::list<irep_idt> implementst;
     implementst implements;
@@ -212,7 +226,7 @@ public:
 
   bool loading_successful;
 
-  java_bytecode_parse_treet():loading_successful(false)
+  java_bytecode_parse_treet() : loading_successful(false)
   {
   }
 };

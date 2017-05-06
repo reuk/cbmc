@@ -13,11 +13,13 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "cnf_clause_list.h"
 
-class dimacs_cnft:public cnf_clause_listt
+class dimacs_cnft : public cnf_clause_listt
 {
 public:
   dimacs_cnft();
-  virtual ~dimacs_cnft() { }
+  virtual ~dimacs_cnft()
+  {
+  }
 
   virtual void write_dimacs_cnf(std::ostream &out);
 
@@ -35,11 +37,13 @@ protected:
   bool break_lines;
 };
 
-class dimacs_cnf_dumpt:public cnft
+class dimacs_cnf_dumpt : public cnft
 {
 public:
   explicit dimacs_cnf_dumpt(std::ostream &_out);
-  virtual ~dimacs_cnf_dumpt() { }
+  virtual ~dimacs_cnf_dumpt()
+  {
+  }
 
   virtual const std::string solver_text()
   {

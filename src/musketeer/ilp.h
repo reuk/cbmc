@@ -20,7 +20,7 @@ class ilpt
 {
 protected:
   template <class T>
-  class my_vectort: public std::vector<T>
+  class my_vectort : public std::vector<T>
   {
   public:
     T *to_array()
@@ -43,10 +43,10 @@ public:
   ilpt()
   {
     glp_init_iocp(&parm);
-    parm.msg_lev=GLP_MSG_OFF;
-    parm.presolve=GLP_ON;
+    parm.msg_lev= GLP_MSG_OFF;
+    parm.presolve= GLP_ON;
 
-    lp=glp_create_prob();
+    lp= glp_create_prob();
     glp_set_prob_name(lp, "fence optimisation");
     glp_set_obj_dir(lp, GLP_MIN);
   }
@@ -58,21 +58,23 @@ public:
 
   void set_size(unsigned mat_size)
   {
-     matrix_size=mat_size;
-     imat.resize(mat_size+1);
-     jmat.resize(mat_size+1);
-     vmat.resize(mat_size+1);
+    matrix_size= mat_size;
+    imat.resize(mat_size + 1);
+    jmat.resize(mat_size + 1);
+    vmat.resize(mat_size + 1);
   }
 
   void solve()
   {
-    glp_load_matrix(lp, matrix_size, imat.to_array(),
-      jmat.to_array(), vmat.to_array());
+    glp_load_matrix(
+      lp, matrix_size, imat.to_array(), jmat.to_array(), vmat.to_array());
     glp_intopt(lp, &parm);
   }
 };
 #else
-class ilpt {};
+class ilpt
+{
+};
 #endif
 
 #endif // CPROVER_MUSKETEER_ILP_H

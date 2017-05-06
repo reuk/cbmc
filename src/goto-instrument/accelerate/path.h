@@ -20,16 +20,13 @@ Author: Matt Lewis
 class path_nodet
 {
 public:
-  explicit path_nodet(const goto_programt::targett &_loc):
-    loc(_loc),
-    guard(nil_exprt())
+  explicit path_nodet(const goto_programt::targett &_loc)
+    : loc(_loc), guard(nil_exprt())
   {
   }
 
-  path_nodet(const goto_programt::targett &_loc,
-             const exprt &_guard) :
-      loc(_loc),
-      guard(_guard)
+  path_nodet(const goto_programt::targett &_loc, const exprt &_guard)
+    : loc(_loc), guard(_guard)
   {
   }
 

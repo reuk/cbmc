@@ -22,8 +22,7 @@ void race_check(
 #ifdef LOCAL_MAY
   const goto_functionst::goto_functiont &goto_function,
 #endif
-  goto_programt &goto_program
-);
+  goto_programt &goto_program);
 
 void race_check(
   value_setst &value_sets,

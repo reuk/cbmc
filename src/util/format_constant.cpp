@@ -29,10 +29,9 @@ std::string format_constantt::operator()(const exprt &expr)
 {
   if(expr.is_constant())
   {
-    if(expr.type().id()==ID_natural ||
-       expr.type().id()==ID_integer ||
-       expr.type().id()==ID_unsignedbv ||
-       expr.type().id()==ID_signedbv)
+    if(
+      expr.type().id() == ID_natural || expr.type().id() == ID_integer ||
+      expr.type().id() == ID_unsignedbv || expr.type().id() == ID_signedbv)
     {
       mp_integer i;
       if(to_integer(expr, i))
@@ -40,17 +39,17 @@ std::string format_constantt::operator()(const exprt &expr)
 
       return integer2string(i);
     }
-    else if(expr.type().id()==ID_fixedbv)
+    else if(expr.type().id() == ID_fixedbv)
     {
       return fixedbvt(to_constant_expr(expr)).format(*this);
     }
-    else if(expr.type().id()==ID_floatbv)
+    else if(expr.type().id() == ID_floatbv)
     {
       return ieee_floatt(to_constant_expr(expr)).format(*this);
     }
   }
-  else if(expr.id()==ID_string_constant)
+  else if(expr.id() == ID_string_constant)
     return expr.get_string(ID_value);
 
-  return "(format-constant failed: "+expr.id_string()+")";
+  return "(format-constant failed: " + expr.id_string() + ")";
 }

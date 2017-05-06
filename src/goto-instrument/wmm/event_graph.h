@@ -36,7 +36,7 @@ class event_grapht
 {
 public:
   /* critical cycle */
-  class critical_cyclet:public std::list<event_idt>
+  class critical_cyclet : public std::list<event_idt>
   {
   protected:
     event_grapht &egraph;
@@ -44,16 +44,21 @@ public:
     bool is_not_uniproc() const;
     bool is_not_weak_uniproc() const;
 
-    std::string print_detail(const critical_cyclet &reduced,
+    std::string print_detail(
+      const critical_cyclet &reduced,
       std::map<std::string, std::string> &map_id2var,
       std::map<std::string, std::string> &map_var2id,
       memory_modelt model) const;
-    std::string print_name(const critical_cyclet &redyced,
-      memory_modelt model) const;
+    std::string
+    print_name(const critical_cyclet &redyced, memory_modelt model) const;
 
-    bool check_AC(const_iterator s_it, const abstract_eventt &first,
+    bool check_AC(
+      const_iterator s_it,
+      const abstract_eventt &first,
       const abstract_eventt &second) const;
-    bool check_BC(const_iterator it, const abstract_eventt &first,
+    bool check_BC(
+      const_iterator it,
+      const abstract_eventt &first,
       const abstract_eventt &second) const;
 
   public:
@@ -62,32 +67,33 @@ public:
     bool has_user_defined_fence;
 
     critical_cyclet(event_grapht &_egraph, unsigned _id)
-      :egraph(_egraph), id(_id), has_user_defined_fence(false)
+      : egraph(_egraph), id(_id), has_user_defined_fence(false)
     {
     }
 
     void operator()(const critical_cyclet &cyc)
     {
       clear();
-      for(const_iterator it=cyc.begin(); it!=cyc.end(); it++)
+      for(const_iterator it= cyc.begin(); it != cyc.end(); it++)
         push_back(*it);
-      has_user_defined_fence=cyc.has_user_defined_fence;
+      has_user_defined_fence= cyc.has_user_defined_fence;
     }
 
     bool is_cycle()
     {
       /* size check */
-      if(size()<4)
+      if(size() < 4)
         return false;
 
       /* po order check */
-      const_iterator it=begin();
-      const_iterator n_it=it;
+      const_iterator it= begin();
+      const_iterator n_it= it;
       ++n_it;
-      for(; it!=end() && n_it!=end(); ++it, ++n_it)
+      for(; it != end() && n_it != end(); ++it, ++n_it)
       {
-        if(egraph[*it].thread==egraph[*n_it].thread
-          && !egraph.are_po_ordered(*it, *n_it))
+        if(
+          egraph[*it].thread == egraph[*n_it].thread &&
+          !egraph.are_po_ordered(*it, *n_it))
           return false;
       }
 
@@ -101,7 +107,7 @@ public:
     /* checks whether there is at leat one pair which is unsafe
        (takes fences and dependencies into account), and adds
        the unsafe pairs in the set */
-    bool is_unsafe(memory_modelt model, bool fast=false);
+    bool is_unsafe(memory_modelt model, bool fast= false);
 
     /* do not update the unsafe pairs set */
     bool is_unsafe_fast(memory_modelt model)
@@ -114,11 +120,11 @@ public:
       is_unsafe(model);
     }
 
-    bool is_unsafe_asm(memory_modelt model, bool fast=false);
+    bool is_unsafe_asm(memory_modelt model, bool fast= false);
 
     bool is_not_uniproc(memory_modelt model) const
     {
-      if(model==RMO)
+      if(model == RMO)
         return is_not_weak_uniproc();
       else
         return is_not_uniproc();
@@ -133,32 +139,33 @@ public:
       event_idt second;
       bool is_po;
 
-      explicit delayt(event_idt _first):
-        first(_first), is_po(true)
+      explicit delayt(event_idt _first) : first(_first), is_po(true)
       {
       }
 
-      delayt(event_idt _first, event_idt _second):
-        first(_first), second(_second), is_po(false)
+      delayt(event_idt _first, event_idt _second)
+        : first(_first), second(_second), is_po(false)
       {
       }
 
-      delayt(event_idt _first, event_idt _second, bool _is_po):
-        first(_first), second(_second), is_po(_is_po)
+      delayt(event_idt _first, event_idt _second, bool _is_po)
+        : first(_first), second(_second), is_po(_is_po)
       {
       }
 
       bool operator==(const delayt &other) const
       {
-        return (is_po ? first==other.first :
-                first==other.first && second==other.second);
+        return (
+          is_po ? first == other.first
+                : first == other.first && second == other.second);
       }
 
       bool operator<(const delayt &other) const
       {
-        return (is_po ? first<other.first :
-                first<other.first ||
-                (first==other.first && second<other.second));
+        return (
+          is_po ? first < other.first
+                : first < other.first ||
+                    (first == other.first && second < other.second));
       }
     };
 
@@ -179,7 +186,7 @@ public:
       {
         critical_cyclet reduced(egraph, id);
         this->hide_internals(reduced);
-        assert(reduced.size()>0);
+        assert(reduced.size() > 0);
         return print_name(reduced, model);
       }
       else
@@ -188,17 +195,18 @@ public:
 
     std::string print_unsafes() const;
     std::string print_output() const;
-    std::string print_all(memory_modelt model,
+    std::string print_all(
+      memory_modelt model,
       std::map<std::string, std::string> &map_id2var,
       std::map<std::string, std::string> &map_var2id,
       bool hide_internals) const;
 
-    void print_dot(std::ostream &str,
-      unsigned colour, memory_modelt model) const;
+    void
+    print_dot(std::ostream &str, unsigned colour, memory_modelt model) const;
 
     bool operator<(const critical_cyclet &other) const
     {
-      return ( ((std::list<event_idt>) *this) < (std::list<event_idt>)other);
+      return (((std::list<event_idt>)*this) < (std::list<event_idt>)other);
     }
   };
 
@@ -238,8 +246,8 @@ protected:
       return false;
     }
 
-    virtual inline std::list<event_idt>* order_filtering(
-      std::list<event_idt>* order)
+    virtual inline std::list<event_idt> *
+    order_filtering(std::list<event_idt> *order)
     {
       return order;
     }
@@ -260,11 +268,11 @@ protected:
     graph_explorert(
       event_grapht &_egraph,
       unsigned _max_var,
-      unsigned _max_po_trans):
-      egraph(_egraph),
-      max_var(_max_var),
-      max_po_trans(_max_po_trans),
-      cycle_nb(0)
+      unsigned _max_po_trans)
+      : egraph(_egraph),
+        max_var(_max_var),
+        max_po_trans(_max_po_trans),
+        cycle_nb(0)
     {
     }
 
@@ -275,10 +283,13 @@ protected:
 
     std::set<event_idt> skip_tracked;
 
-    critical_cyclet extract_cycle(event_idt vertex,
-      event_idt source, unsigned number_of_cycles);
+    critical_cyclet extract_cycle(
+      event_idt vertex,
+      event_idt source,
+      unsigned number_of_cycles);
 
-    bool backtrack(std::set<critical_cyclet> &set_of_cycles,
+    bool backtrack(
+      std::set<critical_cyclet> &set_of_cycles,
       event_idt source,
       event_idt vertex,
       bool unsafe_met,
@@ -296,30 +307,33 @@ protected:
   };
 
   /* explorer for thread */
-  class graph_conc_explorert:public graph_explorert
+  class graph_conc_explorert : public graph_explorert
   {
   protected:
     const std::set<event_idt> &filter;
 
   public:
-    graph_conc_explorert(event_grapht &_egraph, unsigned _max_var,
-      unsigned _max_po_trans, const std::set<event_idt> &_filter)
-      :graph_explorert(_egraph, _max_var, _max_po_trans), filter(_filter)
+    graph_conc_explorert(
+      event_grapht &_egraph,
+      unsigned _max_var,
+      unsigned _max_po_trans,
+      const std::set<event_idt> &_filter)
+      : graph_explorert(_egraph, _max_var, _max_po_trans), filter(_filter)
     {
     }
 
     bool filtering(event_idt u)
     {
-      return filter.find(u)==filter.end();
+      return filter.find(u) == filter.end();
     }
 
-    std::list<event_idt>* initial_filtering(std::list<event_idt>* order)
+    std::list<event_idt> *initial_filtering(std::list<event_idt> *order)
     {
       static std::list<event_idt> new_order;
 
       /* intersection */
       for(const auto &evt : *order)
-        if(filter.find(evt)!=filter.end())
+        if(filter.find(evt) != filter.end())
           new_order.push_back(evt);
 
       return &new_order;
@@ -327,7 +341,7 @@ protected:
   };
 
   /* explorer for pairs collection a la Pensieve */
-  class graph_pensieve_explorert:public graph_explorert
+  class graph_pensieve_explorert : public graph_explorert
   {
   protected:
     std::set<event_idt> visited_nodes;
@@ -336,20 +350,24 @@ protected:
     bool find_second_event(event_idt source);
 
   public:
-    graph_pensieve_explorert(event_grapht &_egraph, unsigned _max_var,
+    graph_pensieve_explorert(
+      event_grapht &_egraph,
+      unsigned _max_var,
       unsigned _max_po_trans)
-      :graph_explorert(_egraph, _max_var, _max_po_trans), naive(false)
-    {}
+      : graph_explorert(_egraph, _max_var, _max_po_trans), naive(false)
+    {
+    }
 
-    void set_naive() {naive=true;}
+    void set_naive()
+    {
+      naive= true;
+    }
     void collect_pairs(namespacet &ns);
   };
 
 public:
-  explicit event_grapht(messaget &_message):
-    filter_thin_air(true),
-    filter_uniproc(true),
-    message(_message)
+  explicit event_grapht(messaget &_message)
+    : filter_thin_air(true), filter_uniproc(true), message(_message)
   {
   }
 
@@ -364,12 +382,12 @@ public:
   std::list<event_idt> po_order;
   std::list<event_idt> poUrfe_order;
 
-  std::set<std::pair<event_idt, event_idt> > loops;
+  std::set<std::pair<event_idt, event_idt>> loops;
 
   event_idt add_node()
   {
-    const event_idt po_no = po_graph.add_node();
-    const event_idt com_no = com_graph.add_node();
+    const event_idt po_no= po_graph.add_node();
+    const event_idt com_no= com_graph.add_node();
     assert(po_no == com_no);
     return po_no;
   }
@@ -416,8 +434,8 @@ public:
 
   void add_po_edge(event_idt a, event_idt b)
   {
-    assert(a!=b);
-    assert(operator[](a).thread==operator[](b).thread);
+    assert(a != b);
+    assert(operator[](a).thread == operator[](b).thread);
     po_graph.add_edge(a, b);
     po_order.push_back(a);
     poUrfe_order.push_back(a);
@@ -425,8 +443,8 @@ public:
 
   void add_po_back_edge(event_idt a, event_idt b)
   {
-    assert(a!=b);
-    assert(operator[](a).thread==operator[](b).thread);
+    assert(a != b);
+    assert(operator[](a).thread == operator[](b).thread);
     po_graph.add_edge(a, b);
     po_order.push_back(a);
     poUrfe_order.push_back(a);
@@ -436,14 +454,14 @@ public:
 
   void add_com_edge(event_idt a, event_idt b)
   {
-    assert(a!=b);
+    assert(a != b);
     com_graph.add_edge(a, b);
     poUrfe_order.push_back(a);
   }
 
   void add_undirected_com_edge(event_idt a, event_idt b)
   {
-    assert(a!=b);
+    assert(a != b);
     add_com_edge(a, b);
     add_com_edge(b, a);
   }
@@ -466,12 +484,14 @@ public:
 
   /* copies the sub-graph G between begin and end into G', connects
      G.end with G'.begin, and returns G'.end */
-  void explore_copy_segment(std::set<event_idt> &explored, event_idt begin,
+  void explore_copy_segment(
+    std::set<event_idt> &explored,
+    event_idt begin,
     event_idt end) const;
   event_idt copy_segment(event_idt begin, event_idt end);
 
   /* to keep track of the loop already copied */
-  std::set<std::pair<const abstract_eventt&, const abstract_eventt&>>
+  std::set<std::pair<const abstract_eventt &, const abstract_eventt &>>
     duplicated_bodies;
 
   bool is_local(event_idt a)
@@ -482,18 +502,18 @@ public:
   /* a -po-> b  -- transitive */
   bool are_po_ordered(event_idt a, event_idt b)
   {
-    if(operator[](a).thread!=operator[](b).thread)
+    if(operator[](a).thread != operator[](b).thread)
       return false;
 
     /* if back-edge, a-po->b \/ b-po->a */
-    if( loops.find(std::pair<event_idt, event_idt>(a, b))!=loops.end() )
+    if(loops.find(std::pair<event_idt, event_idt>(a, b)) != loops.end())
       return true;
 
     // would be true if no cycle in po
     for(const auto &evt : po_order)
-      if(evt==a)
+      if(evt == a)
         return true;
-      else if(evt==b)
+      else if(evt == b)
         return false;
 
     return false;
@@ -508,11 +528,14 @@ public:
 
   /* prints to graph.dot */
   void print_graph();
-  void print_rec_graph(std::ofstream &file, event_idt node_id,
+  void print_rec_graph(
+    std::ofstream &file,
+    event_idt node_id,
     std::set<event_idt> &visited);
 
   /* Tarjan 1972 adapted and modified for events + po-transitivity */
-  void collect_cycles(std::set<critical_cyclet> &set_of_cycles,
+  void collect_cycles(
+    std::set<critical_cyclet> &set_of_cycles,
     memory_modelt model,
     const std::set<event_idt> &filter)
   {
@@ -520,21 +543,21 @@ public:
     exploration.collect_cycles(set_of_cycles, model);
   }
 
-  void collect_cycles(std::set<critical_cyclet> &set_of_cycles,
-    memory_modelt model)
+  void
+  collect_cycles(std::set<critical_cyclet> &set_of_cycles, memory_modelt model)
   {
     graph_explorert exploration(*this, max_var, max_po_trans);
     exploration.collect_cycles(set_of_cycles, model);
   }
 
   void set_parameters_collection(
-    unsigned _max_var=0,
-    unsigned _max_po_trans=0,
-    bool _ignore_arrays=false)
+    unsigned _max_var= 0,
+    unsigned _max_po_trans= 0,
+    bool _ignore_arrays= false)
   {
-    max_var = _max_var;
-    max_po_trans = _max_po_trans;
-    ignore_arrays = _ignore_arrays;
+    max_var= _max_var;
+    max_po_trans= _max_po_trans;
+    ignore_arrays= _ignore_arrays;
   }
 
   /* collects all the pairs of events with respectively at least one cmp,

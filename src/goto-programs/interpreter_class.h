@@ -20,10 +20,10 @@ class interpretert
 public:
   interpretert(
     const symbol_tablet &_symbol_table,
-    const goto_functionst &_goto_functions):
-    symbol_table(_symbol_table),
-    ns(_symbol_table),
-    goto_functions(_goto_functions)
+    const goto_functionst &_goto_functions)
+    : symbol_table(_symbol_table),
+      ns(_symbol_table),
+      goto_functions(_goto_functions)
   {
   }
 
@@ -63,13 +63,9 @@ protected:
   void execute_other();
   void execute_decl();
 
-  void assign(
-    mp_integer address,
-    const std::vector<mp_integer> &rhs);
+  void assign(mp_integer address, const std::vector<mp_integer> &rhs);
 
-  void read(
-    mp_integer address,
-    std::vector<mp_integer> &dest) const;
+  void read(mp_integer address, std::vector<mp_integer> &dest) const;
 
   void command();
 
@@ -94,14 +90,12 @@ protected:
   {
     std::vector<mp_integer> v;
     evaluate(expr, v);
-    if(v.size()!=1)
+    if(v.size() != 1)
       throw "invalid boolean value";
-    return v.front()!=0;
+    return v.front() != 0;
   }
 
-  void evaluate(
-    const exprt &expr,
-    std::vector<mp_integer> &dest) const;
+  void evaluate(const exprt &expr, std::vector<mp_integer> &dest) const;
 
   mp_integer evaluate_address(const exprt &expr) const;
 

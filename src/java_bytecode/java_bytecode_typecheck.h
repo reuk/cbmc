@@ -29,21 +29,23 @@ bool java_bytecode_typecheck(
   message_handlert &message_handler,
   const namespacet &ns);
 
-class java_bytecode_typecheckt:public typecheckt
+class java_bytecode_typecheckt : public typecheckt
 {
 public:
   java_bytecode_typecheckt(
     symbol_tablet &_symbol_table,
     message_handlert &_message_handler,
-    bool _string_refinement_enabled):
-    typecheckt(_message_handler),
-    symbol_table(_symbol_table),
-    ns(symbol_table),
-    string_refinement_enabled(_string_refinement_enabled)
+    bool _string_refinement_enabled)
+    : typecheckt(_message_handler),
+      symbol_table(_symbol_table),
+      ns(symbol_table),
+      string_refinement_enabled(_string_refinement_enabled)
   {
   }
 
-  virtual ~java_bytecode_typecheckt() { }
+  virtual ~java_bytecode_typecheckt()
+  {
+  }
 
   virtual void typecheck();
   virtual void typecheck_expr(exprt &expr);

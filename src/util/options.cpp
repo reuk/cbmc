@@ -21,10 +21,9 @@ Function: optionst::set_option
 
 \*******************************************************************/
 
-void optionst::set_option(const std::string &option,
-                          const std::string &value)
+void optionst::set_option(const std::string &option, const std::string &value)
 {
-  value_listt &value_list=option_map[option];
+  value_listt &value_list= option_map[option];
   value_list.clear();
   value_list.push_back(value);
 }
@@ -41,10 +40,9 @@ Function: optionst::set_option
 
 \*******************************************************************/
 
-void optionst::set_option(const std::string &option,
-                          const bool value)
+void optionst::set_option(const std::string &option, const bool value)
 {
-  set_option(option, std::string(value?"1":"0"));
+  set_option(option, std::string(value ? "1" : "0"));
 }
 
 /*******************************************************************\
@@ -59,8 +57,7 @@ Function: optionst::set_option
 
 \*******************************************************************/
 
-void optionst::set_option(const std::string &option,
-                          const signed int value)
+void optionst::set_option(const std::string &option, const signed int value)
 {
   set_option(option, std::to_string(value));
 }
@@ -77,8 +74,7 @@ Function: optionst::set_option
 
 \*******************************************************************/
 
-void optionst::set_option(const std::string &option,
-                          const unsigned int value)
+void optionst::set_option(const std::string &option, const unsigned int value)
 {
   set_option(option, std::to_string(value));
 }
@@ -97,8 +93,8 @@ Function: optionst::get_bool_option
 
 bool optionst::get_bool_option(const std::string &option) const
 {
-  const std::string value=get_option(option);
-  return value.empty()?false:(std::stoi(value)!=0);
+  const std::string value= get_option(option);
+  return value.empty() ? false : (std::stoi(value) != 0);
 }
 
 /*******************************************************************\
@@ -115,8 +111,8 @@ Function: optionst::get_signed_int_option
 
 signed int optionst::get_signed_int_option(const std::string &option) const
 {
-  const std::string value=get_option(option);
-  return value.empty()?0:std::stoi(value);
+  const std::string value= get_option(option);
+  return value.empty() ? 0 : std::stoi(value);
 }
 
 /*******************************************************************\
@@ -133,8 +129,8 @@ Function: optionst::get_unsigned_int_option
 
 unsigned int optionst::get_unsigned_int_option(const std::string &option) const
 {
-  const std::string value=get_option(option);
-  return value.empty()?0:safe_string2unsigned(value);
+  const std::string value= get_option(option);
+  return value.empty() ? 0 : safe_string2unsigned(value);
 }
 
 /*******************************************************************\
@@ -151,10 +147,9 @@ Function: optionst::get_option
 
 const std::string optionst::get_option(const std::string &option) const
 {
-  option_mapt::const_iterator it=
-    option_map.find(option);
+  option_mapt::const_iterator it= option_map.find(option);
 
-  if(it==option_map.end())
+  if(it == option_map.end())
     return std::string();
   else if(it->second.empty())
     return std::string();
@@ -174,13 +169,12 @@ Function: optionst::get_list_option
 
 \*******************************************************************/
 
-const optionst::value_listt &optionst::get_list_option(
-  const std::string &option) const
+const optionst::value_listt &
+optionst::get_list_option(const std::string &option) const
 {
-  option_mapt::const_iterator it=
-    option_map.find(option);
+  option_mapt::const_iterator it= option_map.find(option);
 
-  if(it==option_map.end())
+  if(it == option_map.end())
     return empty_list;
   else
     return it->second;

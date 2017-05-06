@@ -8,7 +8,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <cassert>
 
-
 #include "satcheck_zchaff.h"
 
 #include <zchaff_solver.h>
@@ -25,9 +24,9 @@ Function: satcheck_zchaff_baset::satcheck_zchaff_baset
 
 \*******************************************************************/
 
-satcheck_zchaff_baset::satcheck_zchaff_baset(CSolver *_solver):solver(_solver)
+satcheck_zchaff_baset::satcheck_zchaff_baset(CSolver *_solver) : solver(_solver)
 {
-  status=INIT;
+  status= INIT;
   solver->set_randomness(0);
   solver->set_variable_number(0);
 }
@@ -62,7 +61,7 @@ Function: satcheck_zchaff_baset::l_get
 
 tvt satcheck_zchaff_baset::l_get(literalt a) const
 {
-  assert(status==SAT);
+  assert(status == SAT);
 
   if(a.is_true())
     return tvt(true);
@@ -71,17 +70,23 @@ tvt satcheck_zchaff_baset::l_get(literalt a) const
 
   tvt result;
 
-  assert(a.var_no()<solver->variables().size());
+  assert(a.var_no() < solver->variables().size());
 
   switch(solver->variable(a.var_no()).value())
   {
-    case 0: result=tvt(false); break;
-    case 1: result=tvt(true); break;
-    default: result=tvt(tvt::tv_enumt::TV_UNKNOWN); break;
+  case 0:
+    result= tvt(false);
+    break;
+  case 1:
+    result= tvt(true);
+    break;
+  default:
+    result= tvt(tvt::tv_enumt::TV_UNKNOWN);
+    break;
   }
 
   if(a.sign())
-    result=!result;
+    result= !result;
 
   return result;
 }
@@ -117,16 +122,13 @@ Function: satcheck_zchaff_baset::copy_cnf
 
 void satcheck_zchaff_baset::copy_cnf()
 {
-  assert(status==INIT);
+  assert(status == INIT);
 
   // this can only be called once
   solver->set_variable_number(no_variables());
 
-  for(clausest::const_iterator it=clauses.begin();
-      it!=clauses.end();
-      it++)
-    solver->add_orig_clause(
-      reinterpret_cast<int*>(&((*it)[0])), it->size());
+  for(clausest::const_iterator it= clauses.begin(); it != clauses.end(); it++)
+    solver->add_orig_clause(reinterpret_cast<int *>(&((*it)[0])), it->size());
 }
 
 /*******************************************************************\
@@ -144,85 +146,85 @@ Function: satcheck_zchaff_baset::prop_solve
 propt::resultt satcheck_zchaff_baset::prop_solve()
 {
   // this is *not* incremental
-  assert(status==INIT);
+  assert(status == INIT);
 
   copy_cnf();
 
   {
-    std::string msg=
-      std::to_string(solver->num_variables())+" variables, "+
-      std::to_string(solver->clauses().size())+" clauses";
+    std::string msg= std::to_string(solver->num_variables()) + " variables, " +
+                     std::to_string(solver->clauses().size()) + " clauses";
     messaget::status() << msg << messaget::eom;
   }
 
-  SAT_StatusT result=(SAT_StatusT)solver->solve();
+  SAT_StatusT result= (SAT_StatusT)solver->solve();
 
   {
     std::string msg;
 
     switch(result)
     {
-     case UNSATISFIABLE:
-      msg="SAT checker: instance is UNSATISFIABLE";
+    case UNSATISFIABLE:
+      msg= "SAT checker: instance is UNSATISFIABLE";
       break;
 
-     case SATISFIABLE:
-      msg="SAT checker: instance is SATISFIABLE";
+    case SATISFIABLE:
+      msg= "SAT checker: instance is SATISFIABLE";
       break;
 
-     case UNDETERMINED:
-      msg="SAT checker failed: UNDETERMINED";
+    case UNDETERMINED:
+      msg= "SAT checker failed: UNDETERMINED";
       break;
 
-     case TIME_OUT:
-      msg="SAT checker failed: Time out";
+    case TIME_OUT:
+      msg= "SAT checker failed: Time out";
       break;
 
-     case MEM_OUT:
-      msg="SAT checker failed: Out of memory";
+    case MEM_OUT:
+      msg= "SAT checker failed: Out of memory";
       break;
 
-     case ABORTED:
-      msg="SAT checker failed: ABORTED";
+    case ABORTED:
+      msg= "SAT checker failed: ABORTED";
       break;
 
-     default:
-      msg="SAT checker failed: unknown result";
+    default:
+      msg= "SAT checker failed: unknown result";
       break;
     }
 
     messaget::status() << msg << messaget::eom;
   }
 
-  if(result==SATISFIABLE)
+  if(result == SATISFIABLE)
   {
     // see if it is complete
-    for(unsigned i=1; i<solver->variables().size(); i++)
-      assert(solver->variables()[i].value()==0 ||
-             solver->variables()[i].value()==1);
+    for(unsigned i= 1; i < solver->variables().size(); i++)
+      assert(
+        solver->variables()[i].value() == 0 ||
+        solver->variables()[i].value() == 1);
   }
 
-  #ifdef DEBUG
-  if(result==SATISFIABLE)
+#ifdef DEBUG
+  if(result == SATISFIABLE)
   {
-    for(unsigned i=2; i<(_no_variables*2); i+=2)
+    for(unsigned i= 2; i < (_no_variables * 2); i+= 2)
       cout << "DEBUG L" << i << ":" << get(i) << endl;
   }
-  #endif
+#endif
 
-  if(result==UNSATISFIABLE)
+  if(result == UNSATISFIABLE)
   {
-    status=UNSAT;
+    status= UNSAT;
     return P_UNSATISFIABLE;
   }
 
-  if(result==SATISFIABLE)
+  if(result == SATISFIABLE)
   {
-    status=SAT;
+    status= SAT;
     return P_SATISFIABLE;
   }
 
-  status=ERROR;
+  status= ERROR;
 
   return P_ERROR;
 }
@@ -241,9 +243,9 @@ Function: satcheck_zchaff_baset::set_assignment
 
 void satcheck_zchaff_baset::set_assignment(literalt a, bool value)
 {
-  unsigned v=a.var_no();
-  bool sign=a.sign();
-  value^=sign;
+  unsigned v= a.var_no();
+  bool sign= a.sign();
+  value^= sign;
   solver->variables()[v].set_value(value);
 }
 
@@ -259,8 +261,7 @@ Function: satcheck_zchafft::satcheck_zchafft
 
 \*******************************************************************/
 
-satcheck_zchafft::satcheck_zchafft():
-  satcheck_zchaff_baset(new CSolver)
+satcheck_zchafft::satcheck_zchafft() : satcheck_zchaff_baset(new CSolver)
 {
 }
 

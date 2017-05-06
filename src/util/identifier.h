@@ -18,10 +18,13 @@ class identifiert
 {
 public:
   explicit identifiert(const std::string &s)
-  { parse(s); }
+  {
+    parse(s);
+  }
 
   identifiert()
-  { }
+  {
+  }
 
   std::string as_string() const;
 

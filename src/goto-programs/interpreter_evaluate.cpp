@@ -27,21 +27,19 @@ Function: interpretert::evaluate
 
 \*******************************************************************/
 
-void interpretert::read(
-  mp_integer address,
-  std::vector<mp_integer> &dest) const
+void interpretert::read(mp_integer address, std::vector<mp_integer> &dest) const
 {
   // copy memory region
   for(auto &d : dest)
   {
     mp_integer value;
 
-    if(address<memory.size())
-      value=memory[integer2size_t(address)].value;
+    if(address < memory.size())
+      value= memory[integer2size_t(address)].value;
     else
-      value=0;
+      value= 0;
 
-    d=value;
+    d= value;
 
     ++address;
   }
@@ -59,30 +57,29 @@ Function: interpretert::evaluate
 
 \*******************************************************************/
 
-void interpretert::evaluate(
-  const exprt &expr,
-  std::vector<mp_integer> &dest) const
+void interpretert::evaluate(const exprt &expr, std::vector<mp_integer> &dest)
+  const
 {
-  if(expr.id()==ID_constant)
+  if(expr.id() == ID_constant)
   {
-    if(expr.type().id()==ID_struct)
+    if(expr.type().id() == ID_struct)
     {
     }
-    else if(expr.type().id()==ID_floatbv)
+    else if(expr.type().id() == ID_floatbv)
     {
       ieee_floatt f;
       f.from_expr(to_constant_expr(expr));
       dest.push_back(f.pack());
       return;
     }
-    else if(expr.type().id()==ID_fixedbv)
+    else if(expr.type().id() == ID_fixedbv)
     {
       fixedbvt f;
       f.from_expr(to_constant_expr(expr));
       dest.push_back(f.get_value());
       return;
     }
-    else if(expr.type().id()==ID_bool)
+    else if(expr.type().id() == ID_bool)
     {
       dest.push_back(expr.is_true());
       return;
@@ -97,30 +94,30 @@ void interpretert::evaluate(
       }
     }
   }
-  else if(expr.id()==ID_struct)
+  else if(expr.id() == ID_struct)
   {
     dest.reserve(get_size(expr.type()));
-    bool error=false;
+    bool error= false;
 
     forall_operands(it, expr)
     {
-      if(it->type().id()==ID_code)
+      if(it->type().id() == ID_code)
         continue;
 
-      unsigned sub_size=get_size(it->type());
-      if(sub_size==0)
+      unsigned sub_size= get_size(it->type());
+      if(sub_size == 0)
         continue;
 
       std::vector<mp_integer> tmp;
       evaluate(*it, tmp);
 
-      if(tmp.size()==sub_size)
+      if(tmp.size() == sub_size)
       {
-        for(unsigned i=0; i<sub_size; i++)
+        for(unsigned i= 0; i < sub_size; i++)
           dest.push_back(tmp[i]);
       }
       else
-        error=true;
+        error= true;
     }
 
     if(!error)
@@ -128,56 +125,53 @@ void interpretert::evaluate(
 
     dest.clear();
   }
-  else if(expr.id()==ID_equal ||
-          expr.id()==ID_notequal ||
-          expr.id()==ID_le ||
-          expr.id()==ID_ge ||
-          expr.id()==ID_lt ||
-          expr.id()==ID_gt)
+  else if(
+    expr.id() == ID_equal || expr.id() == ID_notequal || expr.id() == ID_le ||
+    expr.id() == ID_ge || expr.id() == ID_lt || expr.id() == ID_gt)
   {
-    if(expr.operands().size()!=2)
-      throw id2string(expr.id())+" expects two operands";
+    if(expr.operands().size() != 2)
+      throw id2string(expr.id()) + " expects two operands";
 
     std::vector<mp_integer> tmp0, tmp1;
     evaluate(expr.op0(), tmp0);
     evaluate(expr.op1(), tmp1);
 
-    if(tmp0.size()==1 && tmp1.size()==1)
+    if(tmp0.size() == 1 && tmp1.size() == 1)
     {
-      const mp_integer &op0=tmp0.front();
-      const mp_integer &op1=tmp1.front();
+      const mp_integer &op0= tmp0.front();
+      const mp_integer &op1= tmp1.front();
 
-      if(expr.id()==ID_equal)
-        dest.push_back(op0==op1);
-      else if(expr.id()==ID_notequal)
-        dest.push_back(op0!=op1);
-      else if(expr.id()==ID_le)
-        dest.push_back(op0<=op1);
-      else if(expr.id()==ID_ge)
-        dest.push_back(op0>=op1);
-      else if(expr.id()==ID_lt)
-        dest.push_back(op0<op1);
-      else if(expr.id()==ID_gt)
-        dest.push_back(op0>op1);
+      if(expr.id() == ID_equal)
+        dest.push_back(op0 == op1);
+      else if(expr.id() == ID_notequal)
+        dest.push_back(op0 != op1);
+      else if(expr.id() == ID_le)
+        dest.push_back(op0 <= op1);
+      else if(expr.id() == ID_ge)
+        dest.push_back(op0 >= op1);
+      else if(expr.id() == ID_lt)
+        dest.push_back(op0 < op1);
+      else if(expr.id() == ID_gt)
+        dest.push_back(op0 > op1);
     }
 
     return;
   }
-  else if(expr.id()==ID_or)
+  else if(expr.id() == ID_or)
   {
-    if(expr.operands().size()<1)
-      throw id2string(expr.id())+" expects at least one operand";
+    if(expr.operands().size() < 1)
+      throw id2string(expr.id()) + " expects at least one operand";
 
-    bool result=false;
+    bool result= false;
 
     forall_operands(it, expr)
     {
       std::vector<mp_integer> tmp;
       evaluate(*it, tmp);
 
-      if(tmp.size()==1 && tmp.front()!=0)
+      if(tmp.size() == 1 && tmp.front() != 0)
       {
-        result=true;
+        result= true;
         break;
       }
     }
@@ -186,9 +180,9 @@ void interpretert::evaluate(
 
     return;
   }
-  else if(expr.id()==ID_if)
+  else if(expr.id() == ID_if)
   {
-    if(expr.operands().size()!=3)
+    if(expr.operands().size() != 3)
       throw "if expects three operands";
 
     std::vector<mp_integer> tmp0, tmp1, tmp2;
@@ -196,32 +190,32 @@ void interpretert::evaluate(
     evaluate(expr.op1(), tmp1);
     evaluate(expr.op2(), tmp2);
 
-    if(tmp0.size()==1 && tmp1.size()==1 && tmp2.size()==1)
+    if(tmp0.size() == 1 && tmp1.size() == 1 && tmp2.size() == 1)
     {
-      const mp_integer &op0=tmp0.front();
-      const mp_integer &op1=tmp1.front();
-      const mp_integer &op2=tmp2.front();
+      const mp_integer &op0= tmp0.front();
+      const mp_integer &op1= tmp1.front();
+      const mp_integer &op2= tmp2.front();
 
-      dest.push_back(op0!=0?op1:op2);
+      dest.push_back(op0 != 0 ? op1 : op2);
     }
 
     return;
   }
-  else if(expr.id()==ID_and)
+  else if(expr.id() == ID_and)
   {
-    if(expr.operands().size()<1)
-      throw id2string(expr.id())+" expects at least one operand";
+    if(expr.operands().size() < 1)
+      throw id2string(expr.id()) + " expects at least one operand";
 
-    bool result=true;
+    bool result= true;
 
     forall_operands(it, expr)
     {
       std::vector<mp_integer> tmp;
       evaluate(*it, tmp);
 
-      if(tmp.size()==1 && tmp.front()==0)
+      if(tmp.size() == 1 && tmp.front() == 0)
       {
-        result=false;
+        result= false;
         break;
       }
     }
@@ -230,200 +224,198 @@ void interpretert::evaluate(
 
     return;
   }
-  else if(expr.id()==ID_not)
+  else if(expr.id() == ID_not)
   {
-    if(expr.operands().size()!=1)
-      throw id2string(expr.id())+" expects one operand";
+    if(expr.operands().size() != 1)
+      throw id2string(expr.id()) + " expects one operand";
 
     std::vector<mp_integer> tmp;
     evaluate(expr.op0(), tmp);
 
-    if(tmp.size()==1)
-      dest.push_back(tmp.front()==0);
+    if(tmp.size() == 1)
+      dest.push_back(tmp.front() == 0);
 
     return;
   }
-  else if(expr.id()==ID_plus)
+  else if(expr.id() == ID_plus)
   {
-    mp_integer result=0;
+    mp_integer result= 0;
 
     forall_operands(it, expr)
     {
       std::vector<mp_integer> tmp;
       evaluate(*it, tmp);
-      if(tmp.size()==1)
-        result+=tmp.front();
+      if(tmp.size() == 1)
+        result+= tmp.front();
     }
 
     dest.push_back(result);
     return;
   }
-  else if(expr.id()==ID_mult)
+  else if(expr.id() == ID_mult)
   {
     // type-dependent!
     mp_integer result;
 
-    if(expr.type().id()==ID_fixedbv)
+    if(expr.type().id() == ID_fixedbv)
     {
       fixedbvt f;
-      f.spec=fixedbv_spect(to_fixedbv_type(expr.type()));
+      f.spec= fixedbv_spect(to_fixedbv_type(expr.type()));
       f.from_integer(1);
-      result=f.get_value();
+      result= f.get_value();
     }
-    else if(expr.type().id()==ID_floatbv)
+    else if(expr.type().id() == ID_floatbv)
     {
       ieee_floatt f(to_floatbv_type(expr.type()));
       f.from_integer(1);
-      result=f.pack();
+      result= f.pack();
     }
     else
-      result=1;
+      result= 1;
 
     forall_operands(it, expr)
     {
       std::vector<mp_integer> tmp;
       evaluate(*it, tmp);
-      if(tmp.size()==1)
+      if(tmp.size() == 1)
       {
-        if(expr.type().id()==ID_fixedbv)
+        if(expr.type().id() == ID_fixedbv)
         {
           fixedbvt f1, f2;
-          f1.spec=fixedbv_spect(to_fixedbv_type(expr.type()));
-          f2.spec=fixedbv_spect(to_fixedbv_type(it->type()));
+          f1.spec= fixedbv_spect(to_fixedbv_type(expr.type()));
+          f2.spec= fixedbv_spect(to_fixedbv_type(it->type()));
           f1.set_value(result);
           f2.set_value(tmp.front());
-          f1*=f2;
-          result=f1.get_value();
+          f1*= f2;
+          result= f1.get_value();
         }
-        else if(expr.type().id()==ID_floatbv)
+        else if(expr.type().id() == ID_floatbv)
         {
           ieee_floatt f1(to_floatbv_type(expr.type()));
           ieee_floatt f2(to_floatbv_type(it->type()));
           f1.unpack(result);
           f2.unpack(tmp.front());
-          f1*=f2;
-          result=f2.pack();
+          f1*= f2;
+          result= f2.pack();
         }
         else
-          result*=tmp.front();
+          result*= tmp.front();
       }
     }
 
     dest.push_back(result);
     return;
   }
-  else if(expr.id()==ID_minus)
+  else if(expr.id() == ID_minus)
   {
-    if(expr.operands().size()!=2)
+    if(expr.operands().size() != 2)
       throw "- expects two operands";
 
     std::vector<mp_integer> tmp0, tmp1;
     evaluate(expr.op0(), tmp0);
     evaluate(expr.op1(), tmp1);
 
-    if(tmp0.size()==1 && tmp1.size()==1)
-      dest.push_back(tmp0.front()-tmp1.front());
+    if(tmp0.size() == 1 && tmp1.size() == 1)
+      dest.push_back(tmp0.front() - tmp1.front());
     return;
   }
-  else if(expr.id()==ID_div)
+  else if(expr.id() == ID_div)
   {
-    if(expr.operands().size()!=2)
+    if(expr.operands().size() != 2)
       throw "/ expects two operands";
 
     std::vector<mp_integer> tmp0, tmp1;
     evaluate(expr.op0(), tmp0);
     evaluate(expr.op1(), tmp1);
 
-    if(tmp0.size()==1 && tmp1.size()==1)
-      dest.push_back(tmp0.front()/tmp1.front());
+    if(tmp0.size() == 1 && tmp1.size() == 1)
+      dest.push_back(tmp0.front() / tmp1.front());
     return;
   }
-  else if(expr.id()==ID_unary_minus)
+  else if(expr.id() == ID_unary_minus)
   {
-    if(expr.operands().size()!=1)
+    if(expr.operands().size() != 1)
       throw "unary- expects one operand";
 
     std::vector<mp_integer> tmp0;
     evaluate(expr.op0(), tmp0);
 
-    if(tmp0.size()==1)
+    if(tmp0.size() == 1)
       dest.push_back(-tmp0.front());
     return;
   }
-  else if(expr.id()==ID_address_of)
+  else if(expr.id() == ID_address_of)
   {
-    if(expr.operands().size()!=1)
+    if(expr.operands().size() != 1)
       throw "address_of expects one operand";
 
     dest.push_back(evaluate_address(expr.op0()));
     return;
   }
-  else if(expr.id()==ID_dereference ||
-          expr.id()==ID_index ||
-          expr.id()==ID_symbol ||
-          expr.id()==ID_member)
+  else if(
+    expr.id() == ID_dereference || expr.id() == ID_index ||
+    expr.id() == ID_symbol || expr.id() == ID_member)
   {
-    mp_integer a=evaluate_address(expr);
+    mp_integer a= evaluate_address(expr);
     dest.resize(get_size(expr.type()));
     read(a, dest);
     return;
   }
-  else if(expr.id()==ID_typecast)
+  else if(expr.id() == ID_typecast)
   {
-    if(expr.operands().size()!=1)
+    if(expr.operands().size() != 1)
       throw "typecast expects one operand";
 
     std::vector<mp_integer> tmp;
     evaluate(expr.op0(), tmp);
 
-    if(tmp.size()==1)
+    if(tmp.size() == 1)
     {
-      const mp_integer &value=tmp.front();
+      const mp_integer &value= tmp.front();
 
-      if(expr.type().id()==ID_pointer)
+      if(expr.type().id() == ID_pointer)
       {
         dest.push_back(value);
         return;
       }
-      else if(expr.type().id()==ID_signedbv)
+      else if(expr.type().id() == ID_signedbv)
       {
         const std::string s=
           integer2binary(value, to_signedbv_type(expr.type()).get_width());
         dest.push_back(binary2integer(s, true));
         return;
       }
-      else if(expr.type().id()==ID_unsignedbv)
+      else if(expr.type().id() == ID_unsignedbv)
       {
         const std::string s=
           integer2binary(value, to_unsignedbv_type(expr.type()).get_width());
         dest.push_back(binary2integer(s, false));
         return;
       }
-      else if(expr.type().id()==ID_bool)
+      else if(expr.type().id() == ID_bool)
       {
-        dest.push_back(value!=0);
+        dest.push_back(value != 0);
         return;
       }
     }
   }
-  else if(expr.id()==ID_ashr)
+  else if(expr.id() == ID_ashr)
   {
-    if(expr.operands().size()!=2)
+    if(expr.operands().size() != 2)
       throw "ashr expects two operands";
 
     std::vector<mp_integer> tmp0, tmp1;
     evaluate(expr.op0(), tmp0);
     evaluate(expr.op1(), tmp1);
 
-    if(tmp0.size()==1 && tmp1.size()==1)
-      dest.push_back(tmp0.front()/power(2, tmp1.front()));
+    if(tmp0.size() == 1 && tmp1.size() == 1)
+      dest.push_back(tmp0.front() / power(2, tmp1.front()));
 
     return;
   }
 
   std::cout << "!! failed to evaluate expression: "
-            << from_expr(ns, function->first, expr)
-            << std::endl;
+            << from_expr(ns, function->first, expr) << std::endl;
 }
 
 /*******************************************************************\
@@ -440,14 +432,14 @@ Function: interpretert::evaluate_address
 
 mp_integer interpretert::evaluate_address(const exprt &expr) const
 {
-  if(expr.id()==ID_symbol)
+  if(expr.id() == ID_symbol)
   {
-    const irep_idt &identifier=expr.get(ID_identifier);
+    const irep_idt &identifier= expr.get(ID_identifier);
 
     interpretert::memory_mapt::const_iterator m_it1=
       memory_map.find(identifier);
 
-    if(m_it1!=memory_map.end())
+    if(m_it1 != memory_map.end())
       return m_it1->second;
 
     if(!call_stack.empty())
@@ -455,59 +447,57 @@ mp_integer interpretert::evaluate_address(const exprt &expr) const
       interpretert::memory_mapt::const_iterator m_it2=
         call_stack.top().local_map.find(identifier);
 
-      if(m_it2!=call_stack.top().local_map.end())
+      if(m_it2 != call_stack.top().local_map.end())
         return m_it2->second;
     }
   }
-  else if(expr.id()==ID_dereference)
+  else if(expr.id() == ID_dereference)
   {
-    if(expr.operands().size()!=1)
+    if(expr.operands().size() != 1)
       throw "dereference expects one operand";
 
     std::vector<mp_integer> tmp0;
     evaluate(expr.op0(), tmp0);
 
-    if(tmp0.size()==1)
+    if(tmp0.size() == 1)
       return tmp0.front();
   }
-  else if(expr.id()==ID_index)
+  else if(expr.id() == ID_index)
   {
-    if(expr.operands().size()!=2)
+    if(expr.operands().size() != 2)
       throw "index expects two operands";
 
     std::vector<mp_integer> tmp1;
     evaluate(expr.op1(), tmp1);
 
-    if(tmp1.size()==1)
-      return evaluate_address(expr.op0())+tmp1.front();
+    if(tmp1.size() == 1)
+      return evaluate_address(expr.op0()) + tmp1.front();
   }
-  else if(expr.id()==ID_member)
+  else if(expr.id() == ID_member)
   {
-    if(expr.operands().size()!=1)
+    if(expr.operands().size() != 1)
       throw "member expects one operand";
 
     const struct_typet &struct_type=
       to_struct_type(ns.follow(expr.op0().type()));
 
-    const irep_idt &component_name=
-      to_member_expr(expr).get_component_name();
+    const irep_idt &component_name= to_member_expr(expr).get_component_name();
 
-    unsigned offset=0;
+    unsigned offset= 0;
 
     for(const auto &comp : struct_type.components())
     {
-      if(comp.get_name()==component_name)
+      if(comp.get_name() == component_name)
         break;
 
-      offset+=get_size(comp.type());
+      offset+= get_size(comp.type());
     }
 
-    return evaluate_address(expr.op0())+offset;
+    return evaluate_address(expr.op0()) + offset;
   }
 
   std::cout << "!! failed to evaluate address: "
-            << from_expr(ns, function->first, expr)
-            << std::endl;
+            << from_expr(ns, function->first, expr) << std::endl;
 
   return 0;
 }

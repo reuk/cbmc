@@ -13,7 +13,7 @@ Author: Michael Tautschnig, tautschn@amazon.com
 
 #include "jsil_parse_tree.h"
 
-class jsil_languaget:public languaget
+class jsil_languaget : public languaget
 {
 public:
   virtual bool preprocess(
@@ -21,31 +21,24 @@ public:
     const std::string &path,
     std::ostream &outstream);
 
-  virtual bool parse(
-    std::istream &instream,
-    const std::string &path);
+  virtual bool parse(std::istream &instream, const std::string &path);
 
-  virtual bool typecheck(
-    symbol_tablet &context,
-    const std::string &module);
+  virtual bool typecheck(symbol_tablet &context, const std::string &module);
 
-  virtual bool final(
-    symbol_tablet &context);
+  virtual bool final(symbol_tablet &context);
 
   virtual void show_parse(std::ostream &out);
 
   virtual ~jsil_languaget();
-  jsil_languaget() { }
+  jsil_languaget()
+  {
+  }
 
-  virtual bool from_expr(
-    const exprt &expr,
-    std::string &code,
-    const namespacet &ns);
+  virtual bool
+  from_expr(const exprt &expr, std::string &code, const namespacet &ns);
 
-  virtual bool from_type(
-    const typet &type,
-    std::string &code,
-    const namespacet &ns);
+  virtual bool
+  from_type(const typet &type, std::string &code, const namespacet &ns);
 
   virtual bool to_expr(
     const std::string &code,
@@ -54,11 +47,18 @@ public:
     const namespacet &ns);
 
   virtual languaget *new_language()
-  { return new jsil_languaget; }
+  {
+    return new jsil_languaget;
+  }
 
-  virtual std::string id() const { return "jsil"; }
+  virtual std::string id() const
+  {
+    return "jsil";
+  }
   virtual std::string description() const
-  { return "Javascript Intermediate Language"; }
+  {
+    return "Javascript Intermediate Language";
+  }
   virtual std::set<std::string> extensions() const;
 
   virtual void modules_provided(std::set<std::string> &modules);

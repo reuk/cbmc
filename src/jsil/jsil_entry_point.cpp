@@ -34,13 +34,13 @@ Function: create_initialize
 static void create_initialize(symbol_tablet &symbol_table)
 {
   symbolt initialize;
-  initialize.name=CPROVER_PREFIX "initialize";
-  initialize.base_name=CPROVER_PREFIX "initialize";
-  initialize.mode="jsil";
+  initialize.name= CPROVER_PREFIX "initialize";
+  initialize.base_name= CPROVER_PREFIX "initialize";
+  initialize.mode= "jsil";
 
   code_typet type;
-  type.return_type()=empty_typet();
-  initialize.type=type;
+  type.return_type()= empty_typet();
+  initialize.type= type;
 
   code_blockt init_code;
 
@@ -52,7 +52,7 @@ static void create_initialize(symbol_tablet &symbol_table)
   code_assignt a(rounding_mode, from_integer(0, rounding_mode.type()));
   init_code.add(a);
 
-  initialize.value=init_code;
+  initialize.value= init_code;
 
   if(symbol_table.add(initialize))
     throw "failed to add " CPROVER_PREFIX "initialize";
@@ -75,14 +75,15 @@ bool jsil_entry_point(
   message_handlert &message_handler)
 {
   // check if main is already there
-  if(symbol_table.symbols.find(goto_functionst::entry_point())!=
-     symbol_table.symbols.end())
+  if(
+    symbol_table.symbols.find(goto_functionst::entry_point()) !=
+    symbol_table.symbols.end())
     return false; // silently ignore
 
   irep_idt main_symbol;
 
   // find main symbol
-  if(config.main!="")
+  if(config.main != "")
   {
     std::list<irep_idt> matches;
 
@@ -92,39 +93,39 @@ bool jsil_entry_point(
       symbol_tablet::symbolst::const_iterator s_it=
         symbol_table.symbols.find(it->second);
 
-      if(s_it==symbol_table.symbols.end())
+      if(s_it == symbol_table.symbols.end())
         continue;
 
-      if(s_it->second.type.id()==ID_code)
+      if(s_it->second.type.id() == ID_code)
         matches.push_back(it->second);
     }
 
     if(matches.empty())
     {
       messaget message(message_handler);
-      message.error() << "main symbol `" << config.main
-                      << "' not found" << messaget::eom;
+      message.error() << "main symbol `" << config.main << "' not found"
+                      << messaget::eom;
       return true; // give up
     }
 
-    if(matches.size()>=2)
+    if(matches.size() >= 2)
     {
       messaget message(message_handler);
-      message.error() << "main symbol `" << config.main
-                      << "' is ambiguous" << messaget::eom;
+      message.error() << "main symbol `" << config.main << "' is ambiguous"
+                      << messaget::eom;
       return true;
     }
 
-    main_symbol=matches.front();
+    main_symbol= matches.front();
   }
   else
-    main_symbol=ID_main;
+    main_symbol= ID_main;
 
   // look it up
   symbol_tablet::symbolst::const_iterator s_it=
     symbol_table.symbols.find(main_symbol);
 
-  if(s_it==symbol_table.symbols.end())
+  if(s_it == symbol_table.symbols.end())
   {
     messaget message(message_handler);
     message.error() << "main symbol `" << id2string(main_symbol)
@@ -132,14 +133,14 @@ bool jsil_entry_point(
     return true; // give up, no main
   }
 
-  const symbolt &symbol=s_it->second;
+  const symbolt &symbol= s_it->second;
 
   // check if it has a body
   if(symbol.value.is_nil())
   {
     messaget message(message_handler);
-    message.error() << "main symbol `" << main_symbol
-                    << "' has no body" << messaget::eom;
+    message.error() << "main symbol `" << main_symbol << "' has no body"
+                    << messaget::eom;
     return false; // give up
   }
 
@@ -153,13 +154,13 @@ bool jsil_entry_point(
     symbol_tablet::symbolst::iterator init_it=
       symbol_table.symbols.find(CPROVER_PREFIX "initialize");
 
-    if(init_it==symbol_table.symbols.end())
+    if(init_it == symbol_table.symbols.end())
       throw "failed to find " CPROVER_PREFIX "initialize symbol";
 
     code_function_callt call_init;
     call_init.lhs().make_nil();
-    call_init.add_source_location()=symbol.location;
-    call_init.function()=init_it->second.symbol_expr();
+    call_init.add_source_location()= symbol.location;
+    call_init.function()= init_it->second.symbol_expr();
 
     init_code.move_to_operands(call_init);
   }
@@ -167,9 +168,9 @@ bool jsil_entry_point(
   // build call to main function
 
   code_function_callt call_main;
-  call_main.add_source_location()=symbol.location;
-  call_main.function()=symbol.symbol_expr();
-  call_main.function().add_source_location()=symbol.location;
+  call_main.add_source_location()= symbol.location;
+  call_main.function()= symbol.symbol_expr();
+  call_main.function().add_source_location()= symbol.location;
 
   init_code.move_to_operands(call_main);
 
@@ -177,9 +178,9 @@ bool jsil_entry_point(
   symbolt new_symbol;
 
   code_typet main_type;
-  main_type.return_type()=empty_typet();
+  main_type.return_type()= empty_typet();
 
-  new_symbol.name=goto_functionst::entry_point();
+  new_symbol.name= goto_functionst::entry_point();
   new_symbol.type.swap(main_type);
   new_symbol.value.swap(init_code);
 

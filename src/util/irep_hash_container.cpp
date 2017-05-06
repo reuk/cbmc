@@ -25,16 +25,16 @@ size_t irep_hash_container_baset::number(const irept &irep)
 {
   // the ptr-hash provides a speedup of up to 3x
 
-  ptr_hasht::const_iterator it=ptr_hash.find(&irep.read());
+  ptr_hasht::const_iterator it= ptr_hash.find(&irep.read());
 
-  if(it!=ptr_hash.end())
+  if(it != ptr_hash.end())
     return it->second;
 
   packedt packed;
   pack(irep, packed);
-  size_t id=numbering.number(packed);
+  size_t id= numbering.number(packed);
 
-  ptr_hash[&irep.read()]=id;
+  ptr_hash[&irep.read()]= id;
 
   return id;
 }
@@ -51,17 +51,15 @@ Function: irep_hash_container_baset::pack
 
 \*******************************************************************/
 
-void irep_hash_container_baset::pack(
-  const irept &irep,
-  packedt &packed)
+void irep_hash_container_baset::pack(const irept &irep, packedt &packed)
 {
-  const irept::subt &sub=irep.get_sub();
-  const irept::named_subt &named_sub=irep.get_named_sub();
-  const irept::named_subt &comments=irep.get_comments();
+  const irept::subt &sub= irep.get_sub();
+  const irept::named_subt &named_sub= irep.get_named_sub();
+  const irept::named_subt &comments= irep.get_comments();
 
   packed.reserve(
-    1+1+sub.size()+named_sub.size()*2+
-    (full?comments.size()*2:0));
+    1 + 1 + sub.size() + named_sub.size() * 2 +
+    (full ? comments.size() * 2 : 0));
 
   packed.push_back(irep_id_hash()(irep.id()));
 
@@ -73,7 +71,7 @@ void irep_hash_container_baset::pack(
   forall_named_irep(it, named_sub)
   {
     packed.push_back(irep_id_hash()(it->first)); // id
-    packed.push_back(number(it->second)); // sub-irep
+    packed.push_back(number(it->second));        // sub-irep
   }
 
   if(full)
@@ -82,7 +80,7 @@ void irep_hash_container_baset::pack(
     forall_named_irep(it, comments)
     {
       packed.push_back(irep_id_hash()(it->first)); // id
-      packed.push_back(number(it->second)); // sub-irep
+      packed.push_back(number(it->second));        // sub-irep
     }
   }
 }

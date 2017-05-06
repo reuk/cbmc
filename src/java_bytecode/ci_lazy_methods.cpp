@@ -46,7 +46,7 @@ bool ci_lazy_methodst::add_needed_class(const irep_idt &class_symbol_name)
 {
   if(!needed_classes.insert(class_symbol_name).second)
     return false;
-  const irep_idt clinit_name(id2string(class_symbol_name)+".<clinit>:()V");
+  const irep_idt clinit_name(id2string(class_symbol_name) + ".<clinit>:()V");
   if(symbol_table.symbols.count(clinit_name))
     add_needed_method(clinit_name);
   return true;

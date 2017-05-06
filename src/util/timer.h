@@ -24,12 +24,12 @@ private:
   bool started;
 
 public:
-  timert():
-    _total_time(0),
-    _start_time(0),
-    _latest_time(0),
-    nr_starts(0),
-    started(false)
+  timert()
+    : _total_time(0),
+      _start_time(0),
+      _latest_time(0),
+      nr_starts(0),
+      started(false)
   {
   }
 

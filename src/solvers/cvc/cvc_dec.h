@@ -24,10 +24,10 @@ protected:
   std::string temp_out_filename, temp_result_filename;
 };
 
-class cvc_dect:protected cvc_temp_filet, public cvc_convt
+class cvc_dect : protected cvc_temp_filet, public cvc_convt
 {
 public:
-  explicit cvc_dect(const namespacet &_ns):cvc_convt(_ns, temp_out)
+  explicit cvc_dect(const namespacet &_ns) : cvc_convt(_ns, temp_out)
   {
   }
 

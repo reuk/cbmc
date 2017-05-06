@@ -12,7 +12,7 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "irep.h"
 #include "prefix.h"
 
-class source_locationt:public irept
+class source_locationt : public irept
 {
 public:
   source_locationt()
@@ -141,8 +141,8 @@ public:
 
   static bool is_built_in(const std::string &s)
   {
-    std::string built_in1="<built-in-"; // "<built-in-additions>";
-    std::string built_in2="<builtin-"; // "<builtin-architecture-strings>";
+    std::string built_in1= "<built-in-"; // "<built-in-additions>";
+    std::string built_in2= "<builtin-";  // "<builtin-architecture-strings>";
     return has_prefix(s, built_in1) || has_prefix(s, built_in2);
   }
 
@@ -160,6 +160,6 @@ protected:
   std::string as_string(bool print_cwd) const;
 };
 
-std::ostream &operator <<(std::ostream &, const source_locationt &);
+std::ostream &operator<<(std::ostream &, const source_locationt &);
 
 #endif // CPROVER_UTIL_SOURCE_LOCATION_H

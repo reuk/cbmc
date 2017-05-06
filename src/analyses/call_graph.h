@@ -30,8 +30,7 @@ public:
   void add(const irep_idt &caller, const irep_idt &callee);
 
 protected:
-  void add(const irep_idt &function,
-           const goto_programt &body);
+  void add(const irep_idt &function, const goto_programt &body);
 };
 
 #endif // CPROVER_ANALYSES_CALL_GRAPH_H

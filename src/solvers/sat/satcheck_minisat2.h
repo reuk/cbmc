@@ -18,12 +18,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 namespace Minisat // NOLINT(readability/namespace)
 {
-class Solver; // NOLINT(readability/identifiers)
+class Solver;     // NOLINT(readability/identifiers)
 class SimpSolver; // NOLINT(readability/identifiers)
 }
 
-template<typename T>
-class satcheck_minisat2_baset:public cnf_solvert
+template <typename T>
+class satcheck_minisat2_baset : public cnf_solvert
 {
 public:
   explicit satcheck_minisat2_baset(T *);
@@ -42,8 +42,14 @@ public:
   void set_polarity(literalt a, bool value);
 
   virtual bool is_in_conflict(literalt a) const override;
-  virtual bool has_set_assumptions() const final { return true; }
-  virtual bool has_is_in_conflict() const final { return true; }
+  virtual bool has_set_assumptions() const final
+  {
+    return true;
+  }
+  virtual bool has_is_in_conflict() const final
+  {
+    return true;
+  }
 
 protected:
   T *solver;
@@ -52,16 +58,16 @@ protected:
   bvt assumptions;
 };
 
-class satcheck_minisat_no_simplifiert:
-  public satcheck_minisat2_baset<Minisat::Solver>
+class satcheck_minisat_no_simplifiert
+  : public satcheck_minisat2_baset<Minisat::Solver>
 {
 public:
   satcheck_minisat_no_simplifiert();
   virtual const std::string solver_text();
 };
 
-class satcheck_minisat_simplifiert:
-  public satcheck_minisat2_baset<Minisat::SimpSolver>
+class satcheck_minisat_simplifiert
+  : public satcheck_minisat2_baset<Minisat::SimpSolver>
 {
 public:
   satcheck_minisat_simplifiert();

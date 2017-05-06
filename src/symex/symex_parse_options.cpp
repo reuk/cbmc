@@ -62,10 +62,10 @@ Function: symex_parse_optionst::symex_parse_optionst
 
 \*******************************************************************/
 
-symex_parse_optionst::symex_parse_optionst(int argc, const char **argv):
-  parse_options_baset(SYMEX_OPTIONS, argc, argv),
-  language_uit(cmdline, ui_message_handler),
-  ui_message_handler(cmdline, "Symex " CBMC_VERSION)
+symex_parse_optionst::symex_parse_optionst(int argc, const char **argv)
+  : parse_options_baset(SYMEX_OPTIONS, argc, argv),
+    language_uit(cmdline, ui_message_handler),
+    ui_message_handler(cmdline, "Symex " CBMC_VERSION)
 {
 }
 
@@ -84,15 +84,15 @@ Function: symex_parse_optionst::eval_verbosity
 void symex_parse_optionst::eval_verbosity()
 {
   // this is our default verbosity
-  int v=messaget::M_STATISTICS;
+  int v= messaget::M_STATISTICS;
 
   if(cmdline.isset("verbosity"))
   {
-    v=unsafe_string2int(cmdline.get_value("verbosity"));
-    if(v<0)
-      v=0;
-    else if(v>10)
-      v=10;
+    v= unsafe_string2int(cmdline.get_value("verbosity"));
+    if(v < 0)
+      v= 0;
+    else if(v > 10)
+      v= 10;
   }
 
   ui_message_handler.set_verbosity(v);
@@ -241,13 +241,12 @@ int symex_parse_optionst::doit()
 
     if(cmdline.isset("show-vcc"))
     {
-      path_search.show_vcc=true;
+      path_search.show_vcc= true;
       path_search(goto_model.goto_functions);
       return 0;
     }
 
-    path_search.eager_infeasibility=
-      cmdline.isset("eager-infeasibility");
+    path_search.eager_infeasibility= cmdline.isset("eager-infeasibility");
 
     if(cmdline.isset("cover"))
     {
@@ -289,12 +288,12 @@ int symex_parse_optionst::doit()
     return 8;
   }
 
-  #if 0
+#if 0
   // let's log some more statistics
   debug() << "Memory consumption:" << messaget::endl;
   memory_info(debug());
   debug() << eom;
-  #endif
+#endif
 }
 
 /*******************************************************************\
@@ -392,26 +391,26 @@ bool symex_parse_optionst::process_goto_program(const optionst &options)
 
     if(cmdline.isset("cover"))
     {
-      std::string criterion=cmdline.get_value("cover");
+      std::string criterion= cmdline.get_value("cover");
 
       coverage_criteriont c;
 
-      if(criterion=="assertion" || criterion=="assertions")
-        c=coverage_criteriont::ASSERTION;
-      else if(criterion=="path" || criterion=="paths")
-        c=coverage_criteriont::PATH;
-      else if(criterion=="branch" || criterion=="branches")
-        c=coverage_criteriont::BRANCH;
-      else if(criterion=="location" || criterion=="locations")
-        c=coverage_criteriont::LOCATION;
-      else if(criterion=="decision" || criterion=="decisions")
-        c=coverage_criteriont::DECISION;
-      else if(criterion=="condition" || criterion=="conditions")
-        c=coverage_criteriont::CONDITION;
-      else if(criterion=="mcdc")
-        c=coverage_criteriont::MCDC;
-      else if(criterion=="cover")
-        c=coverage_criteriont::COVER;
+      if(criterion == "assertion" || criterion == "assertions")
+        c= coverage_criteriont::ASSERTION;
+      else if(criterion == "path" || criterion == "paths")
+        c= coverage_criteriont::PATH;
+      else if(criterion == "branch" || criterion == "branches")
+        c= coverage_criteriont::BRANCH;
+      else if(criterion == "location" || criterion == "locations")
+        c= coverage_criteriont::LOCATION;
+      else if(criterion == "decision" || criterion == "decisions")
+        c= coverage_criteriont::DECISION;
+      else if(criterion == "condition" || criterion == "conditions")
+        c= coverage_criteriont::CONDITION;
+      else if(criterion == "mcdc")
+        c= coverage_criteriont::MCDC;
+      else if(criterion == "cover")
+        c= coverage_criteriont::COVER;
       else
       {
         error() << "unknown coverage criterion" << eom;
@@ -479,15 +478,14 @@ Function: symex_parse_optionst::report_properties
 void symex_parse_optionst::report_properties(
   const path_searcht::property_mapt &property_map)
 {
-  if(get_ui()==ui_message_handlert::PLAIN)
+  if(get_ui() == ui_message_handlert::PLAIN)
     status() << "\n** Results:" << eom;
 
-  for(path_searcht::property_mapt::const_iterator
-      it=property_map.begin();
-      it!=property_map.end();
+  for(path_searcht::property_mapt::const_iterator it= property_map.begin();
+      it != property_map.end();
       it++)
   {
-    if(get_ui()==ui_message_handlert::XML_UI)
+    if(get_ui() == ui_message_handlert::XML_UI)
     {
       xmlt xml_result("result");
       xml_result.set_attribute("claim", id2string(it->first));
@@ -496,9 +494,15 @@ void symex_parse_optionst::report_properties(
 
       switch(it->second.status)
       {
-      case path_searcht::SUCCESS: status_string="SUCCESS"; break;
-      case path_searcht::FAILURE: status_string="FAILURE"; break;
-      case path_searcht::NOT_REACHED: status_string="SUCCESS"; break;
+      case path_searcht::SUCCESS:
+        status_string= "SUCCESS";
+        break;
+      case path_searcht::FAILURE:
+        status_string= "FAILURE";
+        break;
+      case path_searcht::NOT_REACHED:
+        status_string= "SUCCESS";
+        break;
       }
 
       xml_result.set_attribute("status", status_string);
@@ -507,20 +511,25 @@ void symex_parse_optionst::report_properties(
     }
     else
     {
-      status() << "[" << it->first << "] "
-               << it->second.description << ": ";
+      status() << "[" << it->first << "] " << it->second.description << ": ";
       switch(it->second.status)
       {
-      case path_searcht::SUCCESS: status() << "SUCCESS"; break;
-      case path_searcht::FAILURE: status() << "FAILURE"; break;
-      case path_searcht::NOT_REACHED: status() << "SUCCESS"; break;
+      case path_searcht::SUCCESS:
+        status() << "SUCCESS";
+        break;
+      case path_searcht::FAILURE:
+        status() << "FAILURE";
+        break;
+      case path_searcht::NOT_REACHED:
+        status() << "SUCCESS";
+        break;
       }
       status() << eom;
     }
 
-    if((cmdline.isset("show-trace") ||
-        cmdline.isset("trace")) &&
-       it->second.is_failure())
+    if(
+      (cmdline.isset("show-trace") || cmdline.isset("trace")) &&
+      it->second.is_failure())
       show_counterexample(it->second.error_trace);
   }
 
@@ -528,17 +537,15 @@ void symex_parse_optionst::report_properties(
   {
     status() << eom;
 
-    unsigned failed=0;
+    unsigned failed= 0;
 
-    for(path_searcht::property_mapt::const_iterator
-        it=property_map.begin();
-        it!=property_map.end();
+    for(path_searcht::property_mapt::const_iterator it= property_map.begin();
+        it != property_map.end();
         it++)
       if(it->second.is_failure())
         failed++;
 
-    status() << "** " << failed
-             << " of " << property_map.size() << " failed"
+    status() << "** " << failed << " of " << property_map.size() << " failed"
              << eom;
   }
 }
@@ -565,13 +572,13 @@ void symex_parse_optionst::report_success()
     break;
 
   case ui_message_handlert::XML_UI:
-    {
-      xmlt xml("cprover-status");
-      xml.data="SUCCESS";
-      std::cout << xml;
-      std::cout << std::endl;
-    }
-    break;
+  {
+    xmlt xml("cprover-status");
+    xml.data= "SUCCESS";
+    std::cout << xml;
+    std::cout << std::endl;
+  }
+  break;
 
   default:
     assert(false);
@@ -590,8 +597,7 @@ Function: symex_parse_optionst::show_counterexample
 
 \*******************************************************************/
 
-void symex_parse_optionst::show_counterexample(
-  const goto_tracet &error_trace)
+void symex_parse_optionst::show_counterexample(const goto_tracet &error_trace)
 {
   const namespacet ns(goto_model.symbol_table);
 
@@ -603,12 +609,12 @@ void symex_parse_optionst::show_counterexample(
     break;
 
   case ui_message_handlert::XML_UI:
-    {
-      xmlt xml;
-      convert(ns, error_trace, xml);
-      std::cout << xml << std::flush;
-    }
-    break;
+  {
+    xmlt xml;
+    convert(ns, error_trace, xml);
+    std::cout << xml << std::flush;
+  }
+  break;
 
   default:
     assert(false);
@@ -637,13 +643,13 @@ void symex_parse_optionst::report_failure()
     break;
 
   case ui_message_handlert::XML_UI:
-    {
-      xmlt xml("cprover-status");
-      xml.data="FAILURE";
-      std::cout << xml;
-      std::cout << std::endl;
-    }
-    break;
+  {
+    xmlt xml("cprover-status");
+    xml.data= "FAILURE";
+    std::cout << xml;
+    std::cout << std::endl;
+  }
+  break;
 
   default:
     assert(false);
@@ -664,80 +670,86 @@ Function: symex_parse_optionst::help
 
 void symex_parse_optionst::help()
 {
-  std::cout <<
-    "\n"
-    "* *     Symex " CBMC_VERSION " - Copyright (C) 2013 ";
+  std::cout << "\n"
+               "* *     Symex " CBMC_VERSION " - Copyright (C) 2013 ";
 
-  std::cout << "(" << (sizeof(void *)*8) << "-bit version)";
+  std::cout << "(" << (sizeof(void *) * 8) << "-bit version)";
 
   std::cout << "     * *\n";
 
-  std::cout <<
-    "* *                    Daniel Kroening                      * *\n"
-    "* *                 University of Oxford                    * *\n"
-    "* *                 kroening@kroening.com                   * *\n"
-    "\n"
-    "Usage:                       Purpose:\n"
-    "\n"
-    " symex [-?] [-h] [--help]     show help\n"
-    " symex file.c ...             source file names\n"
-    "\n"
-    "Analysis options:\n"
-    // NOLINTNEXTLINE(whitespace/line_length)
-    " --show-properties            show the properties, but don't run analysis\n"
-    " --property id                only check one specific property\n"
-    // NOLINTNEXTLINE(whitespace/line_length)
-    " --stop-on-fail               stop analysis once a failed property is detected\n"
-    // NOLINTNEXTLINE(whitespace/line_length)
-    " --trace                      give a counterexample trace for failed properties\n"
-    "\n"
-    "Frontend options:\n"
-    " -I path                      set include path (C/C++)\n"
-    " -D macro                     define preprocessor macro (C/C++)\n"
-    " --preprocess                 stop after preprocessing\n"
-    " --16, --32, --64             set width of int\n"
-    " --LP64, --ILP64, --LLP64,\n"
-    "   --ILP32, --LP32            set width of int, long and pointers\n"
-    " --little-endian              allow little-endian word-byte conversions\n"
-    " --big-endian                 allow big-endian word-byte conversions\n"
-    " --unsigned-char              make \"char\" unsigned by default\n"
-    " --show-parse-tree            show parse tree\n"
-    " --show-symbol-table          show symbol table\n"
-    HELP_SHOW_GOTO_FUNCTIONS
-    " --drop-unused-functions      drop functions trivially unreachable from main function\n" // NOLINT(*)
-    " --ppc-macos                  set MACOS/PPC architecture\n"
-    " --mm model                   set memory model (default: sc)\n"
-    " --arch                       set architecture (default: "
-                                   << configt::this_architecture() << ")\n"
-    " --os                         set operating system (default: "
-                                   << configt::this_operating_system() << ")\n"
-    #ifdef _WIN32
-    " --gcc                        use GCC as preprocessor\n"
-    #endif
-    " --no-arch                    don't set up an architecture\n"
-    " --no-library                 disable built-in abstract C library\n"
-    // NOLINTNEXTLINE(whitespace/line_length)
-    " --round-to-nearest           IEEE floating point rounding mode (default)\n"
-    " --round-to-plus-inf          IEEE floating point rounding mode\n"
-    " --round-to-minus-inf         IEEE floating point rounding mode\n"
-    " --round-to-zero              IEEE floating point rounding mode\n"
-    " --function name              set main function name\n"
-    "\n"
-    "Program instrumentation options:\n"
-    HELP_GOTO_CHECK
-    " --no-assertions              ignore user assertions\n"
-    " --no-assumptions             ignore user assumptions\n"
-    " --error-label label          check that label is unreachable\n"
-    "\n"
-    "Symex options:\n"
-    " --unwind nr                  unwind nr times\n"
-    " --depth nr                   limit search depth\n"
-    " --context-bound nr           limit number of context switches\n"
-    " --branch-bound nr            limit number of branches taken\n"
-    "\n"
-    "Other options:\n"
-    " --version                    show version and exit\n"
-    " --xml-ui                     use XML-formatted output\n"
-    " --verbosity #                verbosity level\n"
-    "\n";
+  std::cout
+    << "* *                    Daniel Kroening                      * *\n"
+       "* *                 University of Oxford                    * *\n"
+       "* *                 kroening@kroening.com                   * *\n"
+       "\n"
+       "Usage:                       Purpose:\n"
+       "\n"
+       " symex [-?] [-h] [--help]     show help\n"
+       " symex file.c ...             source file names\n"
+       "\n"
+       "Analysis options:\n"
+       // NOLINTNEXTLINE(whitespace/line_length)
+       " --show-properties            show the properties, but don't run "
+       "analysis\n"
+       " --property id                only check one specific property\n"
+       // NOLINTNEXTLINE(whitespace/line_length)
+       " --stop-on-fail               stop analysis once a failed property is "
+       "detected\n"
+       // NOLINTNEXTLINE(whitespace/line_length)
+       " --trace                      give a counterexample trace for failed "
+       "properties\n"
+       "\n"
+       "Frontend options:\n"
+       " -I path                      set include path (C/C++)\n"
+       " -D macro                     define preprocessor macro (C/C++)\n"
+       " --preprocess                 stop after preprocessing\n"
+       " --16, --32, --64             set width of int\n"
+       " --LP64, --ILP64, --LLP64,\n"
+       "   --ILP32, --LP32            set width of int, long and pointers\n"
+       " --little-endian              allow little-endian word-byte "
+       "conversions\n"
+       " --big-endian                 allow big-endian word-byte conversions\n"
+       " --unsigned-char              make \"char\" unsigned by default\n"
+       " --show-parse-tree            show parse tree\n"
+       " --show-symbol-table          show symbol "
+       "table\n" HELP_SHOW_GOTO_FUNCTIONS
+       " --drop-unused-functions      drop functions trivially unreachable "
+       "from main function\n" // NOLINT(*)
+       " --ppc-macos                  set MACOS/PPC architecture\n"
+       " --mm model                   set memory model (default: sc)\n"
+       " --arch                       set architecture (default: "
+    << configt::this_architecture()
+    << ")\n"
+       " --os                         set operating system (default: "
+    << configt::this_operating_system()
+    << ")\n"
+#ifdef _WIN32
+       " --gcc                        use GCC as preprocessor\n"
+#endif
+       " --no-arch                    don't set up an architecture\n"
+       " --no-library                 disable built-in abstract C library\n"
+       // NOLINTNEXTLINE(whitespace/line_length)
+       " --round-to-nearest           IEEE floating point rounding mode "
+       "(default)\n"
+       " --round-to-plus-inf          IEEE floating point rounding mode\n"
+       " --round-to-minus-inf         IEEE floating point rounding mode\n"
+       " --round-to-zero              IEEE floating point rounding mode\n"
+       " --function name              set main function name\n"
+       "\n"
+       "Program instrumentation options:\n" HELP_GOTO_CHECK
+       " --no-assertions              ignore user assertions\n"
+       " --no-assumptions             ignore user assumptions\n"
+       " --error-label label          check that label is unreachable\n"
+       "\n"
+       "Symex options:\n"
+       " --unwind nr                  unwind nr times\n"
+       " --depth nr                   limit search depth\n"
+       " --context-bound nr           limit number of context switches\n"
+       " --branch-bound nr            limit number of branches taken\n"
+       "\n"
+       "Other options:\n"
+       " --version                    show version and exit\n"
+       " --xml-ui                     use XML-formatted output\n"
+       " --verbosity #                verbosity level\n"
+       "\n";
 }

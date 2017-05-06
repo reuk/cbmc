@@ -18,15 +18,14 @@ Date: October 2012
 class is_threadedt
 {
 public:
-  explicit is_threadedt(
-    const goto_functionst &goto_functions)
+  explicit is_threadedt(const goto_functionst &goto_functions)
   {
     compute(goto_functions);
   }
 
   bool operator()(const goto_programt::const_targett t) const
   {
-    return is_threaded_set.find(t)!=is_threaded_set.end();
+    return is_threaded_set.find(t) != is_threaded_set.end();
   }
 
   bool operator()(void) const
@@ -38,8 +37,7 @@ protected:
   typedef std::set<goto_programt::const_targett> is_threaded_sett;
   is_threaded_sett is_threaded_set;
 
-  void compute(
-    const goto_functionst &goto_functions);
+  void compute(const goto_functionst &goto_functions);
 };
 
 #endif // CPROVER_ANALYSES_IS_THREADED_H

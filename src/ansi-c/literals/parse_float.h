@@ -21,8 +21,8 @@ void parse_float(
   bool &is_float,
   bool &is_long,
   bool &is_imaginary, // a gcc extension
-  bool &is_decimal, // a gcc extension
-  bool &is_float80, // a gcc extension
+  bool &is_decimal,   // a gcc extension
+  bool &is_float80,   // a gcc extension
   bool &is_float128); // a gcc extension
 
 #endif // CPROVER_ANSI_C_LITERALS_PARSE_FLOAT_H

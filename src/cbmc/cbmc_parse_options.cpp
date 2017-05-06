@@ -70,11 +70,11 @@ Function: cbmc_parse_optionst::cbmc_parse_optionst
 
 \*******************************************************************/
 
-cbmc_parse_optionst::cbmc_parse_optionst(int argc, const char **argv):
-  parse_options_baset(CBMC_OPTIONS, argc, argv),
-  xml_interfacet(cmdline),
-  language_uit(cmdline, ui_message_handler),
-  ui_message_handler(cmdline, "CBMC " CBMC_VERSION)
+cbmc_parse_optionst::cbmc_parse_optionst(int argc, const char **argv)
+  : parse_options_baset(CBMC_OPTIONS, argc, argv),
+    xml_interfacet(cmdline),
+    language_uit(cmdline, ui_message_handler),
+    ui_message_handler(cmdline, "CBMC " CBMC_VERSION)
 {
 }
 
@@ -93,11 +93,11 @@ Function: cbmc_parse_optionst::cbmc_parse_optionst
 ::cbmc_parse_optionst::cbmc_parse_optionst(
   int argc,
   const char **argv,
-  const std::string &extra_options):
-  parse_options_baset(CBMC_OPTIONS+extra_options, argc, argv),
-  xml_interfacet(cmdline),
-  language_uit(cmdline, ui_message_handler),
-  ui_message_handler(cmdline, "CBMC " CBMC_VERSION)
+  const std::string &extra_options)
+  : parse_options_baset(CBMC_OPTIONS + extra_options, argc, argv),
+    xml_interfacet(cmdline),
+    language_uit(cmdline, ui_message_handler),
+    ui_message_handler(cmdline, "CBMC " CBMC_VERSION)
 {
 }
 
@@ -116,13 +116,13 @@ Function: cbmc_parse_optionst::eval_verbosity
 void cbmc_parse_optionst::eval_verbosity()
 {
   // this is our default verbosity
-  unsigned int v=messaget::M_STATISTICS;
+  unsigned int v= messaget::M_STATISTICS;
 
   if(cmdline.isset("verbosity"))
   {
-    v=unsafe_string2unsigned(cmdline.get_value("verbosity"));
-    if(v>10)
-      v=10;
+    v= unsafe_string2unsigned(cmdline.get_value("verbosity"));
+    if(v > 10)
+      v= 10;
   }
 
   ui_message_handler.set_verbosity(v);
@@ -183,15 +183,14 @@ void cbmc_parse_optionst::get_command_line_options(optionst &options)
   else
     options.set_option("simplify", true);
 
-  if(cmdline.isset("stop-on-fail") ||
-     cmdline.isset("dimacs") ||
-     cmdline.isset("outfile"))
+  if(
+    cmdline.isset("stop-on-fail") || cmdline.isset("dimacs") ||
+    cmdline.isset("outfile"))
     options.set_option("stop-on-fail", true);
   else
     options.set_option("stop-on-fail", false);
 
-  if(cmdline.isset("trace") ||
-     cmdline.isset("stop-on-fail"))
+  if(cmdline.isset("trace") || cmdline.isset("stop-on-fail"))
     options.set_option("trace", true);
 
   if(cmdline.isset("localize-faults"))
@@ -199,8 +198,7 @@ void cbmc_parse_optionst::get_command_line_options(optionst &options)
   if(cmdline.isset("localize-faults-method"))
   {
     options.set_option(
-      "localize-faults-method",
-      cmdline.get_value("localize-faults-method"));
+      "localize-faults-method", cmdline.get_value("localize-faults-method"));
   }
 
   if(cmdline.isset("unwind"))
@@ -253,17 +251,15 @@ void cbmc_parse_optionst::get_command_line_options(optionst &options)
   else
   {
     options.set_option(
-      "unwinding-assertions",
-      cmdline.isset("unwinding-assertions"));
+      "unwinding-assertions", cmdline.isset("unwinding-assertions"));
   }
 
   // generate unwinding assumptions otherwise
-  options.set_option(
-    "partial-loops",
-    cmdline.isset("partial-loops"));
+  options.set_option("partial-loops", cmdline.isset("partial-loops"));
 
-  if(options.get_bool_option("partial-loops") &&
-     options.get_bool_option("unwinding-assertions"))
+  if(
+    options.get_bool_option("partial-loops") &&
+    options.get_bool_option("unwinding-assertions"))
   {
     error() << "--partial-loops and --unwinding-assertions "
             << "must not be given together" << eom;
@@ -271,9 +267,7 @@ void cbmc_parse_optionst::get_command_line_options(optionst &options)
   }
 
   // remove unused equations
-  options.set_option(
-    "slice-formula",
-    cmdline.isset("slice-formula"));
+  options.set_option("slice-formula", cmdline.isset("slice-formula"));
 
   // simplify if conditions and branches
   if(cmdline.isset("no-simplify-if"))
@@ -312,20 +306,19 @@ void cbmc_parse_optionst::get_command_line_options(optionst &options)
 
   if(cmdline.isset("max-node-refinement"))
     options.set_option(
-      "max-node-refinement",
-      cmdline.get_value("max-node-refinement"));
+      "max-node-refinement", cmdline.get_value("max-node-refinement"));
 
   if(cmdline.isset("aig"))
     options.set_option("aig", true);
 
   // SMT Options
-  bool version_set=false;
+  bool version_set= false;
 
   if(cmdline.isset("smt1"))
   {
     options.set_option("smt1", true);
     options.set_option("smt2", false);
-    version_set=true;
+    version_set= true;
   }
 
   if(cmdline.isset("smt2"))
@@ -333,62 +326,61 @@ void cbmc_parse_optionst::get_command_line_options(optionst &options)
     // If both are given, smt2 takes precedence
     options.set_option("smt1", false);
     options.set_option("smt2", true);
-    version_set=true;
+    version_set= true;
   }
 
   if(cmdline.isset("fpa"))
     options.set_option("fpa", true);
 
-
-  bool solver_set=false;
+  bool solver_set= false;
 
   if(cmdline.isset("boolector"))
   {
-    options.set_option("boolector", true), solver_set=true;
+    options.set_option("boolector", true), solver_set= true;
     if(!version_set)
-      options.set_option("smt2", true), version_set=true;
+      options.set_option("smt2", true), version_set= true;
   }
 
   if(cmdline.isset("mathsat"))
   {
-    options.set_option("mathsat", true), solver_set=true;
+    options.set_option("mathsat", true), solver_set= true;
     if(!version_set)
-      options.set_option("smt2", true), version_set=true;
+      options.set_option("smt2", true), version_set= true;
   }
 
   if(cmdline.isset("cvc3"))
   {
-    options.set_option("cvc3", true), solver_set=true;
+    options.set_option("cvc3", true), solver_set= true;
     if(!version_set)
-      options.set_option("smt1", true), version_set=true;
+      options.set_option("smt1", true), version_set= true;
   }
 
   if(cmdline.isset("cvc4"))
   {
-    options.set_option("cvc4", true), solver_set=true;
+    options.set_option("cvc4", true), solver_set= true;
     if(!version_set)
-      options.set_option("smt2", true), version_set=true;
+      options.set_option("smt2", true), version_set= true;
   }
 
   if(cmdline.isset("yices"))
   {
-    options.set_option("yices", true), solver_set=true;
+    options.set_option("yices", true), solver_set= true;
     if(!version_set)
-      options.set_option("smt2", true), version_set=true;
+      options.set_option("smt2", true), version_set= true;
   }
 
   if(cmdline.isset("z3"))
   {
-    options.set_option("z3", true), solver_set=true;
+    options.set_option("z3", true), solver_set= true;
     if(!version_set)
-      options.set_option("smt2", true), version_set=true;
+      options.set_option("smt2", true), version_set= true;
   }
 
   if(cmdline.isset("opensmt"))
   {
-    options.set_option("opensmt", true), solver_set=true;
+    options.set_option("opensmt", true), solver_set= true;
     if(!version_set)
-      options.set_option("smt1", true), version_set=true;
+      options.set_option("smt1", true), version_set= true;
   }
 
   if(version_set && !solver_set)
@@ -396,23 +388,23 @@ void cbmc_parse_optionst::get_command_line_options(optionst &options)
     if(cmdline.isset("outfile"))
     {
       // outfile and no solver should give standard compliant SMT-LIB
-      options.set_option("generic", true), solver_set=true;
+      options.set_option("generic", true), solver_set= true;
     }
     else
     {
       if(options.get_bool_option("smt1"))
       {
-        options.set_option("boolector", true), solver_set=true;
+        options.set_option("boolector", true), solver_set= true;
       }
       else
       {
         assert(options.get_bool_option("smt2"));
-        options.set_option("z3", true), solver_set=true;
+        options.set_option("z3", true), solver_set= true;
       }
     }
   }
   // Either have solver and standard version set, or neither.
-  assert(version_set==solver_set);
+  assert(version_set == solver_set);
 
   if(cmdline.isset("beautify"))
     options.set_option("beautify", true);
@@ -422,9 +414,7 @@ void cbmc_parse_optionst::get_command_line_options(optionst &options)
   else
     options.set_option("sat-preprocessor", true);
 
-  options.set_option(
-    "pretty-names",
-    !cmdline.isset("no-pretty-names"));
+  options.set_option("pretty-names", !cmdline.isset("no-pretty-names"));
 
   if(cmdline.isset("outfile"))
     options.set_option("outfile", cmdline.get_value("outfile"));
@@ -438,8 +428,7 @@ void cbmc_parse_optionst::get_command_line_options(optionst &options)
 
   if(cmdline.isset("symex-coverage-report"))
     options.set_option(
-      "symex-coverage-report",
-      cmdline.get_value("symex-coverage-report"));
+      "symex-coverage-report", cmdline.get_value("symex-coverage-report"));
 }
 
 /*******************************************************************\
@@ -473,8 +462,7 @@ int cbmc_parse_optionst::doit()
   //
   // Print a banner
   //
-  status() << "CBMC version " CBMC_VERSION " "
-           << sizeof(void *)*8 << "-bit "
+  status() << "CBMC version " CBMC_VERSION " " << sizeof(void *) * 8 << "-bit "
            << config.this_architecture() << " "
            << config.this_operating_system() << eom;
 
@@ -482,18 +470,18 @@ int cbmc_parse_optionst::doit()
   // Unwinding of transition systems is done by hw-cbmc.
   //
 
-  if(cmdline.isset("module") ||
-     cmdline.isset("gen-interface"))
+  if(cmdline.isset("module") || cmdline.isset("gen-interface"))
   {
     error() << "This version of CBMC has no support for "
-               " hardware modules. Please use hw-cbmc." << eom;
+               " hardware modules. Please use hw-cbmc."
+            << eom;
     return 1; // should contemplate EX_USAGE from sysexits.h
   }
 
   register_languages();
 
   if(cmdline.isset("test-preprocessor"))
-    return test_c_preprocessor(ui_message_handler)?8:0;
+    return test_c_preprocessor(ui_message_handler) ? 8 : 0;
 
   if(cmdline.isset("preprocess"))
   {
@@ -511,7 +499,7 @@ int cbmc_parse_optionst::doit()
 
   try
   {
-    cbmc_solver=cbmc_solvers.get_solver();
+    cbmc_solver= cbmc_solvers.get_solver();
   }
 
   catch(const char *error_msg)
@@ -520,20 +508,20 @@ int cbmc_parse_optionst::doit()
     return 1; // should contemplate EX_SOFTWARE from sysexits.h
   }
 
-  prop_convt &prop_conv=cbmc_solver->prop_conv();
+  prop_convt &prop_conv= cbmc_solver->prop_conv();
 
   bmct bmc(options, symbol_table, ui_message_handler, prop_conv);
 
-  int get_goto_program_ret=
-    get_goto_program(options, bmc, goto_functions);
+  int get_goto_program_ret= get_goto_program(options, bmc, goto_functions);
 
-  if(get_goto_program_ret!=-1)
+  if(get_goto_program_ret != -1)
     return get_goto_program_ret;
 
   label_properties(goto_functions);
 
-  if(cmdline.isset("show-claims") || // will go away
-     cmdline.isset("show-properties")) // use this one
+  if(
+    cmdline.isset("show-claims") ||   // will go away
+    cmdline.isset("show-properties")) // use this one
   {
     const namespacet ns(symbol_table);
     show_properties(ns, get_ui(), goto_functions);
@@ -622,34 +610,32 @@ int cbmc_parse_optionst::get_goto_program(
   {
     if(cmdline.isset("show-parse-tree"))
     {
-      if(cmdline.args.size()!=1 ||
-         is_goto_binary(cmdline.args[0]))
+      if(cmdline.args.size() != 1 || is_goto_binary(cmdline.args[0]))
       {
         error() << "Please give exactly one source file" << eom;
         return 6;
       }
 
-      std::string filename=cmdline.args[0];
+      std::string filename= cmdline.args[0];
 
-      #ifdef _MSC_VER
+#ifdef _MSC_VER
       std::ifstream infile(widen(filename));
-      #else
+#else
       std::ifstream infile(filename);
-      #endif
+#endif
 
       if(!infile)
       {
-        error() << "failed to open input file `"
-                << filename << "'" << eom;
+        error() << "failed to open input file `" << filename << "'" << eom;
         return 6;
       }
 
-      languaget *language=get_language_from_filename(filename);
+      languaget *language= get_language_from_filename(filename);
 
-      if(language==NULL)
+      if(language == NULL)
       {
-        error() << "failed to figure out type of file `"
-                <<  filename << "'" << eom;
+        error() << "failed to figure out type of file `" << filename << "'"
+                << eom;
         return 6;
       }
 
@@ -670,15 +656,13 @@ int cbmc_parse_optionst::get_goto_program(
     cmdlinet::argst binaries;
     binaries.reserve(cmdline.args.size());
 
-    for(cmdlinet::argst::iterator
-        it=cmdline.args.begin();
-        it!=cmdline.args.end();
-        ) // no ++it
+    for(cmdlinet::argst::iterator it= cmdline.args.begin();
+        it != cmdline.args.end();) // no ++it
     {
       if(is_goto_binary(*it))
       {
         binaries.push_back(*it);
-        it=cmdline.args.erase(it);
+        it= cmdline.args.erase(it);
         continue;
       }
 
@@ -691,8 +675,8 @@ int cbmc_parse_optionst::get_goto_program(
         return 6;
       if(typecheck())
         return 6;
-      int get_modules_ret=get_modules(bmc);
-      if(get_modules_ret!=-1)
+      int get_modules_ret= get_modules(bmc);
+      if(get_modules_ret != -1)
         return get_modules_ret;
       if(binaries.empty() && final())
         return 6;
@@ -706,10 +690,7 @@ int cbmc_parse_optionst::get_goto_program(
       status() << "Reading GOTO program from file " << eom;
 
       if(read_object_and_link(
-        bin,
-        symbol_table,
-        goto_functions,
-        get_message_handler()))
+           bin, symbol_table, goto_functions, get_message_handler()))
       {
         return 6;
       }
@@ -789,13 +770,13 @@ void cbmc_parse_optionst::preprocessing()
 {
   try
   {
-    if(cmdline.args.size()!=1)
+    if(cmdline.args.size() != 1)
     {
       error() << "Please provide one program to preprocess" << eom;
       return;
     }
 
-    std::string filename=cmdline.args[0];
+    std::string filename= cmdline.args[0];
 
     std::ifstream infile(filename);
 
@@ -805,9 +786,9 @@ void cbmc_parse_optionst::preprocessing()
       return;
     }
 
-    languaget *ptr=get_language_from_filename(filename);
+    languaget *ptr= get_language_from_filename(filename);
 
-    if(ptr==NULL)
+    if(ptr == NULL)
     {
       error() << "failed to figure out type of file" << eom;
       return;
@@ -915,17 +896,15 @@ bool cbmc_parse_optionst::process_goto_program(
     if(cmdline.isset("nondet-static"))
     {
       status() << "Adding nondeterministic initialization "
-                  "of static/global variables" << eom;
+                  "of static/global variables"
+               << eom;
       nondet_static(ns, goto_functions);
     }
 
     if(cmdline.isset("string-abstraction"))
     {
       status() << "String Abstraction" << eom;
-      string_abstraction(
-        symbol_table,
-        get_message_handler(),
-        goto_functions);
+      string_abstraction(symbol_table, get_message_handler(), goto_functions);
     }
 
     // add failed symbols
@@ -949,10 +928,7 @@ bool cbmc_parse_optionst::process_goto_program(
     if(cmdline.isset("cover"))
     {
       if(instrument_cover_goals(
-           cmdline,
-           symbol_table,
-           goto_functions,
-           get_message_handler()))
+           cmdline, symbol_table, goto_functions, get_message_handler()))
         return true;
     }
 
@@ -1005,20 +981,20 @@ int cbmc_parse_optionst::do_bmc(
 {
   bmc.set_ui(get_ui());
 
-  int result=6;
+  int result= 6;
 
   // do actual BMC
   switch(bmc.run(goto_functions))
   {
-    case safety_checkert::SAFE:
-      result=0;
-      break;
-    case safety_checkert::UNSAFE:
-      result=10;
-      break;
-    case safety_checkert::ERROR:
-      result=6;
-      break;
+  case safety_checkert::SAFE:
+    result= 0;
+    break;
+  case safety_checkert::UNSAFE:
+    result= 10;
+    break;
+  case safety_checkert::ERROR:
+    result= 6;
+    break;
   }
 
   // let's log some more statistics
@@ -1043,133 +1019,162 @@ Function: cbmc_parse_optionst::help
 
 void cbmc_parse_optionst::help()
 {
-  std::cout <<
-    "\n"
-    "* *   CBMC " CBMC_VERSION " - Copyright (C) 2001-2016 ";
+  std::cout << "\n"
+               "* *   CBMC " CBMC_VERSION " - Copyright (C) 2001-2016 ";
 
-  std::cout << "(" << (sizeof(void *)*8) << "-bit version)";
+  std::cout << "(" << (sizeof(void *) * 8) << "-bit version)";
 
   std::cout << "   * *\n";
 
-  std::cout <<
-    "* *              Daniel Kroening, Edmund Clarke             * *\n"
-    "* * Carnegie Mellon University, Computer Science Department * *\n"
-    "* *                 kroening@kroening.com                   * *\n"
-    "* *        Protected in part by U.S. patent 7,225,417       * *\n"
-    "\n"
-    "Usage:                       Purpose:\n"
-    "\n"
-    " cbmc [-?] [-h] [--help]      show help\n"
-    " cbmc file.c ...              source file names\n"
-    "\n"
-    "Analysis options:\n"
-    " --show-properties            show the properties, but don't run analysis\n" // NOLINT(*)
-    " --symex-coverage-report f    generate a Cobertura XML coverage report in f\n" // NOLINT(*)
-    " --property id                only check one specific property\n"
-    " --stop-on-fail               stop analysis once a failed property is detected\n" // NOLINT(*)
-    " --trace                      give a counterexample trace for failed properties\n" //NOLINT(*)
-    "\n"
-    "C/C++ frontend options:\n"
-    " -I path                      set include path (C/C++)\n"
-    " -D macro                     define preprocessor macro (C/C++)\n"
-    " --preprocess                 stop after preprocessing\n"
-    " --16, --32, --64             set width of int\n"
-    " --LP64, --ILP64, --LLP64,\n"
-    "   --ILP32, --LP32            set width of int, long and pointers\n"
-    " --little-endian              allow little-endian word-byte conversions\n"
-    " --big-endian                 allow big-endian word-byte conversions\n"
-    " --unsigned-char              make \"char\" unsigned by default\n"
-    " --mm model                   set memory model (default: sc)\n"
-    " --arch                       set architecture (default: "
-                                   << configt::this_architecture() << ")\n"
-    " --os                         set operating system (default: "
-                                   << configt::this_operating_system() << ")\n"
-    " --c89/99/11                  set C language standard (default: "
-                                   << (configt::ansi_ct::default_c_standard()==
-                                       configt::ansi_ct::c_standardt::C89?"c89":
-                                       configt::ansi_ct::default_c_standard()==
-                                       configt::ansi_ct::c_standardt::C99?"c99":
-                                       configt::ansi_ct::default_c_standard()==
-                                       configt::ansi_ct::c_standardt::C11?"c11":"") << ")\n" // NOLINT(*)
-    " --cpp98/03/11                set C++ language standard (default: "
-                                   << (configt::cppt::default_cpp_standard()==
-                                       configt::cppt::cpp_standardt::CPP98?"cpp98": // NOLINT(*)
-                                       configt::cppt::default_cpp_standard()==
-                                       configt::cppt::cpp_standardt::CPP03?"cpp03": // NOLINT(*)
-                                       configt::cppt::default_cpp_standard()==
-                                       configt::cppt::cpp_standardt::CPP11?"cpp11":"") << ")\n" // NOLINT(*)
-    #ifdef _WIN32
-    " --gcc                        use GCC as preprocessor\n"
-    #endif
-    " --no-arch                    don't set up an architecture\n"
-    " --no-library                 disable built-in abstract C library\n"
-    " --round-to-nearest           rounding towards nearest even (default)\n"
-    " --round-to-plus-inf          rounding towards plus infinity\n"
-    " --round-to-minus-inf         rounding towards minus infinity\n"
-    " --round-to-zero              rounding towards zero\n"
-    " --function name              set main function name\n"
-    "\n"
-    "Program representations:\n"
-    " --show-parse-tree            show parse tree\n"
-    " --show-symbol-table          show symbol table\n"
-    HELP_SHOW_GOTO_FUNCTIONS
-    " --drop-unused-functions      drop functions trivially unreachable from main function\n" // NOLINT(*)
-    "\n"
-    "Program instrumentation options:\n"
-    HELP_GOTO_CHECK
-    " --no-assertions              ignore user assertions\n"
-    " --no-assumptions             ignore user assumptions\n"
-    " --error-label label          check that label is unreachable\n"
-    " --cover CC                   create test-suite with coverage criterion CC\n" // NOLINT(*)
-    " --mm MM                      memory consistency model for concurrent programs\n" // NOLINT(*)
-    "\n"
-    "Java Bytecode frontend options:\n"
-    " --classpath dir/jar          set the classpath\n"
-    " --main-class class-name      set the name of the main class\n"
-    // NOLINTNEXTLINE(whitespace/line_length)
-    " --java-max-vla-length        limit the length of user-code-created arrays\n"
-    // NOLINTNEXTLINE(whitespace/line_length)
-    " --java-cp-include-files      regexp or JSON list of files to load (with '@' prefix)\n"
-    " --java-unwind-enum-static    try to unwind loops in static initialization of enums\n"
-    "\n"
-    "Semantic transformations:\n"
-    " --nondet-static              add nondeterministic initialization of variables with static lifetime\n" // NOLINT(*)
-    "\n"
-    "BMC options:\n"
-    " --program-only               only show program expression\n"
-    " --show-loops                 show the loops in the program\n"
-    " --depth nr                   limit search depth\n"
-    " --unwind nr                  unwind nr times\n"
-    " --unwindset L:B,...          unwind loop L with a bound of B\n"
-    "                              (use --show-loops to get the loop IDs)\n"
-    " --show-vcc                   show the verification conditions\n"
-    " --slice-formula              remove assignments unrelated to property\n"
-    " --unwinding-assertions       generate unwinding assertions\n"
-    " --partial-loops              permit paths with partial loops\n"
-    " --no-pretty-names            do not simplify identifiers\n"
-    " --graphml-witness filename   write the witness in GraphML format to filename\n" // NOLINT(*)
-    "\n"
-    "Backend options:\n"
-    " --dimacs                     generate CNF in DIMACS format\n"
-    " --beautify                   beautify the counterexample (greedy heuristic)\n" // NOLINT(*)
-    " --localize-faults            localize faults (experimental)\n"
-    " --smt1                       use default SMT1 solver (obsolete)\n"
-    " --smt2                       use default SMT2 solver (Z3)\n"
-    " --boolector                  use Boolector\n"
-    " --mathsat                    use MathSAT\n"
-    " --cvc4                       use CVC4\n"
-    " --yices                      use Yices\n"
-    " --z3                         use Z3\n"
-    " --refine                     use refinement procedure (experimental)\n"
-    " --outfile filename           output formula to given file\n"
-    " --arrays-uf-never            never turn arrays into uninterpreted functions\n" // NOLINT(*)
-    " --arrays-uf-always           always turn arrays into uninterpreted functions\n" // NOLINT(*)
-    "\n"
-    "Other options:\n"
-    " --version                    show version and exit\n"
-    " --xml-ui                     use XML-formatted output\n"
-    " --xml-interface              bi-directional XML interface\n"
-    " --json-ui                    use JSON-formatted output\n"
-    " --verbosity #                verbosity level\n"
-    "\n";
+  std::cout
+    << "* *              Daniel Kroening, Edmund Clarke             * *\n"
+       "* * Carnegie Mellon University, Computer Science Department * *\n"
+       "* *                 kroening@kroening.com                   * *\n"
+       "* *        Protected in part by U.S. patent 7,225,417       * *\n"
+       "\n"
+       "Usage:                       Purpose:\n"
+       "\n"
+       " cbmc [-?] [-h] [--help]      show help\n"
+       " cbmc file.c ...              source file names\n"
+       "\n"
+       "Analysis options:\n"
+       " --show-properties            show the properties, but don't run "
+       "analysis\n" // NOLINT(*)
+       " --symex-coverage-report f    generate a Cobertura XML coverage report "
+       "in f\n" // NOLINT(*)
+       " --property id                only check one specific property\n"
+       " --stop-on-fail               stop analysis once a failed property is "
+       "detected\n" // NOLINT(*)
+       " --trace                      give a counterexample trace for failed "
+       "properties\n" //NOLINT(*)
+       "\n"
+       "C/C++ frontend options:\n"
+       " -I path                      set include path (C/C++)\n"
+       " -D macro                     define preprocessor macro (C/C++)\n"
+       " --preprocess                 stop after preprocessing\n"
+       " --16, --32, --64             set width of int\n"
+       " --LP64, --ILP64, --LLP64,\n"
+       "   --ILP32, --LP32            set width of int, long and pointers\n"
+       " --little-endian              allow little-endian word-byte "
+       "conversions\n"
+       " --big-endian                 allow big-endian word-byte conversions\n"
+       " --unsigned-char              make \"char\" unsigned by default\n"
+       " --mm model                   set memory model (default: sc)\n"
+       " --arch                       set architecture (default: "
+    << configt::this_architecture()
+    << ")\n"
+       " --os                         set operating system (default: "
+    << configt::this_operating_system()
+    << ")\n"
+       " --c89/99/11                  set C language standard (default: "
+    << (configt::ansi_ct::default_c_standard() ==
+            configt::ansi_ct::c_standardt::C89
+          ? "c89"
+          : configt::ansi_ct::default_c_standard() ==
+                configt::ansi_ct::c_standardt::C99
+              ? "c99"
+              : configt::ansi_ct::default_c_standard() ==
+                    configt::ansi_ct::c_standardt::C11
+                  ? "c11"
+                  : "")
+    << ")\n" // NOLINT(*)
+       " --cpp98/03/11                set C++ language standard (default: "
+    << (configt::cppt::default_cpp_standard() ==
+            configt::cppt::cpp_standardt::CPP98
+          ? "cpp98"
+          : // NOLINT(*)
+          configt::cppt::default_cpp_standard() ==
+              configt::cppt::cpp_standardt::CPP03
+            ? "cpp03"
+            : // NOLINT(*)
+            configt::cppt::default_cpp_standard() ==
+                configt::cppt::cpp_standardt::CPP11
+              ? "cpp11"
+              : "")
+    << ")\n" // NOLINT(*)
+#ifdef _WIN32
+       " --gcc                        use GCC as preprocessor\n"
+#endif
+       " --no-arch                    don't set up an architecture\n"
+       " --no-library                 disable built-in abstract C library\n"
+       " --round-to-nearest           rounding towards nearest even (default)\n"
+       " --round-to-plus-inf          rounding towards plus infinity\n"
+       " --round-to-minus-inf         rounding towards minus infinity\n"
+       " --round-to-zero              rounding towards zero\n"
+       " --function name              set main function name\n"
+       "\n"
+       "Program representations:\n"
+       " --show-parse-tree            show parse tree\n"
+       " --show-symbol-table          show symbol "
+       "table\n" HELP_SHOW_GOTO_FUNCTIONS
+       " --drop-unused-functions      drop functions trivially unreachable "
+       "from main function\n" // NOLINT(*)
+       "\n"
+       "Program instrumentation options:\n" HELP_GOTO_CHECK
+       " --no-assertions              ignore user assertions\n"
+       " --no-assumptions             ignore user assumptions\n"
+       " --error-label label          check that label is unreachable\n"
+       " --cover CC                   create test-suite with coverage "
+       "criterion CC\n" // NOLINT(*)
+       " --mm MM                      memory consistency model for concurrent "
+       "programs\n" // NOLINT(*)
+       "\n"
+       "Java Bytecode frontend options:\n"
+       " --classpath dir/jar          set the classpath\n"
+       " --main-class class-name      set the name of the main class\n"
+       // NOLINTNEXTLINE(whitespace/line_length)
+       " --java-max-vla-length        limit the length of user-code-created "
+       "arrays\n"
+       // NOLINTNEXTLINE(whitespace/line_length)
+       " --java-cp-include-files      regexp or JSON list of files to load "
+       "(with '@' prefix)\n"
+       " --java-unwind-enum-static    try to unwind loops in static "
+       "initialization of enums\n"
+       "\n"
+       "Semantic transformations:\n"
+       " --nondet-static              add nondeterministic initialization of "
+       "variables with static lifetime\n" // NOLINT(*)
+       "\n"
+       "BMC options:\n"
+       " --program-only               only show program expression\n"
+       " --show-loops                 show the loops in the program\n"
+       " --depth nr                   limit search depth\n"
+       " --unwind nr                  unwind nr times\n"
+       " --unwindset L:B,...          unwind loop L with a bound of B\n"
+       "                              (use --show-loops to get the loop IDs)\n"
+       " --show-vcc                   show the verification conditions\n"
+       " --slice-formula              remove assignments unrelated to "
+       "property\n"
+       " --unwinding-assertions       generate unwinding assertions\n"
+       " --partial-loops              permit paths with partial loops\n"
+       " --no-pretty-names            do not simplify identifiers\n"
+       " --graphml-witness filename   write the witness in GraphML format to "
+       "filename\n" // NOLINT(*)
+       "\n"
+       "Backend options:\n"
+       " --dimacs                     generate CNF in DIMACS format\n"
+       " --beautify                   beautify the counterexample (greedy "
+       "heuristic)\n" // NOLINT(*)
+       " --localize-faults            localize faults (experimental)\n"
+       " --smt1                       use default SMT1 solver (obsolete)\n"
+       " --smt2                       use default SMT2 solver (Z3)\n"
+       " --boolector                  use Boolector\n"
+       " --mathsat                    use MathSAT\n"
+       " --cvc4                       use CVC4\n"
+       " --yices                      use Yices\n"
+       " --z3                         use Z3\n"
+       " --refine                     use refinement procedure (experimental)\n"
+       " --outfile filename           output formula to given file\n"
+       " --arrays-uf-never            never turn arrays into uninterpreted "
+       "functions\n" // NOLINT(*)
+       " --arrays-uf-always           always turn arrays into uninterpreted "
+       "functions\n" // NOLINT(*)
+       "\n"
+       "Other options:\n"
+       " --version                    show version and exit\n"
+       " --xml-ui                     use XML-formatted output\n"
+       " --xml-interface              bi-directional XML interface\n"
+       " --json-ui                    use JSON-formatted output\n"
+       " --verbosity #                verbosity level\n"
+       "\n";
 }

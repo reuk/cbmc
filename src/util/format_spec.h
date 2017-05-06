@@ -26,19 +26,13 @@ public:
   typedef enum { DECIMAL, SCIENTIFIC, AUTOMATIC } stylet;
   stylet style;
 
-  format_spect():
-    min_width(0),
-    precision(6),
-    zero_padding(false),
-    style(AUTOMATIC)
+  format_spect()
+    : min_width(0), precision(6), zero_padding(false), style(AUTOMATIC)
   {
   }
 
-  explicit format_spect(stylet _style):
-    min_width(0),
-    precision(6),
-    zero_padding(false),
-    style(_style)
+  explicit format_spect(stylet _style)
+    : min_width(0), precision(6), zero_padding(false), style(_style)
   {
   }
 

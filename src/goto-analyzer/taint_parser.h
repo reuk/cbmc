@@ -22,22 +22,32 @@ public:
   class rulet
   {
   public:
-    enum { SOURCE, SINK, SANITIZER } kind;
-    enum { THIS, PARAMETER, RETURN_VALUE } where;
+    enum
+    {
+      SOURCE,
+      SINK,
+      SANITIZER
+    } kind;
+    enum
+    {
+      THIS,
+      PARAMETER,
+      RETURN_VALUE
+    } where;
 
     bool is_source() const
     {
-      return kind==SOURCE;
+      return kind == SOURCE;
     }
 
     bool is_sink() const
     {
-      return kind==SINK;
+      return kind == SINK;
     }
 
     bool is_sanitizer() const
     {
-      return kind==SANITIZER;
+      return kind == SANITIZER;
     }
 
     irep_idt id;
@@ -48,7 +58,7 @@ public:
 
     void output(std::ostream &) const;
 
-    rulet():parameter_number(0)
+    rulet() : parameter_number(0)
     {
     }
   };

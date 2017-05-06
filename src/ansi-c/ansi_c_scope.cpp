@@ -28,8 +28,6 @@ void ansi_c_scopet::print(std::ostream &out) const
 
   for(const auto &name : name_map)
   {
-    out << "  ID: " << name.first
-        << " CLASS: " << name.second.id_class
-        << "\n";
+    out << "  ID: " << name.first << " CLASS: " << name.second.id_class << "\n";
   }
 }

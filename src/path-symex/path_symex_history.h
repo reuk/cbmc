@@ -24,34 +24,38 @@ class path_symex_stept;
 class path_symex_step_reft
 {
 public:
-  explicit path_symex_step_reft(
-    class path_symex_historyt &_history):
-    index(std::numeric_limits<std::size_t>::max()),
-    history(&_history)
+  explicit path_symex_step_reft(class path_symex_historyt &_history)
+    : index(std::numeric_limits<std::size_t>::max()), history(&_history)
   {
   }
 
-  path_symex_step_reft():
-    index(std::numeric_limits<std::size_t>::max()), history(0)
+  path_symex_step_reft()
+    : index(std::numeric_limits<std::size_t>::max()), history(0)
   {
   }
 
   bool is_nil() const
   {
-    return index==std::numeric_limits<std::size_t>::max();
+    return index == std::numeric_limits<std::size_t>::max();
   }
 
   path_symex_historyt &get_history() const
   {
-    assert(history!=0);
+    assert(history != 0);
     return *history;
   }
 
   // pre-decrement
   path_symex_step_reft &operator--();
 
-  path_symex_stept &operator*() const { return get(); }
-  path_symex_stept *operator->() const { return &get(); }
+  path_symex_stept &operator*() const
+  {
+    return get();
+  }
+  path_symex_stept *operator->() const
+  {
+    return &get();
+  }
 
   void generate_successor();
 
@@ -74,22 +78,24 @@ class path_symex_stept
 public:
   enum kindt
   {
-    NON_BRANCH, BRANCH_TAKEN, BRANCH_NOT_TAKEN
+    NON_BRANCH,
+    BRANCH_TAKEN,
+    BRANCH_NOT_TAKEN
   } branch;
 
   bool is_branch_taken() const
   {
-    return branch==BRANCH_TAKEN;
+    return branch == BRANCH_TAKEN;
   }
 
   bool is_branch_not_taken() const
   {
-    return branch==BRANCH_NOT_TAKEN;
+    return branch == BRANCH_NOT_TAKEN;
   }
 
   bool is_branch() const
   {
-    return branch==BRANCH_TAKEN || branch==BRANCH_NOT_TAKEN;
+    return branch == BRANCH_TAKEN || branch == BRANCH_NOT_TAKEN;
   }
 
   path_symex_step_reft predecessor;
@@ -106,12 +112,12 @@ public:
 
   bool hidden;
 
-  path_symex_stept():
-    branch(NON_BRANCH),
-    guard(nil_exprt()),
-    ssa_rhs(nil_exprt()),
-    full_lhs(nil_exprt()),
-    hidden(false)
+  path_symex_stept()
+    : branch(NON_BRANCH),
+      guard(nil_exprt()),
+      ssa_rhs(nil_exprt()),
+      full_lhs(nil_exprt()),
+      hidden(false)
   {
   }
 
@@ -122,9 +128,8 @@ public:
 };
 
 // converts the full history
-inline decision_proceduret &operator<<(
-  decision_proceduret &dest,
-  path_symex_step_reft src)
+inline decision_proceduret &
+operator<<(decision_proceduret &dest, path_symex_step_reft src)
 {
   while(!src.is_nil())
   {
@@ -151,22 +156,22 @@ public:
 
 inline void path_symex_step_reft::generate_successor()
 {
-  assert(history!=0);
-  path_symex_step_reft old=*this;
-  index=history->step_container.size();
+  assert(history != 0);
+  path_symex_step_reft old= *this;
+  index= history->step_container.size();
   history->step_container.push_back(path_symex_stept());
-  history->step_container.back().predecessor=old;
+  history->step_container.back().predecessor= old;
 }
 
 inline path_symex_step_reft &path_symex_step_reft::operator--()
 {
-  *this=get().predecessor;
+  *this= get().predecessor;
   return *this;
 }
 
 inline path_symex_stept &path_symex_step_reft::get() const
 {
-  assert(history!=0);
+  assert(history != 0);
   assert(!is_nil());
   return history->step_container[index];
 }

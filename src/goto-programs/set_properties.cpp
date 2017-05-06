@@ -9,7 +9,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <algorithm>
 #include <unordered_set>
 
-
 #include "set_properties.h"
 
 /*******************************************************************\
@@ -28,21 +27,21 @@ void set_properties(
   goto_programt &goto_program,
   std::unordered_set<irep_idt, irep_id_hash> &property_set)
 {
-  for(goto_programt::instructionst::iterator
-      it=goto_program.instructions.begin();
-      it!=goto_program.instructions.end();
+  for(goto_programt::instructionst::iterator it=
+        goto_program.instructions.begin();
+      it != goto_program.instructions.end();
       it++)
   {
     if(!it->is_assert())
       continue;
 
-    irep_idt property_id=it->source_location.get_property_id();
+    irep_idt property_id= it->source_location.get_property_id();
 
-    std::unordered_set<irep_idt, irep_id_hash>::iterator
-      c_it=property_set.find(property_id);
+    std::unordered_set<irep_idt, irep_id_hash>::iterator c_it=
+      property_set.find(property_id);
 
-    if(c_it==property_set.end())
-      it->type=SKIP;
+    if(c_it == property_set.end())
+      it->type= SKIP;
     else
       property_set.erase(c_it);
   }
@@ -81,21 +80,21 @@ void label_properties(
   goto_programt &goto_program,
   std::map<irep_idt, unsigned> &property_counters)
 {
-  for(goto_programt::instructionst::iterator
-      it=goto_program.instructions.begin();
-      it!=goto_program.instructions.end();
+  for(goto_programt::instructionst::iterator it=
+        goto_program.instructions.begin();
+      it != goto_program.instructions.end();
       it++)
   {
     if(!it->is_assert())
       continue;
 
-    irep_idt function=it->source_location.get_function();
+    irep_idt function= it->source_location.get_function();
 
-    std::string prefix=id2string(function);
-    if(it->source_location.get_property_class()!="")
+    std::string prefix= id2string(function);
+    if(it->source_location.get_property_class() != "")
     {
-      if(prefix!="")
-        prefix+=".";
+      if(prefix != "")
+        prefix+= ".";
 
       std::string class_infix=
         id2string(it->source_location.get_property_class());
@@ -103,17 +102,17 @@ void label_properties(
       // replace the spaces by underscores
       std::replace(class_infix.begin(), class_infix.end(), ' ', '_');
 
-      prefix+=class_infix;
+      prefix+= class_infix;
     }
 
-    if(prefix!="")
-      prefix+=".";
+    if(prefix != "")
+      prefix+= ".";
 
-    unsigned &count=property_counters[prefix];
+    unsigned &count= property_counters[prefix];
 
     count++;
 
-    std::string property_id=prefix+std::to_string(count);
+    std::string property_id= prefix + std::to_string(count);
 
     it->source_location.set_property_id(property_id);
   }
@@ -181,7 +180,7 @@ void set_properties(
       set_properties(it->second.body, property_set);
 
   if(!property_set.empty())
-    throw "property "+id2string(*property_set.begin())+" not found";
+    throw "property " + id2string(*property_set.begin()) + " not found";
 }
 
 /*******************************************************************\
@@ -200,9 +199,9 @@ void label_properties(goto_functionst &goto_functions)
 {
   std::map<irep_idt, unsigned> property_counters;
 
-  for(goto_functionst::function_mapt::iterator
-      it=goto_functions.function_map.begin();
-      it!=goto_functions.function_map.end();
+  for(goto_functionst::function_mapt::iterator it=
+        goto_functions.function_map.begin();
+      it != goto_functions.function_map.end();
       it++)
     if(!it->second.is_inlined())
       label_properties(it->second.body, property_counters);
@@ -237,24 +236,23 @@ Function: make_assertions_false
 
 \*******************************************************************/
 
-void make_assertions_false(
-  goto_functionst &goto_functions)
+void make_assertions_false(goto_functionst &goto_functions)
 {
-  for(goto_functionst::function_mapt::iterator
-      f_it=goto_functions.function_map.begin();
-      f_it!=goto_functions.function_map.end();
+  for(goto_functionst::function_mapt::iterator f_it=
+        goto_functions.function_map.begin();
+      f_it != goto_functions.function_map.end();
       f_it++)
   {
-    goto_programt &goto_program=f_it->second.body;
+    goto_programt &goto_program= f_it->second.body;
 
-    for(goto_programt::instructionst::iterator
-        i_it=goto_program.instructions.begin();
-        i_it!=goto_program.instructions.end();
+    for(goto_programt::instructionst::iterator i_it=
+          goto_program.instructions.begin();
+        i_it != goto_program.instructions.end();
         i_it++)
     {
       if(!i_it->is_assert())
         continue;
-      i_it->guard=false_exprt();
+      i_it->guard= false_exprt();
     }
   }
 }

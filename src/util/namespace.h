@@ -30,7 +30,7 @@ public:
   {
     const symbolt *symbol;
     if(lookup(name, symbol))
-      throw "identifier "+id2string(name)+" not found";
+      throw "identifier " + id2string(name) + " not found";
     return *symbol;
   }
 
@@ -52,33 +52,36 @@ public:
   const typet &follow_tag(const c_enum_tag_typet &src) const;
 
   // these do the actual lookup
-  virtual unsigned get_max(const std::string &prefix) const=0;
-  virtual bool lookup(const irep_idt &name, const symbolt *&symbol) const=0;
+  virtual unsigned get_max(const std::string &prefix) const= 0;
+  virtual bool lookup(const irep_idt &name, const symbolt *&symbol) const= 0;
 };
 
 /*! \brief TO_BE_DOCUMENTED
 */
-class namespacet:public namespace_baset
+class namespacet : public namespace_baset
 {
 public:
   // constructors
   explicit namespacet(const symbol_tablet &_symbol_table)
-  { symbol_table1=&_symbol_table; symbol_table2=NULL; }
+  {
+    symbol_table1= &_symbol_table;
+    symbol_table2= NULL;
+  }
 
   namespacet(
     const symbol_tablet &_symbol_table1,
     const symbol_tablet &_symbol_table2)
   {
-    symbol_table1=&_symbol_table1;
-    symbol_table2=&_symbol_table2;
+    symbol_table1= &_symbol_table1;
+    symbol_table2= &_symbol_table2;
   }
 
   namespacet(
     const symbol_tablet *_symbol_table1,
     const symbol_tablet *_symbol_table2)
   {
-    symbol_table1=_symbol_table1;
-    symbol_table2=_symbol_table2;
+    symbol_table1= _symbol_table1;
+    symbol_table2= _symbol_table2;
   }
 
   using namespace_baset::lookup;
@@ -96,16 +99,16 @@ protected:
   const symbol_tablet *symbol_table1, *symbol_table2;
 };
 
-class multi_namespacet:public namespacet
+class multi_namespacet : public namespacet
 {
 public:
   // constructors
-  multi_namespacet():namespacet(NULL, NULL)
+  multi_namespacet() : namespacet(NULL, NULL)
   {
   }
 
-  explicit multi_namespacet(
-    const symbol_tablet &symbol_table):namespacet(NULL, NULL)
+  explicit multi_namespacet(const symbol_tablet &symbol_table)
+    : namespacet(NULL, NULL)
   {
     add(symbol_table);
   }

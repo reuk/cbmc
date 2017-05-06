@@ -16,17 +16,17 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "static_analyzer.h"
 
-class static_analyzert:public messaget
+class static_analyzert : public messaget
 {
 public:
   static_analyzert(
     const goto_modelt &_goto_model,
     const optionst &_options,
-    message_handlert &_message_handler):
-    messaget(_message_handler),
-    goto_functions(_goto_model.goto_functions),
-    ns(_goto_model.symbol_table),
-    options(_options)
+    message_handlert &_message_handler)
+    : messaget(_message_handler),
+      goto_functions(_goto_model.goto_functions),
+      ns(_goto_model.symbol_table),
+      options(_options)
   {
   }
 
@@ -88,8 +88,8 @@ Function: static_analyzert::eval
 
 tvt static_analyzert::eval(goto_programt::const_targett t)
 {
-  exprt guard=t->guard;
-  interval_domaint d=interval_analysis[t];
+  exprt guard= t->guard;
+  interval_domaint d= interval_analysis[t];
   d.assume(not_exprt(guard), ns);
   if(d.is_bottom())
     return tvt(true);
@@ -110,14 +110,14 @@ Function: static_analyzert::plain_text_report
 
 void static_analyzert::plain_text_report()
 {
-  unsigned pass=0, fail=0, unknown=0;
+  unsigned pass= 0, fail= 0, unknown= 0;
 
   forall_goto_functions(f_it, goto_functions)
   {
     if(!f_it->second.body.has_assertion())
       continue;
 
-    if(f_it->first=="__actual_thread_spawn")
+    if(f_it->first == "__actual_thread_spawn")
       continue;
 
     status() << "******** Function " << f_it->first << eom;
@@ -127,10 +127,9 @@ void static_analyzert::plain_text_report()
       if(!i_it->is_assert())
         continue;
 
-      tvt r=eval(i_it);
+      tvt r= eval(i_it);
 
-      result() << '[' << i_it->source_location.get_property_id()
-               << ']' << ' ';
+      result() << '[' << i_it->source_location.get_property_id() << ']' << ' ';
 
       result() << i_it->source_location;
       if(!i_it->source_location.get_comment().empty())
@@ -155,8 +154,8 @@ void static_analyzert::plain_text_report()
     status() << '\n';
   }
 
-  status() << "SUMMARY: " << pass << " pass, " << fail << " fail, "
-           << unknown << " unknown\n";
+  status() << "SUMMARY: " << pass << " pass, " << fail << " fail, " << unknown
+           << " unknown\n";
 }
 
 /*******************************************************************\
@@ -180,7 +179,7 @@ void static_analyzert::json_report(const std::string &file_name)
     if(!f_it->second.body.has_assertion())
       continue;
 
-    if(f_it->first=="__actual_thread_spawn")
+    if(f_it->first == "__actual_thread_spawn")
       continue;
 
     forall_goto_program_instructions(i_it, f_it->second.body)
@@ -188,29 +187,28 @@ void static_analyzert::json_report(const std::string &file_name)
       if(!i_it->is_assert())
         continue;
 
-      tvt r=eval(i_it);
+      tvt r= eval(i_it);
 
-      json_objectt &j=json_result.push_back().make_object();
+      json_objectt &j= json_result.push_back().make_object();
 
       if(r.is_true())
-        j["status"]=json_stringt("SUCCESS");
+        j["status"]= json_stringt("SUCCESS");
       else if(r.is_false())
-        j["status"]=json_stringt("FAILURE");
+        j["status"]= json_stringt("FAILURE");
       else
-        j["status"]=json_stringt("UNKNOWN");
+        j["status"]= json_stringt("UNKNOWN");
 
-      j["file"]=json_stringt(id2string(i_it->source_location.get_file()));
-      j["line"]=json_numbert(id2string(i_it->source_location.get_line()));
-      j["description"]=json_stringt(id2string(
-        i_it->source_location.get_comment()));
+      j["file"]= json_stringt(id2string(i_it->source_location.get_file()));
+      j["line"]= json_numbert(id2string(i_it->source_location.get_line()));
+      j["description"]=
+        json_stringt(id2string(i_it->source_location.get_comment()));
     }
   }
 
   std::ofstream out(file_name);
   if(!out)
   {
-    error() << "failed to open JSON output file `"
-            << file_name << "'" << eom;
+    error() << "failed to open JSON output file `" << file_name << "'" << eom;
     return;
   }
 
@@ -239,7 +237,7 @@ void static_analyzert::xml_report(const std::string &file_name)
     if(!f_it->second.body.has_assertion())
       continue;
 
-    if(f_it->first=="__actual_thread_spawn")
+    if(f_it->first == "__actual_thread_spawn")
       continue;
 
     forall_goto_program_instructions(i_it, f_it->second.body)
@@ -247,9 +245,9 @@ void static_analyzert::xml_report(const std::string &file_name)
       if(!i_it->is_assert())
         continue;
 
-      tvt r=eval(i_it);
+      tvt r= eval(i_it);
 
-      xmlt &x=xml_result.new_element("result");
+      xmlt &x= xml_result.new_element("result");
 
       if(r.is_true())
         x.set_attribute("status", "SUCCESS");
@@ -268,8 +266,7 @@ void static_analyzert::xml_report(const std::string &file_name)
   std::ofstream out(file_name);
   if(!out)
   {
-    error() << "failed to open XML output file `"
-            << file_name << "'" << eom;
+    error() << "failed to open XML output file `" << file_name << "'" << eom;
     return;
   }
 
@@ -294,8 +291,7 @@ bool static_analyzer(
   const optionst &options,
   message_handlert &message_handler)
 {
-  return static_analyzert(
-    goto_model, options, message_handler)();
+  return static_analyzert(goto_model, options, message_handler)();
 }
 
 /*******************************************************************\
@@ -310,9 +306,7 @@ Function: show_intervals
 
 \*******************************************************************/
 
-void show_intervals(
-  const goto_modelt &goto_model,
-  std::ostream &out)
+void show_intervals(const goto_modelt &goto_model, std::ostream &out)
 {
   ait<interval_domaint> interval_analysis;
   interval_analysis(goto_model);

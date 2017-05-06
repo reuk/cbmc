@@ -20,9 +20,9 @@ Function: languagest::languagest
 
 \*******************************************************************/
 
-languagest::languagest(const namespacet &_ns, languaget *_language):ns(_ns)
+languagest::languagest(const namespacet &_ns, languaget *_language) : ns(_ns)
 {
-  language=_language;
+  language= _language;
 }
 
 /*******************************************************************\

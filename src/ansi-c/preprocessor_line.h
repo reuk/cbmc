@@ -11,8 +11,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 class parsert;
 
-void preprocessor_line(
-  const char *text,
-  parsert &parser);
+void preprocessor_line(const char *text, parsert &parser);
 
 #endif // CPROVER_ANSI_C_PREPROCESSOR_LINE_H

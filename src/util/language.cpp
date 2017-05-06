@@ -78,7 +78,7 @@ bool languaget::from_expr(
   std::string &code,
   const namespacet &ns)
 {
-  code=expr.pretty();
+  code= expr.pretty();
   return false;
 }
 
@@ -99,7 +99,7 @@ bool languaget::from_type(
   std::string &code,
   const namespacet &ns)
 {
-  code=type.pretty();
+  code= type.pretty();
   return false;
 }
 
@@ -122,6 +122,6 @@ bool languaget::type_to_name(
 {
   // probably ansi-c/type2name could be used as better fallback if moved to
   // util/
-  name=type.pretty();
+  name= type.pretty();
   return false;
 }

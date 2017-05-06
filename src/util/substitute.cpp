@@ -31,13 +31,11 @@ void substitute(
 
   while(true)
   {
-    std::string::size_type pos=dest.find(what);
+    std::string::size_type pos= dest.find(what);
 
-    if(pos==std::string::npos)
+    if(pos == std::string::npos)
       return; // done
 
-    dest.replace(dest.begin()+pos,
-                 dest.begin()+pos+what.size(),
-                 by);
+    dest.replace(dest.begin() + pos, dest.begin() + pos + what.size(), by);
   }
 }

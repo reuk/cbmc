@@ -22,14 +22,12 @@ class namespacet;
 class value_sett
 {
 public:
-  value_sett():location_number(0)
+  value_sett() : location_number(0)
   {
   }
 
-  static bool field_sensitive(
-    const irep_idt &id,
-    const typet &type,
-    const namespacet &);
+  static bool
+  field_sensitive(const irep_idt &id, const typet &type, const namespacet &);
 
   unsigned location_number;
   static object_numberingt object_numbering;
@@ -39,26 +37,29 @@ public:
   class objectt
   {
   public:
-    objectt():offset_is_set(false)
+    objectt() : offset_is_set(false)
     {
     }
 
-    explicit objectt(const mp_integer &_offset):
-      offset(_offset),
-      offset_is_set(true)
+    explicit objectt(const mp_integer &_offset)
+      : offset(_offset), offset_is_set(true)
     {
     }
 
     mp_integer offset;
     bool offset_is_set;
     bool offset_is_zero() const
-    { return offset_is_set && offset.is_zero(); }
+    {
+      return offset_is_set && offset.is_zero();
+    }
   };
 
-  class object_map_dt:public std::map<unsigned, objectt>
+  class object_map_dt : public std::map<unsigned, objectt>
   {
   public:
-    object_map_dt() {}
+    object_map_dt()
+    {
+    }
     static const object_map_dt blank;
   };
 
@@ -68,7 +69,7 @@ public:
 
   void set(object_mapt &dest, object_map_dt::const_iterator it) const
   {
-    dest.write()[it->first]=it->second;
+    dest.write()[it->first]= it->second;
   }
 
   bool insert(object_mapt &dest, object_map_dt::const_iterator it) const
@@ -81,10 +82,8 @@ public:
     return insert(dest, object_numbering.number(src), objectt());
   }
 
-  bool insert(
-    object_mapt &dest,
-    const exprt &src,
-    const mp_integer &offset) const
+  bool
+  insert(object_mapt &dest, const exprt &src, const mp_integer &offset) const
   {
     return insert(dest, object_numbering.number(src), objectt(offset));
   }
@@ -106,9 +105,8 @@ public:
     {
     }
 
-    entryt(const idt &_identifier, const std::string &_suffix):
-      identifier(_identifier),
-      suffix(_suffix)
+    entryt(const idt &_identifier, const std::string &_suffix)
+      : identifier(_identifier), suffix(_suffix)
     {
     }
   };
@@ -117,20 +115,18 @@ public:
 
   typedef std::set<unsigned int> dynamic_object_id_sett;
 
-  #ifdef USE_DSTRING
+#ifdef USE_DSTRING
   typedef std::map<idt, entryt> valuest;
-  #else
+#else
   typedef std::unordered_map<idt, entryt, string_hash> valuest;
-  #endif
+#endif
 
   void get_value_set(
     const exprt &expr,
     value_setst::valuest &dest,
     const namespacet &ns) const;
 
-  expr_sett &get(
-    const idt &identifier,
-    const std::string &suffix);
+  expr_sett &get(const idt &identifier, const std::string &suffix);
 
   void make_any()
   {
@@ -142,13 +138,9 @@ public:
     values.clear();
   }
 
-  entryt &get_entry(
-    const entryt &e, const typet &type,
-    const namespacet &);
+  entryt &get_entry(const entryt &e, const typet &type, const namespacet &);
 
-  void output(
-    const namespacet &ns,
-    std::ostream &out) const;
+  void output(const namespacet &ns, std::ostream &out) const;
 
   valuest values;
 
@@ -164,13 +156,9 @@ public:
     return make_union(new_values.values);
   }
 
-  void guard(
-    const exprt &expr,
-    const namespacet &ns);
+  void guard(const exprt &expr, const namespacet &ns);
 
-  void apply_code(
-    const codet &code,
-    const namespacet &ns);
+  void apply_code(const codet &code, const namespacet &ns);
 
   void assign(
     const exprt &lhs,
@@ -185,18 +173,14 @@ public:
     const namespacet &ns);
 
   // edge back to call site
-  void do_end_function(
-    const exprt &lhs,
-    const namespacet &ns);
+  void do_end_function(const exprt &lhs, const namespacet &ns);
 
   void get_reference_set(
     const exprt &expr,
     value_setst::valuest &dest,
     const namespacet &ns) const;
 
-  bool eval_pointer_offset(
-    exprt &expr,
-    const namespacet &ns) const;
+  bool eval_pointer_offset(exprt &expr, const namespacet &ns) const;
 
 protected:
   void get_value_set_rec(
@@ -225,9 +209,7 @@ protected:
     object_mapt &dest,
     const namespacet &ns) const;
 
-  void dereference_rec(
-    const exprt &src,
-    exprt &dest) const;
+  void dereference_rec(const exprt &src, exprt &dest) const;
 
   void assign_rec(
     const exprt &lhs,
@@ -236,9 +218,7 @@ protected:
     const namespacet &ns,
     bool add_to_sets);
 
-  void do_free(
-    const exprt &op,
-    const namespacet &ns);
+  void do_free(const exprt &op, const namespacet &ns);
 
   exprt make_member(
     const exprt &src,

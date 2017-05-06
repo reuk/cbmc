@@ -33,13 +33,13 @@ bool parse_json(
 {
   json_parser.clear();
   json_parser.set_file(filename);
-  json_parser.in=&in;
+  json_parser.in= &in;
   json_parser.set_message_handler(message_handler);
 
-  bool result=json_parser.parse();
+  bool result= json_parser.parse();
 
   // save result
-  if(json_parser.stack.size()==1)
+  if(json_parser.stack.size() == 1)
     dest.swap(json_parser.stack.top());
 
   // save some memory

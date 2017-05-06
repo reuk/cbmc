@@ -26,39 +26,32 @@ Author: Daniel Kroening, kroening@kroening.com
 
 class global_may_alias_analysist;
 
-class global_may_alias_domaint:public ai_domain_baset
+class global_may_alias_domaint : public ai_domain_baset
 {
 public:
-  global_may_alias_domaint():has_values(false)
+  global_may_alias_domaint() : has_values(false)
   {
   }
 
-  void transform(
-    locationt from,
-    locationt to,
-    ai_baset &ai,
-    const namespacet &ns) final;
+  void
+  transform(locationt from, locationt to, ai_baset &ai, const namespacet &ns)
+    final;
 
-  void output(
-    std::ostream &out,
-    const ai_baset &ai,
-    const namespacet &ns) const final;
+  void output(std::ostream &out, const ai_baset &ai, const namespacet &ns)
+    const final;
 
-  bool merge(
-    const global_may_alias_domaint &b,
-    locationt from,
-    locationt to);
+  bool merge(const global_may_alias_domaint &b, locationt from, locationt to);
 
   void make_bottom() final
   {
     aliases.clear();
-    has_values=tvt(false);
+    has_values= tvt(false);
   }
 
   void make_top() final
   {
     aliases.clear();
-    has_values=tvt(true);
+    has_values= tvt(true);
   }
 
   void make_entry() final
@@ -77,7 +70,7 @@ private:
   void get_rhs_aliases_address_of(const exprt &, std::set<irep_idt> &);
 };
 
-class global_may_alias_analysist:public ait<global_may_alias_domaint>
+class global_may_alias_analysist : public ait<global_may_alias_domaint>
 {
 protected:
   virtual void initialize(const goto_functionst &_goto_functions)

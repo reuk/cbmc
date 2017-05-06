@@ -31,11 +31,11 @@ bool value_set_domain_fivrnst::transform(
   value_set.set_from(from_l->function, from_l->location_number);
   value_set.set_to(to_l->function, to_l->location_number);
 
-  #if 0
+#if 0
   std::cout << "Transforming: " <<
     from_l->function << " " << from_l->location_number << " to " <<
     to_l->function << " " << to_l->location_number << std::endl;
-  #endif
+#endif
 
   switch(from_l->type)
   {
@@ -50,17 +50,16 @@ bool value_set_domain_fivrnst::transform(
     break;
 
   case FUNCTION_CALL:
-    {
-      const code_function_callt &code=
-        to_code_function_call(from_l->code);
+  {
+    const code_function_callt &code= to_code_function_call(from_l->code);
 
-      value_set.do_function_call(to_l->function, code.arguments(), ns);
-      break;
-    }
+    value_set.do_function_call(to_l->function, code.arguments(), ns);
+    break;
+  }
 
   default:
-    {
-    }
+  {
+  }
   }
 
   return value_set.handover();

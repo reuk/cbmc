@@ -13,19 +13,16 @@ Author: Daniel Kroening
 
 // Returns an unused file name for a writeable temporary file,
 // and makes sure it exists.
-std::string get_temporary_file(
-  const std::string &prefix,
-  const std::string &suffix);
+std::string
+get_temporary_file(const std::string &prefix, const std::string &suffix);
 
 // The below deletes the temporary file upon destruction,
 // cleaning up after you in case of exceptions.
 class temporary_filet
 {
 public:
-  temporary_filet(
-    const std::string &prefix,
-    const std::string &suffix):
-      name(get_temporary_file(prefix, suffix))
+  temporary_filet(const std::string &prefix, const std::string &suffix)
+    : name(get_temporary_file(prefix, suffix))
   {
   }
 

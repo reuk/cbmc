@@ -80,11 +80,11 @@ Function: jsil_typecheckt::update_expr_type
 
 void jsil_typecheckt::update_expr_type(exprt &expr, const typet &type)
 {
-  expr.type()=type;
+  expr.type()= type;
 
-  if(expr.id()==ID_symbol)
+  if(expr.id() == ID_symbol)
   {
-    const irep_idt &id=to_symbol_expr(expr).get_identifier();
+    const irep_idt &id= to_symbol_expr(expr).get_identifier();
 
     if(!symbol_table.has_symbol(id))
     {
@@ -92,11 +92,11 @@ void jsil_typecheckt::update_expr_type(exprt &expr, const typet &type)
       throw 0;
     }
 
-    symbolt &s=symbol_table.lookup(id);
+    symbolt &s= symbol_table.lookup(id);
     if(s.type.id().empty() || s.type.is_nil())
-      s.type=type;
+      s.type= type;
     else
-      s.type=jsil_union(s.type, type);
+      s.type= jsil_union(s.type, type);
   }
 }
 
@@ -113,9 +113,9 @@ Function: jsil_typecheckt::make_type_compatible
 \*******************************************************************/
 
 void jsil_typecheckt::make_type_compatible(
-    exprt &expr,
-    const typet &type,
-    bool must)
+  exprt &expr,
+  const typet &type,
+  bool must)
 {
   if(type.id().empty() || type.is_nil())
   {
@@ -136,17 +136,16 @@ void jsil_typecheckt::make_type_compatible(
     if(jsil_incompatible_types(expr.type(), type))
     {
       err_location(expr);
-      error() << "failed to typecheck expr "
-              << expr.pretty() << " with type "
-              << expr.type().pretty()
-              << "; required type " << type.pretty() << eom;
+      error() << "failed to typecheck expr " << expr.pretty() << " with type "
+              << expr.type().pretty() << "; required type " << type.pretty()
+              << eom;
       throw 0;
     }
   }
   else if(!jsil_is_subtype(type, expr.type()))
   {
     // Types are not compatible
-    typet upper=jsil_union(expr.type(), type);
+    typet upper= jsil_union(expr.type(), type);
     update_expr_type(expr, upper);
   }
 }
@@ -165,36 +164,36 @@ Function: jsil_typecheckt::typecheck_type
 
 void jsil_typecheckt::typecheck_type(typet &type)
 {
-  if(type.id()==ID_code)
+  if(type.id() == ID_code)
   {
-    code_typet &parameters=to_code_type(type);
+    code_typet &parameters= to_code_type(type);
 
     for(code_typet::parametert &p : parameters.parameters())
     {
       // create new symbol
       parameter_symbolt new_symbol;
-      new_symbol.base_name=p.get_identifier();
+      new_symbol.base_name= p.get_identifier();
 
       // append procedure name to parameters
       p.set_identifier(add_prefix(p.get_identifier()));
-      new_symbol.name=p.get_identifier();
+      new_symbol.name= p.get_identifier();
 
       if(is_jsil_builtin_code_type(type))
-        new_symbol.type=jsil_value_or_empty_type();
+        new_symbol.type= jsil_value_or_empty_type();
       else if(is_jsil_spec_code_type(type))
-        new_symbol.type=jsil_value_or_reference_type();
+        new_symbol.type= jsil_value_or_reference_type();
       else
-        new_symbol.type=jsil_value_type(); // User defined function
+        new_symbol.type= jsil_value_type(); // User defined function
 
-      new_symbol.mode="jsil";
+      new_symbol.mode= "jsil";
 
       // mark as already typechecked
-      new_symbol.is_extern=true;
+      new_symbol.is_extern= true;
 
       if(symbol_table.add(new_symbol))
       {
-        error() << "failed to add parameter symbol `"
-                << new_symbol.name << "' in the symbol table" << eom;
+        error() << "failed to add parameter symbol `" << new_symbol.name
+                << "' in the symbol table" << eom;
         throw 0;
       }
     }
@@ -254,15 +253,15 @@ Function: jsil_typecheckt::typecheck_expr_main
 
 void jsil_typecheckt::typecheck_expr_main(exprt &expr)
 {
-  if(expr.id()==ID_code)
+  if(expr.id() == ID_code)
   {
     err_location(expr);
     error() << "typecheck_expr_main got code: " << expr.pretty() << eom;
     throw 0;
   }
-  else if(expr.id()==ID_symbol)
+  else if(expr.id() == ID_symbol)
     typecheck_symbol_expr(to_symbol_expr(expr));
-  else if(expr.id()==ID_constant)
+  else if(expr.id() == ID_constant)
   {
   }
   else
@@ -270,95 +269,78 @@ void jsil_typecheckt::typecheck_expr_main(exprt &expr)
     // expressions are expected not to have type set just yet
     assert(expr.type().is_nil() || expr.type().id().empty());
 
-    if(expr.id()==ID_null ||
-        expr.id()=="undefined" ||
-        expr.id()==ID_empty)
+    if(
+      expr.id() == ID_null || expr.id() == "undefined" || expr.id() == ID_empty)
       typecheck_expr_constant(expr);
-    else if(expr.id()=="null_type" ||
-            expr.id()=="undefined_type" ||
-            expr.id()==ID_boolean ||
-            expr.id()==ID_string ||
-            expr.id()=="number" ||
-            expr.id()=="builtin_object" ||
-            expr.id()=="user_object" ||
-            expr.id()=="object" ||
-            expr.id()==ID_reference ||
-            expr.id()==ID_member ||
-            expr.id()=="variable")
-      expr.type()=jsil_kind();
-    else if(expr.id()=="proto" ||
-            expr.id()=="fid" ||
-            expr.id()=="scope" ||
-            expr.id()=="constructid" ||
-            expr.id()=="primvalue" ||
-            expr.id()=="targetfunction" ||
-            expr.id()==ID_class)
+    else if(
+      expr.id() == "null_type" || expr.id() == "undefined_type" ||
+      expr.id() == ID_boolean || expr.id() == ID_string ||
+      expr.id() == "number" || expr.id() == "builtin_object" ||
+      expr.id() == "user_object" || expr.id() == "object" ||
+      expr.id() == ID_reference || expr.id() == ID_member ||
+      expr.id() == "variable")
+      expr.type()= jsil_kind();
+    else if(
+      expr.id() == "proto" || expr.id() == "fid" || expr.id() == "scope" ||
+      expr.id() == "constructid" || expr.id() == "primvalue" ||
+      expr.id() == "targetfunction" || expr.id() == ID_class)
     {
       // TODO: have a special type for builtin fields
-      expr.type()=string_typet();
+      expr.type()= string_typet();
     }
-    else if(expr.id()==ID_not)
+    else if(expr.id() == ID_not)
       typecheck_expr_unary_boolean(expr);
-    else if(expr.id()=="string_to_num")
+    else if(expr.id() == "string_to_num")
       typecheck_expr_unary_string(expr);
-    else if(expr.id()==ID_unary_minus ||
-            expr.id()=="num_to_int32" ||
-            expr.id()=="num_to_uint32" ||
-            expr.id()==ID_bitnot)
+    else if(
+      expr.id() == ID_unary_minus || expr.id() == "num_to_int32" ||
+      expr.id() == "num_to_uint32" || expr.id() == ID_bitnot)
     {
       typecheck_expr_unary_num(expr);
-      expr.type()=floatbv_typet();
+      expr.type()= floatbv_typet();
     }
-    else if(expr.id()=="num_to_string")
+    else if(expr.id() == "num_to_string")
     {
       typecheck_expr_unary_num(expr);
-      expr.type()=string_typet();
+      expr.type()= string_typet();
     }
-    else if(expr.id()==ID_equal)
+    else if(expr.id() == ID_equal)
       typecheck_exp_binary_equal(expr);
-    else if(expr.id()==ID_lt ||
-            expr.id()==ID_le)
+    else if(expr.id() == ID_lt || expr.id() == ID_le)
       typecheck_expr_binary_compare(expr);
-    else if(expr.id()==ID_plus ||
-            expr.id()==ID_minus ||
-            expr.id()==ID_mult ||
-            expr.id()==ID_div ||
-            expr.id()==ID_mod ||
-            expr.id()==ID_bitand ||
-            expr.id()==ID_bitor ||
-            expr.id()==ID_bitxor ||
-            expr.id()==ID_shl ||
-            expr.id()==ID_shr ||
-            expr.id()==ID_lshr)
+    else if(
+      expr.id() == ID_plus || expr.id() == ID_minus || expr.id() == ID_mult ||
+      expr.id() == ID_div || expr.id() == ID_mod || expr.id() == ID_bitand ||
+      expr.id() == ID_bitor || expr.id() == ID_bitxor || expr.id() == ID_shl ||
+      expr.id() == ID_shr || expr.id() == ID_lshr)
       typecheck_expr_binary_arith(expr);
-    else if(expr.id()==ID_and ||
-            expr.id()==ID_or)
+    else if(expr.id() == ID_and || expr.id() == ID_or)
       typecheck_expr_binary_boolean(expr);
-    else if(expr.id()=="subtype_of")
+    else if(expr.id() == "subtype_of")
       typecheck_expr_subtype(expr);
-    else if(expr.id()==ID_concatenation)
+    else if(expr.id() == ID_concatenation)
       typecheck_expr_concatenation(expr);
-    else if(expr.id()=="ref")
+    else if(expr.id() == "ref")
       typecheck_expr_ref(expr);
-    else if(expr.id()=="field")
+    else if(expr.id() == "field")
       typecheck_expr_field(expr);
-    else if(expr.id()==ID_base)
+    else if(expr.id() == ID_base)
       typecheck_expr_base(expr);
-    else if(expr.id()==ID_typeof)
-      expr.type()=jsil_kind();
-    else if(expr.id()=="new")
-      expr.type()=jsil_user_object_type();
-    else if(expr.id()=="hasField")
+    else if(expr.id() == ID_typeof)
+      expr.type()= jsil_kind();
+    else if(expr.id() == "new")
+      expr.type()= jsil_user_object_type();
+    else if(expr.id() == "hasField")
       typecheck_expr_has_field(expr);
-    else if(expr.id()==ID_index)
+    else if(expr.id() == ID_index)
       typecheck_expr_index(expr);
-    else if(expr.id()=="delete")
+    else if(expr.id() == "delete")
       typecheck_expr_delete(expr);
-    else if(expr.id()=="protoField")
+    else if(expr.id() == "protoField")
       typecheck_expr_proto_field(expr);
-    else if(expr.id()=="protoObj")
+    else if(expr.id() == "protoObj")
       typecheck_expr_proto_obj(expr);
-    else if(expr.id()==ID_side_effect)
+    else if(expr.id() == ID_side_effect)
       typecheck_expr_side_effect_throw(to_side_effect_expr_throw(expr));
     else
     {
@@ -384,9 +366,9 @@ Function: jsil_typecheckt::typecheck_expr_side_effect_throw
 void jsil_typecheckt::typecheck_expr_side_effect_throw(
   side_effect_expr_throwt &expr)
 {
-  irept &excep_list=expr.add(ID_exception_list);
-  assert(excep_list.id()==ID_symbol);
-  symbol_exprt &s=static_cast<symbol_exprt &>(excep_list);
+  irept &excep_list= expr.add(ID_exception_list);
+  assert(excep_list.id() == ID_symbol);
+  symbol_exprt &s= static_cast<symbol_exprt &>(excep_list);
   typecheck_symbol_expr(s);
 }
 
@@ -404,12 +386,12 @@ Function: jsil_typecheckt::typecheck_expr_constant
 
 void jsil_typecheckt::typecheck_expr_constant(exprt &expr)
 {
-  if(expr.id()==ID_null)
-    expr.type()=jsil_null_type();
-  else if(expr.id()=="undefined")
-    expr.type()=jsil_undefined_type();
-  else if(expr.id()==ID_empty)
-    expr.type()=jsil_empty_type();
+  if(expr.id() == ID_null)
+    expr.type()= jsil_null_type();
+  else if(expr.id() == "undefined")
+    expr.type()= jsil_undefined_type();
+  else if(expr.id() == ID_empty)
+    expr.type()= jsil_empty_type();
 }
 
 /*******************************************************************\
@@ -426,18 +408,17 @@ Function: jsil_typecheck_baset::typecheck_expr_proto_field
 
 void jsil_typecheckt::typecheck_expr_proto_field(exprt &expr)
 {
-  if(expr.operands().size()!=2)
+  if(expr.operands().size() != 2)
   {
     err_location(expr);
-    error() << "operator `" << expr.id()
-            << "' expects two operands" << eom;
+    error() << "operator `" << expr.id() << "' expects two operands" << eom;
     throw 0;
   }
 
   make_type_compatible(expr.op0(), jsil_object_type(), true);
   make_type_compatible(expr.op1(), string_typet(), true);
 
-  expr.type()=jsil_value_or_empty_type();
+  expr.type()= jsil_value_or_empty_type();
 }
 
 /*******************************************************************\
@@ -454,18 +435,17 @@ Function: jsil_typecheck_baset::typecheck_expr_proto_field
 
 void jsil_typecheckt::typecheck_expr_proto_obj(exprt &expr)
 {
-  if(expr.operands().size()!=2)
+  if(expr.operands().size() != 2)
   {
     err_location(expr);
-    error() << "operator `" << expr.id()
-            << "' expects two operands";
+    error() << "operator `" << expr.id() << "' expects two operands";
     throw 0;
   }
 
   make_type_compatible(expr.op0(), jsil_object_type(), true);
   make_type_compatible(expr.op1(), jsil_object_type(), true);
 
-  expr.type()=bool_typet();
+  expr.type()= bool_typet();
 }
 
 /*******************************************************************\
@@ -482,18 +462,17 @@ Function: jsil_typecheck_baset::typecheck_expr_delete
 
 void jsil_typecheckt::typecheck_expr_delete(exprt &expr)
 {
-  if(expr.operands().size()!=2)
+  if(expr.operands().size() != 2)
   {
     err_location(expr);
-    error() << "operator `" << expr.id()
-            << "' expects two operands" << eom;
+    error() << "operator `" << expr.id() << "' expects two operands" << eom;
     throw 0;
   }
 
   make_type_compatible(expr.op0(), jsil_object_type(), true);
   make_type_compatible(expr.op1(), string_typet(), true);
 
-  expr.type()=bool_typet();
+  expr.type()= bool_typet();
 }
 
 /*******************************************************************\
@@ -510,11 +489,10 @@ Function: jsil_typecheck_baset::typecheck_expr_hasfield
 
 void jsil_typecheckt::typecheck_expr_index(exprt &expr)
 {
-  if(expr.operands().size()!=2)
+  if(expr.operands().size() != 2)
   {
     err_location(expr);
-    error() << "operator `" << expr.id()
-            << "' expects two operands" << eom;
+    error() << "operator `" << expr.id() << "' expects two operands" << eom;
     throw 0;
   }
 
@@ -522,10 +500,10 @@ void jsil_typecheckt::typecheck_expr_index(exprt &expr)
   make_type_compatible(expr.op1(), string_typet(), true);
 
   // special case for function identifiers
-  if(expr.op1().id()=="fid" || expr.op1().id()=="constructid")
-    expr.type()=code_typet();
+  if(expr.op1().id() == "fid" || expr.op1().id() == "constructid")
+    expr.type()= code_typet();
   else
-    expr.type()=jsil_value_type();
+    expr.type()= jsil_value_type();
 }
 
 /*******************************************************************\
@@ -542,18 +520,17 @@ Function: jsil_typecheck_baset::typecheck_expr_hasfield
 
 void jsil_typecheckt::typecheck_expr_has_field(exprt &expr)
 {
-  if(expr.operands().size()!=2)
+  if(expr.operands().size() != 2)
   {
     err_location(expr);
-    error() << "operator `" << expr.id()
-            << "' expects two operands" << eom;
+    error() << "operator `" << expr.id() << "' expects two operands" << eom;
     throw 0;
   }
 
   make_type_compatible(expr.op0(), jsil_object_type(), true);
   make_type_compatible(expr.op1(), string_typet(), true);
 
-  expr.type()=bool_typet();
+  expr.type()= bool_typet();
 }
 
 /*******************************************************************\
@@ -570,17 +547,16 @@ Function: jsil_typecheck_baset::typecheck_expr_field
 
 void jsil_typecheckt::typecheck_expr_field(exprt &expr)
 {
-  if(expr.operands().size()!=1)
+  if(expr.operands().size() != 1)
   {
     err_location(expr);
-    error() << "operator `" << expr.id()
-            << "' expects single operand" << eom;
+    error() << "operator `" << expr.id() << "' expects single operand" << eom;
     throw 0;
   }
 
   make_type_compatible(expr.op0(), jsil_reference_type(), true);
 
-  expr.type()=string_typet();
+  expr.type()= string_typet();
 }
 
 /*******************************************************************\
@@ -597,17 +573,16 @@ Function: jsil_typecheck_baset::typecheck_expr_base
 
 void jsil_typecheckt::typecheck_expr_base(exprt &expr)
 {
-  if(expr.operands().size()!=1)
+  if(expr.operands().size() != 1)
   {
     err_location(expr);
-    error() << "operator `" << expr.id()
-            << "' expects single operand" << eom;
+    error() << "operator `" << expr.id() << "' expects single operand" << eom;
     throw 0;
   }
 
   make_type_compatible(expr.op0(), jsil_reference_type(), true);
 
-  expr.type()=jsil_value_type();
+  expr.type()= jsil_value_type();
 }
 
 /*******************************************************************\
@@ -624,24 +599,23 @@ Function: jsil_typecheck_baset::typecheck_expr_ref
 
 void jsil_typecheckt::typecheck_expr_ref(exprt &expr)
 {
-  if(expr.operands().size()!=3)
+  if(expr.operands().size() != 3)
   {
     err_location(expr);
-    error() << "operator `" << expr.id()
-            << "' expects three operands" << eom;
+    error() << "operator `" << expr.id() << "' expects three operands" << eom;
     throw 0;
   }
 
   make_type_compatible(expr.op0(), jsil_value_type(), true);
   make_type_compatible(expr.op1(), string_typet(), true);
 
-  exprt &operand3=expr.op2();
+  exprt &operand3= expr.op2();
   make_type_compatible(operand3, jsil_kind(), true);
 
-  if(operand3.id()==ID_member)
-    expr.type()=jsil_member_reference_type();
-  else if(operand3.id()=="variable")
-    expr.type()=jsil_variable_reference_type();
+  if(operand3.id() == ID_member)
+    expr.type()= jsil_member_reference_type();
+  else if(operand3.id() == "variable")
+    expr.type()= jsil_variable_reference_type();
   else
   {
     err_location(expr);
@@ -666,18 +640,17 @@ Function: jsil_typecheck_baset::typecheck_expr_concatenation
 
 void jsil_typecheckt::typecheck_expr_concatenation(exprt &expr)
 {
-  if(expr.operands().size()!=2)
+  if(expr.operands().size() != 2)
   {
     err_location(expr);
-    error() << "operator `" << expr.id()
-            << "' expects two operands" << eom;
+    error() << "operator `" << expr.id() << "' expects two operands" << eom;
     throw 0;
   }
 
   make_type_compatible(expr.op0(), string_typet(), true);
   make_type_compatible(expr.op1(), string_typet(), true);
 
-  expr.type()=string_typet();
+  expr.type()= string_typet();
 }
 
 /*******************************************************************\
@@ -694,18 +667,17 @@ Function: jsil_typecheck_baset::typecheck_expr_subtype
 
 void jsil_typecheckt::typecheck_expr_subtype(exprt &expr)
 {
-  if(expr.operands().size()!=2)
+  if(expr.operands().size() != 2)
   {
     err_location(expr);
-    error() << "operator `" << expr.id()
-            << "' expects two operands" << eom;
+    error() << "operator `" << expr.id() << "' expects two operands" << eom;
     throw 0;
   }
 
   make_type_compatible(expr.op0(), jsil_kind(), true);
   make_type_compatible(expr.op1(), jsil_kind(), true);
 
-  expr.type()=bool_typet();
+  expr.type()= bool_typet();
 }
 
 /*******************************************************************\
@@ -722,18 +694,17 @@ Function: jsil_typecheck_baset::typecheck_expr_binary_boolean
 
 void jsil_typecheckt::typecheck_expr_binary_boolean(exprt &expr)
 {
-  if(expr.operands().size()!=2)
+  if(expr.operands().size() != 2)
   {
     err_location(expr);
-    error() << "operator `" << expr.id()
-            << "' expects two operands" << eom;
+    error() << "operator `" << expr.id() << "' expects two operands" << eom;
     throw 0;
   }
 
   make_type_compatible(expr.op0(), bool_typet(), true);
   make_type_compatible(expr.op1(), bool_typet(), true);
 
-  expr.type()=bool_typet();
+  expr.type()= bool_typet();
 }
 
 /*******************************************************************\
@@ -750,19 +721,17 @@ Function: jsil_typecheck_baset::typecheck_expr_binary_arith
 
 void jsil_typecheckt::typecheck_expr_binary_arith(exprt &expr)
 {
-  if(expr.operands().size()!=2)
+  if(expr.operands().size() != 2)
   {
     err_location(expr);
-    error() << "operator `" << expr.id()
-            << "' expects two operands" << eom;
+    error() << "operator `" << expr.id() << "' expects two operands" << eom;
     throw 0;
   }
-
 
   make_type_compatible(expr.op0(), floatbv_typet(), true);
   make_type_compatible(expr.op1(), floatbv_typet(), true);
 
-  expr.type()=floatbv_typet();
+  expr.type()= floatbv_typet();
 }
 
 /*******************************************************************\
@@ -779,17 +748,16 @@ Function: jsil_typecheck_baset::typecheck_exp_binary_equal
 
 void jsil_typecheckt::typecheck_exp_binary_equal(exprt &expr)
 {
-  if(expr.operands().size()!=2)
+  if(expr.operands().size() != 2)
   {
     err_location(expr);
-    error() << "operator `" << expr.id()
-            << "' expects two operands" << eom;
+    error() << "operator `" << expr.id() << "' expects two operands" << eom;
     throw 0;
   }
 
   // operands can be of any types
 
-  expr.type()=bool_typet();
+  expr.type()= bool_typet();
 }
 
 /*******************************************************************\
@@ -806,18 +774,17 @@ Function: jsil_typecheck_baset::typecheck_expr_binary_compare
 
 void jsil_typecheckt::typecheck_expr_binary_compare(exprt &expr)
 {
-  if(expr.operands().size()!=2)
+  if(expr.operands().size() != 2)
   {
     err_location(expr);
-    error() << "operator `" << expr.id()
-            << "' expects two operands" << eom;
+    error() << "operator `" << expr.id() << "' expects two operands" << eom;
     throw 0;
   }
 
   make_type_compatible(expr.op0(), floatbv_typet(), true);
   make_type_compatible(expr.op1(), floatbv_typet(), true);
 
-  expr.type()=bool_typet();
+  expr.type()= bool_typet();
 }
 
 /*******************************************************************\
@@ -834,17 +801,16 @@ Function: jsil_typecheck_baset::typecheck_expr_unary_boolean
 
 void jsil_typecheckt::typecheck_expr_unary_boolean(exprt &expr)
 {
-  if(expr.operands().size()!=1)
+  if(expr.operands().size() != 1)
   {
     err_location(expr);
-    error() << "operator `" << expr.id()
-            << "' expects one operand" << eom;
+    error() << "operator `" << expr.id() << "' expects one operand" << eom;
     throw 0;
   }
 
   make_type_compatible(expr.op0(), bool_typet(), true);
 
-  expr.type()=bool_typet();
+  expr.type()= bool_typet();
 }
 
 /*******************************************************************\
@@ -861,17 +827,16 @@ Function: jsil_typecheck_baset::typecheck_expr_unary_string
 
 void jsil_typecheckt::typecheck_expr_unary_string(exprt &expr)
 {
-  if(expr.operands().size()!=1)
+  if(expr.operands().size() != 1)
   {
     err_location(expr);
-    error() << "operator `" << expr.id()
-            << "' expects one operand" << eom;
+    error() << "operator `" << expr.id() << "' expects one operand" << eom;
     throw 0;
   }
 
   make_type_compatible(expr.op0(), string_typet(), true);
 
-  expr.type()=floatbv_typet();
+  expr.type()= floatbv_typet();
 }
 
 /*******************************************************************\
@@ -888,11 +853,10 @@ Function: jsil_typecheck_baset::typecheck_expr_unary_num
 
 void jsil_typecheckt::typecheck_expr_unary_num(exprt &expr)
 {
-  if(expr.operands().size()!=1)
+  if(expr.operands().size() != 1)
   {
     err_location(expr);
-    error() << "operator `" << expr.id()
-            << "' expects one operand" << eom;
+    error() << "operator `" << expr.id() << "' expects one operand" << eom;
     throw 0;
   }
 
@@ -913,20 +877,20 @@ Function: jsil_typecheckt::typecheck_symbol_expr
 
 void jsil_typecheckt::typecheck_symbol_expr(symbol_exprt &symbol_expr)
 {
-  irep_idt identifier=symbol_expr.get_identifier();
+  irep_idt identifier= symbol_expr.get_identifier();
 
   // if this is a built-in identifier, check if it exists in the
   // symbol table and retrieve it's type
   // TODO: add a flag for not needing to prefix internal symbols
   // that do not start with hash
-  if(has_prefix(id2string(identifier), "#") ||
-     identifier=="eval" ||
-     identifier=="nan")
+  if(
+    has_prefix(id2string(identifier), "#") || identifier == "eval" ||
+    identifier == "nan")
   {
     symbol_tablet::symbolst::const_iterator s_it=
       symbol_table.symbols.find(identifier);
 
-    if(s_it==symbol_table.symbols.end())
+    if(s_it == symbol_table.symbols.end())
     {
       error() << "unexpected internal symbol: " << identifier << eom;
       throw 0;
@@ -934,45 +898,44 @@ void jsil_typecheckt::typecheck_symbol_expr(symbol_exprt &symbol_expr)
     else
     {
       // symbol already exists
-      const symbolt &symbol=s_it->second;
+      const symbolt &symbol= s_it->second;
 
       // type the expression
-      symbol_expr.type()=symbol.type;
+      symbol_expr.type()= symbol.type;
     }
   }
   else
   {
     // if this is a variable, we need to check if we already
     // prefixed it and add to the symbol table if it is not there already
-    irep_idt identifier_base = identifier;
+    irep_idt identifier_base= identifier;
     if(!has_prefix(id2string(identifier), id2string(proc_name)))
     {
-      identifier = add_prefix(identifier);
+      identifier= add_prefix(identifier);
       symbol_expr.set_identifier(identifier);
     }
 
     symbol_tablet::symbolst::const_iterator s_it=
-    symbol_table.symbols.find(identifier);
+      symbol_table.symbols.find(identifier);
 
-    if(s_it==symbol_table.symbols.end())
+    if(s_it == symbol_table.symbols.end())
     {
       // create new symbol
       symbolt new_symbol;
-      new_symbol.name=identifier;
-      new_symbol.type=symbol_expr.type();
-      new_symbol.base_name=identifier_base;
-      new_symbol.mode="jsil";
-      new_symbol.is_type=false;
-      new_symbol.is_lvalue=new_symbol.type.id()!=ID_code;
+      new_symbol.name= identifier;
+      new_symbol.type= symbol_expr.type();
+      new_symbol.base_name= identifier_base;
+      new_symbol.mode= "jsil";
+      new_symbol.is_type= false;
+      new_symbol.is_lvalue= new_symbol.type.id() != ID_code;
 
       // mark as already typechecked
-      new_symbol.is_extern=true;
+      new_symbol.is_extern= true;
 
       if(symbol_table.add(new_symbol))
       {
-        error() << "failed to add symbol `"
-                << new_symbol.name << "' in the symbol table"
-                << eom;
+        error() << "failed to add symbol `" << new_symbol.name
+                << "' in the symbol table" << eom;
         throw 0;
       }
     }
@@ -981,10 +944,10 @@ void jsil_typecheckt::typecheck_symbol_expr(symbol_exprt &symbol_expr)
       // symbol already exists
       assert(!s_it->second.is_type);
 
-      const symbolt &symbol=s_it->second;
+      const symbolt &symbol= s_it->second;
 
       // type the expression
-      symbol_expr.type()=symbol.type;
+      symbol_expr.type()= symbol.type;
     }
   }
 }
@@ -1003,42 +966,41 @@ Function: jsil_typecheckt::typecheck_code
 
 void jsil_typecheckt::typecheck_code(codet &code)
 {
-  const irep_idt &statement=code.get_statement();
+  const irep_idt &statement= code.get_statement();
 
-  if(statement==ID_function_call)
+  if(statement == ID_function_call)
     typecheck_function_call(to_code_function_call(code));
-  else if(statement==ID_return)
+  else if(statement == ID_return)
     typecheck_return(to_code_return(code));
-  else if(statement==ID_expression)
+  else if(statement == ID_expression)
   {
-    if(code.operands().size()!=1)
+    if(code.operands().size() != 1)
     {
       err_location(code);
-      error() << "expression statement expected to have one operand"
-              << eom;
+      error() << "expression statement expected to have one operand" << eom;
       throw 0;
     }
 
     typecheck_expr(code.op0());
   }
-  else if(statement==ID_label)
+  else if(statement == ID_label)
   {
     typecheck_code(to_code_label(code).code());
     // TODO: produce defined label set
   }
-  else if(statement==ID_block)
+  else if(statement == ID_block)
     typecheck_block(code);
-  else if(statement==ID_ifthenelse)
+  else if(statement == ID_ifthenelse)
     typecheck_ifthenelse(to_code_ifthenelse(code));
-  else if(statement==ID_goto)
+  else if(statement == ID_goto)
   {
     // TODO: produce used label set
   }
-  else if(statement==ID_assign)
+  else if(statement == ID_assign)
     typecheck_assign(to_code_assign(code));
-  else if(statement==ID_try_catch)
+  else if(statement == ID_try_catch)
     typecheck_try_catch(to_code_try_catch(code));
-  else if(statement==ID_skip)
+  else if(statement == ID_skip)
   {
   }
   else
@@ -1100,7 +1062,7 @@ Function: jsil_typecheckt::typecheck_try_catch
 void jsil_typecheckt::typecheck_try_catch(code_try_catcht &code)
 {
   // A special case of try catch with one catch clause
-  if(code.operands().size()!=3)
+  if(code.operands().size() != 3)
   {
     err_location(code);
     error() << "try_catch expected to have three operands" << eom;
@@ -1127,71 +1089,71 @@ Function: jsil_typecheckt::typecheck_function_call
 
 \*******************************************************************/
 
-void jsil_typecheckt::typecheck_function_call(
-  code_function_callt &call)
+void jsil_typecheckt::typecheck_function_call(code_function_callt &call)
 {
-  if(call.operands().size()!=3)
+  if(call.operands().size() != 3)
   {
     err_location(call);
     error() << "function call expected to have three operands" << eom;
     throw 0;
   }
 
-  exprt &lhs=call.lhs();
+  exprt &lhs= call.lhs();
   typecheck_expr(lhs);
 
-  exprt &f=call.function();
+  exprt &f= call.function();
   typecheck_expr(f);
 
   for(auto &arg : call.arguments())
     typecheck_expr(arg);
 
   // Look for a function declaration symbol in the symbol table
-  if(f.id()==ID_symbol)
+  if(f.id() == ID_symbol)
   {
-    const irep_idt &id=to_symbol_expr(f).get_identifier();
+    const irep_idt &id= to_symbol_expr(f).get_identifier();
 
     if(symbol_table.has_symbol(id))
     {
-      symbolt &s=symbol_table.lookup(id);
+      symbolt &s= symbol_table.lookup(id);
 
-      if(s.type.id()==ID_code)
+      if(s.type.id() == ID_code)
       {
-        code_typet &codet=to_code_type(s.type);
+        code_typet &codet= to_code_type(s.type);
 
-        for(std::size_t i=0; i<codet.parameters().size(); i++)
+        for(std::size_t i= 0; i < codet.parameters().size(); i++)
         {
-          if(i>=call.arguments().size())
+          if(i >= call.arguments().size())
             break;
 
-          const typet &param_type=codet.parameters()[i].type();
+          const typet &param_type= codet.parameters()[i].type();
 
           if(!param_type.id().empty() && param_type.is_not_nil())
           {
-             // check argument's type if parameter's type is given
-             make_type_compatible(call.arguments()[i], param_type, true);
+            // check argument's type if parameter's type is given
+            make_type_compatible(call.arguments()[i], param_type, true);
           }
         }
 
         // if there are too few arguments, add undefined
-        if(codet.parameters().size()>call.arguments().size())
+        if(codet.parameters().size() > call.arguments().size())
         {
-          for(std::size_t i=call.arguments().size();
-              i<codet.parameters().size();
+          for(std::size_t i= call.arguments().size();
+              i < codet.parameters().size();
               ++i)
             call.arguments().push_back(
               exprt("undefined", jsil_undefined_type()));
         }
 
         // if there are too many arguments, remove
-        while(codet.parameters().size()<call.arguments().size())
+        while(codet.parameters().size() < call.arguments().size())
           call.arguments().pop_back();
 
         // check return type if exists
-        if(!codet.return_type().id().empty() &&
-            codet.return_type().is_not_nil())
+        if(
+          !codet.return_type().id().empty() && codet.return_type().is_not_nil())
           make_type_compatible(lhs, codet.return_type(), true);
-        else make_type_compatible(lhs, jsil_any_type(), true);
+        else
+          make_type_compatible(lhs, jsil_any_type(), true);
       }
       else
       {
@@ -1204,19 +1166,18 @@ void jsil_typecheckt::typecheck_function_call(
     {
       // Should be function, declaration not found yet
       symbolt new_symbol;
-      new_symbol.name=id;
-      new_symbol.type=code_typet();
-      new_symbol.mode="jsil";
-      new_symbol.is_type=false;
-      new_symbol.value=exprt("no-body-just-yet");
+      new_symbol.name= id;
+      new_symbol.type= code_typet();
+      new_symbol.mode= "jsil";
+      new_symbol.is_type= false;
+      new_symbol.value= exprt("no-body-just-yet");
 
       make_type_compatible(lhs, jsil_any_type(), true);
 
       if(symbol_table.add(new_symbol))
       {
-        error().source_location=new_symbol.location;
-        error() << "failed to add expression symbol to symbol table"
-                << eom;
+        error().source_location= new_symbol.location;
+        error() << "failed to add expression symbol to symbol table" << eom;
         throw 0;
       }
     }
@@ -1243,7 +1204,7 @@ Function: jsil_typecheckt::typecheck_ifthenelse
 
 void jsil_typecheckt::typecheck_ifthenelse(code_ifthenelset &code)
 {
-  exprt &cond=code.cond();
+  exprt &cond= code.cond();
   typecheck_expr(cond);
   make_type_compatible(cond, bool_typet(), true);
 
@@ -1294,25 +1255,25 @@ void jsil_typecheckt::typecheck_non_type_symbol(symbolt &symbol)
   // Using is_extern to check if symbol was already typechecked
   if(symbol.is_extern)
     return;
-  if(symbol.value.id()!="no-body-just-yet")
-    symbol.is_extern=true;
+  if(symbol.value.id() != "no-body-just-yet")
+    symbol.is_extern= true;
 
-  proc_name=symbol.name;
+  proc_name= symbol.name;
   typecheck_type(symbol.type);
 
-  if(symbol.value.id()==ID_code)
+  if(symbol.value.id() == ID_code)
     typecheck_code(to_code(symbol.value));
-  else if(symbol.name=="eval")
+  else if(symbol.name == "eval")
   {
     // No code for eval. Do nothing
   }
-  else if(symbol.value.id()=="no-body-just-yet")
+  else if(symbol.value.id() == "no-body-just-yet")
   {
     // Do nothing
   }
   else
   {
-    error().source_location=symbol.location;
+    error().source_location= symbol.location;
     error() << "non-type symbol value expected code, but got "
             << symbol.value.pretty() << eom;
     throw 0;
@@ -1345,7 +1306,7 @@ void jsil_typecheckt::typecheck()
   // recursively doing base classes first.
   for(const irep_idt &id : identifiers)
   {
-    symbolt &symbol=symbol_table.symbols[id];
+    symbolt &symbol= symbol_table.symbols[id];
 
     if(symbol.is_type)
       typecheck_type_symbol(symbol);
@@ -1354,7 +1315,7 @@ void jsil_typecheckt::typecheck()
   // We now check all non-type symbols
   for(const irep_idt &id : identifiers)
   {
-    symbolt &symbol=symbol_table.symbols[id];
+    symbolt &symbol= symbol_table.symbols[id];
 
     if(!symbol.is_type)
       typecheck_non_type_symbol(symbol);
@@ -1400,9 +1361,7 @@ bool jsil_typecheck(
 {
   symbol_tablet symbol_table;
 
-  jsil_typecheckt jsil_typecheck(
-    symbol_table,
-    message_handler);
+  jsil_typecheckt jsil_typecheck(symbol_table, message_handler);
 
   try
   {

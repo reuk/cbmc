@@ -26,41 +26,34 @@ Author: Daniel Kroening, kroening@kroening.com
 
 class escape_analysist;
 
-class escape_domaint:public ai_domain_baset
+class escape_domaint : public ai_domain_baset
 {
 public:
-  escape_domaint():has_values(false)
+  escape_domaint() : has_values(false)
   {
   }
 
-  void transform(
-    locationt from,
-    locationt to,
-    ai_baset &ai,
-    const namespacet &ns) final;
+  void
+  transform(locationt from, locationt to, ai_baset &ai, const namespacet &ns)
+    final;
 
-  void output(
-    std::ostream &out,
-    const ai_baset &ai,
-    const namespacet &ns) const final;
+  void output(std::ostream &out, const ai_baset &ai, const namespacet &ns)
+    const final;
 
-  bool merge(
-    const escape_domaint &b,
-    locationt from,
-    locationt to);
+  bool merge(const escape_domaint &b, locationt from, locationt to);
 
   void make_bottom() final
   {
     cleanup_map.clear();
     aliases.clear();
-    has_values=tvt(false);
+    has_values= tvt(false);
   }
 
   void make_top() final
   {
     cleanup_map.clear();
     aliases.clear();
-    has_values=tvt(true);
+    has_values= tvt(true);
   }
 
   void make_entry() final
@@ -97,12 +90,10 @@ private:
   bool is_tracked(const symbol_exprt &);
 };
 
-class escape_analysist:public ait<escape_domaint>
+class escape_analysist : public ait<escape_domaint>
 {
 public:
-  void instrument(
-    goto_functionst &,
-    const namespacet &);
+  void instrument(goto_functionst &, const namespacet &);
 
 protected:
   virtual void initialize(const goto_functionst &_goto_functions)

@@ -24,10 +24,10 @@ Function: prop_conv_storet::set_to
 
 void prop_conv_storet::set_to(const exprt &expr, bool value)
 {
-  constraintt &constraint=constraints.add_constraint();
-  constraint.type=constraintt::SET_TO;
-  constraint.expr=expr;
-  constraint.value=value;
+  constraintt &constraint= constraints.add_constraint();
+  constraint.type= constraintt::SET_TO;
+  constraint.expr= expr;
+  constraint.value= value;
 }
 
 /*******************************************************************\
@@ -44,12 +44,12 @@ Function: prop_conv_storet::convert_rest
 
 literalt prop_conv_storet::convert(const exprt &expr)
 {
-  constraintt &constraint=constraints.add_constraint();
-  constraint.type=constraintt::CONVERT;
-  constraint.expr=expr;
-  #if 0
+  constraintt &constraint= constraints.add_constraint();
+  constraint.type= constraintt::CONVERT;
+  constraint.expr= expr;
+#if 0
   constraint.literal=prop.new_variable();
-  #endif
+#endif
   return constraint.literal;
 }
 
@@ -67,9 +67,8 @@ Function: prop_conv_storet::constraintst::replay
 
 void prop_conv_storet::constraintst::replay(prop_convt &dest) const
 {
-  for(constraint_listt::const_iterator
-      it=constraint_list.begin();
-      it!=constraint_list.end();
+  for(constraint_listt::const_iterator it= constraint_list.begin();
+      it != constraint_list.end();
       it++)
     it->replay(dest);
 }
@@ -88,9 +87,8 @@ Function: prop_conv_storet::constraintst::print
 
 void prop_conv_storet::constraintst::print(std::ostream &out) const
 {
-  for(constraint_listt::const_iterator
-      it=constraint_list.begin();
-      it!=constraint_list.end();
+  for(constraint_listt::const_iterator it= constraint_list.begin();
+      it != constraint_list.end();
       it++)
     it->print(out);
 }
@@ -141,7 +139,7 @@ void prop_conv_storet::constraintt::print(std::ostream &out) const
   switch(type)
   {
   case SET_TO:
-    out << "SET_TO " << (value?"TRUE":"FALSE") << ": ";
+    out << "SET_TO " << (value ? "TRUE" : "FALSE") << ": ";
     out << expr.pretty() << "\n";
     break;
 

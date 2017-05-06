@@ -27,18 +27,16 @@ class extractbit_exprt;
 class extractbits_exprt;
 class member_exprt;
 
-class boolbvt:public arrayst
+class boolbvt : public arrayst
 {
 public:
-  boolbvt(
-    const namespacet &_ns,
-    propt &_prop):
-    arrayst(_ns, _prop),
-    unbounded_array(U_NONE),
-    boolbv_width(_ns),
-    bv_utils(_prop),
-    functions(*this),
-    map(_prop, _ns, boolbv_width)
+  boolbvt(const namespacet &_ns, propt &_prop)
+    : arrayst(_ns, _prop),
+      unbounded_array(U_NONE),
+      boolbv_width(_ns),
+      bv_utils(_prop),
+      functions(*this),
+      map(_prop, _ns, boolbv_width)
   {
   }
 
@@ -64,10 +62,8 @@ public:
   }
 
   // get literals for variables/expressions, if available
-  virtual bool literal(
-    const exprt &expr,
-    std::size_t bit,
-    literalt &literal) const;
+  virtual bool
+  literal(const exprt &expr, std::size_t bit, literalt &literal) const;
 
   using arrayst::literal;
 
@@ -106,7 +102,7 @@ protected:
 
   void conversion_failed(const exprt &expr, bvt &bv)
   {
-    bv=conversion_failed(expr);
+    bv= conversion_failed(expr);
   }
 
   bvt conversion_failed(const exprt &expr);
@@ -115,8 +111,10 @@ protected:
   bv_cachet bv_cache;
 
   bool type_conversion(
-    const typet &src_type, const bvt &src,
-    const typet &dest_type, bvt &dest);
+    const typet &src_type,
+    const bvt &src,
+    const typet &dest_type,
+    bvt &dest);
 
   virtual literalt convert_bv_rel(const exprt &expr);
   virtual literalt convert_typecast(const typecast_exprt &expr);
@@ -125,8 +123,8 @@ protected:
   virtual literalt convert_extractbit(const extractbit_exprt &expr);
   virtual literalt convert_overflow(const exprt &expr);
   virtual literalt convert_equality(const equal_exprt &expr);
-  virtual literalt convert_verilog_case_equality(
-    const binary_relation_exprt &expr);
+  virtual literalt
+  convert_verilog_case_equality(const binary_relation_exprt &expr);
   virtual literalt convert_ieee_float_rel(const exprt &expr);
   virtual literalt convert_quantifier(const exprt &expr);
 
@@ -170,8 +168,8 @@ protected:
   virtual bvt convert_bv_reduction(const unary_exprt &expr);
   virtual bvt convert_not(const not_exprt &expr);
   virtual bvt convert_power(const binary_exprt &expr);
-  virtual bvt convert_function_application(
-    const function_application_exprt &expr);
+  virtual bvt
+  convert_function_application(const function_application_exprt &expr);
 
   virtual void make_bv_expr(const typet &type, const bvt &bv, exprt &dest);
   virtual void make_free_bv_expr(const typet &type, exprt &dest);

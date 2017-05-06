@@ -11,44 +11,36 @@ Date: October 2012
 #include "ai.h"
 #include "is_threaded.h"
 
-class is_threaded_domaint:public ai_domain_baset
+class is_threaded_domaint : public ai_domain_baset
 {
 public:
   bool reachable;
   bool is_threaded;
 
-  is_threaded_domaint():
-    reachable(false),
-    is_threaded(false)
+  is_threaded_domaint() : reachable(false), is_threaded(false)
   {
     // this is bottom
   }
 
-  bool merge(
-    const is_threaded_domaint &src,
-    locationt from,
-    locationt to)
+  bool merge(const is_threaded_domaint &src, locationt from, locationt to)
   {
     // assert(src.reachable);
 
     if(!src.reachable)
       return false;
 
-    bool old_reachable=reachable;
-    bool old_is_threaded=is_threaded;
+    bool old_reachable= reachable;
+    bool old_is_threaded= is_threaded;
 
-    reachable=true;
-    is_threaded|=src.is_threaded;
+    reachable= true;
+    is_threaded|= src.is_threaded;
 
-    return old_reachable!=reachable ||
-           old_is_threaded!=is_threaded;
+    return old_reachable != reachable || old_is_threaded != is_threaded;
   }
 
-  void transform(
-    locationt from,
-    locationt to,
-    ai_baset &ai,
-    const namespacet &ns) final
+  void
+  transform(locationt from, locationt to, ai_baset &ai, const namespacet &ns)
+    final
   {
     // assert(reachable);
 
@@ -56,25 +48,25 @@ public:
       return;
 
     if(from->is_start_thread())
-      is_threaded=true;
+      is_threaded= true;
   }
 
   void make_bottom() final
   {
-    reachable=false;
-    is_threaded=false;
+    reachable= false;
+    is_threaded= false;
   }
 
   void make_top() final
   {
-    reachable=true;
-    is_threaded=true;
+    reachable= true;
+    is_threaded= true;
   }
 
   void make_entry() final
   {
-    reachable=true;
-    is_threaded=false;
+    reachable= true;
+    is_threaded= false;
   }
 };
 

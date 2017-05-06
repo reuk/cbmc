@@ -28,8 +28,8 @@ Function: qbf_qube_coret::qbf_qube_coret
 
 qbf_qube_coret::qbf_qube_coret() : qdimacs_coret()
 {
-  break_lines=false;
-  qbf_tmp_file="qube.qdimacs";
+  break_lines= false;
+  qbf_tmp_file= "qube.qdimacs";
 }
 
 /*******************************************************************\
@@ -79,66 +79,65 @@ Function: qbf_qube_coret::prop_solve
 
 propt::resultt qbf_qube_coret::prop_solve()
 {
-  if(no_clauses()==0)
+  if(no_clauses() == 0)
     return P_SATISFIABLE;
 
   {
-    messaget::status() << "QuBE: "
-      << no_variables() << " variables, "
-      << no_clauses() << " clauses" << eom;
+    messaget::status() << "QuBE: " << no_variables() << " variables, "
+                       << no_clauses() << " clauses" << eom;
   }
 
-  std::string result_tmp_file="qube.out";
+  std::string result_tmp_file= "qube.out";
 
   {
     std::ofstream out(qbf_tmp_file.c_str());
 
     // write it
-    break_lines=false;
+    break_lines= false;
     write_qdimacs_cnf(out);
   }
 
-  std::string options="";
+  std::string options= "";
 
   // solve it
-  int res=system((
-    "QuBE "+options+" "+qbf_tmp_file+" > "+result_tmp_file).c_str());
-  assert(0==res);
+  int res= system(
+    ("QuBE " + options + " " + qbf_tmp_file + " > " + result_tmp_file).c_str());
+  assert(0 == res);
 
-  bool result=false;
+  bool result= false;
 
   // read result
   {
     std::ifstream in(result_tmp_file.c_str());
 
-    bool result_found=false;
+    bool result_found= false;
     while(in)
     {
       std::string line;
 
       std::getline(in, line);
 
-      if(line!="" && line[line.size()-1]=='\r')
-        line.resize(line.size()-1);
+      if(line != "" && line[line.size() - 1] == '\r')
+        line.resize(line.size() - 1);
 
-      if(line[0]=='V')
+      if(line[0] == 'V')
       {
         mp_integer b(line.substr(2).c_str());
-        if(b<0)
-          assignment[integer2unsigned(b.negate())]=false;
+        if(b < 0)
+          assignment[integer2unsigned(b.negate())]= false;
         else
-          assignment[integer2unsigned(b)]=true;
+          assignment[integer2unsigned(b)]= true;
       }
-      else if(line=="s cnf 1")
+      else if(line == "s cnf 1")
       {
-        result=true;
-        result_found=true;
+        result= true;
+        result_found= true;
         break;
       }
-      else if(line=="s cnf 0")
+      else if(line == "s cnf 0")
       {
-        result=false;
-        result_found=true;
+        result= false;
+        result_found= true;
         break;
       }
     }

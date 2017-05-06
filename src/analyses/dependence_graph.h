@@ -24,28 +24,22 @@ class dependence_grapht;
 class dep_edget
 {
 public:
-  typedef enum
-  {
-    NONE,
-    CTRL,
-    DATA,
-    BOTH
-  } kindt;
+  typedef enum { NONE, CTRL, DATA, BOTH } kindt;
 
   void add(kindt _kind)
   {
     switch(kind)
     {
-      case NONE:
-        kind=_kind;
-        break;
-      case DATA:
-      case CTRL:
-        if(kind!=_kind)
-          kind=BOTH;
-        break;
-      case BOTH:
-        break;
+    case NONE:
+      kind= _kind;
+      break;
+    case DATA:
+    case CTRL:
+      if(kind != _kind)
+        kind= BOTH;
+      break;
+    case BOTH:
+      break;
     }
   }
 
@@ -58,7 +52,7 @@ protected:
   kindt kind;
 };
 
-struct dep_nodet:public graph_nodet<dep_edget>
+struct dep_nodet : public graph_nodet<dep_edget>
 {
   typedef graph_nodet<dep_edget>::edget edget;
   typedef graph_nodet<dep_edget>::edgest edgest;
@@ -66,14 +60,13 @@ struct dep_nodet:public graph_nodet<dep_edget>
   goto_programt::const_targett PC;
 };
 
-class dep_graph_domaint:public ai_domain_baset
+class dep_graph_domaint : public ai_domain_baset
 {
 public:
   typedef grapht<dep_nodet>::node_indext node_indext;
 
-  dep_graph_domaint():
-    has_values(false),
-    node_id(std::numeric_limits<node_indext>::max())
+  dep_graph_domaint()
+    : has_values(false), node_id(std::numeric_limits<node_indext>::max())
   {
   }
 
@@ -88,25 +81,23 @@ public:
     ai_baset &ai,
     const namespacet &ns) final;
 
-  void output(
-    std::ostream &out,
-    const ai_baset &ai,
-    const namespacet &ns) const final;
+  void output(std::ostream &out, const ai_baset &ai, const namespacet &ns)
+    const final;
 
   void make_top() final
   {
-    assert(node_id!=std::numeric_limits<node_indext>::max());
+    assert(node_id != std::numeric_limits<node_indext>::max());
 
-    has_values=tvt(true);
+    has_values= tvt(true);
     control_deps.clear();
     data_deps.clear();
   }
 
   void make_bottom() final
   {
-    assert(node_id!=std::numeric_limits<node_indext>::max());
+    assert(node_id != std::numeric_limits<node_indext>::max());
 
-    has_values=tvt(false);
+    has_values= tvt(false);
     control_deps.clear();
     data_deps.clear();
   }
@@ -118,12 +109,12 @@ public:
 
   void set_node_id(node_indext id)
   {
-    node_id=id;
+    node_id= id;
   }
 
   node_indext get_node_id() const
   {
-    assert(node_id!=std::numeric_limits<node_indext>::max());
+    assert(node_id != std::numeric_limits<node_indext>::max());
     return node_id;
   }
 
@@ -146,9 +137,8 @@ private:
     const namespacet &ns);
 };
 
-class dependence_grapht:
-  public ait<dep_graph_domaint>,
-  public grapht<dep_nodet>
+class dependence_grapht : public ait<dep_graph_domaint>,
+                          public grapht<dep_nodet>
 {
 public:
   using ait<dep_graph_domaint>::operator[];
@@ -156,9 +146,7 @@ public:
 
   typedef std::map<irep_idt, cfg_post_dominatorst> post_dominators_mapt;
 
-  explicit dependence_grapht(const namespacet &_ns):
-    ns(_ns),
-    rd(ns)
+  explicit dependence_grapht(const namespacet &_ns) : ns(_ns), rd(ns)
   {
   }
 
@@ -174,8 +162,8 @@ public:
 
     if(!goto_program.empty())
     {
-      const irep_idt id=goto_programt::get_function_id(goto_program);
-      cfg_post_dominatorst &pd=post_dominators[id];
+      const irep_idt id= goto_programt::get_function_id(goto_program);
+      cfg_post_dominatorst &pd= post_dominators[id];
       pd(goto_program);
     }
   }
@@ -202,9 +190,9 @@ public:
 
     if(entry.second)
     {
-      const node_indext node_id=add_node();
+      const node_indext node_id= add_node();
       entry.first->second.set_node_id(node_id);
-      nodes[node_id].PC=l;
+      nodes[node_id].PC= l;
     }
 
     return entry.first->second;

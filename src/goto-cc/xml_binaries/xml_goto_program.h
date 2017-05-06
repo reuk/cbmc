@@ -14,13 +14,9 @@ Date: June 2006
 #include <goto-programs/goto_program.h>
 #include <util/xml.h>
 
-void convert(
-  const goto_programt&,
-  xmlt&);
+void convert(const goto_programt &, xmlt &);
 
-void convert(
-  const xmlt&,
-  goto_programt&);
+void convert(const xmlt &, goto_programt &);
 
 goto_programt::targett find_instruction(
   const xmlt &,

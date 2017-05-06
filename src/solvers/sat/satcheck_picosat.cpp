@@ -12,8 +12,7 @@ Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
 
 #include "satcheck_picosat.h"
 
-extern "C"
-{
+extern "C" {
 #include <picosat.h>
 }
 
@@ -40,14 +39,14 @@ tvt satcheck_picosatt::l_get(literalt a) const
 
   tvt result;
 
-  if(static_cast<int>(a.var_no())>picosat_variables(picosat))
+  if(static_cast<int>(a.var_no()) > picosat_variables(picosat))
     return tvt(tvt::tv_enumt::TV_UNKNOWN);
 
-  const int val=picosat_deref(picosat, a.dimacs());
-  if(val>0)
-    result=tvt(true);
-  else if(val<0)
-    result=tvt(false);
+  const int val= picosat_deref(picosat, a.dimacs());
+  if(val > 0)
+    result= tvt(true);
+  else if(val < 0)
+    result= tvt(false);
   else
     return tvt(tvt::tv_enumt::TV_UNKNOWN);
 
@@ -114,12 +113,12 @@ Function: satcheck_picosatt::prop_solve
 
 propt::resultt satcheck_picosatt::prop_solve()
 {
-  assert(status!=ERROR);
+  assert(status != ERROR);
 
   {
-    std::string msg=
-      std::to_string(_no_variables-1)+" variables, "+
-      std::to_string(picosat_added_original_clauses(picosat))+" clauses";
+    std::string msg= std::to_string(_no_variables - 1) + " variables, " +
+                     std::to_string(picosat_added_original_clauses(picosat)) +
+                     " clauses";
     messaget::status() << msg << messaget::eom;
   }
 
@@ -128,22 +127,22 @@ propt::resultt satcheck_picosatt::prop_solve()
   forall_literals(it, assumptions)
     picosat_assume(picosat, it->dimacs());
 
-  const int res=picosat_sat(picosat, -1);
-  if(res==PICOSAT_SATISFIABLE)
+  const int res= picosat_sat(picosat, -1);
+  if(res == PICOSAT_SATISFIABLE)
   {
-    msg="SAT checker: instance is SATISFIABLE";
+    msg= "SAT checker: instance is SATISFIABLE";
     messaget::status() << msg << messaget::eom;
-    status=SAT;
+    status= SAT;
     return P_SATISFIABLE;
   }
   else
   {
-    assert(res==PICOSAT_UNSATISFIABLE);
-    msg="SAT checker: instance is UNSATISFIABLE";
+    assert(res == PICOSAT_UNSATISFIABLE);
+    msg= "SAT checker: instance is UNSATISFIABLE";
     messaget::status() << msg << messaget::eom;
   }
 
-  status=UNSAT;
+  status= UNSAT;
   return P_UNSATISFIABLE;
 }
 
@@ -178,7 +177,7 @@ Function: satcheck_picosatt::satcheck_picosatt
 
 satcheck_picosatt::satcheck_picosatt()
 {
-  picosat = picosat_init();
+  picosat= picosat_init();
 }
 
 /*******************************************************************\
@@ -214,7 +213,7 @@ bool satcheck_picosatt::is_in_conflict(literalt a) const
 {
   assert(!a.is_constant());
 
-  return picosat_failed_assumption(picosat, a.dimacs())!=0;
+  return picosat_failed_assumption(picosat, a.dimacs()) != 0;
 }
 
 /*******************************************************************\
@@ -231,7 +230,7 @@ Function: satcheck_picosatt::set_assumptions
 
 void satcheck_picosatt::set_assumptions(const bvt &bv)
 {
-  assumptions=bv;
+  assumptions= bv;
 
   forall_literals(it, assumptions)
     assert(!it->is_constant());

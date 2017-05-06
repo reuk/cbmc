@@ -23,9 +23,8 @@ Function: ansi_c_typecheckt::typecheck
 void ansi_c_typecheckt::typecheck()
 {
   start_typecheck_code();
-  for(ansi_c_parse_treet::itemst::iterator
-      it=parse_tree.items.begin();
-      it!=parse_tree.items.end();
+  for(ansi_c_parse_treet::itemst::iterator it= parse_tree.items.begin();
+      it != parse_tree.items.end();
       it++)
   {
     typecheck_declaration(*it);
@@ -76,8 +75,11 @@ bool ansi_c_typecheck(
   ansi_c_parse_treet ansi_c_parse_tree;
 
   ansi_c_typecheckt ansi_c_typecheck(
-    ansi_c_parse_tree, symbol_table,
-    ns.get_symbol_table(), "", message_handler);
+    ansi_c_parse_tree,
+    symbol_table,
+    ns.get_symbol_table(),
+    "",
+    message_handler);
 
   try
   {

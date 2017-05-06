@@ -30,7 +30,7 @@ void path_symex_stept::output(std::ostream &out) const
 {
   out << "PCs:";
 
-/*
+  /*
     for(pc_vectort::const_iterator p_it=s_it->pc_vector.begin();
         p_it!=pc_vector.end();
         p_it++)
@@ -83,7 +83,7 @@ void path_symex_step_reft::build_history(
 {
   dest.clear();
 
-  path_symex_step_reft s=*this;
+  path_symex_step_reft s= *this;
   while(!s.is_nil())
   {
     dest.push_back(s);
