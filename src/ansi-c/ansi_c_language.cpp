@@ -163,8 +163,9 @@ bool ansi_c_languaget::typecheck(
 {
   symbol_tablet new_symbol_table;
 
-  if(ansi_c_typecheck(
-       parse_tree, new_symbol_table, module, get_message_handler()))
+  if(
+    ansi_c_typecheck(
+      parse_tree, new_symbol_table, module, get_message_handler()))
   {
     return true;
   }

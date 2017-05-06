@@ -24,10 +24,11 @@ Function: jsil_any_type
 
 typet jsil_any_type()
 {
-  return jsil_union_typet({// NOLINT(whitespace/braces)
-                           jsil_empty_type(),
-                           jsil_reference_type(),
-                           jsil_value_type()});
+  return jsil_union_typet(
+    {// NOLINT(whitespace/braces)
+     jsil_empty_type(),
+     jsil_reference_type(),
+     jsil_value_type()});
 }
 
 /*******************************************************************\
@@ -44,9 +45,10 @@ Function: jsil_value_or_empty_type
 
 typet jsil_value_or_empty_type()
 {
-  return jsil_union_typet({// NOLINT(whitespace/braces)
-                           jsil_value_type(),
-                           jsil_empty_type()});
+  return jsil_union_typet(
+    {// NOLINT(whitespace/braces)
+     jsil_value_type(),
+     jsil_empty_type()});
 }
 
 /*******************************************************************\
@@ -63,9 +65,10 @@ Function: jsil_value_or_reference_type
 
 typet jsil_value_or_reference_type()
 {
-  return jsil_union_typet({// NOLINT(whitespace/braces)
-                           jsil_value_type(),
-                           jsil_reference_type()});
+  return jsil_union_typet(
+    {// NOLINT(whitespace/braces)
+     jsil_value_type(),
+     jsil_reference_type()});
 }
 
 /*******************************************************************\
@@ -82,11 +85,12 @@ Function: jsil_value_type
 
 typet jsil_value_type()
 {
-  return jsil_union_typet({// NOLINT(whitespace/braces)
-                           jsil_undefined_type(),
-                           jsil_null_type(),
-                           jsil_prim_type(),
-                           jsil_object_type()});
+  return jsil_union_typet(
+    {// NOLINT(whitespace/braces)
+     jsil_undefined_type(),
+     jsil_null_type(),
+     jsil_prim_type(),
+     jsil_object_type()});
 }
 
 /*******************************************************************\
@@ -103,10 +107,11 @@ Function: jsil_prim_type
 
 typet jsil_prim_type()
 {
-  return jsil_union_typet({// NOLINT(whitespace/braces)
-                           floatbv_typet(),
-                           string_typet(),
-                           bool_typet()});
+  return jsil_union_typet(
+    {// NOLINT(whitespace/braces)
+     floatbv_typet(),
+     string_typet(),
+     bool_typet()});
 }
 
 /*******************************************************************\
@@ -123,9 +128,10 @@ Function: jsil_reference_type
 
 typet jsil_reference_type()
 {
-  return jsil_union_typet({// NOLINT(whitespace/braces)
-                           jsil_member_reference_type(),
-                           jsil_variable_reference_type()});
+  return jsil_union_typet(
+    {// NOLINT(whitespace/braces)
+     jsil_member_reference_type(),
+     jsil_variable_reference_type()});
 }
 
 /*******************************************************************\
@@ -176,9 +182,10 @@ Function: jsil_object_type
 
 typet jsil_object_type()
 {
-  return jsil_union_typet({// NOLINT(whitespace/braces)
-                           jsil_user_object_type(),
-                           jsil_builtin_object_type()});
+  return jsil_union_typet(
+    {// NOLINT(whitespace/braces)
+     jsil_user_object_type(),
+     jsil_builtin_object_type()});
 }
 
 /*******************************************************************\

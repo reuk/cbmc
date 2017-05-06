@@ -546,8 +546,9 @@ exprt smt2_convt::parse_struct(const irept &src, const struct_typet &type)
 
       assert(offset + component_width <= total_width);
       std::string component_binary=
-        "#b" + id2string(binary).substr(
-                 total_width - offset - component_width, component_width);
+        "#b" +
+        id2string(binary).substr(
+          total_width - offset - component_width, component_width);
 
       result.operands()[i]=
         parse_rec(irept(component_binary), components[i].type());
@@ -1891,9 +1892,8 @@ void smt2_convt::convert_expr(const exprt &expr)
       out << ")))) "; // sign_extend, bvadd/sub let2
       out << "(not (= "
              "((_ extract "
-          << width << " " << width
-          << ") ?sum) "
-             "((_ extract "
+          << width << " " << width << ") ?sum) "
+                                      "((_ extract "
           << (width - 1) << " " << (width - 1) << ") ?sum)";
       out << ")))"; // =, not, let
     }
@@ -2175,9 +2175,8 @@ void smt2_convt::convert_typecast(const typecast_exprt &expr)
       out << " (ite (and ";
 
       // some faction bit is not zero
-      out << "(not (= ((_ extract " << (from_fraction_bits - 1)
-          << " 0) ?tcop) "
-             "(_ bv0 "
+      out << "(not (= ((_ extract " << (from_fraction_bits - 1) << " 0) ?tcop) "
+                                                                   "(_ bv0 "
           << from_fraction_bits << ")))";
 
       // number negative
@@ -3253,10 +3252,11 @@ void smt2_convt::convert_plus(const plus_exprt &expr)
       {
         exprt tmp(ID_plus, vector_type.subtype());
         forall_operands(it, expr)
-          tmp.copy_to_operands(index_exprt(
-            *it,
-            from_integer(size - i - 1, index_type),
-            vector_type.subtype()));
+          tmp.copy_to_operands(
+            index_exprt(
+              *it,
+              from_integer(size - i - 1, index_type),
+              vector_type.subtype()));
 
         out << " ";
         convert_expr(tmp);
@@ -3480,8 +3480,11 @@ void smt2_convt::convert_minus(const minus_exprt &expr)
     {
       exprt tmp(ID_minus, vector_type.subtype());
       forall_operands(it, expr)
-        tmp.copy_to_operands(index_exprt(
-          *it, from_integer(size - i - 1, index_type), vector_type.subtype()));
+        tmp.copy_to_operands(
+          index_exprt(
+            *it,
+            from_integer(size - i - 1, index_type),
+            vector_type.subtype()));
 
       out << " ";
       convert_expr(tmp);

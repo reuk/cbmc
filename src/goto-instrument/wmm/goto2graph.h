@@ -308,9 +308,9 @@ public:
 
   /* map from function to begin and end of the corresponding part of the
      graph */
-  typedef std::
-    map<irep_idt, std::pair<std::set<event_idt>, std::set<event_idt>>>
-      map_function_nodest;
+  typedef std::map<irep_idt,
+                   std::pair<std::set<event_idt>, std::set<event_idt>>>
+    map_function_nodest;
   map_function_nodest map_function_graph;
 
   void print_map_function_graph() const

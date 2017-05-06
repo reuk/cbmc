@@ -23,11 +23,10 @@ const T *as_const(T *t)
   return t;
 }
 
-template <
-  class keyT,
-  class valueT,
-  class predT= std::equal_to<keyT>,
-  bool no_sharing= false>
+template <class keyT,
+          class valueT,
+          class predT= std::equal_to<keyT>,
+          bool no_sharing= false>
 class sharing_nodet
 {
 public:

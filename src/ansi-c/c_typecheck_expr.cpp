@@ -168,8 +168,9 @@ bool c_typecheck_baset::gcc_types_compatible_p(
       return false;
 
     for(std::size_t i= 0; i < c_type1.parameters().size(); i++)
-      if(!gcc_types_compatible_p(
-           c_type1.parameters()[i].type(), c_type2.parameters()[i].type()))
+      if(
+        !gcc_types_compatible_p(
+          c_type1.parameters()[i].type(), c_type2.parameters()[i].type()))
         return false;
 
     return true;
@@ -2655,8 +2656,9 @@ exprt c_typecheck_baset::do_special_functions(
     equality_expr.operands()= expr.arguments();
     equality_expr.add_source_location()= source_location;
 
-    if(!base_type_eq(
-         equality_expr.lhs().type(), equality_expr.rhs().type(), *this))
+    if(
+      !base_type_eq(
+        equality_expr.lhs().type(), equality_expr.rhs().type(), *this))
     {
       err_location(f_op);
       error() << "equal expects two operands of same type" << eom;
@@ -2828,8 +2830,8 @@ exprt c_typecheck_baset::do_special_functions(
     return tmp;
   }
   else if(
-    identifier == CPROVER_PREFIX "float_debug1" || identifier == CPROVER_PREFIX
-                                                     "float_debug2")
+    identifier == CPROVER_PREFIX "float_debug1" ||
+    identifier == CPROVER_PREFIX "float_debug2")
   {
     if(expr.arguments().size() != 2)
     {
@@ -3611,8 +3613,9 @@ void c_typecheck_baset::typecheck_side_effect_assignment(
     else if(o_type0.id() == ID_vector && o_type1.id() == ID_vector)
     {
       // We are willing to do a modest amount of conversion
-      if(gcc_vector_types_compatible(
-           to_vector_type(o_type0), to_vector_type(o_type1)))
+      if(
+        gcc_vector_types_compatible(
+          to_vector_type(o_type0), to_vector_type(o_type1)))
       {
         if(o_type0 != o_type1)
           op1.make_typecast(o_type0);
@@ -3632,8 +3635,9 @@ void c_typecheck_baset::typecheck_side_effect_assignment(
     else if(o_type0.id() == ID_vector && o_type1.id() == ID_vector)
     {
       // We are willing to do a modest amount of conversion
-      if(gcc_vector_types_compatible(
-           to_vector_type(o_type0), to_vector_type(o_type1)))
+      if(
+        gcc_vector_types_compatible(
+          to_vector_type(o_type0), to_vector_type(o_type1)))
       {
         if(o_type0 != o_type1)
           op1.make_typecast(o_type0);

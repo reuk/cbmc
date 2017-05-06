@@ -263,9 +263,10 @@ bool bmc_covert::operator()()
     if(it->is_assert())
     {
       assert(it->source.pc->is_assert());
-      exprt c= conjunction({// NOLINT(whitespace/braces)
-                            literal_exprt(it->guard_literal),
-                            literal_exprt(!it->cond_literal)});
+      exprt c= conjunction(
+        {// NOLINT(whitespace/braces)
+         literal_exprt(it->guard_literal),
+         literal_exprt(!it->cond_literal)});
       literalt l_c= solver.convert(c);
       goal_map[id(it->source.pc)].add_instance(it, l_c);
     }

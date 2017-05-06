@@ -267,16 +267,14 @@ void cfg_dominators_templatet<P, T, post_dom>::output(std::ostream &out) const
   }
 }
 
-typedef cfg_dominators_templatet<
-  const goto_programt,
-  goto_programt::const_targett,
-  false>
+typedef cfg_dominators_templatet<const goto_programt,
+                                 goto_programt::const_targett,
+                                 false>
   cfg_dominatorst;
 
-typedef cfg_dominators_templatet<
-  const goto_programt,
-  goto_programt::const_targett,
-  true>
+typedef cfg_dominators_templatet<const goto_programt,
+                                 goto_programt::const_targett,
+                                 true>
   cfg_post_dominatorst;
 
 template <>

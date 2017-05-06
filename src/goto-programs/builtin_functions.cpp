@@ -1230,8 +1230,8 @@ void goto_convertt::do_function_call_symbol(
     a->source_location= function.source_location();
     a->source_location.set("user-provided", true);
   }
-  else if(has_prefix(
-            id2string(identifier), "java::java.lang.AssertionError.<init>:"))
+  else if(
+    has_prefix(id2string(identifier), "java::java.lang.AssertionError.<init>:"))
   {
     // insert function call anyway
     code_function_callt function_call;

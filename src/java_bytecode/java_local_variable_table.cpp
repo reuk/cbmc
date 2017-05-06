@@ -117,9 +117,9 @@ static bool lt_startpc(
 
 // The predecessor map, and a top-sorting comparator:
 
-typedef std::
-  map<local_variable_with_holest *, std::set<local_variable_with_holest *>>
-    predecessor_mapt;
+typedef std::map<local_variable_with_holest *,
+                 std::set<local_variable_with_holest *>>
+  predecessor_mapt;
 
 struct is_predecessor_oft
 {
@@ -356,8 +356,9 @@ static void populate_predecessor_map(
                           << " -> " << amapit->first << messaget::eom;
             continue;
           }
-          if(!is_store_to_slot(
-               *(inst_before_this->second.source), it->var.index))
+          if(
+            !is_store_to_slot(
+              *(inst_before_this->second.source), it->var.index))
           {
             throw "local variable table: didn't find initialising store";
           }

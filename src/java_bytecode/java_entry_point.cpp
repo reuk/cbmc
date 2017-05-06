@@ -232,8 +232,9 @@ exprt::operandst java_build_arguments(
     // record as an input
     codet input(ID_input);
     input.operands().resize(2);
-    input.op0()= address_of_exprt(index_exprt(
-      string_constantt(p_symbol.base_name), from_integer(0, index_type())));
+    input.op0()= address_of_exprt(
+      index_exprt(
+        string_constantt(p_symbol.base_name), from_integer(0, index_type())));
     input.op1()= main_arguments[param_number];
     input.add_source_location()= function.location;
 
@@ -278,9 +279,10 @@ void java_record_outputs(
 
     const symbolt &return_symbol= symbol_table.lookup("return'");
 
-    output.op0()= address_of_exprt(index_exprt(
-      string_constantt(return_symbol.base_name),
-      from_integer(0, index_type())));
+    output.op0()= address_of_exprt(
+      index_exprt(
+        string_constantt(return_symbol.base_name),
+        from_integer(0, index_type())));
     output.op1()= return_symbol.symbol_expr();
     output.add_source_location()= function.location;
 
@@ -298,8 +300,9 @@ void java_record_outputs(
       // record as an output
       codet output(ID_output);
       output.operands().resize(2);
-      output.op0()= address_of_exprt(index_exprt(
-        string_constantt(p_symbol.base_name), from_integer(0, index_type())));
+      output.op0()= address_of_exprt(
+        index_exprt(
+          string_constantt(p_symbol.base_name), from_integer(0, index_type())));
       output.op1()= main_arguments[param_number];
       output.add_source_location()= function.location;
 
@@ -317,8 +320,9 @@ void java_record_outputs(
   const symbolt exc_symbol=
     symbol_table.lookup(id2string(function.name) + EXC_SUFFIX);
 
-  output.op0()= address_of_exprt(index_exprt(
-    string_constantt(exc_symbol.base_name), from_integer(0, index_type())));
+  output.op0()= address_of_exprt(
+    index_exprt(
+      string_constantt(exc_symbol.base_name), from_integer(0, index_type())));
   output.op1()= exc_symbol.symbol_expr();
   output.add_source_location()= function.location;
 
@@ -539,12 +543,13 @@ bool java_entry_point(
 
   create_initialize(symbol_table);
 
-  if(java_static_lifetime_init(
-       symbol_table,
-       symbol.location,
-       message_handler,
-       assume_init_pointers_not_null,
-       max_nondet_array_length))
+  if(
+    java_static_lifetime_init(
+      symbol_table,
+      symbol.location,
+      message_handler,
+      assume_init_pointers_not_null,
+      max_nondet_array_length))
     return true;
 
   code_blockt init_code;

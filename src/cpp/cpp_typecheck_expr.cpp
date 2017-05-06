@@ -2273,8 +2273,8 @@ void cpp_typecheckt::typecheck_side_effect_function_call(
 
       // look for the right entry
       irep_idt vtentry_component_name=
-        vt_compo.type().subtype().get_string(ID_identifier) +
-        "::" + expr.function().type().get_string("#virtual_name");
+        vt_compo.type().subtype().get_string(ID_identifier) + "::" +
+        expr.function().type().get_string("#virtual_name");
 
       exprt vtentry_member(ID_ptrmember);
       vtentry_member.copy_to_operands(vtptr_member);
@@ -2619,10 +2619,11 @@ void cpp_typecheckt::typecheck_method_application(
     if(expr.arguments().size() == func_type.parameters().size())
     {
       // this might be set up for base-class initialisation
-      if(!base_type_eq(
-           expr.arguments().front().type(),
-           func_type.parameters().front().type(),
-           *this))
+      if(
+        !base_type_eq(
+          expr.arguments().front().type(),
+          func_type.parameters().front().type(),
+          *this))
       {
         implicit_typecast(expr.arguments().front(), this_type);
         assert(is_reference(expr.arguments().front().type()));

@@ -147,8 +147,9 @@ bool base_type_eqt::base_type_eq_rec(const typet &type1, const typet &type2)
     type2.id() == type1.id())
   {
     // already in same set?
-    if(identifiers.make_union(
-         type1.get(ID_identifier), type2.get(ID_identifier)))
+    if(
+      identifiers.make_union(
+        type1.get(ID_identifier), type2.get(ID_identifier)))
       return true;
   }
 
@@ -244,8 +245,9 @@ bool base_type_eqt::base_type_eq_rec(const typet &type1, const typet &type2)
   }
   else if(type1.id() == ID_array)
   {
-    if(!base_type_eq_rec(
-         to_array_type(type1).subtype(), to_array_type(type2).subtype()))
+    if(
+      !base_type_eq_rec(
+        to_array_type(type1).subtype(), to_array_type(type2).subtype()))
       return false;
 
     if(to_array_type(type1).size() != to_array_type(type2).size())

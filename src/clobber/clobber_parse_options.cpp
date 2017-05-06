@@ -271,11 +271,9 @@ bool clobber_parse_optionst::get_goto_program(
     {
       status() << "Reading GOTO program from file" << eom;
 
-      if(read_goto_binary(
-           cmdline.args[0],
-           symbol_table,
-           goto_functions,
-           get_message_handler()))
+      if(
+        read_goto_binary(
+          cmdline.args[0], symbol_table, goto_functions, get_message_handler()))
         return true;
 
       config.set_from_symbol_table(symbol_table);

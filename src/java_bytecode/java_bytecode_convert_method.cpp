@@ -781,9 +781,10 @@ static void gather_symbol_live_ranges(
   if(e.id() == ID_symbol)
   {
     const auto &symexpr= to_symbol_expr(e);
-    auto findit= result.insert({// NOLINT(whitespace/braces)
-                                symexpr.get_identifier(),
-                                java_bytecode_convert_methodt::variablet()});
+    auto findit= result.insert(
+      {// NOLINT(whitespace/braces)
+       symexpr.get_identifier(),
+       java_bytecode_convert_methodt::variablet()});
     auto &var= findit.first->second;
     if(findit.second)
     {
@@ -1484,13 +1485,13 @@ codet java_bytecode_convert_methodt::convert_instructions(
           ? ID_equal
           : statement == "ifne"
               ? ID_notequal
-              : statement == "iflt"
-                  ? ID_lt
-                  : statement == "ifge"
-                      ? ID_ge
-                      : statement == "ifgt"
-                          ? ID_gt
-                          : statement == "ifle" ? ID_le : (assert(false), "");
+              : statement == "iflt" ? ID_lt : statement == "ifge"
+                                                ? ID_ge
+                                                : statement == "ifgt"
+                                                    ? ID_gt
+                                                    : statement == "ifle"
+                                                        ? ID_le
+                                                        : (assert(false), "");
 
       irep_idt number= to_constant_expr(arg0).get_value();
       assert(op.size() == 1 && results.empty());

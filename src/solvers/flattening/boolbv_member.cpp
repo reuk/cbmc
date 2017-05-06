@@ -33,11 +33,12 @@ bvt boolbvt::convert_member(const member_exprt &expr)
 
   if(struct_op_type.id() == ID_union)
   {
-    return convert_bv(byte_extract_exprt(
-      byte_extract_id(),
-      struct_op,
-      from_integer(0, integer_typet()),
-      expr.type()));
+    return convert_bv(
+      byte_extract_exprt(
+        byte_extract_id(),
+        struct_op,
+        from_integer(0, integer_typet()),
+        expr.type()));
   }
   else if(struct_op_type.id() == ID_struct)
   {

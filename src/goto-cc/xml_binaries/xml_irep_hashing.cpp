@@ -322,9 +322,10 @@ unsigned long xml_irep_convertt::insert(unsigned long id, const irept &i)
     ireps_container.content_container.insert(
       std::pair<irept, unsigned long>(i, id));
 
-    if(ireps_container.id_container
-         .insert(std::pair<unsigned long, irept>(id, i))
-         .second)
+    if(
+      ireps_container.id_container
+        .insert(std::pair<unsigned long, irept>(id, i))
+        .second)
     {
       ireps_container.id_replace_map[id]= ireps_container.id_container.size();
     }

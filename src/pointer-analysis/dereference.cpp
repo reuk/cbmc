@@ -373,8 +373,9 @@ bool dereferencet::type_compatible(
 
   if(object_type.id() == ID_struct && dereference_type.id() == ID_struct)
   {
-    if(to_struct_type(dereference_type)
-         .is_prefix_of(to_struct_type(object_type)))
+    if(
+      to_struct_type(dereference_type)
+        .is_prefix_of(to_struct_type(object_type)))
       return true; // ok, dreference_type is a prefix of object_type
   }
 

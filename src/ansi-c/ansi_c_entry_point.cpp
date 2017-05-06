@@ -90,9 +90,10 @@ void record_function_outputs(
 
     const symbolt &return_symbol= symbol_table.lookup("return'");
 
-    output.op0()= address_of_exprt(index_exprt(
-      string_constantt(return_symbol.base_name),
-      from_integer(0, index_type())));
+    output.op0()= address_of_exprt(
+      index_exprt(
+        string_constantt(return_symbol.base_name),
+        from_integer(0, index_type())));
 
     output.op1()= return_symbol.symbol_expr();
     output.add_source_location()= function.location;

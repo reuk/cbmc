@@ -813,8 +813,9 @@ bool rd_range_domaint::merge_shared(
   {
     const irep_idt &identifier= value.first;
 
-    if(!ns.lookup(identifier).is_shared()
-       /*&& !rd.get_is_dirty()(identifier)*/)
+    if(
+      !ns.lookup(identifier).is_shared()
+      /*&& !rd.get_is_dirty()(identifier)*/)
       continue;
 
     while(it != values.end() && it->first < value.first)

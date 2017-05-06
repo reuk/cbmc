@@ -36,10 +36,9 @@ void java_class_loader_limitt::setup_class_load_limit(
   {
     assert(java_cp_include_files.length() > 1);
     jsont json_cp_config;
-    if(parse_json(
-         java_cp_include_files.substr(1),
-         get_message_handler(),
-         json_cp_config))
+    if(
+      parse_json(
+        java_cp_include_files.substr(1), get_message_handler(), json_cp_config))
       throw "cannot read JSON input configuration for JAR loading";
     if(!json_cp_config.is_object())
       throw "the JSON file has a wrong format";

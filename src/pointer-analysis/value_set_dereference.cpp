@@ -421,11 +421,12 @@ value_set_dereferencet::valuet value_set_dereferencet::build_reference_to(
 
           guardt tmp_guard(guard);
           tmp_guard.add(is_malloc_object);
-          tmp_guard.add(dynamic_object_upper_bound(
-            pointer_expr,
-            dereference_type,
-            ns,
-            size_of_expr(dereference_type, ns)));
+          tmp_guard.add(
+            dynamic_object_upper_bound(
+              pointer_expr,
+              dereference_type,
+              ns,
+              size_of_expr(dereference_type, ns)));
           dereference_callback.dereference_failure(
             "pointer dereference", "dynamic object upper bound", tmp_guard);
         }
@@ -449,8 +450,9 @@ value_set_dereferencet::valuet value_set_dereferencet::build_reference_to(
     exprt pointer_offset=
       unary_exprt(ID_pointer_offset, pointer_expr, index_type());
 
-    if(base_type_eq(
-         ns.follow(memory_symbol.type).subtype(), dereference_type, ns))
+    if(
+      base_type_eq(
+        ns.follow(memory_symbol.type).subtype(), dereference_type, ns))
     {
       // Types match already, what a coincidence!
       // We can use an index expression.
@@ -565,8 +567,9 @@ value_set_dereferencet::valuet value_set_dereferencet::build_reference_to(
       if(ns.follow(result.value.type()) != ns.follow(dereference_type))
         result.value.make_typecast(dereference_type);
     }
-    else if(get_subexpression_at_offset(
-              root_object_subexpression, o.offset(), dereference_type, ns))
+    else if(
+      get_subexpression_at_offset(
+        root_object_subexpression, o.offset(), dereference_type, ns))
     {
       // Successfully found a member, array index, or combination thereof
       // that matches the desired type and offset:

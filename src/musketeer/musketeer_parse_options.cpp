@@ -115,11 +115,9 @@ int goto_fence_inserter_parse_optionst::doit()
     {
       status() << "Writing GOTO program to " << cmdline.args[1] << eom;
 
-      if(write_goto_binary(
-           cmdline.args[1],
-           symbol_table,
-           goto_functions,
-           get_message_handler()))
+      if(
+        write_goto_binary(
+          cmdline.args[1], symbol_table, goto_functions, get_message_handler()))
         return 1;
       else
         return 0;
@@ -170,8 +168,9 @@ void goto_fence_inserter_parse_optionst::get_goto_program(
 {
   status() << "Reading GOTO program from " << cmdline.args[0] << eom;
 
-  if(read_goto_binary(
-       cmdline.args[0], symbol_table, goto_functions, get_message_handler()))
+  if(
+    read_goto_binary(
+      cmdline.args[0], symbol_table, goto_functions, get_message_handler()))
     throw 0;
 
   config.set_from_symbol_table(symbol_table);

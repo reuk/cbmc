@@ -255,8 +255,9 @@ void goto_program_coverage_recordt::compute_coverage_lines(
     if(is_branch)
     {
       branches_total+= 2;
-      if(!entry.first->second.conditions.insert({it, coverage_conditiont()})
-            .second)
+      if(
+        !entry.first->second.conditions.insert({it, coverage_conditiont()})
+           .second)
         assert(false);
     }
 

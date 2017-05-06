@@ -240,8 +240,9 @@ exprt good_pointer_def(const exprt &pointer, const namespacet &ns)
     not_exprt(malloc_object(pointer, ns)),
     and_exprt(
       not_exprt(dynamic_object_lower_bound(pointer, ns, nil_exprt())),
-      not_exprt(dynamic_object_upper_bound(
-        pointer, dereference_type, ns, size_of_expr(dereference_type, ns)))));
+      not_exprt(
+        dynamic_object_upper_bound(
+          pointer, dereference_type, ns, size_of_expr(dereference_type, ns)))));
 
   exprt good_dynamic_tmp2=
     and_exprt(not_exprt(deallocated(pointer, ns)), good_dynamic_tmp1);

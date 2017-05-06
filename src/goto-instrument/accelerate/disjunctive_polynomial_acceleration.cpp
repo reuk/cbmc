@@ -453,12 +453,14 @@ bool disjunctive_polynomial_accelerationt::fit_polynomial(
     // I'm just constraining these coefficients to prevent overflows
     // messing things up later...  Should really do this properly
     // somehow.
-    program.assume(binary_relation_exprt(
-      from_integer(-(1 << 10), signed_poly_type()),
-      ID_lt,
-      coeff.symbol_expr()));
-    program.assume(binary_relation_exprt(
-      coeff.symbol_expr(), ID_lt, from_integer(1 << 10, signed_poly_type())));
+    program.assume(
+      binary_relation_exprt(
+        from_integer(-(1 << 10), signed_poly_type()),
+        ID_lt,
+        coeff.symbol_expr()));
+    program.assume(
+      binary_relation_exprt(
+        coeff.symbol_expr(), ID_lt, from_integer(1 << 10, signed_poly_type())));
   }
 
   // Build a set of values for all the parameters that allow us to fit a

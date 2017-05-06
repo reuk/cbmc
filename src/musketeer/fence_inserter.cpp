@@ -760,8 +760,8 @@ void inline fence_insertert::mip_fill_matrix(
       }
     }
   }
-  instrumenter.message.debug()
-    << "3: " << i << " row: " << row << messaget::eom;
+  instrumenter.message.debug() << "3: " << i << " row: " << row
+                               << messaget::eom;
 #else
   throw "sorry, musketeer requires glpk; please recompile musketeer with glpk";
 #endif
@@ -805,8 +805,8 @@ void fence_insertert::solve()
   const std::size_t mat_size=
     // NOLINTNEXTLINE(whitespace/operators)
     const_unique * fence_options * const_constraints_number;
-  instrumenter.message.statistics()
-    << "size of the system: " << mat_size << messaget::eom;
+  instrumenter.message.statistics() << "size of the system: " << mat_size
+                                    << messaget::eom;
   instrumenter.message.statistics()
     << "# of constraints: " << const_constraints_number << messaget::eom;
   instrumenter.message.statistics()
@@ -822,15 +822,15 @@ void fence_insertert::solve()
   /* tables read from 1 in glpk -- first row/column ignored */
   mip_fill_matrix(ilp, i, const_constraints_number, const_unique);
 
-  instrumenter.message.statistics()
-    << "i: " << i << " mat_size: " << mat_size << messaget::eom;
+  instrumenter.message.statistics() << "i: " << i << " mat_size: " << mat_size
+                                    << messaget::eom;
 // assert(i-1==mat_size);
 
 #ifdef DEBUG
   for(i= 1; i <= mat_size; ++i)
-    instrumenter.message.debug()
-      << i << "[" << ilp.imat[i] << "," << ilp.jmat[i] << "]=" << ilp.vmat[i]
-      << messaget::eom;
+    instrumenter.message.debug() << i << "[" << ilp.imat[i] << ","
+                                 << ilp.jmat[i] << "]=" << ilp.vmat[i]
+                                 << messaget::eom;
 #endif
 
   /* solves MIP by branch-and-cut */
@@ -850,14 +850,14 @@ void fence_insertert::solve()
     instrumenter.message.result() << "Solution undefined" << messaget::eom;
     assert(0);
   case GLP_FEAS:
-    instrumenter.message.result()
-      << "Solution feasible, "
-      << "yet not proven optimal, "
-      << "due to early termination" << messaget::eom;
+    instrumenter.message.result() << "Solution feasible, "
+                                  << "yet not proven optimal, "
+                                  << "due to early termination"
+                                  << messaget::eom;
     break;
   case GLP_NOFEAS:
-    instrumenter.message.result()
-      << "No feasible solution, the system is UNSAT" << messaget::eom;
+    instrumenter.message.result() << "No feasible solution, the system is UNSAT"
+                                  << messaget::eom;
     assert(0);
   }
 
@@ -873,9 +873,9 @@ void fence_insertert::solve()
       /* insert that fence */
       assert(map_to_e.find(col_to_var(j)) != map_to_e.end());
       const edget &delay= map_to_e.find(col_to_var(j))->second;
-      instrumenter.message.statistics()
-        << delay.first << " -> " << delay.second << " : "
-        << to_string(col_to_fence(j)) << messaget::eom;
+      instrumenter.message.statistics() << delay.first << " -> " << delay.second
+                                        << " : " << to_string(col_to_fence(j))
+                                        << messaget::eom;
       instrumenter.message.statistics()
         << "(between " << egraph[delay.first].source_location << " and "
         << egraph[delay.second].source_location << messaget::eom;
@@ -1245,23 +1245,23 @@ Function: fence_insertert::print_vars
 
 void fence_insertert::print_vars() const
 {
-  instrumenter.message.statistics()
-    << "---- pos/pos+ (visible) variables ----" << messaget::eom;
+  instrumenter.message.statistics() << "---- pos/pos+ (visible) variables ----"
+                                    << messaget::eom;
   for(std::map<edget, unsigned>::const_iterator it= map_from_e.begin();
       it != map_from_e.end();
       ++it)
-    instrumenter.message.statistics()
-      << it->first.first << "," << it->first.second << messaget::eom;
-  instrumenter.message.statistics()
-    << "---- cmp (invisible) variables ----" << messaget::eom;
+    instrumenter.message.statistics() << it->first.first << ","
+                                      << it->first.second << messaget::eom;
+  instrumenter.message.statistics() << "---- cmp (invisible) variables ----"
+                                    << messaget::eom;
   for(std::map<edget, unsigned>::const_iterator it=
         invisible_var.map_from_e.begin();
       it != invisible_var.map_from_e.end();
       ++it)
-    instrumenter.message.statistics()
-      << it->first.first << "," << it->first.second << messaget::eom;
-  instrumenter.message.statistics()
-    << "-----------------------------------" << messaget::eom;
+    instrumenter.message.statistics() << it->first.first << ","
+                                      << it->first.second << messaget::eom;
+  instrumenter.message.statistics() << "-----------------------------------"
+                                    << messaget::eom;
 }
 
 /*******************************************************************\

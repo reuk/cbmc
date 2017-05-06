@@ -365,10 +365,11 @@ exprt cpp_typecheck_resolvet::convert_identifier(
 
       if(object_type.id() == ID_struct || object_type.id() == ID_union)
       {
-        if(!has_component_rec(
-             to_struct_union_type(object_type),
-             identifier.identifier,
-             cpp_typecheck))
+        if(
+          !has_component_rec(
+            to_struct_union_type(object_type),
+            identifier.identifier,
+            cpp_typecheck))
           object.make_nil(); // failed!
       }
       else
@@ -812,9 +813,9 @@ exprt cpp_typecheck_resolvet::do_builtin(
     if(arguments.size() != 1)
     {
       cpp_typecheck.error().source_location= source_location;
-      cpp_typecheck.error()
-        << base_name << " expects one template argument, but got "
-        << arguments.size() << messaget::eom;
+      cpp_typecheck.error() << base_name
+                            << " expects one template argument, but got "
+                            << arguments.size() << messaget::eom;
       throw 0;
     }
 
@@ -823,9 +824,9 @@ exprt cpp_typecheck_resolvet::do_builtin(
     if(argument.id() == ID_type)
     {
       cpp_typecheck.error().source_location= source_location;
-      cpp_typecheck.error()
-        << base_name << " expects one integer template argument, "
-        << "but got type" << messaget::eom;
+      cpp_typecheck.error() << base_name
+                            << " expects one integer template argument, "
+                            << "but got type" << messaget::eom;
       throw 0;
     }
 
@@ -833,16 +834,16 @@ exprt cpp_typecheck_resolvet::do_builtin(
     if(to_integer(argument, i))
     {
       cpp_typecheck.error().source_location= source_location;
-      cpp_typecheck.error()
-        << "template argument must be constant" << messaget::eom;
+      cpp_typecheck.error() << "template argument must be constant"
+                            << messaget::eom;
       throw 0;
     }
 
     if(i < 1)
     {
       cpp_typecheck.error().source_location= source_location;
-      cpp_typecheck.error()
-        << "template argument must be greater than zero" << messaget::eom;
+      cpp_typecheck.error() << "template argument must be greater than zero"
+                            << messaget::eom;
       throw 0;
     }
 
@@ -854,9 +855,9 @@ exprt cpp_typecheck_resolvet::do_builtin(
     if(arguments.size() != 2)
     {
       cpp_typecheck.error().source_location= source_location;
-      cpp_typecheck.error()
-        << base_name << " expects two template arguments, but got "
-        << arguments.size() << messaget::eom;
+      cpp_typecheck.error() << base_name
+                            << " expects two template arguments, but got "
+                            << arguments.size() << messaget::eom;
       throw 0;
     }
 
@@ -866,18 +867,18 @@ exprt cpp_typecheck_resolvet::do_builtin(
     if(argument0.id() == ID_type)
     {
       cpp_typecheck.error().source_location= argument0.find_source_location();
-      cpp_typecheck.error()
-        << base_name << " expects two integer template arguments, "
-        << "but got type" << messaget::eom;
+      cpp_typecheck.error() << base_name
+                            << " expects two integer template arguments, "
+                            << "but got type" << messaget::eom;
       throw 0;
     }
 
     if(argument1.id() == ID_type)
     {
       cpp_typecheck.error().source_location= argument1.find_source_location();
-      cpp_typecheck.error()
-        << base_name << " expects two integer template arguments, "
-        << "but got type" << messaget::eom;
+      cpp_typecheck.error() << base_name
+                            << " expects two integer template arguments, "
+                            << "but got type" << messaget::eom;
       throw 0;
     }
 
@@ -886,32 +887,32 @@ exprt cpp_typecheck_resolvet::do_builtin(
     if(to_integer(argument0, width))
     {
       cpp_typecheck.error().source_location= argument0.find_source_location();
-      cpp_typecheck.error()
-        << "template argument must be constant" << messaget::eom;
+      cpp_typecheck.error() << "template argument must be constant"
+                            << messaget::eom;
       throw 0;
     }
 
     if(to_integer(argument1, integer_bits))
     {
       cpp_typecheck.error().source_location= argument1.find_source_location();
-      cpp_typecheck.error()
-        << "template argument must be constant" << messaget::eom;
+      cpp_typecheck.error() << "template argument must be constant"
+                            << messaget::eom;
       throw 0;
     }
 
     if(width < 1)
     {
       cpp_typecheck.error().source_location= argument0.find_source_location();
-      cpp_typecheck.error()
-        << "template argument must be greater than zero" << messaget::eom;
+      cpp_typecheck.error() << "template argument must be greater than zero"
+                            << messaget::eom;
       throw 0;
     }
 
     if(integer_bits < 0)
     {
       cpp_typecheck.error().source_location= argument1.find_source_location();
-      cpp_typecheck.error()
-        << "template argument must be greater or equal zero" << messaget::eom;
+      cpp_typecheck.error() << "template argument must be greater or equal zero"
+                            << messaget::eom;
       throw 0;
     }
 
@@ -932,8 +933,8 @@ exprt cpp_typecheck_resolvet::do_builtin(
     if(!arguments.empty())
     {
       cpp_typecheck.error().source_location= source_location;
-      cpp_typecheck.error()
-        << base_name << " expects no template arguments" << messaget::eom;
+      cpp_typecheck.error() << base_name << " expects no template arguments"
+                            << messaget::eom;
       throw 0;
     }
 
@@ -947,8 +948,8 @@ exprt cpp_typecheck_resolvet::do_builtin(
   else if(base_name == "dump_scopes")
   {
     dest= exprt(ID_constant, typet(ID_empty));
-    cpp_typecheck.warning()
-      << "Scopes in location " << source_location << messaget::eom;
+    cpp_typecheck.warning() << "Scopes in location " << source_location
+                            << messaget::eom;
     cpp_typecheck.cpp_scopes.get_root_scope().print(cpp_typecheck.warning());
   }
   else if(base_name == "current_scope")
@@ -1066,8 +1067,8 @@ cpp_scopet &cpp_typecheck_resolvet::resolve_scope(
         {
           cpp_typecheck.show_instantiation_stack(cpp_typecheck.error());
           cpp_typecheck.error().source_location= source_location;
-          cpp_typecheck.error()
-            << "scope `" << final_base_name << "' not found" << messaget::eom;
+          cpp_typecheck.error() << "scope `" << final_base_name << "' not found"
+                                << messaget::eom;
           throw 0;
         }
         else if(id_set.size() >= 2)
@@ -1209,10 +1210,11 @@ symbol_typet cpp_typecheck_resolvet::disambiguate_template_classes(
   std::vector<matcht> matches;
 
   // the baseline
-  matches.push_back(matcht(
-    full_template_args_tc,
-    full_template_args_tc,
-    primary_template_symbol.name));
+  matches.push_back(
+    matcht(
+      full_template_args_tc,
+      full_template_args_tc,
+      primary_template_symbol.name));
 
   for(cpp_scopest::id_sett::const_iterator it= id_set.begin();
       it != id_set.end();
@@ -1251,9 +1253,9 @@ symbol_typet cpp_typecheck_resolvet::disambiguate_template_classes(
     if(template_scope == NULL)
     {
       cpp_typecheck.error().source_location= source_location;
-      cpp_typecheck.error()
-        << "template identifier: " << id << '\n'
-        << "class template instantiation error" << messaget::eom;
+      cpp_typecheck.error() << "template identifier: " << id << '\n'
+                            << "class template instantiation error"
+                            << messaget::eom;
       throw 0;
     }
 
@@ -1606,9 +1608,9 @@ exprt cpp_typecheck_resolvet::resolve(
       if(cpp_typecheck.cpp_scopes.current_scope().is_root_scope())
         cpp_typecheck.error() << " in root scope";
       else
-        cpp_typecheck.error()
-          << " in scope `" << cpp_typecheck.cpp_scopes.current_scope().prefix
-          << "'";
+        cpp_typecheck.error() << " in scope `"
+                              << cpp_typecheck.cpp_scopes.current_scope().prefix
+                              << "'";
     }
     else
     {
@@ -1750,15 +1752,15 @@ exprt cpp_typecheck_resolvet::resolve(
     if(new_identifiers.empty())
     {
       cpp_typecheck.error().source_location= source_location;
-      cpp_typecheck.error()
-        << "found no match for symbol `" << base_name << "', candidates are:\n";
+      cpp_typecheck.error() << "found no match for symbol `" << base_name
+                            << "', candidates are:\n";
       show_identifiers(base_name, identifiers, cpp_typecheck.error());
     }
     else
     {
       cpp_typecheck.error().source_location= source_location;
-      cpp_typecheck.error()
-        << "symbol `" << base_name << "' does not uniquely resolve:\n";
+      cpp_typecheck.error() << "symbol `" << base_name
+                            << "' does not uniquely resolve:\n";
       show_identifiers(base_name, new_identifiers, cpp_typecheck.error());
 
 #if 0
@@ -1785,8 +1787,8 @@ exprt cpp_typecheck_resolvet::resolve(
           it != fargs.operands.end();
           it++)
       {
-        cpp_typecheck.error()
-          << "  " << cpp_typecheck.to_string(it->type()) << '\n';
+        cpp_typecheck.error() << "  " << cpp_typecheck.to_string(it->type())
+                              << '\n';
       }
     }
 
@@ -1824,9 +1826,9 @@ exprt cpp_typecheck_resolvet::resolve(
 
       cpp_typecheck.error().source_location= source_location;
 
-      cpp_typecheck.error()
-        << "error: expected expression, but got type `"
-        << cpp_typecheck.to_string(result.type()) << "'" << messaget::eom;
+      cpp_typecheck.error() << "error: expected expression, but got type `"
+                            << cpp_typecheck.to_string(result.type()) << "'"
+                            << messaget::eom;
 
       throw 0;
     }
@@ -1840,9 +1842,9 @@ exprt cpp_typecheck_resolvet::resolve(
 
       cpp_typecheck.error().source_location= source_location;
 
-      cpp_typecheck.error()
-        << "error: expected type, but got expression `"
-        << cpp_typecheck.to_string(result) << "'" << messaget::eom;
+      cpp_typecheck.error() << "error: expected type, but got expression `"
+                            << cpp_typecheck.to_string(result) << "'"
+                            << messaget::eom;
 
       throw 0;
     }

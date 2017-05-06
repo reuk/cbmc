@@ -93,9 +93,8 @@ exprt c_typecheck_baset::do_initializer_rec(
 
   if(
     value.id() == ID_array && value.get_bool(ID_C_string_constant) &&
-    full_type.id() == ID_array &&
-    (full_type.subtype().id() == ID_signedbv ||
-     full_type.subtype().id() == ID_unsignedbv) &&
+    full_type.id() == ID_array && (full_type.subtype().id() == ID_signedbv ||
+                                   full_type.subtype().id() == ID_unsignedbv) &&
     full_type.subtype().get(ID_width) == value.type().subtype().get(ID_width))
   {
     exprt tmp= value;

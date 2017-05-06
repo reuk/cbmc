@@ -379,8 +379,9 @@ bool compilet::link()
     std::string file_name= object_files.front();
     object_files.pop_front();
 
-    if(read_object_and_link(
-         file_name, symbol_table, compiled_functions, get_message_handler()))
+    if(
+      read_object_and_link(
+        file_name, symbol_table, compiled_functions, get_message_handler()))
       return true;
   }
 
@@ -403,8 +404,8 @@ bool compilet::link()
     convert_symbols(compiled_functions);
   }
 
-  if(write_object_file(
-       output_file_executable, symbol_table, compiled_functions))
+  if(
+    write_object_file(output_file_executable, symbol_table, compiled_functions))
     return true;
 
   return false;
@@ -716,8 +717,8 @@ bool compilet::parse_source(const std::string &file_name)
     return true;
 
   if(
-    (has_suffix(file_name, ".class") || has_suffix(file_name, ".jar")) &&
-    final())
+    (has_suffix(file_name, ".class") ||
+     has_suffix(file_name, ".jar")) && final())
     return true;
 
   // so we remove it from the list afterwards

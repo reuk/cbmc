@@ -127,9 +127,10 @@ static void add_to_json(
   assert(end_function->is_end_function());
 
   entry["function"]= json_stringt(id2string(end_function->function));
-  entry["fileName"]= json_stringt(concat_dir_file(
-    id2string(end_function->source_location.get_working_directory()),
-    id2string(end_function->source_location.get_file())));
+  entry["fileName"]= json_stringt(
+    concat_dir_file(
+      id2string(end_function->source_location.get_working_directory()),
+      id2string(end_function->source_location.get_file())));
 
   json_arrayt &dead_ins= entry["unreachableInstructions"].make_array();
 
@@ -232,9 +233,10 @@ static void json_output_function(
   json_objectt &entry= dest.push_back().make_object();
 
   entry["function"]= json_stringt(id2string(function));
-  entry["file name"]= json_stringt(concat_dir_file(
-    id2string(first_location.get_working_directory()),
-    id2string(first_location.get_file())));
+  entry["file name"]= json_stringt(
+    concat_dir_file(
+      id2string(first_location.get_working_directory()),
+      id2string(first_location.get_file())));
   entry["first line"]= json_numbert(id2string(first_location.get_line()));
   entry["last line"]= json_numbert(id2string(last_location.get_line()));
 }

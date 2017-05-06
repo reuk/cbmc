@@ -32,11 +32,10 @@
 //#pragma pack(push,8)
 //#pragma warning(push,3)
 
-template <
-  class K,
-  bool bNoDuplicates= false,
-  class Pr= std::less<K>,
-  class A= std::allocator<K>>
+template <class K,
+          bool bNoDuplicates= false,
+          class Pr= std::less<K>,
+          class A= std::allocator<K>>
 class sorted_vector
 {
 public:

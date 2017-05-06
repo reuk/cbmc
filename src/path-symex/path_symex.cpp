@@ -369,10 +369,11 @@ void path_symext::symex_va_arg_next(
        * corresponds to the respective one set upon function call
        */
       if(has_prefix(id2string(id), base))
-        id= base + std::to_string(
-                     safe_string2unsigned(std::string(
-                       id2string(id), base.size(), std::string::npos)) +
-                     1);
+        id= base +
+            std::to_string(
+              safe_string2unsigned(
+                std::string(id2string(id), base.size(), std::string::npos)) +
+              1);
       else
         id= base + "0";
 

@@ -571,9 +571,8 @@ void symex_slice_by_tracet::slice_SSA_steps(
             << (sliced_SSA_steps + sliced_conds) << " out of "
             << equation.SSA_steps.size() << " SSA_steps." << std::endl;
   std::cout << "  (" << ((sliced_SSA_steps + sliced_conds) - trace_loc_sliced)
-            << " out of "
-            << (equation.SSA_steps.size() - trace_SSA_steps -
-                location_SSA_steps)
+            << " out of " << (equation.SSA_steps.size() - trace_SSA_steps -
+                              location_SSA_steps)
             << " non-trace, non-location SSA_steps)" << std::endl;
 }
 

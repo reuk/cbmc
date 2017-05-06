@@ -58,9 +58,9 @@ protected:
   void compute_natural_loop(T, T);
 };
 
-class natural_loopst : public natural_loops_templatet<
-                         const goto_programt,
-                         goto_programt::const_targett>
+class natural_loopst
+  : public natural_loops_templatet<const goto_programt,
+                                   goto_programt::const_targett>
 {
 };
 

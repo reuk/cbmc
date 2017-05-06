@@ -900,11 +900,12 @@ goto_programt::const_targett goto_program2codet::get_cases(
           switch_var != to_equal_expr(*e_it).lhs())
           return target;
 
-        cases.push_back(caset(
-          goto_program,
-          to_equal_expr(*e_it).rhs(),
-          cases_it,
-          cases_it->get_target()));
+        cases.push_back(
+          caset(
+            goto_program,
+            to_equal_expr(*e_it).rhs(),
+            cases_it,
+            cases_it->get_target()));
         assert(cases.back().value.is_not_nil());
 
         if(

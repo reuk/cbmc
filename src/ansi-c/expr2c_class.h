@@ -67,10 +67,9 @@ protected:
 
   static std::string indent_str(unsigned indent);
 
-  std::unordered_map<
-    irep_idt,
-    std::unordered_set<irep_idt, irep_id_hash>,
-    irep_id_hash>
+  std::unordered_map<irep_idt,
+                     std::unordered_set<irep_idt, irep_id_hash>,
+                     irep_id_hash>
     ns_collision;
   std::unordered_map<irep_idt, irep_idt, irep_id_hash> shorthands;
 

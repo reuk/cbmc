@@ -451,9 +451,10 @@ string_exprt string_constraint_generatort::add_axioms_from_int_hex(
   exprt f_char= constant_char('f', char_type);
 
   size_t max_size= 8;
-  axioms.push_back(and_exprt(
-    res.axiom_for_is_strictly_longer_than(0),
-    res.axiom_for_is_shorter_than(max_size)));
+  axioms.push_back(
+    and_exprt(
+      res.axiom_for_is_strictly_longer_than(0),
+      res.axiom_for_is_shorter_than(max_size)));
 
   for(size_t size= 1; size <= max_size; size++)
   {

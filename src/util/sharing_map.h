@@ -36,11 +36,10 @@ Author: Daniel Poetzl
   CV typename sharing_mapt<keyT, valueT, hashT, predT>::ST                     \
     sharing_mapt<keyT, valueT, hashT, predT>
 
-template <
-  class keyT,
-  class valueT,
-  class hashT= std::hash<keyT>,
-  class predT= std::equal_to<keyT>>
+template <class keyT,
+          class valueT,
+          class hashT= std::hash<keyT>,
+          class predT= std::equal_to<keyT>>
 class sharing_mapt
 {
 public:
@@ -259,8 +258,8 @@ Function: gather_all
 
 \*******************************************************************/
 
-SHARING_MAPT(
-  void)::gather_all(const node_type &n, delta_viewt &delta_view) const
+SHARING_MAPT(void)
+::gather_all(const node_type &n, delta_viewt &delta_view) const
 {
   std::stack<const node_type *> stack;
   stack.push(&n);
@@ -302,7 +301,8 @@ Function: get_delta_view
 
 \*******************************************************************/
 
-SHARING_MAPT(void)::get_delta_view(
+SHARING_MAPT(void)
+::get_delta_view(
   const self_type &other,
   delta_viewt &delta_view,
   const bool only_common) const
@@ -580,10 +580,8 @@ Function: insert
 
 \*******************************************************************/
 
-SHARING_MAPT2(, const_find_type)::insert(
-  const key_type &k,
-  const mapped_type &m,
-  const tvt &key_exists)
+SHARING_MAPT2(, const_find_type)
+::insert(const key_type &k, const mapped_type &m, const tvt &key_exists)
 {
   _sn_assert(!key_exists.is_true());
 
@@ -615,9 +613,8 @@ Function: insert
 
 \*******************************************************************/
 
-SHARING_MAPT2(, const_find_type)::insert(
-  const value_type &p,
-  const tvt &key_exists)
+SHARING_MAPT2(, const_find_type)
+::insert(const value_type &p, const tvt &key_exists)
 {
   return insert(p.first, p.second, key_exists);
 }

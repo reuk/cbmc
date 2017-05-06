@@ -1050,10 +1050,11 @@ void string_instrumentationt::do_strerror(
 
     goto_programt::targett assumption1= tmp.add_instruction();
 
-    assumption1->make_assumption(binary_relation_exprt(
-      symbol_size.symbol_expr(),
-      ID_notequal,
-      from_integer(0, symbol_size.type)));
+    assumption1->make_assumption(
+      binary_relation_exprt(
+        symbol_size.symbol_expr(),
+        ID_notequal,
+        from_integer(0, symbol_size.type)));
 
     assumption1->source_location= it->source_location;
   }

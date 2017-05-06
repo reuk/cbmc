@@ -190,8 +190,9 @@ bool remove_function_pointerst::is_type_compatible(
   }
   else
   {
-    if(!arg_is_type_compatible(
-         call_type.return_type(), function_type.return_type()))
+    if(
+      !arg_is_type_compatible(
+        call_type.return_type(), function_type.return_type()))
       return false;
   }
 
@@ -215,8 +216,9 @@ bool remove_function_pointerst::is_type_compatible(
       return false;
 
     for(unsigned i= 0; i < call_parameters.size(); i++)
-      if(!arg_is_type_compatible(
-           call_parameters[i].type(), function_parameters[i].type()))
+      if(
+        !arg_is_type_compatible(
+          call_parameters[i].type(), function_parameters[i].type()))
         return false;
   }
 
