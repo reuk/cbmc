@@ -46,8 +46,7 @@ bool abstract_eventt::unsafe_pair_lwfence_param(
 
   case PSO:
     return (
-      thread == next.thread &&
-      operation == Write
+      thread == next.thread && operation == Write
       /* lwsyncWW -> mfenceWW */
       &&
       !(operation == Write && next.operation == Write && lwsync_met));

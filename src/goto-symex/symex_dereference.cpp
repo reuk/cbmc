@@ -352,8 +352,9 @@ void goto_symext::dereference_rec(
         pointer_typet(to_address_of_expr(tc_op).object().type().subtype()),
         ns))
     {
-      expr= address_of_exprt(index_exprt(
-        to_address_of_expr(tc_op).object(), from_integer(0, index_type())));
+      expr= address_of_exprt(
+        index_exprt(
+          to_address_of_expr(tc_op).object(), from_integer(0, index_type())));
 
       dereference_rec(expr, state, guard, write);
     }

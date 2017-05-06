@@ -6,8 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <ostream>
 #include <cassert>
+#include <ostream>
 
 #include <util/config.h>
 #include <util/std_types.h>

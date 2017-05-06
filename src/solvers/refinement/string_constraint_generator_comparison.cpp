@@ -336,17 +336,18 @@ symbol_exprt string_constraint_generatort::add_axioms_for_intern(
     if(it->second != str)
     {
       symbol_exprt i= fresh_exist_index("index_intern", index_type);
-      axioms.push_back(or_exprt(
-        equal_exprt(pool[it->second], pool[str]),
+      axioms.push_back(
         or_exprt(
-          not_exprt(str.axiom_for_has_same_length_as(it->second)),
-          and_exprt(
-            str.axiom_for_has_same_length_as(it->second),
+          equal_exprt(pool[it->second], pool[str]),
+          or_exprt(
+            not_exprt(str.axiom_for_has_same_length_as(it->second)),
             and_exprt(
-              not_exprt(equal_exprt(str[i], it->second[i])),
+              str.axiom_for_has_same_length_as(it->second),
               and_exprt(
-                str.axiom_for_is_strictly_longer_than(i),
-                axiom_for_is_positive_index(i)))))));
+                not_exprt(equal_exprt(str[i], it->second[i])),
+                and_exprt(
+                  str.axiom_for_is_strictly_longer_than(i),
+                  axiom_for_is_positive_index(i)))))));
     }
 
   return pool[str];

@@ -10,8 +10,8 @@ Author: Peter Schrammel
 #include <iostream>
 #endif
 
-#include <util/find_symbols.h>
 #include <util/arith_tools.h>
+#include <util/find_symbols.h>
 #include <util/simplify_expr.h>
 
 #include "constant_propagator.h"
@@ -214,7 +214,7 @@ void constant_propagator_domaint::transform(
       values.set_to_bottom();
     else
     {
-      //TODO: we need to support widening!
+      // TODO: we need to support widening!
       if(g.is_constant())
         values.set_to_top();
       else
@@ -543,7 +543,7 @@ bool constant_propagator_domaint::valuest::merge(const valuest &src)
 
     if(b_it == src.replace_const.expr_map.end())
     {
-      //cannot use set_to_top here
+      // cannot use set_to_top here
       replace_const.expr_map.erase(it);
       changed= true;
       break;

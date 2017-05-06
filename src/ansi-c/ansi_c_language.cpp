@@ -7,8 +7,8 @@ Author: Daniel Kroening, kroening@kroening.com
 \*******************************************************************/
 
 #include <cstring>
-#include <sstream>
 #include <fstream>
+#include <sstream>
 
 #include <util/config.h>
 #include <util/get_base_name.h>
@@ -17,12 +17,12 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <linking/remove_internal_symbols.h>
 
 #include "ansi_c_entry_point.h"
-#include "ansi_c_language.h"
-#include "ansi_c_typecheck.h"
-#include "ansi_c_parser.h"
-#include "expr2c.h"
-#include "c_preprocess.h"
 #include "ansi_c_internal_additions.h"
+#include "ansi_c_language.h"
+#include "ansi_c_parser.h"
+#include "ansi_c_typecheck.h"
+#include "c_preprocess.h"
+#include "expr2c.h"
 #include "type2name.h"
 
 /*******************************************************************\
@@ -163,8 +163,9 @@ bool ansi_c_languaget::typecheck(
 {
   symbol_tablet new_symbol_table;
 
-  if(ansi_c_typecheck(
-       parse_tree, new_symbol_table, module, get_message_handler()))
+  if(
+    ansi_c_typecheck(
+      parse_tree, new_symbol_table, module, get_message_handler()))
   {
     return true;
   }

@@ -442,8 +442,8 @@ bool event_grapht::graph_explorert::backtrack(
             not_thin_air && new_cycle.is_cycle() &&
             new_cycle.is_unsafe(model) /*&& new_cycle.is_unsafe_asm(model)*/)
           {
-            egraph.message.debug()
-              << new_cycle.print_name(model, false) << messaget::eom;
+            egraph.message.debug() << new_cycle.print_name(model, false)
+                                   << messaget::eom;
             set_of_cycles.insert(new_cycle);
 #if 0
             const critical_cyclet* reduced=new_cycle.hide_internals();
@@ -498,8 +498,8 @@ bool event_grapht::graph_explorert::backtrack(
             not_thin_air && new_cycle.is_cycle() &&
             new_cycle.is_unsafe(model) /*&& new_cycle.is_unsafe_asm(model)*/)
           {
-            egraph.message.debug()
-              << new_cycle.print_name(model, false) << messaget::eom;
+            egraph.message.debug() << new_cycle.print_name(model, false)
+                                   << messaget::eom;
             set_of_cycles.insert(new_cycle);
 #if 0
             const critical_cyclet* reduced=new_cycle.hide_internals();

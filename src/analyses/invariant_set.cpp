@@ -8,13 +8,13 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <iostream>
 
-#include <util/symbol_table.h>
-#include <util/namespace.h>
 #include <util/arith_tools.h>
-#include <util/std_expr.h>
-#include <util/simplify_expr.h>
 #include <util/base_type.h>
+#include <util/namespace.h>
+#include <util/simplify_expr.h>
+#include <util/std_expr.h>
 #include <util/std_types.h>
+#include <util/symbol_table.h>
 
 #include <ansi-c/c_types.h>
 #include <langapi/language_util.h>

@@ -489,8 +489,9 @@ void cpp_typecheckt::typecheck_compound_declarator(
     // the 'virtual' name of the function
     std::string virtual_name=
       component.get_string(ID_base_name) +
-      id2string(function_identifier(
-        static_cast<const typet &>(component.find(ID_type))));
+      id2string(
+        function_identifier(
+          static_cast<const typet &>(component.find(ID_type))));
 
     if(has_const(method_qualifier))
       virtual_name+= "$const";

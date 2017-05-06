@@ -775,11 +775,9 @@ int goto_instrument_parse_optionst::doit()
     {
       status() << "Writing GOTO program to `" << cmdline.args[1] << "'" << eom;
 
-      if(write_goto_binary(
-           cmdline.args[1],
-           symbol_table,
-           goto_functions,
-           get_message_handler()))
+      if(
+        write_goto_binary(
+          cmdline.args[1], symbol_table, goto_functions, get_message_handler()))
         return 1;
       else
         return 0;
@@ -946,8 +944,9 @@ void goto_instrument_parse_optionst::get_goto_program()
 {
   status() << "Reading GOTO program from `" << cmdline.args[0] << "'" << eom;
 
-  if(read_goto_binary(
-       cmdline.args[0], symbol_table, goto_functions, get_message_handler()))
+  if(
+    read_goto_binary(
+      cmdline.args[0], symbol_table, goto_functions, get_message_handler()))
     throw 0;
 
   config.set(cmdline);
@@ -1012,10 +1011,9 @@ void goto_instrument_parse_optionst::instrument_goto_program()
   if(cmdline.isset("skip-loops"))
   {
     status() << "Adding gotos to skip loops" << eom;
-    if(skip_loops(
-         goto_functions,
-         cmdline.get_value("skip-loops"),
-         get_message_handler()))
+    if(
+      skip_loops(
+        goto_functions, cmdline.get_value("skip-loops"), get_message_handler()))
       throw 0;
   }
 
@@ -1028,8 +1026,9 @@ void goto_instrument_parse_optionst::instrument_goto_program()
       safe_string2unsigned(cmdline.get_value("model-argc-argv"));
 
     status() << "Adding up to " << max_argc << " command line arguments" << eom;
-    if(model_argc_argv(
-         symbol_table, goto_functions, max_argc, get_message_handler()))
+    if(
+      model_argc_argv(
+        symbol_table, goto_functions, max_argc, get_message_handler()))
       throw 0;
   }
 

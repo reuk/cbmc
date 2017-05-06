@@ -37,17 +37,19 @@ void data_dpt::dp_analysis(
   {
     if(local_read && it->id == read.id)
     {
-      insert(datat(
-        write.id,
-        (local_write ? source_locationt() : write.loc),
-        it->eq_class));
+      insert(
+        datat(
+          write.id,
+          (local_write ? source_locationt() : write.loc),
+          it->eq_class));
       continue;
     }
 
     if(local_write && it->id == write.id)
     {
-      insert(datat(
-        read.id, (local_read ? source_locationt() : read.loc), it->eq_class));
+      insert(
+        datat(
+          read.id, (local_read ? source_locationt() : read.loc), it->eq_class));
       continue;
     }
   }
@@ -57,8 +59,9 @@ void data_dpt::dp_analysis(
     ++class_nb;
     insert(
       datat(read.id, (local_read ? source_locationt() : read.loc), class_nb));
-    insert(datat(
-      write.id, (local_write ? source_locationt() : write.loc), class_nb));
+    insert(
+      datat(
+        write.id, (local_write ? source_locationt() : write.loc), class_nb));
   }
 }
 

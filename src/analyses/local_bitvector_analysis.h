@@ -13,9 +13,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <util/expanding_vector.h>
 
-#include "locals.h"
 #include "dirty.h"
 #include "local_cfg.h"
+#include "locals.h"
 
 /*******************************************************************\
 

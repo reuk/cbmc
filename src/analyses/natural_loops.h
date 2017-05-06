@@ -9,12 +9,12 @@ Author: Georg Weissenbacher, georg@weissenbacher.name
 #ifndef CPROVER_ANALYSES_NATURAL_LOOPS_H
 #define CPROVER_ANALYSES_NATURAL_LOOPS_H
 
-#include <stack>
 #include <iosfwd>
 #include <set>
+#include <stack>
 
-#include <goto-programs/goto_program.h>
 #include <goto-programs/goto_functions.h>
+#include <goto-programs/goto_program.h>
 
 #include "cfg_dominators.h"
 
@@ -58,9 +58,9 @@ protected:
   void compute_natural_loop(T, T);
 };
 
-class natural_loopst : public natural_loops_templatet<
-                         const goto_programt,
-                         goto_programt::const_targett>
+class natural_loopst
+  : public natural_loops_templatet<const goto_programt,
+                                   goto_programt::const_targett>
 {
 };
 

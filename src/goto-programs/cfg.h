@@ -36,10 +36,9 @@ struct cfg_base_nodet : public graph_nodet<empty_edget>, public T
   I PC;
 };
 
-template <
-  class T,
-  typename P= const goto_programt,
-  typename I= goto_programt::const_targett>
+template <class T,
+          typename P= const goto_programt,
+          typename I= goto_programt::const_targett>
 class cfg_baset : public grapht<cfg_base_nodet<T, I>>
 {
 public:
@@ -149,10 +148,9 @@ public:
 
 \*******************************************************************/
 
-template <
-  class T,
-  typename P= const goto_programt,
-  typename I= goto_programt::const_targett>
+template <class T,
+          typename P= const goto_programt,
+          typename I= goto_programt::const_targett>
 class concurrent_cfg_baset : public virtual cfg_baset<T, P, I>
 {
 protected:
@@ -171,10 +169,9 @@ protected:
 
 \*******************************************************************/
 
-template <
-  class T,
-  typename P= const goto_programt,
-  typename I= goto_programt::const_targett>
+template <class T,
+          typename P= const goto_programt,
+          typename I= goto_programt::const_targett>
 class procedure_local_cfg_baset : public virtual cfg_baset<T, P, I>
 {
 protected:
@@ -194,10 +191,9 @@ protected:
 
 \*******************************************************************/
 
-template <
-  class T,
-  typename P= const goto_programt,
-  typename I= goto_programt::const_targett>
+template <class T,
+          typename P= const goto_programt,
+          typename I= goto_programt::const_targett>
 class procedure_local_concurrent_cfg_baset
   : public concurrent_cfg_baset<T, P, I>,
     public procedure_local_cfg_baset<T, P, I>

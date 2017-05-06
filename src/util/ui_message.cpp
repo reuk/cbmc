@@ -78,8 +78,8 @@ ui_message_handlert::ui_message_handlert(
   const class cmdlinet &cmdline,
   const std::string &program)
   : ui_message_handlert(
-      cmdline.isset("xml-ui") ? XML_UI
-                              : cmdline.isset("json-ui") ? JSON_UI : PLAIN,
+      cmdline.isset("xml-ui") ? XML_UI : cmdline.isset("json-ui") ? JSON_UI
+                                                                  : PLAIN,
       program)
 {
 }

@@ -398,11 +398,12 @@ int goto_diff_parse_optionst::get_goto_program(
 
   if(is_goto_binary(cmdline.args[0]))
   {
-    if(read_goto_binary(
-         cmdline.args[0],
-         goto_model.symbol_table,
-         goto_model.goto_functions,
-         languages.get_message_handler()))
+    if(
+      read_goto_binary(
+        cmdline.args[0],
+        goto_model.symbol_table,
+        goto_model.goto_functions,
+        languages.get_message_handler()))
       return 6;
 
     config.set(cmdline);

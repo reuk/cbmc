@@ -9,14 +9,14 @@ Author: Daniel Kroening, kroening@kroening.com
 #ifndef CPROVER_ANALYSES_LOCAL_MAY_ALIAS_H
 #define CPROVER_ANALYSES_LOCAL_MAY_ALIAS_H
 
-#include <stack>
 #include <memory>
+#include <stack>
 
 #include <util/union_find.h>
 
-#include "locals.h"
 #include "dirty.h"
 #include "local_cfg.h"
+#include "locals.h"
 
 /*******************************************************************\
 

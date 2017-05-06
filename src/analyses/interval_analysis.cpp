@@ -8,8 +8,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <util/find_symbols.h>
 
-#include "interval_domain.h"
 #include "interval_analysis.h"
+#include "interval_domain.h"
 
 /*******************************************************************\
 

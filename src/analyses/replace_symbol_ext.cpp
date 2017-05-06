@@ -6,8 +6,8 @@ Author: Peter Schrammel
 
 \*******************************************************************/
 
-#include <util/std_types.h>
 #include <util/std_expr.h>
+#include <util/std_types.h>
 
 #include "replace_symbol_ext.h"
 

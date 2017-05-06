@@ -123,8 +123,7 @@ void locst::output(std::ostream &out) const
       out << "*** " << function << "\n";
     }
 
-    out << "  L" << l
-        << ": "
+    out << "  L" << l << ": "
         //        << loc.target->type << " "
         //        << loc.target->location
         << " " << as_string(ns, *loc.target) << "\n";

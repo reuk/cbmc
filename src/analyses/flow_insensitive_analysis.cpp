@@ -9,8 +9,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <cassert>
 
-#include <util/std_expr.h>
 #include <util/std_code.h>
+#include <util/std_expr.h>
 
 #include "flow_insensitive_analysis.h"
 

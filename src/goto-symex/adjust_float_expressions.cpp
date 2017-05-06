@@ -123,15 +123,15 @@ void adjust_float_expressions(exprt &expr, const namespacet &ns)
 
       // now add rounding mode
       expr.id(
-        expr.id() == ID_plus
-          ? ID_floatbv_plus
-          : expr.id() == ID_minus
-              ? ID_floatbv_minus
-              : expr.id() == ID_mult
-                  ? ID_floatbv_mult
-                  : expr.id() == ID_div
-                      ? ID_floatbv_div
-                      : expr.id() == ID_rem ? ID_floatbv_rem : irep_idt());
+        expr.id() == ID_plus ? ID_floatbv_plus : expr.id() == ID_minus
+                                                   ? ID_floatbv_minus
+                                                   : expr.id() == ID_mult
+                                                       ? ID_floatbv_mult
+                                                       : expr.id() == ID_div
+                                                           ? ID_floatbv_div
+                                                           : expr.id() == ID_rem
+                                                               ? ID_floatbv_rem
+                                                               : irep_idt());
 
       expr.operands().resize(3);
       expr.op2()= rounding_mode;

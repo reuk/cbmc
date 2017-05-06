@@ -557,8 +557,9 @@ bool acceleration_utilst::do_arrays(
   polynomial_array_assignmentst poly_assignments;
   polynomialst nondet_indices;
 
-  if(!array_assignments2polys(
-       array_assignments, polynomials, poly_assignments, nondet_indices))
+  if(
+    !array_assignments2polys(
+      array_assignments, polynomials, poly_assignments, nondet_indices))
   {
 // We weren't able to model some array assignment.  That means we need to
 // bail out altogether :-(
@@ -589,9 +590,10 @@ bool acceleration_utilst::do_arrays(
     stashed_index.substitute(substitution);
     stashed_value.substitute(substitution);
 
-    array_operands.push_back(equal_exprt(
-      index_exprt(it->array, stashed_index.to_expr()),
-      stashed_value.to_expr()));
+    array_operands.push_back(
+      equal_exprt(
+        index_exprt(it->array, stashed_index.to_expr()),
+        stashed_value.to_expr()));
   }
 
   exprt arrays_expr= conjunction(array_operands);

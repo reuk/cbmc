@@ -251,10 +251,11 @@ void goto_symext::symex_gcc_builtin_va_arg_next(
       std::string base= id2string(function_identifier) + "::va_arg";
 
       if(has_prefix(id2string(id), base))
-        id= base + std::to_string(
-                     safe_string2unsigned(std::string(
-                       id2string(id), base.size(), std::string::npos)) +
-                     1);
+        id= base +
+            std::to_string(
+              safe_string2unsigned(
+                std::string(id2string(id), base.size(), std::string::npos)) +
+              1);
       else
         id= base + "0";
 

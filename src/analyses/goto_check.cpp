@@ -8,23 +8,23 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <algorithm>
 
-#include <util/simplify_expr.h>
-#include <util/array_name.h>
-#include <util/ieee_float.h>
 #include <util/arith_tools.h>
+#include <util/array_name.h>
+#include <util/base_type.h>
+#include <util/cprover_prefix.h>
 #include <util/expr_util.h>
 #include <util/find_symbols.h>
-#include <util/std_expr.h>
-#include <util/std_types.h>
 #include <util/guard.h>
-#include <util/base_type.h>
+#include <util/ieee_float.h>
+#include <util/options.h>
 #include <util/pointer_offset_size.h>
 #include <util/pointer_predicates.h>
-#include <util/cprover_prefix.h>
-#include <util/options.h>
+#include <util/simplify_expr.h>
+#include <util/std_expr.h>
+#include <util/std_types.h>
 
-#include "local_bitvector_analysis.h"
 #include "goto_check.h"
+#include "local_bitvector_analysis.h"
 
 class goto_checkt
 {

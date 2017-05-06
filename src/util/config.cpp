@@ -967,8 +967,8 @@ void configt::set_arch(const irep_idt &arch)
   }
   else if(arch == "alpha")
     ansi_c.set_arch_spec_alpha();
-  else if(
-    arch == "arm64" || arch == "armel" || arch == "armhf" || arch == "arm")
+  else if(arch == "arm64" || arch == "armel" || arch == "armhf" || arch == "ar"
+                                                                           "m")
     ansi_c.set_arch_spec_arm(arch);
   else if(
     arch == "mips64el" || arch == "mipsn32el" || arch == "mipsel" ||
@@ -1437,9 +1437,9 @@ void configt::set_from_symbol_table(const symbol_tablet &symbol_table)
 {
   // maybe not compiled from C/C++
   if(
-    symbol_table.symbols.find(CPROVER_PREFIX
-                              "architecture_"
-                              "int_width") == symbol_table.symbols.end())
+    symbol_table.symbols.find(
+      CPROVER_PREFIX "architecture_"
+                     "int_width") == symbol_table.symbols.end())
     return;
 
   namespacet ns(symbol_table);
@@ -1449,9 +1449,9 @@ void configt::set_from_symbol_table(const symbol_tablet &symbol_table)
 
   // first set architecture to get some defaults
   if(
-    symbol_table.symbols.find(CPROVER_PREFIX
-                              "architecture_"
-                              "arch") == symbol_table.symbols.end())
+    symbol_table.symbols.find(
+      CPROVER_PREFIX "architecture_"
+                     "arch") == symbol_table.symbols.end())
     set_arch(id2string(this_architecture()));
   else
     set_arch(string_from_ns(ns, "arch"));
@@ -1481,9 +1481,9 @@ void configt::set_from_symbol_table(const symbol_tablet &symbol_table)
   ansi_c.endianness= (ansi_ct::endiannesst)unsigned_from_ns(ns, "endianness");
 
   if(
-    symbol_table.symbols.find(CPROVER_PREFIX
-                              "architecture_"
-                              "os") == symbol_table.symbols.end())
+    symbol_table.symbols.find(
+      CPROVER_PREFIX "architecture_"
+                     "os") == symbol_table.symbols.end())
     ansi_c.os= ansi_ct::string_to_os(id2string(this_operating_system()));
   else
     ansi_c.os= ansi_ct::string_to_os(id2string(string_from_ns(ns, "os")));

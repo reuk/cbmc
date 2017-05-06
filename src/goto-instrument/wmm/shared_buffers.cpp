@@ -74,16 +74,18 @@ operator()(const irep_idt &object)
 
   for(unsigned cnt= 0; cnt < nb_threads; cnt++)
   {
-    vars.r_buff0_thds.push_back(shared_bufferst::add(
-      object,
-      symbol.base_name,
-      "$r_buff0_thd" + std::to_string(cnt),
-      bool_typet()));
-    vars.r_buff1_thds.push_back(shared_bufferst::add(
-      object,
-      symbol.base_name,
-      "$r_buff1_thd" + std::to_string(cnt),
-      bool_typet()));
+    vars.r_buff0_thds.push_back(
+      shared_bufferst::add(
+        object,
+        symbol.base_name,
+        "$r_buff0_thd" + std::to_string(cnt),
+        bool_typet()));
+    vars.r_buff1_thds.push_back(
+      shared_bufferst::add(
+        object,
+        symbol.base_name,
+        "$r_buff1_thd" + std::to_string(cnt),
+        bool_typet()));
   }
 
   return vars;
@@ -1150,8 +1152,8 @@ void shared_bufferst::cfg_visitort::weak_memory(
   const irep_idt &function,
   memory_modelt model)
 {
-  shared_buffers.message.debug()
-    << "visit function " << function << messaget::eom;
+  shared_buffers.message.debug() << "visit function " << function
+                                 << messaget::eom;
   if(function == CPROVER_PREFIX "initialize")
     return;
 
@@ -1166,8 +1168,8 @@ void shared_bufferst::cfg_visitort::weak_memory(
   {
     goto_programt::instructiont &instruction= *i_it;
 
-    shared_buffers.message.debug()
-      << "instruction " << instruction.type << messaget::eom;
+    shared_buffers.message.debug() << "instruction " << instruction.type
+                                   << messaget::eom;
 
     /* thread marking */
     if(instruction.is_start_thread())
@@ -1370,8 +1372,8 @@ void shared_bufferst::cfg_visitort::weak_memory(
       }
       catch(...)
       {
-        shared_buffers.message.warning()
-          << "Identifier not found" << messaget::eom;
+        shared_buffers.message.warning() << "Identifier not found"
+                                         << messaget::eom;
       }
     }
     else if(

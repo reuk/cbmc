@@ -6,8 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <util/xml_expr.h>
 #include <util/simplify_expr.h>
+#include <util/xml_expr.h>
 
 #include "custom_bitvector_analysis.h"
 

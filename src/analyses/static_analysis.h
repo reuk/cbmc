@@ -13,8 +13,8 @@ Author: Daniel Kroening, kroening@kroening.com
 #error Deprecated, use ai.h instead
 #endif
 
-#include <map>
 #include <iosfwd>
+#include <map>
 #include <unordered_set>
 
 #include <goto-programs/goto_functions.h>

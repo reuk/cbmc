@@ -79,14 +79,15 @@ int pipe_streamt::run()
     return -1;
 
   // Create duplicate of output write handle for the std error handle
-  if(!DuplicateHandle(
-       GetCurrentProcess(),
-       hOutputWrite,
-       GetCurrentProcess(),
-       &hErrorWrite,
-       0,
-       TRUE,
-       DUPLICATE_SAME_ACCESS))
+  if(
+    !DuplicateHandle(
+      GetCurrentProcess(),
+      hOutputWrite,
+      GetCurrentProcess(),
+      &hErrorWrite,
+      0,
+      TRUE,
+      DUPLICATE_SAME_ACCESS))
     return -1;
 
   // Create child input pipe
@@ -94,24 +95,26 @@ int pipe_streamt::run()
     return -1;
 
   // Create new output read handle and the input write handles
-  if(!DuplicateHandle(
-       GetCurrentProcess(),
-       hOutputReadTmp,
-       GetCurrentProcess(),
-       &hOutputRead,
-       0,
-       FALSE, // uninheritable.
-       DUPLICATE_SAME_ACCESS))
+  if(
+    !DuplicateHandle(
+      GetCurrentProcess(),
+      hOutputReadTmp,
+      GetCurrentProcess(),
+      &hOutputRead,
+      0,
+      FALSE, // uninheritable.
+      DUPLICATE_SAME_ACCESS))
     return -1;
 
-  if(!DuplicateHandle(
-       GetCurrentProcess(),
-       hInputWriteTmp,
-       GetCurrentProcess(),
-       &hInputWrite,
-       0,
-       FALSE, //  uninheritable.
-       DUPLICATE_SAME_ACCESS))
+  if(
+    !DuplicateHandle(
+      GetCurrentProcess(),
+      hInputWriteTmp,
+      GetCurrentProcess(),
+      &hInputWrite,
+      0,
+      FALSE, //  uninheritable.
+      DUPLICATE_SAME_ACCESS))
     return -1;
 
   if(!CloseHandle(hOutputReadTmp) || !CloseHandle(hInputWriteTmp))

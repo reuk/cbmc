@@ -10,9 +10,9 @@ Author: Daniel Kroening, kroening@kroening.com
 #ifndef CPROVER_ANALYSES_FLOW_INSENSITIVE_ANALYSIS_H
 #define CPROVER_ANALYSES_FLOW_INSENSITIVE_ANALYSIS_H
 
-#include <queue>
-#include <map>
 #include <iosfwd>
+#include <map>
+#include <queue>
 #include <unordered_set>
 
 #include <goto-programs/goto_functions.h>

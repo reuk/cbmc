@@ -9,8 +9,8 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <cassert>
 #include <memory>
 
-#include <util/std_expr.h>
 #include <util/std_code.h>
+#include <util/std_expr.h>
 
 #include "is_threaded.h"
 

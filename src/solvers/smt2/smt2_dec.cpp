@@ -41,17 +41,17 @@ std::string smt2_dect::decision_procedure_text() const
             ? "Generic"
             : solver == BOOLECTOR
                 ? "Boolector"
-                : solver == CVC3
-                    ? "CVC3"
-                    : solver == CVC4
-                        ? "CVC4"
-                        : solver == MATHSAT
-                            ? "MathSAT"
-                            : solver == OPENSMT
-                                ? "OpenSMT"
-                                : solver == YICES
-                                    ? "Yices"
-                                    : solver == Z3 ? "Z3" : "(unknown)");
+                : solver == CVC3 ? "CVC3" : solver == CVC4
+                                              ? "CVC4"
+                                              : solver == MATHSAT
+                                                  ? "MathSAT"
+                                                  : solver == OPENSMT
+                                                      ? "OpenSMT"
+                                                      : solver == YICES
+                                                          ? "Yices"
+                                                          : solver == Z3
+                                                              ? "Z3"
+                                                              : "(unknown)");
 }
 
 /*******************************************************************\

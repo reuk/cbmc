@@ -9,13 +9,13 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <cassert>
 #include <cstdlib>
 
-#include <util/namespace.h>
-#include <util/std_expr.h>
 #include <util/arith_tools.h>
-#include <util/std_code.h>
 #include <util/config.h>
 #include <util/cprover_prefix.h>
+#include <util/namespace.h>
 #include <util/prefix.h>
+#include <util/std_code.h>
+#include <util/std_expr.h>
 
 #include <ansi-c/c_types.h>
 #include <ansi-c/string_constant.h>
@@ -90,9 +90,10 @@ void record_function_outputs(
 
     const symbolt &return_symbol= symbol_table.lookup("return'");
 
-    output.op0()= address_of_exprt(index_exprt(
-      string_constantt(return_symbol.base_name),
-      from_integer(0, index_type())));
+    output.op0()= address_of_exprt(
+      index_exprt(
+        string_constantt(return_symbol.base_name),
+        from_integer(0, index_type())));
 
     output.op1()= return_symbol.symbol_expr();
     output.add_source_location()= function.location;
@@ -349,25 +350,25 @@ bool ansi_c_entry_point(
         /* zero_string doesn't work yet */
 
         /*
-        exprt zero_string(ID_zero_string, array_typet());
-        zero_string.type().subtype()=char_type();
-        zero_string.type().set(ID_size, "infinity");
-        exprt index(ID_index, char_type());
-        index.copy_to_operands(zero_string, from_integer(0, uint_type()));
-        exprt address_of("address_of", pointer_typet());
-        address_of.type().subtype()=char_type();
-        address_of.copy_to_operands(index);
+          exprt zero_string(ID_zero_string, array_typet());
+          zero_string.type().subtype()=char_type();
+          zero_string.type().set(ID_size, "infinity");
+          exprt index(ID_index, char_type());
+          index.copy_to_operands(zero_string, from_integer(0, uint_type()));
+          exprt address_of("address_of", pointer_typet());
+          address_of.type().subtype()=char_type();
+          address_of.copy_to_operands(index);
 
-        if(argv_symbol.type.subtype()!=address_of.type())
-          address_of.make_typecast(argv_symbol.type.subtype());
+          if(argv_symbol.type.subtype()!=address_of.type())
+            address_of.make_typecast(argv_symbol.type.subtype());
 
-        // assign argv[*] to the address of a string-object
-        exprt array_of("array_of", argv_symbol.type);
-        array_of.copy_to_operands(address_of);
+          // assign argv[*] to the address of a string-object
+          exprt array_of("array_of", argv_symbol.type);
+          array_of.copy_to_operands(address_of);
 
-        init_code.copy_to_operands(
-          code_assignt(argv_symbol.symbol_expr(), array_of));
-        */
+          init_code.copy_to_operands(
+            code_assignt(argv_symbol.symbol_expr(), array_of));
+          */
       }
 
       {

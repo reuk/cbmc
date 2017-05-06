@@ -13,8 +13,8 @@ Date: March 2013
 
 #include <unordered_set>
 
-#include <util/std_expr.h>
 #include <goto-programs/goto_functions.h>
+#include <util/std_expr.h>
 
 class dirtyt
 {

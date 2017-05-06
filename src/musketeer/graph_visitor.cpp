@@ -233,8 +233,9 @@ void const_graph_visitort::const_graph_explore_BC(
     {
       const abstract_eventt &e1= egraph[*it];
       const abstract_eventt &e2= egraph[*next_it];
-      if((e1.operation == abstract_eventt::Read &&
-          e2.operation == abstract_eventt::Write))
+      if(
+        (e1.operation == abstract_eventt::Read &&
+         e2.operation == abstract_eventt::Write))
         fence_inserter.add_edge(edget(*it, *next_it));
     }
     // NEW

@@ -259,9 +259,9 @@ protected:
   void finish_computed_gotos(goto_programt &dest);
   void finish_guarded_gotos(goto_programt &dest);
 
-  typedef std::
-    map<irep_idt, std::pair<goto_programt::targett, destructor_stackt>>
-      labelst;
+  typedef std::map<irep_idt,
+                   std::pair<goto_programt::targett, destructor_stackt>>
+    labelst;
   typedef std::list<std::pair<goto_programt::targett, destructor_stackt>>
     gotost;
   typedef std::list<goto_programt::targett> computed_gotost;

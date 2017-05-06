@@ -14,8 +14,8 @@ Date: February 2013
 
 #include <pointer-analysis/value_set_analysis_fi.h>
 
-#include "is_threaded.h"
 #include "dirty.h"
+#include "is_threaded.h"
 
 #include "reaching_definitions.h"
 
@@ -813,8 +813,9 @@ bool rd_range_domaint::merge_shared(
   {
     const irep_idt &identifier= value.first;
 
-    if(!ns.lookup(identifier).is_shared()
-       /*&& !rd.get_is_dirty()(identifier)*/)
+    if(
+      !ns.lookup(identifier).is_shared()
+      /*&& !rd.get_is_dirty()(identifier)*/)
       continue;
 
     while(it != values.end() && it->first < value.first)

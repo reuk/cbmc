@@ -2078,8 +2078,9 @@ bool Parser::rOtherDeclaration(
 
     cpp_declaratort conv_operator_declarator;
     typet trailing_return_type;
-    if(!rConstructorDecl(
-         conv_operator_declarator, type_name, trailing_return_type))
+    if(
+      !rConstructorDecl(
+        conv_operator_declarator, type_name, trailing_return_type))
       return false;
 
     type_name= typet("cpp-cast-operator");
@@ -2104,8 +2105,9 @@ bool Parser::rOtherDeclaration(
 
     cpp_declaratort constructor_declarator;
     typet trailing_return_type;
-    if(!rConstructorDecl(
-         constructor_declarator, type_name, trailing_return_type))
+    if(
+      !rConstructorDecl(
+        constructor_declarator, type_name, trailing_return_type))
       return false;
 
 #ifdef DEBUG
@@ -3215,8 +3217,9 @@ bool Parser::rDeclaratorWithInit(
   {
     cpp_declaratort declarator;
 
-    if(!rDeclarator(
-         declarator, kDeclarator, false, should_be_declarator, is_statement))
+    if(
+      !rDeclarator(
+        declarator, kDeclarator, false, should_be_declarator, is_statement))
       return false;
 
     // asm post-declarator

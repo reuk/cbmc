@@ -263,9 +263,10 @@ bool gcc_cmdlinet::parse_arguments(const argst &args, bool in_spec_file)
 
       bool found= false;
 
-      if(in_list(
-           argv_i.c_str(),
-           goto_cc_options_without_argument)) // without argument
+      if(
+        in_list(
+          argv_i.c_str(),
+          goto_cc_options_without_argument)) // without argument
       {
         set(argv_i);
         found= true;

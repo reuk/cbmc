@@ -11,9 +11,9 @@ Date: April 2010
 #ifndef CPROVER_ANALYSES_GOTO_RW_H
 #define CPROVER_ANALYSES_GOTO_RW_H
 
+#include <limits>
 #include <map>
 #include <ostream>
-#include <limits>
 
 #include <util/guard.h>
 

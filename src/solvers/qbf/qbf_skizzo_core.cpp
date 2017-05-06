@@ -127,8 +127,9 @@ propt::resultt qbf_skizzo_coret::prop_solve()
   std::string options= "";
 
   // solve it
-  system(("sKizzo -log " + qbf_tmp_file + options + " > " + result_tmp_file)
-           .c_str());
+  system(
+    ("sKizzo -log " + qbf_tmp_file + options + " > " + result_tmp_file)
+      .c_str());
 
   bool result= false;
 

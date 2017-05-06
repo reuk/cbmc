@@ -76,10 +76,12 @@ void goto_symext::symex_start_thread(statet &state)
     lhs.set_level_0(t);
 
     // setup L1 name
-    if(!state.level1.current_names
-          .insert(std::make_pair(
-            lhs.get_l1_object_identifier(), std::make_pair(lhs, 0)))
-          .second)
+    if(
+      !state.level1.current_names
+         .insert(
+           std::make_pair(
+             lhs.get_l1_object_identifier(), std::make_pair(lhs, 0)))
+         .second)
       assert(false);
     state.rename(lhs, ns, goto_symex_statet::L1);
     const irep_idt l1_name= lhs.get_l1_object_identifier();

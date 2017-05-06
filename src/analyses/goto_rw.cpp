@@ -8,16 +8,16 @@ Date: April 2010
 
 \*******************************************************************/
 
-#include <limits>
 #include <algorithm>
+#include <limits>
 
-#include <util/std_code.h>
-#include <util/std_expr.h>
-#include <util/pointer_offset_size.h>
+#include <util/arith_tools.h>
 #include <util/byte_operators.h>
 #include <util/endianness_map.h>
-#include <util/arith_tools.h>
+#include <util/pointer_offset_size.h>
 #include <util/simplify_expr.h>
+#include <util/std_code.h>
+#include <util/std_expr.h>
 
 #include <goto-programs/goto_functions.h>
 

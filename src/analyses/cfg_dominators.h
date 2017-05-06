@@ -9,15 +9,15 @@ Author: Georg Weissenbacher, georg@weissenbacher.name
 #ifndef CPROVER_ANALYSES_CFG_DOMINATORS_H
 #define CPROVER_ANALYSES_CFG_DOMINATORS_H
 
-#include <set>
+#include <cassert>
+#include <iosfwd>
 #include <list>
 #include <map>
-#include <iosfwd>
-#include <cassert>
+#include <set>
 
+#include <goto-programs/cfg.h>
 #include <goto-programs/goto_functions.h>
 #include <goto-programs/goto_program.h>
-#include <goto-programs/cfg.h>
 
 template <class P, class T, bool post_dom>
 class cfg_dominators_templatet
@@ -267,16 +267,14 @@ void cfg_dominators_templatet<P, T, post_dom>::output(std::ostream &out) const
   }
 }
 
-typedef cfg_dominators_templatet<
-  const goto_programt,
-  goto_programt::const_targett,
-  false>
+typedef cfg_dominators_templatet<const goto_programt,
+                                 goto_programt::const_targett,
+                                 false>
   cfg_dominatorst;
 
-typedef cfg_dominators_templatet<
-  const goto_programt,
-  goto_programt::const_targett,
-  true>
+typedef cfg_dominators_templatet<const goto_programt,
+                                 goto_programt::const_targett,
+                                 true>
   cfg_post_dominatorst;
 
 template <>

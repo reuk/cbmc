@@ -9,8 +9,8 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <cassert>
 #include <memory>
 
-#include <util/std_expr.h>
 #include <util/std_code.h>
+#include <util/std_expr.h>
 
 #include "is_threaded.h"
 
@@ -421,8 +421,9 @@ bool ai_baset::visit(
       // this is a big special case
       const code_function_callt &code= to_code_function_call(l->code);
 
-      if(do_function_call_rec(
-           l, to_l, code.function(), code.arguments(), goto_functions, ns))
+      if(
+        do_function_call_rec(
+          l, to_l, code.function(), code.arguments(), goto_functions, ns))
         have_new_values= true;
     }
     else

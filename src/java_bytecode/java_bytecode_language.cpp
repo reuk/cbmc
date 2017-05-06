@@ -63,10 +63,11 @@ void java_bytecode_languaget::get_language_options(const cmdlinet &cmd)
     if(java_cp_include_files[0] == '@')
     {
       jsont json_cp_config;
-      if(parse_json(
-           java_cp_include_files.substr(1),
-           get_message_handler(),
-           json_cp_config))
+      if(
+        parse_json(
+          java_cp_include_files.substr(1),
+          get_message_handler(),
+          json_cp_config))
         throw "cannot read JSON input configuration for JAR loading";
 
       if(!json_cp_config.is_object())
@@ -515,14 +516,15 @@ bool java_bytecode_languaget::typecheck(
 
     debug() << "Converting class " << c_it->first << eom;
 
-    if(java_bytecode_convert_class(
-         c_it->second,
-         symbol_table,
-         get_message_handler(),
-         max_user_array_length,
-         lazy_methods,
-         lazy_methods_mode,
-         string_refinement_enabled))
+    if(
+      java_bytecode_convert_class(
+        c_it->second,
+        symbol_table,
+        get_message_handler(),
+        max_user_array_length,
+        lazy_methods,
+        lazy_methods_mode,
+        string_refinement_enabled))
       return true;
   }
 
@@ -536,8 +538,9 @@ bool java_bytecode_languaget::typecheck(
   }
 
   // now typecheck all
-  if(java_bytecode_typecheck(
-       symbol_table, get_message_handler(), string_refinement_enabled))
+  if(
+    java_bytecode_typecheck(
+      symbol_table, get_message_handler(), string_refinement_enabled))
     return true;
 
   return false;
@@ -779,12 +782,13 @@ bool java_bytecode_languaget::final(symbol_tablet &symbol_table)
 
   symbolt entry= res.main_function;
 
-  return (java_entry_point(
-    symbol_table,
-    main_class,
-    get_message_handler(),
-    assume_inputs_non_null,
-    max_nondet_array_length));
+  return (
+    java_entry_point(
+      symbol_table,
+      main_class,
+      get_message_handler(),
+      assume_inputs_non_null,
+      max_nondet_array_length));
 }
 
 /*******************************************************************\

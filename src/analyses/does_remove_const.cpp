@@ -6,12 +6,12 @@
 
 \*******************************************************************/
 
+#include <ansi-c/c_qualifiers.h>
 #include <goto-programs/goto_program.h>
-#include <util/type.h>
+#include <util/base_type.h>
 #include <util/expr.h>
 #include <util/std_code.h>
-#include <util/base_type.h>
-#include <ansi-c/c_qualifiers.h>
+#include <util/type.h>
 
 #include "does_remove_const.h"
 

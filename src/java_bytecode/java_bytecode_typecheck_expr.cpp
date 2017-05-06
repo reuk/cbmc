@@ -180,8 +180,9 @@ void java_bytecode_typecheckt::typecheck_expr_java_string_literal(exprt &expr)
   struct_exprt jlo_init(jlo_symbol);
   const auto &jls_struct= to_struct_type(ns.follow(string_type));
 
-  jlo_init.copy_to_operands(constant_exprt(
-    "java::java.lang.String", jlo_struct.components()[0].type()));
+  jlo_init.copy_to_operands(
+    constant_exprt(
+      "java::java.lang.String", jlo_struct.components()[0].type()));
   jlo_init.copy_to_operands(from_integer(0, jlo_struct.components()[1].type()));
 
   // If string refinement *is* around, populate the actual
@@ -211,8 +212,9 @@ void java_bytecode_typecheckt::typecheck_expr_java_string_literal(exprt &expr)
     if(symbol_table.add(array_symbol))
       throw "failed to add constarray symbol to symbol table";
 
-    literal_init.copy_to_operands(from_integer(
-      literal_array.operands().size(), jls_struct.components()[1].type()));
+    literal_init.copy_to_operands(
+      from_integer(
+        literal_array.operands().size(), jls_struct.components()[1].type()));
     literal_init.copy_to_operands(address_of_exprt(array_symbol.symbol_expr()));
 
     new_symbol.value= literal_init;

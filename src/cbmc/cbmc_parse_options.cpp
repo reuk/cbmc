@@ -689,8 +689,9 @@ int cbmc_parse_optionst::get_goto_program(
     {
       status() << "Reading GOTO program from file " << eom;
 
-      if(read_object_and_link(
-           bin, symbol_table, goto_functions, get_message_handler()))
+      if(
+        read_object_and_link(
+          bin, symbol_table, goto_functions, get_message_handler()))
       {
         return 6;
       }
@@ -927,8 +928,9 @@ bool cbmc_parse_optionst::process_goto_program(
     // instrument cover goals
     if(cmdline.isset("cover"))
     {
-      if(instrument_cover_goals(
-           cmdline, symbol_table, goto_functions, get_message_handler()))
+      if(
+        instrument_cover_goals(
+          cmdline, symbol_table, goto_functions, get_message_handler()))
         return true;
     }
 

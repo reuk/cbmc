@@ -116,13 +116,17 @@ void overflow_instrumentert::overflow_expr(const exprt &expr, expr_sett &cases)
           return;
         }
 
-        cases.insert(binary_relation_exprt(
-          expr.op0(),
-          ID_gt,
-          from_integer(power(2, new_width - 1) - 1, old_type)));
+        cases.insert(
+          binary_relation_exprt(
+            expr.op0(),
+            ID_gt,
+            from_integer(power(2, new_width - 1) - 1, old_type)));
 
-        cases.insert(binary_relation_exprt(
-          expr.op0(), ID_lt, from_integer(-power(2, new_width - 1), old_type)));
+        cases.insert(
+          binary_relation_exprt(
+            expr.op0(),
+            ID_lt,
+            from_integer(-power(2, new_width - 1), old_type)));
       }
       else if(old_type.id() == ID_unsignedbv)
       {
@@ -133,10 +137,11 @@ void overflow_instrumentert::overflow_expr(const exprt &expr, expr_sett &cases)
           return;
         }
 
-        cases.insert(binary_relation_exprt(
-          expr.op0(),
-          ID_gt,
-          from_integer(power(2, new_width - 1) - 1, old_type)));
+        cases.insert(
+          binary_relation_exprt(
+            expr.op0(),
+            ID_gt,
+            from_integer(power(2, new_width - 1) - 1, old_type)));
       }
     }
     else if(type.id() == ID_unsignedbv)
@@ -149,10 +154,11 @@ void overflow_instrumentert::overflow_expr(const exprt &expr, expr_sett &cases)
         if(new_width < old_width - 1)
         {
           // Need to check for overflow as well as signedness.
-          cases.insert(binary_relation_exprt(
-            expr.op0(),
-            ID_gt,
-            from_integer(power(2, new_width - 1) - 1, old_type)));
+          cases.insert(
+            binary_relation_exprt(
+              expr.op0(),
+              ID_gt,
+              from_integer(power(2, new_width - 1) - 1, old_type)));
         }
       }
       else if(old_type.id() == ID_unsignedbv)
@@ -164,10 +170,11 @@ void overflow_instrumentert::overflow_expr(const exprt &expr, expr_sett &cases)
           return;
         }
 
-        cases.insert(binary_relation_exprt(
-          expr.op0(),
-          ID_gt,
-          from_integer(power(2, new_width - 1) - 1, old_type)));
+        cases.insert(
+          binary_relation_exprt(
+            expr.op0(),
+            ID_gt,
+            from_integer(power(2, new_width - 1) - 1, old_type)));
       }
     }
   }
