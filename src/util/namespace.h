@@ -54,7 +54,7 @@ public:
 };
 
 /*! \brief TO_BE_DOCUMENTED
-*/
+ */
 class namespacet : public namespace_baset {
 public:
   // constructors

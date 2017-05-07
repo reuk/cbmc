@@ -19,7 +19,7 @@ class symbol_tablet;
 class namespacet;
 
 /*! \brief Globally accessible architectural configuration
-*/
+ */
 class configt {
 public:
   struct ansi_ct {

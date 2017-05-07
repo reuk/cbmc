@@ -50,8 +50,8 @@ Function: memory_model_tsot::before
 \*******************************************************************/
 
 exprt memory_model_tsot::before(event_it e1, event_it e2) {
-  return partial_order_concurrencyt::before(e1, e2, AX_SC_PER_LOCATION |
-                                                        AX_PROPAGATION);
+  return partial_order_concurrencyt::before(
+      e1, e2, AX_SC_PER_LOCATION | AX_PROPAGATION);
 }
 
 /*******************************************************************\

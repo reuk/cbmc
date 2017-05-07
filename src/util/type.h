@@ -15,7 +15,7 @@ Author: Daniel Kroening, kroening@kroening.com
 #define SUBTYPES_IN_GETSUB
 
 /*! \brief The type of an expression
-*/
+ */
 class typet : public irept {
 public:
   typet() {}

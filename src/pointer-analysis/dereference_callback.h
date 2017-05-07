@@ -18,7 +18,7 @@ class exprt;
 class symbolt;
 
 /*! \brief TO_BE_DOCUMENTED
-*/
+ */
 class dereference_callbackt {
 public:
   virtual ~dereference_callbackt();

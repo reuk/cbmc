@@ -10,7 +10,7 @@ Author: Daniel Kroening, kroening@kroening.com
 #define CPROVER_GOTO_SYMEX_GOTO_SYMEX_H
 
 /*! \defgroup goto_symex Symbolic execution of goto programs
-*/
+ */
 
 #include <util/byte_operators.h>
 #include <util/options.h>
@@ -37,7 +37,7 @@ class symex_targett;
 class typecast_exprt;
 
 /*! \brief The main class for the forward symbolic simulator
-*/
+ */
 class goto_symext {
 public:
   goto_symext(const namespacet &_ns, symbol_tablet &_new_symbol_table,

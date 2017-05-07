@@ -178,12 +178,10 @@ bool event_grapht::graph_explorert::backtrack(
     event_idt vertex,
     bool unsafe_met,    /* unsafe pair for the model met in the visited path */
     event_idt po_trans, /* po-transition skips still allowed */
-    bool
-        same_var_pair, /* in a thread, tells if we already met one rfi wsi fri
-                          */
+    bool same_var_pair, /* in a thread, tells if we already met one rfi wsi fri
+                         */
     bool lwfence_met, /* if we try to skip a lwsync (only valid for lwsyncWR) */
-    bool has_to_be_unsafe,
-    irep_idt var_to_avoid, memory_modelt model) {
+    bool has_to_be_unsafe, irep_idt var_to_avoid, memory_modelt model) {
 #ifdef DEBUG
   egraph.message.debug() << std::string(80, '-');
   egraph.message.debug() << messaget::eom;
@@ -379,8 +377,8 @@ bool event_grapht::graph_explorert::backtrack(
               not_thin_air && new_cycle.is_cycle() &&
               new_cycle.is_unsafe(
                   model) /*&& new_cycle.is_unsafe_asm(model)*/) {
-            egraph.message.debug() << new_cycle.print_name(model, false)
-                                   << messaget::eom;
+            egraph.message.debug()
+                << new_cycle.print_name(model, false) << messaget::eom;
             set_of_cycles.insert(new_cycle);
 #if 0
             const critical_cyclet* reduced=new_cycle.hide_internals();
@@ -418,8 +416,8 @@ bool event_grapht::graph_explorert::backtrack(
               not_thin_air && new_cycle.is_cycle() &&
               new_cycle.is_unsafe(
                   model) /*&& new_cycle.is_unsafe_asm(model)*/) {
-            egraph.message.debug() << new_cycle.print_name(model, false)
-                                   << messaget::eom;
+            egraph.message.debug()
+                << new_cycle.print_name(model, false) << messaget::eom;
             set_of_cycles.insert(new_cycle);
 #if 0
             const critical_cyclet* reduced=new_cycle.hide_internals();

@@ -323,9 +323,9 @@ void fence_all_sharedt::compute() {
                   rw_set.set_reads.find(from) != rw_set.set_reads.end()
                       ? rw_set.r_entries[from]
                       : rw_set.w_entries[from];
-              message.debug() << "shared: (through "
-                              << id2string(w_it->second.object) << ") "
-                              << entry.object << messaget::eom;
+              message.debug()
+                  << "shared: (through " << id2string(w_it->second.object)
+                  << ") " << entry.object << messaget::eom;
               fenced_edges.writes.push_front(entry.symbol_expr);
             } else {
               message.debug() << "shared: " << id2string(w_it->second.object)
@@ -360,9 +360,9 @@ void fence_all_sharedt::compute() {
                       ? rw_set.r_entries[from]
                       : rw_set.w_entries[from];
 
-              message.debug() << "shared: (through "
-                              << id2string(r_it->second.object) << ") "
-                              << entry.object << messaget::eom;
+              message.debug()
+                  << "shared: (through " << id2string(r_it->second.object)
+                  << ") " << entry.object << messaget::eom;
               fenced_edges.reads.push_front(entry.symbol_expr);
             } else {
               message.debug() << "shared: " << id2string(r_it->second.object)
@@ -466,9 +466,9 @@ void fence_all_shared_aegt::fence_all_shared_aeg_explore(
                     ? rw_set.r_entries[from]
                     : rw_set.w_entries[from];
 
-            message.debug() << "shared: (through "
-                            << id2string(w_it->second.object) << ") "
-                            << entry.object << messaget::eom;
+            message.debug()
+                << "shared: (through " << id2string(w_it->second.object) << ") "
+                << entry.object << messaget::eom;
             fenced_edges.writes.push_front(entry.symbol_expr);
           } else {
             message.debug() << "shared: " << id2string(w_it->second.object)
@@ -503,9 +503,9 @@ void fence_all_shared_aegt::fence_all_shared_aeg_explore(
                     ? rw_set.r_entries[from]
                     : rw_set.w_entries[from];
 
-            message.debug() << "shared: (through "
-                            << id2string(r_it->second.object) << ") "
-                            << entry.object << messaget::eom;
+            message.debug()
+                << "shared: (through " << id2string(r_it->second.object) << ") "
+                << entry.object << messaget::eom;
             fenced_edges.reads.push_front(entry.symbol_expr);
           } else {
             message.debug() << "shared: " << id2string(r_it->second.object)

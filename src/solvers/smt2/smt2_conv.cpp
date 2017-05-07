@@ -492,9 +492,8 @@ exprt smt2_convt::parse_struct(const irept &src, const struct_typet &type) {
 
       assert(offset + component_width <= total_width);
       std::string component_binary =
-          "#b" +
-          id2string(binary).substr(total_width - offset - component_width,
-                                   component_width);
+          "#b" + id2string(binary).substr(
+                     total_width - offset - component_width, component_width);
 
       result.operands()[i] =
           parse_rec(irept(component_binary), components[i].type());
@@ -1599,8 +1598,9 @@ void smt2_convt::convert_expr(const exprt &expr) {
       out << ")))) "; // sign_extend, bvadd/sub let2
       out << "(not (= "
              "((_ extract "
-          << width << " " << width << ") ?sum) "
-                                      "((_ extract "
+          << width << " " << width
+          << ") ?sum) "
+             "((_ extract "
           << (width - 1) << " " << (width - 1) << ") ?sum)";
       out << ")))"; // =, not, let
     } else if (op_type.id() == ID_unsignedbv || op_type.id() == ID_pointer) {
@@ -1832,8 +1832,9 @@ void smt2_convt::convert_typecast(const typecast_exprt &expr) {
       out << " (ite (and ";
 
       // some faction bit is not zero
-      out << "(not (= ((_ extract " << (from_fraction_bits - 1) << " 0) ?tcop) "
-                                                                   "(_ bv0 "
+      out << "(not (= ((_ extract " << (from_fraction_bits - 1)
+          << " 0) ?tcop) "
+             "(_ bv0 "
           << from_fraction_bits << ")))";
 
       // number negative
@@ -1935,8 +1936,8 @@ void smt2_convt::convert_typecast(const typecast_exprt &expr) {
       }
     } else {
       UNEXPECTEDCASE("TODO typecast2 " + src_type.id_string() + " -> " +
-                     dest_type.id_string() + " src == " +
-                     from_expr(ns, "", src));
+                     dest_type.id_string() +
+                     " src == " + from_expr(ns, "", src));
     }
   } else if (dest_type.id() == ID_fixedbv) // to fixedbv
   {

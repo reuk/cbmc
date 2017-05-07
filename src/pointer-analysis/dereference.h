@@ -16,7 +16,7 @@ class if_exprt;
 class typecast_exprt;
 
 /*! \brief TO_BE_DOCUMENTED
-*/
+ */
 class dereferencet {
 public:
   /*! \brief Constructor

@@ -56,7 +56,7 @@ public:
 //
 
 /*! \brief TO_BE_DOCUMENTED
-*/
+ */
 class prop_conv_solvert : public prop_convt {
 public:
   prop_conv_solvert(const namespacet &_ns, propt &_prop)

@@ -12,14 +12,14 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/std_expr.h>
 
 /*! \brief Expression providing an SSA-renamed symbol of expressions
-*/
+ */
 class ssa_exprt : public symbol_exprt {
 public:
   ssa_exprt() { set(ID_C_SSA_symbol, true); }
 
   /*! \brief Constructor
    * \param expr Expression to be converted to SSA symbol
-  */
+   */
   explicit ssa_exprt(const exprt &expr) : symbol_exprt(expr.type()) {
     set(ID_C_SSA_symbol, true);
     add(ID_expression, expr);
@@ -118,7 +118,7 @@ public:
  * \return Object of type \ref ssa_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const ssa_exprt &to_ssa_expr(const exprt &expr) {
   assert(expr.id() == ID_symbol && expr.get_bool(ID_C_SSA_symbol) &&
          !expr.has_operands());
@@ -127,7 +127,7 @@ inline const ssa_exprt &to_ssa_expr(const exprt &expr) {
 
 /*! \copydoc to_ssa_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline ssa_exprt &to_ssa_expr(exprt &expr) {
   assert(expr.id() == ID_symbol && expr.get_bool(ID_C_SSA_symbol) &&
          !expr.has_operands());

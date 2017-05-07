@@ -61,7 +61,7 @@ class optionst;
   "(lazy-methods)"                                                             \
   "(fixedbv)(floatbv)(all-claims)(all-properties)" // legacy, and will
                                                    // eventually disappear //
-                                                   // NOLINT(whitespace/line_length)
+// NOLINT(whitespace/line_length)
 
 class cbmc_parse_optionst : public parse_options_baset,
                             public xml_interfacet,

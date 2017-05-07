@@ -431,8 +431,9 @@ static void populate_live_range_holes(
   maybe_add_hole(merge_into, expanded_live_range_start,
                  sorted_by_startpc[0]->var.start_pc);
   for (unsigned idx = 0; idx < sorted_by_startpc.size() - 1; ++idx) {
-    maybe_add_hole(merge_into, sorted_by_startpc[idx]->var.start_pc +
-                                   sorted_by_startpc[idx]->var.length,
+    maybe_add_hole(merge_into,
+                   sorted_by_startpc[idx]->var.start_pc +
+                       sorted_by_startpc[idx]->var.length,
                    sorted_by_startpc[idx + 1]->var.start_pc);
   }
 }

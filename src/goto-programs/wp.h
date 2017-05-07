@@ -23,7 +23,7 @@ class namespacet;
  * \return Weakest precondition
  *
  * \ingroup gr_wp
-*/
+ */
 exprt wp(const codet &code, const exprt &post, const namespacet &ns);
 
 /*! \brief approximate the non-deterministic choice

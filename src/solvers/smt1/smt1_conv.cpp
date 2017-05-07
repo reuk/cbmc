@@ -1123,8 +1123,9 @@ void smt1_convt::convert_expr(const exprt &expr, bool bool_as_bv) {
       out << "))) "; // sign_extend, bvadd/sub let2
       out << "(not (= "
              "(extract["
-          << width << ":" << width << "] ?sum) "
-                                      "(extract["
+          << width << ":" << width
+          << "] ?sum) "
+             "(extract["
           << (width - 1) << ":" << (width - 1) << "] ?sum)";
       out << ")))"; // =, not, let
       from_bool_end(type, bool_as_bv);

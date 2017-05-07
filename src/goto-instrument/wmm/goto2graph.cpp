@@ -177,8 +177,8 @@ void instrumentert::cfg_visitort::visit_cfg_function(
     std::set<instrumentert::cfg_visitort::nodet> &ending_vertex) {
   /* flow: egraph */
 
-  instrumenter.message.debug() << "visit function " << function
-                               << messaget::eom;
+  instrumenter.message.debug()
+      << "visit function " << function << messaget::eom;
 
   if (function == CPROVER_PREFIX "initialize") {
     return;
@@ -203,8 +203,8 @@ void instrumentert::cfg_visitort::visit_cfg_function(
       current_thread = coming_from;
     thread = current_thread;
 
-    instrumenter.message.debug() << "visit instruction " << instruction.type
-                                 << messaget::eom;
+    instrumenter.message.debug()
+        << "visit instruction " << instruction.type << messaget::eom;
 
     if (instruction.is_start_thread() || instruction.is_end_thread()) {
       /* break the flow */
@@ -448,23 +448,23 @@ bool instrumentert::cfg_visitort::contains_shared_array(
       << "contains_shared_array called for " << targ->source_location.get_line()
       << " and " << i_it->source_location.get_line() << messaget::eom;
   for (goto_programt::const_targett cur = targ; cur != i_it; ++cur) {
-    instrumenter.message.debug() << "Do we have an array at line "
-                                 << cur->source_location.get_line() << "?"
-                                 << messaget::eom;
+    instrumenter.message.debug()
+        << "Do we have an array at line " << cur->source_location.get_line()
+        << "?" << messaget::eom;
     rw_set_loct rw_set(ns, value_sets, cur
 #ifdef LOCAL_MAY
                        ,
                        local_may
 #endif
                        ); // NOLINT(whitespace/parens)
-    instrumenter.message.debug() << "Writes: " << rw_set.w_entries.size()
-                                 << "; Reads:" << rw_set.r_entries.size()
-                                 << messaget::eom;
+    instrumenter.message.debug()
+        << "Writes: " << rw_set.w_entries.size()
+        << "; Reads:" << rw_set.r_entries.size() << messaget::eom;
 
     forall_rw_set_r_entries(r_it, rw_set) {
       const irep_idt var = r_it->second.object;
-      instrumenter.message.debug() << "Is " << var << " an array?"
-                                   << messaget::eom;
+      instrumenter.message.debug()
+          << "Is " << var << " an array?" << messaget::eom;
       if (id2string(var).find("[]") != std::string::npos &&
           !instrumenter.local(var))
         return true;
@@ -472,8 +472,8 @@ bool instrumentert::cfg_visitort::contains_shared_array(
 
     forall_rw_set_w_entries(w_it, rw_set) {
       const irep_idt var = w_it->second.object;
-      instrumenter.message.debug() << "Is " << var << " an array?"
-                                   << messaget::eom;
+      instrumenter.message.debug()
+          << "Is " << var << " an array?" << messaget::eom;
       if (id2string(var).find("[]") != std::string::npos &&
           !instrumenter.local(var))
         return true;
@@ -628,8 +628,8 @@ void inline instrumentert::cfg_visitort::visit_cfg_backedge(
         if (from->first != to->first) {
           if (egraph[from->first].thread != egraph[to->first].thread)
             continue;
-          instrumenter.message.debug() << from->first << "-po->" << to->first
-                                       << messaget::eom;
+          instrumenter.message.debug()
+              << from->first << "-po->" << to->first << messaget::eom;
           egraph.add_po_back_edge(from->first, to->first);
           egraph_alt.add_edge(from->second, to->second);
         }
@@ -659,8 +659,8 @@ void inline instrumentert::cfg_visitort::visit_cfg_backedge(
           if (from->first != to->first) {
             if (egraph[from->first].thread != egraph[to->first].thread)
               continue;
-            instrumenter.message.debug() << from->first << "-po->" << to->first
-                                         << messaget::eom;
+            instrumenter.message.debug()
+                << from->first << "-po->" << to->first << messaget::eom;
             egraph.add_po_back_edge(from->first, to->first);
             egraph_alt.add_edge(from->second, to->second);
           }
@@ -774,9 +774,9 @@ void instrumentert::cfg_visitort::visit_cfg_function_call(
     cur_fun = stack_fun.pop();
 #endif
   } catch (std::string s) {
-    instrumenter.message.warning() << "sorry, doesn't handle recursion "
-                                   << "(function " << fun_id << "; .cpp) " << s
-                                   << messaget::eom;
+    instrumenter.message.warning()
+        << "sorry, doesn't handle recursion "
+        << "(function " << fun_id << "; .cpp) " << s << messaget::eom;
   }
 }
 
@@ -810,8 +810,8 @@ void instrumentert::cfg_visitort::visit_cfg_lwfence(
       for (const auto &node : in_pos[in]) {
         if (egraph[node.first].thread != thread)
           continue;
-        instrumenter.message.debug() << node.first << "-po->" << new_fence_node
-                                     << messaget::eom;
+        instrumenter.message.debug()
+            << node.first << "-po->" << new_fence_node << messaget::eom;
         egraph.add_po_edge(node.first, new_fence_node);
         egraph_alt.add_edge(node.second, new_fence_gnode);
       }
@@ -860,8 +860,8 @@ void instrumentert::cfg_visitort::visit_cfg_asm_fence(
       for (const auto &node : in_pos[in]) {
         if (egraph[node.first].thread != thread)
           continue;
-        instrumenter.message.debug() << node.first << "-po->" << new_fence_node
-                                     << messaget::eom;
+        instrumenter.message.debug()
+            << node.first << "-po->" << new_fence_node << messaget::eom;
         egraph.add_po_edge(node.first, new_fence_node);
         egraph_alt.add_edge(node.second, new_fence_gnode);
       }
@@ -955,8 +955,8 @@ void instrumentert::cfg_visitort::visit_cfg_assign(
         for (const auto &node : in_pos[in]) {
           if (egraph[node.first].thread != thread)
             continue;
-          instrumenter.message.debug() << node.first << "-po->" << new_read_node
-                                       << messaget::eom;
+          instrumenter.message.debug()
+              << node.first << "-po->" << new_read_node << messaget::eom;
           egraph.add_po_edge(node.first, new_read_node);
           egraph_alt.add_edge(node.second, new_read_gnode);
         }
@@ -973,8 +973,8 @@ void instrumentert::cfg_visitort::visit_cfg_assign(
     for (id2nodet::iterator id_it = with_same_var.first;
          id_it != with_same_var.second; id_it++)
       if (egraph[id_it->second].thread != new_read_event.thread) {
-        instrumenter.message.debug() << id_it->second << "<-com->"
-                                     << new_read_node << messaget::eom;
+        instrumenter.message.debug()
+            << id_it->second << "<-com->" << new_read_node << messaget::eom;
         std::map<event_idt, event_idt>::const_iterator entry =
             instrumenter.map_vertex_gnode.find(id_it->second);
         assert(entry != instrumenter.map_vertex_gnode.end());
@@ -990,8 +990,8 @@ void instrumentert::cfg_visitort::visit_cfg_assign(
              unknown_write_nodes.begin();
          id_it != unknown_write_nodes.end(); ++id_it)
       if (egraph[*id_it].thread != new_read_event.thread) {
-        instrumenter.message.debug() << *id_it << "<-com->" << new_read_node
-                                     << messaget::eom;
+        instrumenter.message.debug()
+            << *id_it << "<-com->" << new_read_node << messaget::eom;
         std::map<event_idt, event_idt>::const_iterator entry =
             instrumenter.map_vertex_gnode.find(*id_it);
         assert(entry != instrumenter.map_vertex_gnode.end());
@@ -1043,8 +1043,8 @@ void instrumentert::cfg_visitort::visit_cfg_assign(
 
     /* creates Read -po-> Write */
     if (previous != std::numeric_limits<event_idt>::max()) {
-      instrumenter.message.debug() << previous << "-po->" << new_write_node
-                                   << messaget::eom;
+      instrumenter.message.debug()
+          << previous << "-po->" << new_write_node << messaget::eom;
       egraph.add_po_edge(previous, new_write_node);
       egraph_alt.add_edge(previous_gnode, new_write_gnode);
     } else {
@@ -1053,8 +1053,8 @@ void instrumentert::cfg_visitort::visit_cfg_assign(
           for (const auto &node : in_pos[in]) {
             if (egraph[node.first].thread != thread)
               continue;
-            instrumenter.message.debug() << node.first << "-po->"
-                                         << new_write_node << messaget::eom;
+            instrumenter.message.debug()
+                << node.first << "-po->" << new_write_node << messaget::eom;
             egraph.add_po_edge(node.first, new_write_node);
             egraph_alt.add_edge(node.second, new_write_gnode);
           }
@@ -1068,8 +1068,8 @@ void instrumentert::cfg_visitort::visit_cfg_assign(
     for (id2nodet::iterator idr_it = r_with_same_var.first;
          idr_it != r_with_same_var.second; idr_it++)
       if (egraph[idr_it->second].thread != new_write_event.thread) {
-        instrumenter.message.debug() << idr_it->second << "<-com->"
-                                     << new_write_node << messaget::eom;
+        instrumenter.message.debug()
+            << idr_it->second << "<-com->" << new_write_node << messaget::eom;
         std::map<event_idt, event_idt>::const_iterator entry =
             instrumenter.map_vertex_gnode.find(idr_it->second);
         assert(entry != instrumenter.map_vertex_gnode.end());
@@ -1086,8 +1086,8 @@ void instrumentert::cfg_visitort::visit_cfg_assign(
     for (id2nodet::iterator idw_it = w_with_same_var.first;
          idw_it != w_with_same_var.second; idw_it++)
       if (egraph[idw_it->second].thread != new_write_event.thread) {
-        instrumenter.message.debug() << idw_it->second << "<-com->"
-                                     << new_write_node << messaget::eom;
+        instrumenter.message.debug()
+            << idw_it->second << "<-com->" << new_write_node << messaget::eom;
         std::map<event_idt, event_idt>::const_iterator entry =
             instrumenter.map_vertex_gnode.find(idw_it->second);
         assert(entry != instrumenter.map_vertex_gnode.end());
@@ -1103,8 +1103,8 @@ void instrumentert::cfg_visitort::visit_cfg_assign(
              unknown_write_nodes.begin();
          id_it != unknown_write_nodes.end(); ++id_it)
       if (egraph[*id_it].thread != new_write_event.thread) {
-        instrumenter.message.debug() << *id_it << "<-com->" << new_write_node
-                                     << messaget::eom;
+        instrumenter.message.debug()
+            << *id_it << "<-com->" << new_write_node << messaget::eom;
         std::map<event_idt, event_idt>::const_iterator entry =
             instrumenter.map_vertex_gnode.find(*id_it);
         assert(entry != instrumenter.map_vertex_gnode.end());
@@ -1119,8 +1119,8 @@ void instrumentert::cfg_visitort::visit_cfg_assign(
     for (std::set<event_idt>::const_iterator id_it = unknown_read_nodes.begin();
          id_it != unknown_read_nodes.end(); ++id_it)
       if (egraph[*id_it].thread != new_write_event.thread) {
-        instrumenter.message.debug() << *id_it << "<-com->" << new_write_node
-                                     << messaget::eom;
+        instrumenter.message.debug()
+            << *id_it << "<-com->" << new_write_node << messaget::eom;
         std::map<event_idt, event_idt>::const_iterator entry =
             instrumenter.map_vertex_gnode.find(*id_it);
         assert(entry != instrumenter.map_vertex_gnode.end());
@@ -1151,8 +1151,8 @@ void instrumentert::cfg_visitort::visit_cfg_assign(
         forall_rw_set_r_entries(read_it, rw_set) {
       const irep_idt &write = write_it->second.object;
       const irep_idt &read = read_it->second.object;
-      instrumenter.message.debug() << "dp: Write:" << write << "; Read:" << read
-                                   << messaget::eom;
+      instrumenter.message.debug()
+          << "dp: Write:" << write << "; Read:" << read << messaget::eom;
       const datat read_p(read, instruction.source_location);
       const datat write_p(write, instruction.source_location);
       data_dp.dp_analysis(read_p, local(read), write_p, local(write));
@@ -1201,8 +1201,8 @@ void instrumentert::cfg_visitort::visit_cfg_fence(
   for (const auto &in : instruction.incoming_edges)
     if (in_pos.find(in) != in_pos.end()) {
       for (const auto &node : in_pos[in]) {
-        instrumenter.message.debug() << node.first << "-po->" << new_fence_node
-                                     << messaget::eom;
+        instrumenter.message.debug()
+            << node.first << "-po->" << new_fence_node << messaget::eom;
         egraph.add_po_edge(node.first, new_fence_node);
         egraph_alt.add_edge(node.second, new_fence_gnode);
       }

@@ -79,7 +79,7 @@ class irept;
 const irept &get_nil_irep();
 
 /*! \brief Base class for tree-like data structures with sharing
-*/
+ */
 class irept {
 public:
   // These are not stable.

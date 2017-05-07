@@ -38,7 +38,7 @@ Author: Daniel Kroening, kroening@kroening.com
   for (expr_listt::iterator it = (expr).begin(); it != (expr).end(); ++it)
 
 /*! \brief Base class for all expressions
-*/
+ */
 class exprt : public irept {
 public:
   typedef std::vector<exprt> operandst;

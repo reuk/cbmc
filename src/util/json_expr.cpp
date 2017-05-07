@@ -6,12 +6,12 @@ Author: Peter Schrammel
 
 \*******************************************************************/
 
-#include "json.h"
 #include "arith_tools.h"
 #include "config.h"
 #include "expr.h"
 #include "fixedbv.h"
 #include "ieee_float.h"
+#include "json.h"
 #include "namespace.h"
 #include "std_expr.h"
 

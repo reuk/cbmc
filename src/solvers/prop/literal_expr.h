@@ -37,7 +37,7 @@ public:
  * \return Object of type \ref literal_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const literal_exprt &to_literal_expr(const exprt &expr) {
   assert(expr.id() == ID_literal && !expr.has_operands());
   return static_cast<const literal_exprt &>(expr);
@@ -45,7 +45,7 @@ inline const literal_exprt &to_literal_expr(const exprt &expr) {
 
 /*! \copydoc to_literal_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline literal_exprt &to_literal_expr(exprt &expr) {
   assert(expr.id() == ID_literal && !expr.has_operands());
   return static_cast<literal_exprt &>(expr);

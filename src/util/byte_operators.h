@@ -14,12 +14,12 @@ Author: Daniel Kroening, kroening@kroening.com
  *
  * \author Daniel Kroening <kroening@kroening.com>
  * \date   Sun Jul 31 21:54:44 BST 2011
-*/
+ */
 
 #include "expr.h"
 
 /*! \brief TO_BE_DOCUMENTED
-*/
+ */
 class byte_extract_exprt : public exprt {
 public:
   explicit byte_extract_exprt(irep_idt _id) : exprt(_id) {
@@ -58,7 +58,7 @@ irep_idt byte_extract_id();
 irep_idt byte_update_id();
 
 /*! \brief TO_BE_DOCUMENTED
-*/
+ */
 class byte_extract_little_endian_exprt : public byte_extract_exprt {
 public:
   byte_extract_little_endian_exprt()
@@ -80,7 +80,7 @@ to_byte_extract_little_endian_expr(exprt &expr) {
 }
 
 /*! \brief TO_BE_DOCUMENTED
-*/
+ */
 class byte_extract_big_endian_exprt : public byte_extract_exprt {
 public:
   byte_extract_big_endian_exprt()
@@ -106,7 +106,7 @@ to_byte_extract_big_endian_expr(exprt &expr) {
 }
 
 /*! \brief TO_BE_DOCUMENTED
-*/
+ */
 class byte_update_exprt : public exprt {
 public:
   explicit byte_update_exprt(irep_idt _id) : exprt(_id) {
@@ -143,7 +143,7 @@ inline byte_update_exprt &to_byte_update_expr(exprt &expr) {
 }
 
 /*! \brief TO_BE_DOCUMENTED
-*/
+ */
 class byte_update_little_endian_exprt : public byte_update_exprt {
 public:
   byte_update_little_endian_exprt()
@@ -169,7 +169,7 @@ to_byte_update_little_endian_expr(exprt &expr) {
 }
 
 /*! \brief TO_BE_DOCUMENTED
-*/
+ */
 class byte_update_big_endian_exprt : public byte_update_exprt {
 public:
   byte_update_big_endian_exprt()

@@ -17,7 +17,7 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "prop_assignment.h"
 
 /*! \brief TO_BE_DOCUMENTED
-*/
+ */
 class propt : public messaget, public prop_assignmentt {
 public:
   propt() {}

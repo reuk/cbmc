@@ -66,7 +66,7 @@ public:
   goto_program_templatet &operator=(const goto_program_templatet &src) = delete;
 
   /*! \brief Container for an instruction of the goto-program
-  */
+   */
   class instructiont {
   public:
     codeT code;

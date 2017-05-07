@@ -14,7 +14,7 @@ Author: Daniel Kroening, kroening@kroening.com
  *
  * \author Daniel Kroening <kroening@kroening.com>
  * \date   Sun Jul 31 21:54:44 BST 2011
-*/
+ */
 
 #include <cassert>
 #include <iosfwd>
@@ -24,7 +24,7 @@ class namespacet;
 class typet;
 
 /*! \brief Maps a big-endian offset to a little-endian offset
-*/
+ */
 class endianness_mapt {
 public:
   endianness_mapt(const typet &type, bool little_endian, const namespacet &_ns)

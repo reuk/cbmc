@@ -382,8 +382,8 @@ void const_function_pointer_propagationt::arg_stackt::add_args(
         cfpp.add(cor_arg_it->get_base_name(), cfpp.get(arg_symbol.base_name),
                  cfpp.fun_id_to_invok[arg_symbol.base_name]);
         insert(cor_arg_it->get_base_name());
-        cfpp.message.debug() << "SET: insert " << cor_arg_it->get_base_name()
-                             << messaget::eom;
+        cfpp.message.debug()
+            << "SET: insert " << cor_arg_it->get_base_name() << messaget::eom;
       }
     }
   }

@@ -1280,8 +1280,8 @@ void value_set_fit::do_function_call(const irep_idt &function,
   // calls
 
   for (unsigned i = 0; i < arguments.size(); i++) {
-    const std::string identifier = "value_set::" + id2string(function) + "::" +
-                                   "argument$" + std::to_string(i);
+    const std::string identifier = "value_set::" + id2string(function) +
+                                   "::" + "argument$" + std::to_string(i);
     add_var(identifier, "");
     exprt dummy_lhs = symbol_exprt(identifier, arguments[i].type());
     assign(dummy_lhs, arguments[i], ns);
@@ -1401,6 +1401,6 @@ void value_set_fit::apply_code(const exprt &code, const namespacet &ns) {
   } else if (statement == ID_input || statement == ID_output) {
     // doesn't do anything
   } else
-    throw code.pretty() + "\n" + "value_set_fit: unexpected statement: " +
-        id2string(statement);
+    throw code.pretty() + "\n" +
+        "value_set_fit: unexpected statement: " + id2string(statement);
 }

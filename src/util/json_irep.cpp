@@ -6,9 +6,9 @@ Author: Thomas Kiley, thomas.kiley@diffblue.com
 
 \*******************************************************************/
 
-#include "json.h"
-#include "irep.h"
 #include "json_irep.h"
+#include "irep.h"
+#include "json.h"
 
 #include <algorithm>
 

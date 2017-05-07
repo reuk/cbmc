@@ -8,7 +8,6 @@ Author: Daniel Kroening
 
 \*******************************************************************/
 
-#include "xml.h"
 #include "arith_tools.h"
 #include "config.h"
 #include "expr.h"
@@ -16,6 +15,7 @@ Author: Daniel Kroening
 #include "ieee_float.h"
 #include "namespace.h"
 #include "std_expr.h"
+#include "xml.h"
 
 #include "xml_expr.h"
 

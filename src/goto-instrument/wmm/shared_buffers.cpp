@@ -929,8 +929,8 @@ Function: weak_memory_cfg
 void shared_bufferst::cfg_visitort::weak_memory(value_setst &value_sets,
                                                 const irep_idt &function,
                                                 memory_modelt model) {
-  shared_buffers.message.debug() << "visit function " << function
-                                 << messaget::eom;
+  shared_buffers.message.debug()
+      << "visit function " << function << messaget::eom;
   if (function == CPROVER_PREFIX "initialize")
     return;
 
@@ -944,8 +944,8 @@ void shared_bufferst::cfg_visitort::weak_memory(value_setst &value_sets,
   Forall_goto_program_instructions(i_it, goto_program) {
     goto_programt::instructiont &instruction = *i_it;
 
-    shared_buffers.message.debug() << "instruction " << instruction.type
-                                   << messaget::eom;
+    shared_buffers.message.debug()
+        << "instruction " << instruction.type << messaget::eom;
 
     /* thread marking */
     if (instruction.is_start_thread()) {
@@ -1105,8 +1105,8 @@ void shared_bufferst::cfg_visitort::weak_memory(value_setst &value_sets,
 
         i_it--; // the for loop already counts us up
       } catch (...) {
-        shared_buffers.message.warning() << "Identifier not found"
-                                         << messaget::eom;
+        shared_buffers.message.warning()
+            << "Identifier not found" << messaget::eom;
       }
     } else if (is_fence(instruction, ns) ||
                (instruction.is_other() &&

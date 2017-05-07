@@ -120,8 +120,8 @@ bool read_goto_binary(const std::string &filename, symbol_tablet &symbol_table,
 
         std::ifstream temp_in(tempname, std::ios::binary);
         if (!temp_in)
-          messaget(message_handler).error() << "failed to read temp binary"
-                                            << messaget::eom;
+          messaget(message_handler).error()
+              << "failed to read temp binary" << messaget::eom;
         const bool read_err = read_bin_goto_object(
             temp_in, filename, symbol_table, goto_functions, message_handler);
         temp_in.close();
@@ -350,8 +350,8 @@ bool read_object_and_link(const std::string &file_name,
                           symbol_tablet &symbol_table,
                           goto_functionst &functions,
                           message_handlert &message_handler) {
-  messaget(message_handler).statistics() << "Reading: " << file_name
-                                         << messaget::eom;
+  messaget(message_handler).statistics()
+      << "Reading: " << file_name << messaget::eom;
 
   // we read into a temporary model
   goto_modelt temp_model;

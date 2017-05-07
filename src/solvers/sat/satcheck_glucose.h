@@ -20,7 +20,7 @@ namespace Glucose // NOLINT(readability/namespace)
 {
 class Solver;     // NOLINT(readability/identifiers)
 class SimpSolver; // NOLINT(readability/identifiers)
-}
+} // namespace Glucose
 
 template <typename T> class satcheck_glucose_baset : public cnf_solvert {
 public:

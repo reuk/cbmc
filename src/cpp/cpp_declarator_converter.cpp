@@ -123,9 +123,9 @@ symbolt &cpp_declarator_convertert::convert(
       if (c_it == cpp_typecheck.symbol_table.symbols.end()) {
         cpp_typecheck.error().source_location =
             declarator.name().source_location();
-        cpp_typecheck.error() << "member `" << base_name
-                              << "' not found in scope `" << scope->identifier
-                              << "'" << messaget::eom;
+        cpp_typecheck.error()
+            << "member `" << base_name << "' not found in scope `"
+            << scope->identifier << "'" << messaget::eom;
         throw 0;
       }
     }
@@ -182,8 +182,8 @@ symbolt &cpp_declarator_convertert::convert(
         to_code_type(final_type).return_type().id() == ID_constructor) {
       cpp_typecheck.error().source_location =
           declarator.name().source_location();
-      cpp_typecheck.error() << "function must have return type"
-                            << messaget::eom;
+      cpp_typecheck.error()
+          << "function must have return type" << messaget::eom;
       throw 0;
     }
 
@@ -485,8 +485,8 @@ symbolt &cpp_declarator_convertert::convert_new_symbol(
           symbol.is_file_local = true;
         } else if (storage_spec.is_extern()) {
           cpp_typecheck.error().source_location = storage_spec.location();
-          cpp_typecheck.error() << "external storage not permitted here"
-                                << messaget::eom;
+          cpp_typecheck.error()
+              << "external storage not permitted here" << messaget::eom;
           throw 0;
         }
       }
@@ -521,8 +521,8 @@ symbolt &cpp_declarator_convertert::convert_new_symbol(
 
       if (!id.is_class() && !id.is_enum()) {
         cpp_typecheck.error().source_location = new_symbol->location;
-        cpp_typecheck.error() << "`" << base_name << "' already in scope"
-                              << messaget::eom;
+        cpp_typecheck.error()
+            << "`" << base_name << "' already in scope" << messaget::eom;
         throw 0;
       }
     }

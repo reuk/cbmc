@@ -14,7 +14,7 @@ Author: Daniel Kroening, kroening@kroening.com
  *
  * \author Daniel Kroening <kroening@kroening.com>
  * \date   Sun Jul 31 21:54:44 BST 2011
-*/
+ */
 
 #include <cassert>
 
@@ -25,63 +25,63 @@ class constant_exprt;
 
 /*! \defgroup gr_std_types Conversion to specific types
  *  Conversion to subclasses of @ref typet
-*/
+ */
 
 /*! \brief The proper Booleans
-*/
+ */
 class bool_typet : public typet {
 public:
   bool_typet() : typet(ID_bool) {}
 };
 
 /*! \brief The NIL type
-*/
+ */
 class nil_typet : public typet {
 public:
   nil_typet() : typet(static_cast<const typet &>(get_nil_irep())) {}
 };
 
 /*! \brief The empty type
-*/
+ */
 class empty_typet : public typet {
 public:
   empty_typet() : typet(ID_empty) {}
 };
 
 /*! \brief The void type
-*/
+ */
 class void_typet : public empty_typet {};
 
 /*! \brief Unbounded, signed integers
-*/
+ */
 class integer_typet : public typet {
 public:
   integer_typet() : typet(ID_integer) {}
 };
 
 /*! \brief Natural numbers (which include zero)
-*/
+ */
 class natural_typet : public typet {
 public:
   natural_typet() : typet(ID_natural) {}
 };
 
 /*! \brief Unbounded, signed rational numbers
-*/
+ */
 class rational_typet : public typet {
 public:
   rational_typet() : typet(ID_rational) {}
 };
 
 /*! \brief Unbounded, signed real numbers
-*/
+ */
 class real_typet : public typet {
 public:
   real_typet() : typet(ID_real) {}
 };
 
 /*! \brief A reference into the symbol table
-*/
+ */
 class symbol_typet : public typet {
 public:
   symbol_typet() : typet(ID_symbol) {}
@@ -106,7 +106,7 @@ public:
  * \return Object of type \ref symbol_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const symbol_typet &to_symbol_type(const typet &type) {
   assert(type.id() == ID_symbol);
   return static_cast<const symbol_typet &>(type);
@@ -114,14 +114,14 @@ inline const symbol_typet &to_symbol_type(const typet &type) {
 
 /*! \copydoc to_symbol_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline symbol_typet &to_symbol_type(typet &type) {
   assert(type.id() == ID_symbol);
   return static_cast<symbol_typet &>(type);
 }
 
 /*! \brief Base type of C structs and unions, and C++ classes
-*/
+ */
 class struct_union_typet : public typet {
 public:
   explicit struct_union_typet(const irep_idt &_id) : typet(_id) {}
@@ -198,7 +198,7 @@ public:
  * \return Object of type \ref struct_union_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const struct_union_typet &to_struct_union_type(const typet &type) {
   assert(type.id() == ID_struct || type.id() == ID_union);
   return static_cast<const struct_union_typet &>(type);
@@ -206,14 +206,14 @@ inline const struct_union_typet &to_struct_union_type(const typet &type) {
 
 /*! \copydoc to_struct_union_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline struct_union_typet &to_struct_union_type(typet &type) {
   assert(type.id() == ID_struct || type.id() == ID_union);
   return static_cast<struct_union_typet &>(type);
 }
 
 /*! \brief Structure type
-*/
+ */
 class struct_typet : public struct_union_typet {
 public:
   struct_typet() : struct_union_typet(ID_struct) {}
@@ -231,7 +231,7 @@ public:
  * \return Object of type \ref struct_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const struct_typet &to_struct_type(const typet &type) {
   assert(type.id() == ID_struct);
   return static_cast<const struct_typet &>(type);
@@ -239,14 +239,14 @@ inline const struct_typet &to_struct_type(const typet &type) {
 
 /*! \copydoc to_struct_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline struct_typet &to_struct_type(typet &type) {
   assert(type.id() == ID_struct);
   return static_cast<struct_typet &>(type);
 }
 
 /*! \brief C++ class type
-*/
+ */
 class class_typet : public struct_typet {
 public:
   class_typet() : struct_typet() { set(ID_C_class, true); }
@@ -296,7 +296,7 @@ public:
  * \return Object of type \ref class_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const class_typet &to_class_type(const typet &type) {
   assert(type.id() == ID_struct);
   return static_cast<const class_typet &>(type);
@@ -304,14 +304,14 @@ inline const class_typet &to_class_type(const typet &type) {
 
 /*! \copydoc to_class_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline class_typet &to_class_type(typet &type) {
   assert(type.id() == ID_struct);
   return static_cast<class_typet &>(type);
 }
 
 /*! \brief The union type
-*/
+ */
 class union_typet : public struct_union_typet {
 public:
   union_typet() : struct_union_typet(ID_union) {}
@@ -326,7 +326,7 @@ public:
  * \return Object of type \ref union_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const union_typet &to_union_type(const typet &type) {
   assert(type.id() == ID_union);
   return static_cast<const union_typet &>(type);
@@ -334,14 +334,14 @@ inline const union_typet &to_union_type(const typet &type) {
 
 /*! \copydoc to_union_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline union_typet &to_union_type(typet &type) {
   assert(type.id() == ID_union);
   return static_cast<union_typet &>(type);
 }
 
 /*! \brief A generic tag-based type
-*/
+ */
 
 class tag_typet : public typet {
 public:
@@ -368,7 +368,7 @@ public:
  * \return Object of type \ref tag_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const tag_typet &to_tag_type(const typet &type) {
   assert(type.id() == ID_c_enum_tag || type.id() == ID_struct_tag ||
          type.id() == ID_union_tag);
@@ -377,7 +377,7 @@ inline const tag_typet &to_tag_type(const typet &type) {
 
 /*! \copydoc to_tag_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline tag_typet &to_tag_type(typet &type) {
   assert(type.id() == ID_c_enum_tag || type.id() == ID_struct_tag ||
          type.id() == ID_union_tag);
@@ -385,7 +385,7 @@ inline tag_typet &to_tag_type(typet &type) {
 }
 
 /*! \brief A struct tag type
-*/
+ */
 
 class struct_tag_typet : public tag_typet {
 public:
@@ -402,7 +402,7 @@ public:
  * \return Object of type \ref union_tag_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const struct_tag_typet &to_struct_tag_type(const typet &type) {
   assert(type.id() == ID_struct_tag);
   return static_cast<const struct_tag_typet &>(type);
@@ -410,14 +410,14 @@ inline const struct_tag_typet &to_struct_tag_type(const typet &type) {
 
 /*! \copydoc to_struct_tag_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline struct_tag_typet &to_struct_tag_type(typet &type) {
   assert(type.id() == ID_struct_tag);
   return static_cast<struct_tag_typet &>(type);
 }
 
 /*! \brief A union tag type
-*/
+ */
 
 class union_tag_typet : public tag_typet {
 public:
@@ -434,7 +434,7 @@ public:
  * \return Object of type \ref union_tag_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const union_tag_typet &to_union_tag_type(const typet &type) {
   assert(type.id() == ID_union_tag);
   return static_cast<const union_tag_typet &>(type);
@@ -442,14 +442,14 @@ inline const union_tag_typet &to_union_tag_type(const typet &type) {
 
 /*! \copydoc to_union_tag_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline union_tag_typet &to_union_tag_type(typet &type) {
   assert(type.id() == ID_union_tag);
   return static_cast<union_tag_typet &>(type);
 }
 
 /*! \brief A generic enumeration type (not to be confused with C enums)
-*/
+ */
 
 class enumeration_typet : public typet {
 public:
@@ -469,7 +469,7 @@ public:
  * \return Object of type \ref enumeration_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const enumeration_typet &to_enumeration_type(const typet &type) {
   assert(type.id() == ID_enumeration);
   return static_cast<const enumeration_typet &>(type);
@@ -477,14 +477,14 @@ inline const enumeration_typet &to_enumeration_type(const typet &type) {
 
 /*! \copydoc to_enumeration_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline enumeration_typet &to_enumeration_type(typet &type) {
   assert(type.id() == ID_enumeration);
   return static_cast<enumeration_typet &>(type);
 }
 
 /*! \brief The type of C enums
-*/
+ */
 
 class c_enum_typet : public type_with_subtypet {
 public:
@@ -521,7 +521,7 @@ public:
  * \return Object of type \ref c_enum_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const c_enum_typet &to_c_enum_type(const typet &type) {
   assert(type.id() == ID_c_enum);
   return static_cast<const c_enum_typet &>(type);
@@ -529,14 +529,14 @@ inline const c_enum_typet &to_c_enum_type(const typet &type) {
 
 /*! \copydoc to_c_enum_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline c_enum_typet &to_c_enum_type(typet &type) {
   assert(type.id() == ID_c_enum);
   return static_cast<c_enum_typet &>(type);
 }
 
 /*! \brief An enum tag type
-*/
+ */
 
 class c_enum_tag_typet : public tag_typet {
 public:
@@ -553,7 +553,7 @@ public:
  * \return Object of type \ref c_enum_tag_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const c_enum_tag_typet &to_c_enum_tag_type(const typet &type) {
   assert(type.id() == ID_c_enum_tag);
   return static_cast<const c_enum_tag_typet &>(type);
@@ -561,14 +561,14 @@ inline const c_enum_tag_typet &to_c_enum_tag_type(const typet &type) {
 
 /*! \copydoc to_enum_tag_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline c_enum_tag_typet &to_c_enum_tag_type(typet &type) {
   assert(type.id() == ID_c_enum_tag);
   return static_cast<c_enum_tag_typet &>(type);
 }
 
 /*! \brief Base type of functions
-*/
+ */
 class code_typet : public typet {
 public:
   code_typet() : typet(ID_code) {}
@@ -658,7 +658,7 @@ public:
  * \return Object of type \ref code_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const code_typet &to_code_type(const typet &type) {
   assert(type.id() == ID_code);
   return static_cast<const code_typet &>(type);
@@ -666,14 +666,14 @@ inline const code_typet &to_code_type(const typet &type) {
 
 /*! \copydoc to_code_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline code_typet &to_code_type(typet &type) {
   assert(type.id() == ID_code);
   return static_cast<code_typet &>(type);
 }
 
 /*! \brief arrays with given size
-*/
+ */
 class array_typet : public type_with_subtypet {
 public:
   array_typet() : type_with_subtypet(ID_array) {}
@@ -703,7 +703,7 @@ public:
  * \return Object of type \ref array_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const array_typet &to_array_type(const typet &type) {
   assert(type.id() == ID_array);
   return static_cast<const array_typet &>(type);
@@ -711,14 +711,14 @@ inline const array_typet &to_array_type(const typet &type) {
 
 /*! \copydoc to_array_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline array_typet &to_array_type(typet &type) {
   assert(type.id() == ID_array);
   return static_cast<array_typet &>(type);
 }
 
 /*! \brief arrays without size
-*/
+ */
 class incomplete_array_typet : public type_with_subtypet {
 public:
   incomplete_array_typet() : type_with_subtypet(ID_incomplete_array) {}
@@ -736,7 +736,7 @@ public:
  * \return Object of type \ref incomplete_array_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const incomplete_array_typet &
 to_incomplete_array_type(const typet &type) {
   assert(type.id() == ID_array);
@@ -745,14 +745,14 @@ to_incomplete_array_type(const typet &type) {
 
 /*! \copydoc to_incomplete_array_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline incomplete_array_typet &to_incomplete_array_type(typet &type) {
   assert(type.id() == ID_array);
   return static_cast<incomplete_array_typet &>(type);
 }
 
 /*! \brief Base class of bitvector types
-*/
+ */
 class bitvector_typet : public type_with_subtypet {
 public:
   explicit bitvector_typet(const irep_idt &_id) : type_with_subtypet(_id) {}
@@ -784,7 +784,7 @@ public:
  * \return Object of type \ref bitvector_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const bitvector_typet &to_bitvector_type(const typet &type) {
   assert(type.id() == ID_signedbv || type.id() == ID_unsignedbv ||
          type.id() == ID_fixedbv || type.id() == ID_floatbv ||
@@ -808,7 +808,7 @@ inline bitvector_typet &to_bitvector_type(typet &type) {
 }
 
 /*! \brief fixed-width bit-vector without numerical interpretation
-*/
+ */
 class bv_typet : public bitvector_typet {
 public:
   bv_typet() : bitvector_typet(ID_bv) {}
@@ -827,7 +827,7 @@ public:
  * \return Object of type \ref bv_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const bv_typet &to_bv_type(const typet &type) {
   assert(type.id() == ID_bv);
   return static_cast<const bv_typet &>(type);
@@ -835,14 +835,14 @@ inline const bv_typet &to_bv_type(const typet &type) {
 
 /*! \copydoc to_bv_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline bv_typet &to_bv_type(typet &type) {
   assert(type.id() == ID_bv);
   return static_cast<bv_typet &>(type);
 }
 
 /*! \brief Fixed-width bit-vector with unsigned binary interpretation
-*/
+ */
 class unsignedbv_typet : public bitvector_typet {
 public:
   unsignedbv_typet() : bitvector_typet(ID_unsignedbv) {}
@@ -866,7 +866,7 @@ public:
  * \return Object of type \ref unsignedbv_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const unsignedbv_typet &to_unsignedbv_type(const typet &type) {
   assert(type.id() == ID_unsignedbv);
   return static_cast<const unsignedbv_typet &>(type);
@@ -874,14 +874,14 @@ inline const unsignedbv_typet &to_unsignedbv_type(const typet &type) {
 
 /*! \copydoc to_unsignedbv_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline unsignedbv_typet &to_unsignedbv_type(typet &type) {
   assert(type.id() == ID_unsignedbv);
   return static_cast<unsignedbv_typet &>(type);
 }
 
 /*! \brief Fixed-width bit-vector with two's complement interpretation
-*/
+ */
 class signedbv_typet : public bitvector_typet {
 public:
   signedbv_typet() : bitvector_typet(ID_signedbv) {}
@@ -905,7 +905,7 @@ public:
  * \return Object of type \ref signedbv_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const signedbv_typet &to_signedbv_type(const typet &type) {
   assert(type.id() == ID_signedbv);
   return static_cast<const signedbv_typet &>(type);
@@ -913,14 +913,14 @@ inline const signedbv_typet &to_signedbv_type(const typet &type) {
 
 /*! \copydoc to_signedbv_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline signedbv_typet &to_signedbv_type(typet &type) {
   assert(type.id() == ID_signedbv);
   return static_cast<signedbv_typet &>(type);
 }
 
 /*! \brief Fixed-width bit-vector with signed fixed-point interpretation
-*/
+ */
 class fixedbv_typet : public bitvector_typet {
 public:
   fixedbv_typet() : bitvector_typet(ID_fixedbv) {}
@@ -943,14 +943,14 @@ public:
  * \return Object of type \ref fixedbv_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const fixedbv_typet &to_fixedbv_type(const typet &type) {
   assert(type.id() == ID_fixedbv);
   return static_cast<const fixedbv_typet &>(type);
 }
 
 /*! \brief Fixed-width bit-vector with IEEE floating-point interpretation
-*/
+ */
 class floatbv_typet : public bitvector_typet {
 public:
   floatbv_typet() : bitvector_typet(ID_floatbv) {}
@@ -974,14 +974,14 @@ public:
  * \return Object of type \ref floatbv_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const floatbv_typet &to_floatbv_type(const typet &type) {
   assert(type.id() == ID_floatbv);
   return static_cast<const floatbv_typet &>(type);
 }
 
 /*! \brief Type for c bit fields
-*/
+ */
 class c_bit_field_typet : public bitvector_typet {
 public:
   c_bit_field_typet() : bitvector_typet(ID_c_bit_field) {}
@@ -1001,7 +1001,7 @@ public:
  * \return Object of type \ref c_bit_field_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const c_bit_field_typet &to_c_bit_field_type(const typet &type) {
   assert(type.id() == ID_c_bit_field);
   return static_cast<const c_bit_field_typet &>(type);
@@ -1016,14 +1016,14 @@ inline const c_bit_field_typet &to_c_bit_field_type(const typet &type) {
  * \return Object of type \ref c_bit_field_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline c_bit_field_typet &to_c_bit_field_type(typet &type) {
   assert(type.id() == ID_c_bit_field);
   return static_cast<c_bit_field_typet &>(type);
 }
 
 /*! \brief The pointer type
-*/
+ */
 class pointer_typet : public bitvector_typet {
 public:
   pointer_typet() : bitvector_typet(ID_pointer) {}
@@ -1047,7 +1047,7 @@ public:
  * \return Object of type \ref pointer_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const pointer_typet &to_pointer_type(const typet &type) {
   assert(type.id() == ID_pointer);
   return static_cast<const pointer_typet &>(type);
@@ -1055,14 +1055,14 @@ inline const pointer_typet &to_pointer_type(const typet &type) {
 
 /*! \copydoc to_pointer_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline pointer_typet &to_pointer_type(typet &type) {
   assert(type.id() == ID_pointer);
   return static_cast<pointer_typet &>(type);
 }
 
 /*! \brief The reference type
-*/
+ */
 class reference_typet : public pointer_typet {
 public:
   reference_typet() { set(ID_C_reference, true); }
@@ -1079,14 +1079,14 @@ public:
 };
 
 /*! \brief TO_BE_DOCUMENTED
-*/
+ */
 bool is_reference(const typet &type);
 /*! \brief TO_BE_DOCUMENTED
-*/
+ */
 bool is_rvalue_reference(const typet &type);
 
 /*! \brief The C/C++ Booleans
-*/
+ */
 class c_bool_typet : public bitvector_typet {
 public:
   c_bool_typet() : bitvector_typet(ID_c_bool) {}
@@ -1104,7 +1104,7 @@ public:
  * \return Object of type \ref c_bool_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const c_bool_typet &to_c_bool_type(const typet &type) {
   assert(type.id() == ID_c_bool);
   return static_cast<const c_bool_typet &>(type);
@@ -1112,14 +1112,14 @@ inline const c_bool_typet &to_c_bool_type(const typet &type) {
 
 /*! \copydoc to_c_bool_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline c_bool_typet &to_c_bool_type(typet &type) {
   assert(type.id() == ID_c_bool);
   return static_cast<c_bool_typet &>(type);
 }
 
 /*! \brief TO_BE_DOCUMENTED
-*/
+ */
 class string_typet : public typet {
 public:
   string_typet() : typet(ID_string) {}
@@ -1134,14 +1134,14 @@ public:
  * \return Object of type \ref string_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const string_typet &to_string_type(const typet &type) {
   assert(type.id() == ID_string);
   return static_cast<const string_typet &>(type);
 }
 
 /*! \brief A type for subranges of integers
-*/
+ */
 class range_typet : public typet {
 public:
   range_typet() : typet(ID_range) {}
@@ -1167,14 +1167,14 @@ public:
  * \return Object of type \ref range_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const range_typet &to_range_type(const typet &type) {
   assert(type.id() == ID_range);
   return static_cast<const range_typet &>(type);
 }
 
 /*! \brief A constant-size array type
-*/
+ */
 class vector_typet : public type_with_subtypet {
 public:
   vector_typet() : type_with_subtypet(ID_vector) {}
@@ -1200,7 +1200,7 @@ public:
  * \return Object of type \ref vector_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const vector_typet &to_vector_type(const typet &type) {
   assert(type.id() == ID_vector);
   return static_cast<const vector_typet &>(type);
@@ -1208,14 +1208,14 @@ inline const vector_typet &to_vector_type(const typet &type) {
 
 /*! \copydoc to_vector_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline vector_typet &to_vector_type(typet &type) {
   assert(type.id() == ID_vector);
   return static_cast<vector_typet &>(type);
 }
 
 /*! \brief Complex numbers made of pair of given subtype
-*/
+ */
 class complex_typet : public type_with_subtypet {
 public:
   complex_typet() : type_with_subtypet(ID_complex) {}
@@ -1233,7 +1233,7 @@ public:
  * \return Object of type \ref complex_typet
  *
  * \ingroup gr_std_types
-*/
+ */
 inline const complex_typet &to_complex_type(const typet &type) {
   assert(type.id() == ID_complex);
   return static_cast<const complex_typet &>(type);
@@ -1241,7 +1241,7 @@ inline const complex_typet &to_complex_type(const typet &type) {
 
 /*! \copydoc to_complex_type(const typet &)
  * \ingroup gr_std_types
-*/
+ */
 inline complex_typet &to_complex_type(typet &type) {
   assert(type.id() == ID_complex);
   return static_cast<complex_typet &>(type);

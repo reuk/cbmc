@@ -210,8 +210,9 @@ void dott::do_dot_function_calls(std::ostream &out) {
         break;
 
     if (cit != clusters.end()) {
-      out << expr.op0().id() << " -> "
-                                "Node_"
+      out << expr.op0().id()
+          << " -> "
+             "Node_"
           << cit->get("nr") << "_0"
           << " [lhead=\"cluster_" << expr.op1().get(ID_identifier) << "\","
           << "color=blue];" << std::endl;
@@ -226,8 +227,9 @@ void dott::do_dot_function_calls(std::ostream &out) {
       clusters.push_back(exprt("cluster"));
       clusters.back().set("name", expr.op1().get(ID_identifier));
       clusters.back().set("nr", subgraphscount);
-      out << expr.op0().id() << " -> "
-                                "Node_"
+      out << expr.op0().id()
+          << " -> "
+             "Node_"
           << subgraphscount << "_0"
           << " [lhead=\"cluster_" << expr.op1().get("identifier") << "\","
           << "color=blue];" << std::endl;

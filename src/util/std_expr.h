@@ -14,7 +14,7 @@ Author: Daniel Kroening, kroening@kroening.com
  *
  * \author Daniel Kroening <kroening@kroening.com>
  * \date   Sun Jul 31 21:54:44 BST 2011
-*/
+ */
 
 #include <cassert>
 
@@ -22,7 +22,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 /*! \defgroup gr_std_expr Conversion to specific expressions
  *  Conversion to subclasses of @ref exprt
-*/
+ */
 
 /*! \brief A transition system, consisting of
            state invariant, initial state predicate,
@@ -53,7 +53,7 @@ public:
  * \return Object of type \ref transt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const transt &to_trans_expr(const exprt &expr) {
   assert(expr.id() == ID_trans && expr.operands().size() == 3);
   return static_cast<const transt &>(expr);
@@ -61,34 +61,34 @@ inline const transt &to_trans_expr(const exprt &expr) {
 
 /*! \copydoc to_trans(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline transt &to_trans_expr(exprt &expr) {
   assert(expr.id() == ID_trans && expr.operands().size() == 3);
   return static_cast<transt &>(expr);
 }
 
 /*! \brief Expression to hold a symbol (variable)
-*/
+ */
 class symbol_exprt : public exprt {
 public:
   symbol_exprt() : exprt(ID_symbol) {}
 
   /*! \brief Constructor
    * \param identifier Name of symbol
-  */
+   */
   explicit symbol_exprt(const irep_idt &identifier) : exprt(ID_symbol) {
     set_identifier(identifier);
   }
 
   /*! \brief Constructor
    * \param  type Type of symbol
-  */
+   */
   explicit symbol_exprt(const typet &type) : exprt(ID_symbol, type) {}
 
   /*! \brief Constructor
    * \param identifier Name of symbol
    * \param  type Type of symbol
-  */
+   */
   symbol_exprt(const irep_idt &identifier, const typet &type)
       : exprt(ID_symbol, type) {
     set_identifier(identifier);
@@ -102,26 +102,26 @@ public:
 };
 
 /*! \brief Expression to hold a symbol (variable)
-*/
+ */
 class decorated_symbol_exprt : public symbol_exprt {
 public:
   decorated_symbol_exprt() {}
 
   /*! \brief Constructor
    * \param identifier Name of symbol
-  */
+   */
   explicit decorated_symbol_exprt(const irep_idt &identifier)
       : symbol_exprt(identifier) {}
 
   /*! \brief Constructor
    * \param  type Type of symbol
-  */
+   */
   explicit decorated_symbol_exprt(const typet &type) : symbol_exprt(type) {}
 
   /*! \brief Constructor
    * \param identifier Name of symbol
    * \param  type Type of symbol
-  */
+   */
   decorated_symbol_exprt(const irep_idt &identifier, const typet &type)
       : symbol_exprt(identifier, type) {}
 
@@ -147,7 +147,7 @@ public:
  * \return Object of type \ref symbol_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const symbol_exprt &to_symbol_expr(const exprt &expr) {
   assert(expr.id() == ID_symbol && !expr.has_operands());
   return static_cast<const symbol_exprt &>(expr);
@@ -155,14 +155,14 @@ inline const symbol_exprt &to_symbol_expr(const exprt &expr) {
 
 /*! \copydoc to_symbol_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline symbol_exprt &to_symbol_expr(exprt &expr) {
   assert(expr.id() == ID_symbol && !expr.has_operands());
   return static_cast<symbol_exprt &>(expr);
 }
 
 /*! \brief Generic base class for unary expressions
-*/
+ */
 class unary_exprt : public exprt {
 public:
   unary_exprt() { operands().resize(1); }
@@ -198,7 +198,7 @@ public:
  * \return Object of type \ref unary_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const unary_exprt &to_unary_expr(const exprt &expr) {
   assert(expr.operands().size() == 1);
   return static_cast<const unary_exprt &>(expr);
@@ -206,14 +206,14 @@ inline const unary_exprt &to_unary_expr(const exprt &expr) {
 
 /*! \copydoc to_unary_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline unary_exprt &to_unary_expr(exprt &expr) {
   assert(expr.operands().size() == 1);
   return static_cast<unary_exprt &>(expr);
 }
 
 /*! \brief absolute value
-*/
+ */
 class abs_exprt : public unary_exprt {
 public:
   abs_exprt() {}
@@ -230,7 +230,7 @@ public:
  * \return Object of type \ref abs_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const abs_exprt &to_abs_expr(const exprt &expr) {
   assert(expr.id() == ID_abs && expr.operands().size() == 1);
   return static_cast<const abs_exprt &>(expr);
@@ -238,14 +238,14 @@ inline const abs_exprt &to_abs_expr(const exprt &expr) {
 
 /*! \copydoc to_abs_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline abs_exprt &to_abs_expr(exprt &expr) {
   assert(expr.id() == ID_abs && expr.operands().size() == 1);
   return static_cast<abs_exprt &>(expr);
 }
 
 /*! \brief The unary minus expression
-*/
+ */
 class unary_minus_exprt : public unary_exprt {
 public:
   unary_minus_exprt() : unary_exprt(ID_unary_minus) {}
@@ -266,7 +266,7 @@ public:
  * \return Object of type \ref unary_minus_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const unary_minus_exprt &to_unary_minus_expr(const exprt &expr) {
   assert(expr.id() == ID_unary_minus && expr.operands().size() == 1);
   return static_cast<const unary_minus_exprt &>(expr);
@@ -274,7 +274,7 @@ inline const unary_minus_exprt &to_unary_minus_expr(const exprt &expr) {
 
 /*! \copydoc to_unary_minus_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline unary_minus_exprt &to_unary_minus_expr(exprt &expr) {
   assert(expr.id() == ID_unary_minus && expr.operands().size() == 1);
   return static_cast<unary_minus_exprt &>(expr);
@@ -319,7 +319,7 @@ protected:
 };
 
 /*! \brief sign of an expression
-*/
+ */
 class sign_exprt : public unary_predicate_exprt {
 public:
   sign_exprt() {}
@@ -328,7 +328,7 @@ public:
 };
 
 /*! \brief A generic base class for binary expressions
-*/
+ */
 class binary_exprt : public exprt {
 public:
   binary_exprt() { operands().resize(2); }
@@ -365,7 +365,7 @@ protected:
  * \return Object of type \ref binary_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const binary_exprt &to_binary_expr(const exprt &expr) {
   assert(expr.operands().size() == 2);
   return static_cast<const binary_exprt &>(expr);
@@ -373,7 +373,7 @@ inline const binary_exprt &to_binary_expr(const exprt &expr) {
 
 /*! \copydoc to_binary_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline binary_exprt &to_binary_expr(exprt &expr) {
   assert(expr.operands().size() == 2);
   return static_cast<binary_exprt &>(expr);
@@ -395,7 +395,7 @@ public:
 };
 
 /*! \brief A generic base class for relations, i.e., binary predicates
-*/
+ */
 class binary_relation_exprt : public binary_predicate_exprt {
 public:
   binary_relation_exprt() {}
@@ -425,7 +425,7 @@ public:
  * \return Object of type \ref binary_relation_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const binary_relation_exprt &to_binary_relation_expr(const exprt &expr) {
   assert(expr.operands().size() == 2);
   return static_cast<const binary_relation_exprt &>(expr);
@@ -433,14 +433,14 @@ inline const binary_relation_exprt &to_binary_relation_expr(const exprt &expr) {
 
 /*! \copydoc to_binary_relation_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline binary_relation_exprt &to_binary_relation_expr(exprt &expr) {
   assert(expr.operands().size() == 2);
   return static_cast<binary_relation_exprt &>(expr);
 }
 
 /*! \brief The plus expression
-*/
+ */
 class plus_exprt : public binary_exprt {
 public:
   plus_exprt() : binary_exprt(ID_plus) {}
@@ -461,7 +461,7 @@ public:
  * \return Object of type \ref plus_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const plus_exprt &to_plus_expr(const exprt &expr) {
   assert(expr.id() == ID_plus && expr.operands().size() >= 2);
   return static_cast<const plus_exprt &>(expr);
@@ -469,14 +469,14 @@ inline const plus_exprt &to_plus_expr(const exprt &expr) {
 
 /*! \copydoc to_plus_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline plus_exprt &to_plus_expr(exprt &expr) {
   assert(expr.id() == ID_plus && expr.operands().size() >= 2);
   return static_cast<plus_exprt &>(expr);
 }
 
 /*! \brief binary minus
-*/
+ */
 class minus_exprt : public binary_exprt {
 public:
   minus_exprt() : binary_exprt(ID_minus) {}
@@ -494,7 +494,7 @@ public:
  * \return Object of type \ref minus_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const minus_exprt &to_minus_expr(const exprt &expr) {
   assert(expr.id() == ID_minus && expr.operands().size() >= 2);
   return static_cast<const minus_exprt &>(expr);
@@ -502,14 +502,14 @@ inline const minus_exprt &to_minus_expr(const exprt &expr) {
 
 /*! \copydoc to_minus_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline minus_exprt &to_minus_expr(exprt &expr) {
   assert(expr.id() == ID_minus && expr.operands().size() >= 2);
   return static_cast<minus_exprt &>(expr);
 }
 
 /*! \brief binary multiplication
-*/
+ */
 class mult_exprt : public binary_exprt {
 public:
   mult_exprt() : binary_exprt(ID_mult) {}
@@ -527,7 +527,7 @@ public:
  * \return Object of type \ref mult_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const mult_exprt &to_mult_expr(const exprt &expr) {
   assert(expr.id() == ID_mult && expr.operands().size() >= 2);
   return static_cast<const mult_exprt &>(expr);
@@ -535,14 +535,14 @@ inline const mult_exprt &to_mult_expr(const exprt &expr) {
 
 /*! \copydoc to_mult_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline mult_exprt &to_mult_expr(exprt &expr) {
   assert(expr.id() == ID_mult && expr.operands().size() >= 2);
   return static_cast<mult_exprt &>(expr);
 }
 
 /*! \brief division (integer and real)
-*/
+ */
 class div_exprt : public binary_exprt {
 public:
   div_exprt() : binary_exprt(ID_div) {}
@@ -560,7 +560,7 @@ public:
  * \return Object of type \ref div_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const div_exprt &to_div_expr(const exprt &expr) {
   assert(expr.id() == ID_div && expr.operands().size() == 2);
   return static_cast<const div_exprt &>(expr);
@@ -568,14 +568,14 @@ inline const div_exprt &to_div_expr(const exprt &expr) {
 
 /*! \copydoc to_div_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline div_exprt &to_div_expr(exprt &expr) {
   assert(expr.id() == ID_div && expr.operands().size() == 2);
   return static_cast<div_exprt &>(expr);
 }
 
 /*! \brief binary modulo
-*/
+ */
 class mod_exprt : public binary_exprt {
 public:
   mod_exprt() : binary_exprt(ID_mod) {}
@@ -593,7 +593,7 @@ public:
  * \return Object of type \ref mod_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const mod_exprt &to_mod_expr(const exprt &expr) {
   assert(expr.id() == ID_mod && expr.operands().size() == 2);
   return static_cast<const mod_exprt &>(expr);
@@ -601,14 +601,14 @@ inline const mod_exprt &to_mod_expr(const exprt &expr) {
 
 /*! \copydoc to_mod_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline mod_exprt &to_mod_expr(exprt &expr) {
   assert(expr.id() == ID_mod && expr.operands().size() == 2);
   return static_cast<mod_exprt &>(expr);
 }
 
 /*! \brief remainder of division
-*/
+ */
 class rem_exprt : public binary_exprt {
 public:
   rem_exprt() : binary_exprt(ID_rem) {}
@@ -626,7 +626,7 @@ public:
  * \return Object of type \ref rem_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const rem_exprt &to_rem_expr(const exprt &expr) {
   assert(expr.id() == ID_rem && expr.operands().size() == 2);
   return static_cast<const rem_exprt &>(expr);
@@ -634,7 +634,7 @@ inline const rem_exprt &to_rem_expr(const exprt &expr) {
 
 /*! \copydoc to_rem_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline rem_exprt &to_rem_expr(exprt &expr) {
   assert(expr.id() == ID_rem && expr.operands().size() == 2);
   return static_cast<rem_exprt &>(expr);
@@ -659,7 +659,7 @@ public:
  * \return Object of type \ref power_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const power_exprt &to_power_expr(const exprt &expr) {
   assert(expr.id() == ID_power && expr.operands().size() == 2);
   return static_cast<const power_exprt &>(expr);
@@ -667,7 +667,7 @@ inline const power_exprt &to_power_expr(const exprt &expr) {
 
 /*! \copydoc to_power_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline power_exprt &to_power_expr(exprt &expr) {
   assert(expr.id() == ID_power && expr.operands().size() == 2);
   return static_cast<power_exprt &>(expr);
@@ -692,7 +692,7 @@ public:
  * \return Object of type \ref factorial_power_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const factorial_power_exprt &to_factorial_power_expr(const exprt &expr) {
   assert(expr.id() == ID_factorial_power && expr.operands().size() == 2);
   return static_cast<const factorial_power_exprt &>(expr);
@@ -700,14 +700,14 @@ inline const factorial_power_exprt &to_factorial_power_expr(const exprt &expr) {
 
 /*! \copydoc to_factorial_power_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline factorial_power_exprt &to_factorial_expr(exprt &expr) {
   assert(expr.id() == ID_factorial_power && expr.operands().size() == 2);
   return static_cast<factorial_power_exprt &>(expr);
 }
 
 /*! \brief equality
-*/
+ */
 class equal_exprt : public binary_relation_exprt {
 public:
   equal_exprt() : binary_relation_exprt(ID_equal) {}
@@ -725,7 +725,7 @@ public:
  * \return Object of type \ref equal_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const equal_exprt &to_equal_expr(const exprt &expr) {
   assert(expr.id() == ID_equal && expr.operands().size() == 2);
   return static_cast<const equal_exprt &>(expr);
@@ -733,14 +733,14 @@ inline const equal_exprt &to_equal_expr(const exprt &expr) {
 
 /*! \copydoc to_equal_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline equal_exprt &to_equal_expr(exprt &expr) {
   assert(expr.id() == ID_equal && expr.operands().size() == 2);
   return static_cast<equal_exprt &>(expr);
 }
 
 /*! \brief inequality
-*/
+ */
 class notequal_exprt : public binary_relation_exprt {
 public:
   notequal_exprt() : binary_relation_exprt(ID_notequal) {}
@@ -758,7 +758,7 @@ public:
  * \return Object of type \ref notequal_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const notequal_exprt &to_notequal_expr(const exprt &expr) {
   assert(expr.id() == ID_notequal && expr.operands().size() == 2);
   return static_cast<const notequal_exprt &>(expr);
@@ -766,14 +766,14 @@ inline const notequal_exprt &to_notequal_expr(const exprt &expr) {
 
 /*! \copydoc to_notequal_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline notequal_exprt &to_notequal_expr(exprt &expr) {
   assert(expr.id() == ID_notequal && expr.operands().size() == 2);
   return static_cast<notequal_exprt &>(expr);
 }
 
 /*! \brief array index operator
-*/
+ */
 class index_exprt : public exprt {
 public:
   index_exprt() : exprt(ID_index) { operands().resize(2); }
@@ -810,7 +810,7 @@ public:
  * \return Object of type \ref index_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const index_exprt &to_index_expr(const exprt &expr) {
   assert(expr.id() == ID_index && expr.operands().size() == 2);
   return static_cast<const index_exprt &>(expr);
@@ -818,14 +818,14 @@ inline const index_exprt &to_index_expr(const exprt &expr) {
 
 /*! \copydoc to_index_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline index_exprt &to_index_expr(exprt &expr) {
   assert(expr.id() == ID_index && expr.operands().size() == 2);
   return static_cast<index_exprt &>(expr);
 }
 
 /*! \brief array constructor from single element
-*/
+ */
 class array_of_exprt : public unary_exprt {
 public:
   array_of_exprt() : unary_exprt(ID_array_of) {}
@@ -847,7 +847,7 @@ public:
  * \return Object of type \ref array_of_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const array_of_exprt &to_array_of_expr(const exprt &expr) {
   assert(expr.id() == ID_array_of && expr.operands().size() == 1);
   return static_cast<const array_of_exprt &>(expr);
@@ -855,14 +855,14 @@ inline const array_of_exprt &to_array_of_expr(const exprt &expr) {
 
 /*! \copydoc to_array_of_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline array_of_exprt &to_array_of_expr(exprt &expr) {
   assert(expr.id() == ID_array_of && expr.operands().size() == 1);
   return static_cast<array_of_exprt &>(expr);
 }
 
 /*! \brief array constructor from list of elements
-*/
+ */
 class array_exprt : public exprt {
 public:
   array_exprt() : exprt(ID_array) {}
@@ -879,7 +879,7 @@ public:
  * \return Object of type \ref array_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const array_exprt &to_array_expr(const exprt &expr) {
   assert(expr.id() == ID_array);
   return static_cast<const array_exprt &>(expr);
@@ -887,14 +887,14 @@ inline const array_exprt &to_array_expr(const exprt &expr) {
 
 /*! \copydoc to_array_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline array_exprt &to_array_expr(exprt &expr) {
   assert(expr.id() == ID_array);
   return static_cast<array_exprt &>(expr);
 }
 
 /*! \brief array constructor from list of elements
-*/
+ */
 class vector_exprt : public exprt {
 public:
   vector_exprt() : exprt(ID_vector) {}
@@ -911,7 +911,7 @@ public:
  * \return Object of type \ref vector_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const vector_exprt &to_vector_expr(const exprt &expr) {
   assert(expr.id() == ID_vector);
   return static_cast<const vector_exprt &>(expr);
@@ -919,14 +919,14 @@ inline const vector_exprt &to_vector_expr(const exprt &expr) {
 
 /*! \copydoc to_vector_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline vector_exprt &to_vector_expr(exprt &expr) {
   assert(expr.id() == ID_vector);
   return static_cast<vector_exprt &>(expr);
 }
 
 /*! \brief union constructor from single element
-*/
+ */
 class union_exprt : public unary_exprt {
 public:
   union_exprt() : unary_exprt(ID_union) {}
@@ -963,7 +963,7 @@ public:
  * \return Object of type \ref union_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const union_exprt &to_union_expr(const exprt &expr) {
   assert(expr.id() == ID_union && expr.operands().size() == 1);
   return static_cast<const union_exprt &>(expr);
@@ -971,14 +971,14 @@ inline const union_exprt &to_union_expr(const exprt &expr) {
 
 /*! \copydoc to_union_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline union_exprt &to_union_expr(exprt &expr) {
   assert(expr.id() == ID_union && expr.operands().size() == 1);
   return static_cast<union_exprt &>(expr);
 }
 
 /*! \brief struct constructor from list of elements
-*/
+ */
 class struct_exprt : public exprt {
 public:
   struct_exprt() : exprt(ID_struct) {}
@@ -995,7 +995,7 @@ public:
  * \return Object of type \ref struct_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const struct_exprt &to_struct_expr(const exprt &expr) {
   assert(expr.id() == ID_struct);
   return static_cast<const struct_exprt &>(expr);
@@ -1003,14 +1003,14 @@ inline const struct_exprt &to_struct_expr(const exprt &expr) {
 
 /*! \copydoc to_struct_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline struct_exprt &to_struct_expr(exprt &expr) {
   assert(expr.id() == ID_struct);
   return static_cast<struct_exprt &>(expr);
 }
 
 /*! \brief complex constructor from a pair of numbers
-*/
+ */
 class complex_exprt : public binary_exprt {
 public:
   complex_exprt() : binary_exprt(ID_complex) {}
@@ -1040,7 +1040,7 @@ public:
  * \return Object of type \ref complex_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const complex_exprt &to_complex_expr(const exprt &expr) {
   assert(expr.id() == ID_complex && expr.operands().size() == 2);
   return static_cast<const complex_exprt &>(expr);
@@ -1048,7 +1048,7 @@ inline const complex_exprt &to_complex_expr(const exprt &expr) {
 
 /*! \copydoc to_complex_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline complex_exprt &to_complex_expr(exprt &expr) {
   assert(expr.id() == ID_complex && expr.operands().size() == 2);
   return static_cast<complex_exprt &>(expr);
@@ -1057,7 +1057,7 @@ inline complex_exprt &to_complex_expr(exprt &expr) {
 class namespacet;
 
 /*! \brief split an expression into a base object and a (byte) offset
-*/
+ */
 class object_descriptor_exprt : public exprt {
 public:
   object_descriptor_exprt() : exprt(ID_object_descriptor) {
@@ -1097,7 +1097,7 @@ public:
  * \return Object of type \ref object_descriptor_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const object_descriptor_exprt &
 to_object_descriptor_expr(const exprt &expr) {
   assert(expr.id() == ID_object_descriptor && expr.operands().size() == 2);
@@ -1106,14 +1106,14 @@ to_object_descriptor_expr(const exprt &expr) {
 
 /*! \copydoc to_object_descriptor_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline object_descriptor_exprt &to_object_descriptor_expr(exprt &expr) {
   assert(expr.id() == ID_object_descriptor && expr.operands().size() == 2);
   return static_cast<object_descriptor_exprt &>(expr);
 }
 
 /*! \brief TO_BE_DOCUMENTED
-*/
+ */
 class dynamic_object_exprt : public exprt {
 public:
   dynamic_object_exprt() : exprt(ID_dynamic_object) {
@@ -1147,7 +1147,7 @@ public:
  * \return Object of type \ref dynamic_object_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const dynamic_object_exprt &to_dynamic_object_expr(const exprt &expr) {
   assert(expr.id() == ID_dynamic_object && expr.operands().size() == 2);
   return static_cast<const dynamic_object_exprt &>(expr);
@@ -1155,14 +1155,14 @@ inline const dynamic_object_exprt &to_dynamic_object_expr(const exprt &expr) {
 
 /*! \copydoc to_dynamic_object_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline dynamic_object_exprt &to_dynamic_object_expr(exprt &expr) {
   assert(expr.id() == ID_dynamic_object && expr.operands().size() == 2);
   return static_cast<dynamic_object_exprt &>(expr);
 }
 
 /*! \brief semantic type conversion
-*/
+ */
 class typecast_exprt : public exprt {
 public:
   explicit typecast_exprt(const typet &_type) : exprt(ID_typecast, _type) {
@@ -1188,7 +1188,7 @@ public:
  * \return Object of type \ref typecast_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const typecast_exprt &to_typecast_expr(const exprt &expr) {
   assert(expr.id() == ID_typecast && expr.operands().size() == 1);
   return static_cast<const typecast_exprt &>(expr);
@@ -1196,14 +1196,14 @@ inline const typecast_exprt &to_typecast_expr(const exprt &expr) {
 
 /*! \copydoc to_typecast_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline typecast_exprt &to_typecast_expr(exprt &expr) {
   assert(expr.id() == ID_typecast && expr.operands().size() == 1);
   return static_cast<typecast_exprt &>(expr);
 }
 
 /*! \brief semantic type conversion from/to floating-point formats
-*/
+ */
 class floatbv_typecast_exprt : public binary_exprt {
 public:
   floatbv_typecast_exprt() : binary_exprt(ID_floatbv_typecast) {}
@@ -1232,7 +1232,7 @@ public:
  * \return Object of type \ref floatbv_typecast_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const floatbv_typecast_exprt &
 to_floatbv_typecast_expr(const exprt &expr) {
   assert(expr.id() == ID_floatbv_typecast && expr.operands().size() == 2);
@@ -1241,14 +1241,14 @@ to_floatbv_typecast_expr(const exprt &expr) {
 
 /*! \copydoc to_floatbv_typecast_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline floatbv_typecast_exprt &to_floatbv_typecast_expr(exprt &expr) {
   assert(expr.id() == ID_floatbv_typecast && expr.operands().size() == 2);
   return static_cast<floatbv_typecast_exprt &>(expr);
 }
 
 /*! \brief boolean AND
-*/
+ */
 class and_exprt : public exprt {
 public:
   and_exprt() : exprt(ID_and, bool_typet()) {}
@@ -1277,7 +1277,7 @@ public:
 /*! 1) generates a conjunction for two or more operands
  *  2) for one operand, returns the operand
  *  3) returns true otherwise
-*/
+ */
 
 exprt conjunction(const exprt::operandst &);
 
@@ -1290,7 +1290,7 @@ exprt conjunction(const exprt::operandst &);
  * \return Object of type \ref and_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const and_exprt &to_and_expr(const exprt &expr) {
   assert(expr.id() == ID_and);
   return static_cast<const and_exprt &>(expr);
@@ -1298,14 +1298,14 @@ inline const and_exprt &to_and_expr(const exprt &expr) {
 
 /*! \copydoc to_and_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline and_exprt &to_and_expr(exprt &expr) {
   assert(expr.id() == ID_and);
   return static_cast<and_exprt &>(expr);
 }
 
 /*! \brief boolean implication
-*/
+ */
 class implies_exprt : public binary_exprt {
 public:
   implies_exprt() : binary_exprt(ID_implies, bool_typet()) {}
@@ -1323,7 +1323,7 @@ public:
  * \return Object of type \ref implies_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const implies_exprt &to_implies_expr(const exprt &expr) {
   assert(expr.id() == ID_implies && expr.operands().size() == 2);
   return static_cast<const implies_exprt &>(expr);
@@ -1331,14 +1331,14 @@ inline const implies_exprt &to_implies_expr(const exprt &expr) {
 
 /*! \copydoc to_implies_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline implies_exprt &to_implies_expr(exprt &expr) {
   assert(expr.id() == ID_implies && expr.operands().size() == 2);
   return static_cast<implies_exprt &>(expr);
 }
 
 /*! \brief boolean OR
-*/
+ */
 class or_exprt : public exprt {
 public:
   or_exprt() : exprt(ID_or, bool_typet()) {}
@@ -1367,7 +1367,7 @@ public:
 /*! 1) generates a disjunction for two or more operands
  *  2) for one operand, returns the operand
  *  3) returns false otherwise
-*/
+ */
 
 exprt disjunction(const exprt::operandst &);
 
@@ -1380,7 +1380,7 @@ exprt disjunction(const exprt::operandst &);
  * \return Object of type \ref or_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const or_exprt &to_or_expr(const exprt &expr) {
   assert(expr.id() == ID_or);
   return static_cast<const or_exprt &>(expr);
@@ -1388,14 +1388,14 @@ inline const or_exprt &to_or_expr(const exprt &expr) {
 
 /*! \copydoc to_or_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline or_exprt &to_or_expr(exprt &expr) {
   assert(expr.id() == ID_or);
   return static_cast<or_exprt &>(expr);
 }
 
 /*! \brief Bit-wise negation of bit-vectors
-*/
+ */
 class bitnot_exprt : public unary_exprt {
 public:
   bitnot_exprt() : unary_exprt(ID_bitnot) {}
@@ -1404,7 +1404,7 @@ public:
 };
 
 /*! \brief Bit-wise OR
-*/
+ */
 class bitor_exprt : public exprt {
 public:
   bitor_exprt() : exprt(ID_bitor) {}
@@ -1424,7 +1424,7 @@ public:
  * \return Object of type \ref bitor_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const bitor_exprt &to_bitor_expr(const exprt &expr) {
   assert(expr.id() == ID_bitor);
   return static_cast<const bitor_exprt &>(expr);
@@ -1432,14 +1432,14 @@ inline const bitor_exprt &to_bitor_expr(const exprt &expr) {
 
 /*! \copydoc to_bitor_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline bitor_exprt &to_bitor_expr(exprt &expr) {
   assert(expr.id() == ID_bitor);
   return static_cast<bitor_exprt &>(expr);
 }
 
 /*! \brief Bit-wise XOR
-*/
+ */
 class bitxor_exprt : public exprt {
 public:
   bitxor_exprt() : exprt(ID_bitxor) {}
@@ -1459,7 +1459,7 @@ public:
  * \return Object of type \ref bitxor_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const bitxor_exprt &to_bitxor_expr(const exprt &expr) {
   assert(expr.id() == ID_bitxor);
   return static_cast<const bitxor_exprt &>(expr);
@@ -1467,14 +1467,14 @@ inline const bitxor_exprt &to_bitxor_expr(const exprt &expr) {
 
 /*! \copydoc to_bitxor_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline bitxor_exprt &to_bitxor_expr(exprt &expr) {
   assert(expr.id() == ID_bitxor);
   return static_cast<bitxor_exprt &>(expr);
 }
 
 /*! \brief Bit-wise AND
-*/
+ */
 class bitand_exprt : public exprt {
 public:
   bitand_exprt() : exprt(ID_bitand) {}
@@ -1494,7 +1494,7 @@ public:
  * \return Object of type \ref bitand_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const bitand_exprt &to_bitand_expr(const exprt &expr) {
   assert(expr.id() == ID_bitand);
   return static_cast<const bitand_exprt &>(expr);
@@ -1502,14 +1502,14 @@ inline const bitand_exprt &to_bitand_expr(const exprt &expr) {
 
 /*! \copydoc to_bitand_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline bitand_exprt &to_bitand_expr(exprt &expr) {
   assert(expr.id() == ID_bitand);
   return static_cast<bitand_exprt &>(expr);
 }
 
 /*! \brief A base class for shift operators
-*/
+ */
 class shift_exprt : public binary_exprt {
 public:
   explicit shift_exprt(const irep_idt &_id) : binary_exprt(_id) {}
@@ -1541,7 +1541,7 @@ public:
  * \return Object of type \ref shift_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const shift_exprt &to_shift_expr(const exprt &expr) {
   assert(expr.operands().size() == 2);
   return static_cast<const shift_exprt &>(expr);
@@ -1549,14 +1549,14 @@ inline const shift_exprt &to_shift_expr(const exprt &expr) {
 
 /*! \copydoc to_shift_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline shift_exprt &to_shift_expr(exprt &expr) {
   assert(expr.operands().size() == 2);
   return static_cast<shift_exprt &>(expr);
 }
 
 /*! \brief Left shift
-*/
+ */
 class shl_exprt : public shift_exprt {
 public:
   shl_exprt() : shift_exprt(ID_shl) {}
@@ -1569,7 +1569,7 @@ public:
 };
 
 /*! \brief Arithmetic right shift
-*/
+ */
 class ashr_exprt : public shift_exprt {
 public:
   ashr_exprt() : shift_exprt(ID_ashr) {}
@@ -1582,7 +1582,7 @@ public:
 };
 
 /*! \brief Logical right shift
-*/
+ */
 class lshr_exprt : public shift_exprt {
 public:
   lshr_exprt() : shift_exprt(ID_lshr) {}
@@ -1595,7 +1595,7 @@ public:
 };
 
 /*! \brief Bit-vector replication
-*/
+ */
 class replication_exprt : public binary_exprt {
 public:
   replication_exprt() : binary_exprt(ID_replication) {}
@@ -1626,7 +1626,7 @@ public:
  * \return Object of type \ref replication_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const replication_exprt &to_replication_expr(const exprt &expr) {
   assert(expr.id() == ID_replication && expr.operands().size() == 2);
   return static_cast<const replication_exprt &>(expr);
@@ -1634,14 +1634,14 @@ inline const replication_exprt &to_replication_expr(const exprt &expr) {
 
 /*! \copydoc to_replication_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline replication_exprt &to_replication_expr(exprt &expr) {
   assert(expr.id() == ID_replication && expr.operands().size() == 2);
   return static_cast<replication_exprt &>(expr);
 }
 
 /*! \brief Extracts a single bit of a bit-vector operand
-*/
+ */
 class extractbit_exprt : public binary_predicate_exprt {
 public:
   extractbit_exprt() : binary_predicate_exprt(ID_extractbit) {}
@@ -1669,7 +1669,7 @@ public:
  * \return Object of type \ref extractbit_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const extractbit_exprt &to_extractbit_expr(const exprt &expr) {
   assert(expr.id() == ID_extractbit && expr.operands().size() == 2);
   return static_cast<const extractbit_exprt &>(expr);
@@ -1677,14 +1677,14 @@ inline const extractbit_exprt &to_extractbit_expr(const exprt &expr) {
 
 /*! \copydoc to_extractbit_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline extractbit_exprt &to_extractbit_expr(exprt &expr) {
   assert(expr.id() == ID_extractbit && expr.operands().size() == 2);
   return static_cast<extractbit_exprt &>(expr);
 }
 
 /*! \brief Extracts a sub-range of a bit-vector operand
-*/
+ */
 class extractbits_exprt : public exprt {
 public:
   extractbits_exprt() : exprt(ID_extractbits) { operands().resize(3); }
@@ -1721,7 +1721,7 @@ public:
  * \return Object of type \ref extractbits_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const extractbits_exprt &to_extractbits_expr(const exprt &expr) {
   assert(expr.id() == ID_extractbits && expr.operands().size() == 3);
   return static_cast<const extractbits_exprt &>(expr);
@@ -1729,14 +1729,14 @@ inline const extractbits_exprt &to_extractbits_expr(const exprt &expr) {
 
 /*! \copydoc to_extractbits_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline extractbits_exprt &to_extractbits_expr(exprt &expr) {
   assert(expr.id() == ID_extractbits && expr.operands().size() == 3);
   return static_cast<extractbits_exprt &>(expr);
 }
 
 /*! \brief Operator to return the address of an object
-*/
+ */
 class address_of_exprt : public exprt {
 public:
   explicit address_of_exprt(const exprt &op)
@@ -1762,7 +1762,7 @@ public:
  * \return Object of type \ref address_of_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const address_of_exprt &to_address_of_expr(const exprt &expr) {
   assert(expr.id() == ID_address_of && expr.operands().size() == 1);
   return static_cast<const address_of_exprt &>(expr);
@@ -1770,14 +1770,14 @@ inline const address_of_exprt &to_address_of_expr(const exprt &expr) {
 
 /*! \copydoc to_address_of_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline address_of_exprt &to_address_of_expr(exprt &expr) {
   assert(expr.id() == ID_address_of && expr.operands().size() == 1);
   return static_cast<address_of_exprt &>(expr);
 }
 
 /*! \brief Boolean negation
-*/
+ */
 class not_exprt : public exprt {
 public:
   explicit not_exprt(const exprt &op) : exprt(ID_not, bool_typet()) {
@@ -1800,7 +1800,7 @@ public:
  * \return Object of type \ref not_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const not_exprt &to_not_expr(const exprt &expr) {
   assert(expr.id() == ID_not && expr.operands().size() == 1);
   return static_cast<const not_exprt &>(expr);
@@ -1808,14 +1808,14 @@ inline const not_exprt &to_not_expr(const exprt &expr) {
 
 /*! \copydoc to_not_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline not_exprt &to_not_expr(exprt &expr) {
   assert(expr.id() == ID_not && expr.operands().size() == 1);
   return static_cast<not_exprt &>(expr);
 }
 
 /*! \brief Operator to dereference a pointer
-*/
+ */
 class dereference_exprt : public exprt {
 public:
   explicit dereference_exprt(const typet &type) : exprt(ID_dereference, type) {
@@ -1847,7 +1847,7 @@ public:
  * \return Object of type \ref dereference_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const dereference_exprt &to_dereference_expr(const exprt &expr) {
   assert(expr.id() == ID_dereference && expr.operands().size() == 1);
   return static_cast<const dereference_exprt &>(expr);
@@ -1855,14 +1855,14 @@ inline const dereference_exprt &to_dereference_expr(const exprt &expr) {
 
 /*! \copydoc to_dereference_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline dereference_exprt &to_dereference_expr(exprt &expr) {
   assert(expr.id() == ID_dereference && expr.operands().size() == 1);
   return static_cast<dereference_exprt &>(expr);
 }
 
 /*! \brief The trinary if-then-else operator
-*/
+ */
 class if_exprt : public exprt {
 public:
   if_exprt(const exprt &cond, const exprt &t, const exprt &f)
@@ -1899,7 +1899,7 @@ public:
  * \return Object of type \ref if_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const if_exprt &to_if_expr(const exprt &expr) {
   assert(expr.id() == ID_if && expr.operands().size() == 3);
   return static_cast<const if_exprt &>(expr);
@@ -1907,7 +1907,7 @@ inline const if_exprt &to_if_expr(const exprt &expr) {
 
 /*! \copydoc to_if_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline if_exprt &to_if_expr(exprt &expr) {
   assert(expr.id() == ID_if && expr.operands().size() == 3);
   return static_cast<if_exprt &>(expr);
@@ -1948,7 +1948,7 @@ public:
  * \return Object of type \ref with_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const with_exprt &to_with_expr(const exprt &expr) {
   assert(expr.id() == ID_with && expr.operands().size() == 3);
   return static_cast<const with_exprt &>(expr);
@@ -1956,7 +1956,7 @@ inline const with_exprt &to_with_expr(const exprt &expr) {
 
 /*! \copydoc to_with_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline with_exprt &to_with_expr(exprt &expr) {
   assert(expr.id() == ID_with && expr.operands().size() == 3);
   return static_cast<with_exprt &>(expr);
@@ -1982,7 +1982,7 @@ public:
  * \return Object of type \ref index_designatort
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const index_designatort &to_index_designator(const exprt &expr) {
   assert(expr.id() == ID_index_designator && expr.operands().size() == 1);
   return static_cast<const index_designatort &>(expr);
@@ -1990,7 +1990,7 @@ inline const index_designatort &to_index_designator(const exprt &expr) {
 
 /*! \copydoc to_index_designator(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline index_designatort &to_index_designator(exprt &expr) {
   assert(expr.id() == ID_index_designator && expr.operands().size() == 1);
   return static_cast<index_designatort &>(expr);
@@ -2015,7 +2015,7 @@ public:
  * \return Object of type \ref member_designatort
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const member_designatort &to_member_designator(const exprt &expr) {
   assert(expr.id() == ID_member_designator && expr.operands().size() == 0);
   return static_cast<const member_designatort &>(expr);
@@ -2023,14 +2023,14 @@ inline const member_designatort &to_member_designator(const exprt &expr) {
 
 /*! \copydoc to_member_designator(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline member_designatort &to_member_designator(exprt &expr) {
   assert(expr.id() == ID_member_designator && expr.operands().size() == 0);
   return static_cast<member_designatort &>(expr);
 }
 
 /*! \brief Operator to update elements in structs and arrays
-*/
+ */
 class update_exprt : public exprt {
 public:
   update_exprt(const exprt &_old, const exprt &_designator,
@@ -2074,7 +2074,7 @@ public:
  * \return Object of type \ref update_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const update_exprt &to_update_expr(const exprt &expr) {
   assert(expr.id() == ID_update && expr.operands().size() == 3);
   return static_cast<const update_exprt &>(expr);
@@ -2082,7 +2082,7 @@ inline const update_exprt &to_update_expr(const exprt &expr) {
 
 /*! \copydoc to_update_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline update_exprt &to_update_expr(exprt &expr) {
   assert(expr.id() == ID_update && expr.operands().size() == 3);
   return static_cast<update_exprt &>(expr);
@@ -2166,7 +2166,7 @@ inline array_update_exprt &to_array_update_expr(exprt &expr)
 #endif
 
 /*! \brief Extract member of struct or union
-*/
+ */
 class member_exprt : public exprt {
 public:
   explicit member_exprt(const exprt &op) : exprt(ID_member) {
@@ -2226,7 +2226,7 @@ public:
  * \return Object of type \ref member_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const member_exprt &to_member_expr(const exprt &expr) {
   assert(expr.id() == ID_member && expr.operands().size() == 1);
   return static_cast<const member_exprt &>(expr);
@@ -2234,14 +2234,14 @@ inline const member_exprt &to_member_expr(const exprt &expr) {
 
 /*! \copydoc to_member_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline member_exprt &to_member_expr(exprt &expr) {
   assert(expr.id() == ID_member && expr.operands().size() == 1);
   return static_cast<member_exprt &>(expr);
 }
 
 /*! \brief Evaluates to true if the operand is NaN
-*/
+ */
 class isnan_exprt : public unary_predicate_exprt {
 public:
   explicit isnan_exprt(const exprt &op) : unary_predicate_exprt(ID_isnan, op) {}
@@ -2258,7 +2258,7 @@ public:
  * \return Object of type \ref isnan_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const isnan_exprt &to_isnan_expr(const exprt &expr) {
   assert(expr.id() == ID_isnan && expr.operands().size() == 1);
   return static_cast<const isnan_exprt &>(expr);
@@ -2266,14 +2266,14 @@ inline const isnan_exprt &to_isnan_expr(const exprt &expr) {
 
 /*! \copydoc to_isnan_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline isnan_exprt &to_isnan_expr(exprt &expr) {
   assert(expr.id() == ID_isnan && expr.operands().size() == 1);
   return static_cast<isnan_exprt &>(expr);
 }
 
 /*! \brief Evaluates to true if the operand is infinite
-*/
+ */
 class isinf_exprt : public unary_predicate_exprt {
 public:
   explicit isinf_exprt(const exprt &op) : unary_predicate_exprt(ID_isinf, op) {}
@@ -2290,7 +2290,7 @@ public:
  * \return Object of type \ref isinf_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const isinf_exprt &to_isinf_expr(const exprt &expr) {
   assert(expr.id() == ID_isinf && expr.operands().size() == 1);
   return static_cast<const isinf_exprt &>(expr);
@@ -2298,14 +2298,14 @@ inline const isinf_exprt &to_isinf_expr(const exprt &expr) {
 
 /*! \copydoc to_isinf_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline isinf_exprt &to_isinf_expr(exprt &expr) {
   assert(expr.id() == ID_isinf && expr.operands().size() == 1);
   return static_cast<isinf_exprt &>(expr);
 }
 
 /*! \brief Evaluates to true if the operand is finite
-*/
+ */
 class isfinite_exprt : public unary_predicate_exprt {
 public:
   explicit isfinite_exprt(const exprt &op)
@@ -2323,7 +2323,7 @@ public:
  * \return Object of type \ref isfinite_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const isfinite_exprt &to_isfinite_expr(const exprt &expr) {
   assert(expr.id() == ID_isfinite && expr.operands().size() == 1);
   return static_cast<const isfinite_exprt &>(expr);
@@ -2331,14 +2331,14 @@ inline const isfinite_exprt &to_isfinite_expr(const exprt &expr) {
 
 /*! \copydoc to_isfinite_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline isfinite_exprt &to_isfinite_expr(exprt &expr) {
   assert(expr.id() == ID_isfinite && expr.operands().size() == 1);
   return static_cast<isfinite_exprt &>(expr);
 }
 
 /*! \brief Evaluates to true if the operand is a normal number
-*/
+ */
 class isnormal_exprt : public unary_predicate_exprt {
 public:
   explicit isnormal_exprt(const exprt &op)
@@ -2356,7 +2356,7 @@ public:
  * \return Object of type \ref isnormal_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const isnormal_exprt &to_isnormal_expr(const exprt &expr) {
   assert(expr.id() == ID_isnormal && expr.operands().size() == 1);
   return static_cast<const isnormal_exprt &>(expr);
@@ -2364,14 +2364,14 @@ inline const isnormal_exprt &to_isnormal_expr(const exprt &expr) {
 
 /*! \copydoc to_isnormal_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline isnormal_exprt &to_isnormal_expr(exprt &expr) {
   assert(expr.id() == ID_isnormal && expr.operands().size() == 1);
   return static_cast<isnormal_exprt &>(expr);
 }
 
 /*! \brief IEEE-floating-point equality
-*/
+ */
 class ieee_float_equal_exprt : public binary_relation_exprt {
 public:
   ieee_float_equal_exprt() : binary_relation_exprt(ID_ieee_float_equal) {}
@@ -2389,7 +2389,7 @@ public:
  * \return Object of type \ref ieee_float_equal_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const ieee_float_equal_exprt &
 to_ieee_float_equal_expr(const exprt &expr) {
   assert(expr.id() == ID_ieee_float_equal && expr.operands().size() == 2);
@@ -2398,14 +2398,14 @@ to_ieee_float_equal_expr(const exprt &expr) {
 
 /*! \copydoc to_ieee_float_equal_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline ieee_float_equal_exprt &to_ieee_float_equal_expr(exprt &expr) {
   assert(expr.id() == ID_ieee_float_equal && expr.operands().size() == 2);
   return static_cast<ieee_float_equal_exprt &>(expr);
 }
 
 /*! \brief IEEE-floating-point disequality
-*/
+ */
 class ieee_float_notequal_exprt : public binary_relation_exprt {
 public:
   ieee_float_notequal_exprt() : binary_relation_exprt(ID_ieee_float_notequal) {}
@@ -2423,7 +2423,7 @@ public:
  * \return Object of type \ref ieee_float_notequal_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const ieee_float_notequal_exprt &
 to_ieee_float_notequal_expr(const exprt &expr) {
   assert(expr.id() == ID_ieee_float_notequal && expr.operands().size() == 2);
@@ -2432,14 +2432,14 @@ to_ieee_float_notequal_expr(const exprt &expr) {
 
 /*! \copydoc to_ieee_float_notequal_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline ieee_float_notequal_exprt &to_ieee_float_notequal_expr(exprt &expr) {
   assert(expr.id() == ID_ieee_float_notequal && expr.operands().size() == 2);
   return static_cast<ieee_float_notequal_exprt &>(expr);
 }
 
 /*! \brief IEEE-floating-point disequality
-*/
+ */
 class ieee_float_op_exprt : public exprt {
 public:
   ieee_float_op_exprt() { operands().resize(3); }
@@ -2472,7 +2472,7 @@ public:
  * \return Object of type \ref ieee_float_op_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const ieee_float_op_exprt &to_ieee_float_op_expr(const exprt &expr) {
   assert(expr.operands().size() == 3);
   return static_cast<const ieee_float_op_exprt &>(expr);
@@ -2480,14 +2480,14 @@ inline const ieee_float_op_exprt &to_ieee_float_op_expr(const exprt &expr) {
 
 /*! \copydoc to_ieee_float_op_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline ieee_float_op_exprt &to_ieee_float_op_expr(exprt &expr) {
   assert(expr.operands().size() == 3);
   return static_cast<ieee_float_op_exprt &>(expr);
 }
 
 /*! \brief An expression denoting a type
-*/
+ */
 class type_exprt : public exprt {
 public:
   type_exprt() : exprt(ID_type) {}
@@ -2496,7 +2496,7 @@ public:
 };
 
 /*! \brief A constant literal expression
-*/
+ */
 class constant_exprt : public exprt {
 public:
   constant_exprt() : exprt(ID_constant) {}
@@ -2526,7 +2526,7 @@ public:
  * \return Object of type \ref constant_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const constant_exprt &to_constant_expr(const exprt &expr) {
   assert(expr.id() == ID_constant);
   return static_cast<const constant_exprt &>(expr);
@@ -2534,35 +2534,35 @@ inline const constant_exprt &to_constant_expr(const exprt &expr) {
 
 /*! \copydoc to_constant_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline constant_exprt &to_constant_expr(exprt &expr) {
   assert(expr.id() == ID_constant);
   return static_cast<constant_exprt &>(expr);
 }
 
 /*! \brief The boolean constant true
-*/
+ */
 class true_exprt : public constant_exprt {
 public:
   true_exprt() : constant_exprt(bool_typet()) { set_value(ID_true); }
 };
 
 /*! \brief The boolean constant false
-*/
+ */
 class false_exprt : public constant_exprt {
 public:
   false_exprt() : constant_exprt(bool_typet()) { set_value(ID_false); }
 };
 
 /*! \brief The NIL expression
-*/
+ */
 class nil_exprt : public exprt {
 public:
   nil_exprt() : exprt(static_cast<const exprt &>(get_nil_irep())) {}
 };
 
 /*! \brief The null pointer constant
-*/
+ */
 class null_pointer_exprt : public constant_exprt {
 public:
   explicit null_pointer_exprt(const pointer_typet &type)
@@ -2572,7 +2572,7 @@ public:
 };
 
 /*! \brief application of (mathematical) function
-*/
+ */
 class function_application_exprt : public exprt {
 public:
   function_application_exprt() : exprt(ID_function_application) {
@@ -2599,7 +2599,7 @@ public:
  * \return Object of type \ref function_application_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const function_application_exprt &
 to_function_application_expr(const exprt &expr) {
   assert(expr.id() == ID_function_application && expr.operands().size() == 2);
@@ -2608,7 +2608,7 @@ to_function_application_expr(const exprt &expr) {
 
 /*! \copydoc to_function_application_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline function_application_exprt &to_function_application_expr(exprt &expr) {
   assert(expr.id() == ID_function_application && expr.operands().size() == 2);
   return static_cast<function_application_exprt &>(expr);
@@ -2620,7 +2620,7 @@ inline function_application_exprt &to_function_application_expr(exprt &expr) {
  * (a restriction to make this binary will happen in the future).
  * The ordering of the operands is the same as in the _new_ SMT 1.x standard,
  * i.e., most-significant operands come first.
-*/
+ */
 class concatenation_exprt : public exprt {
 public:
   concatenation_exprt() : exprt(ID_concatenation) {}
@@ -2644,7 +2644,7 @@ public:
  * \return Object of type \ref concatenation_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const concatenation_exprt &to_concatenation_expr(const exprt &expr) {
   assert(expr.id() == ID_concatenation);
   return static_cast<const concatenation_exprt &>(expr);
@@ -2652,21 +2652,21 @@ inline const concatenation_exprt &to_concatenation_expr(const exprt &expr) {
 
 /*! \copydoc to_concatenation_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline concatenation_exprt &to_concatenation_expr(exprt &expr) {
   assert(expr.id() == ID_concatenation);
   return static_cast<concatenation_exprt &>(expr);
 }
 
 /*! \brief An expression denoting infinity
-*/
+ */
 class infinity_exprt : public exprt {
 public:
   explicit infinity_exprt(const typet &_type) : exprt(ID_infinity, _type) {}
 };
 
 /*! \brief A let expression
-*/
+ */
 class let_exprt : public exprt {
 public:
   let_exprt() : exprt(ID_let) {
@@ -2698,7 +2698,7 @@ public:
  * \return Object of type \ref let_exprt
  *
  * \ingroup gr_std_expr
-*/
+ */
 inline const let_exprt &to_let_expr(const exprt &expr) {
   assert(expr.id() == ID_let && expr.operands().size() == 3);
   return static_cast<const let_exprt &>(expr);
@@ -2706,14 +2706,14 @@ inline const let_exprt &to_let_expr(const exprt &expr) {
 
 /*! \copydoc to_let_expr(const exprt &)
  * \ingroup gr_std_expr
-*/
+ */
 inline let_exprt &to_let_expr(exprt &expr) {
   assert(expr.id() == ID_let && expr.operands().size() == 3);
   return static_cast<let_exprt &>(expr);
 }
 
 /*! \brief A forall expression
-*/
+ */
 class forall_exprt : public exprt {
 public:
   forall_exprt() : exprt(ID_forall) {
@@ -2733,7 +2733,7 @@ public:
 };
 
 /*! \brief An exists expression
-*/
+ */
 class exists_exprt : public exprt {
 public:
   exists_exprt() : exprt(ID_exists) {

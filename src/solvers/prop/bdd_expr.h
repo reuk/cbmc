@@ -14,7 +14,7 @@ Author: Michael Tautschnig, michael.tautschnig@qmul.ac.uk
  *
  * \author Michael Tautschnig, michael.tautschnig@qmul.ac.uk
  * \date   Sat, 02 Jan 2016 20:26:19 +0100
-*/
+ */
 
 #include <util/expr.h>
 
@@ -23,7 +23,7 @@ Author: Michael Tautschnig, michael.tautschnig@qmul.ac.uk
 class namespacet;
 
 /*! \brief TO_BE_DOCUMENTED
-*/
+ */
 class bdd_exprt {
 public:
   explicit bdd_exprt(const namespacet &_ns) : ns(_ns) {}

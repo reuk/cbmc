@@ -941,8 +941,9 @@ exprt float_bvt::relation(const exprt &src1, relt rel, const exprt &src2,
     exprt less_than1 = binary_relation_exprt(
         typecast_exprt(typecast_exprt(src1, bv_typet(spec.width())),
                        unsignedbv_typet(spec.width())),
-        ID_lt, typecast_exprt(typecast_exprt(src2, bv_typet(spec.width())),
-                              unsignedbv_typet(spec.width())));
+        ID_lt,
+        typecast_exprt(typecast_exprt(src2, bv_typet(spec.width())),
+                       unsignedbv_typet(spec.width())));
 
     // if both are negative (and not the same), need to turn around!
     exprt less_than2 =
@@ -1410,11 +1411,11 @@ void float_bvt::round_fraction(unbiased_floatt &result,
     // post normalization of the fraction
     // In the case of overflow, set the MSB to 1
     // The subnormal case will have (only) the MSB set to 1
-    result.fraction =
-        bitor_exprt(result.fraction,
-                    if_exprt(overflow, from_integer(1 << (fraction_size - 1),
-                                                    result.fraction.type()),
-                             from_integer(0, result.fraction.type())));
+    result.fraction = bitor_exprt(
+        result.fraction,
+        if_exprt(overflow,
+                 from_integer(1 << (fraction_size - 1), result.fraction.type()),
+                 from_integer(0, result.fraction.type())));
 #endif
   }
 }
@@ -1642,8 +1643,9 @@ exprt float_bvt::pack(const biased_floatt &src, const ieee_float_spect &spec) {
 
   // stitch all three together
   return concatenation_exprt(
-      sign_bit, concatenation_exprt(exponent, fraction,
-                                    unsignedbv_typet(spec.e + spec.f)),
+      sign_bit,
+      concatenation_exprt(exponent, fraction,
+                          unsignedbv_typet(spec.e + spec.f)),
       spec.to_type());
 }
 

@@ -15,7 +15,7 @@ Author: Daniel Kroening, kroening@kroening.com
  *
  * \author Daniel Kroening <kroening@kroening.com>
  * \date   Mon Sep 28 00:00:00 BST 2009
-*/
+ */
 
 #include <cassert>
 #include <list>

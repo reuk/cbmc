@@ -16,7 +16,7 @@ Date: July 2005
  *
  * \author Daniel Kroening <kroening@kroening.com>
  * \date   Sun Jul 31 21:54:44 BST 2011
-*/
+ */
 
 #include <iosfwd>
 #include <vector>
@@ -27,7 +27,7 @@ Date: July 2005
 
 /*! \brief TO_BE_DOCUMENTED
  * \ingroup gr_goto_symex
-*/
+ */
 class goto_trace_stept {
 public:
   unsigned step_nr;
@@ -112,7 +112,7 @@ public:
   irep_idt identifier;
 
   /*! \brief outputs the trace step in ASCII to a given stream
-  */
+   */
   void output(const class namespacet &ns, std::ostream &out) const;
 
   goto_trace_stept()
@@ -128,7 +128,7 @@ public:
 
 /*! \brief TO_BE_DOCUMENTED
  * \ingroup gr_goto_symex
-*/
+ */
 class goto_tracet {
 public:
   typedef std::list<goto_trace_stept> stepst;
@@ -142,7 +142,7 @@ public:
   }
 
   /*! \brief outputs the trace in ASCII to a given stream
-  */
+   */
   void output(const class namespacet &ns, std::ostream &out) const;
 
   void swap(goto_tracet &other) {

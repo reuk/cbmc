@@ -15,7 +15,7 @@ class tvt;
 class propt;
 
 /*! \brief TO_BE_DOCUMENTED
-*/
+ */
 class prop_assignmentt {
 public:
   virtual ~prop_assignmentt();

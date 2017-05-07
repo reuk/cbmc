@@ -177,8 +177,9 @@ void symex_parse_optionst::report_cover(
 
   status() << "** " << goals_covered << " of " << property_map.size()
            << " covered (" << std::fixed << std::setw(1) << std::setprecision(1)
-           << (property_map.empty() ? 100.0 : 100.0 * goals_covered /
-                                                  property_map.size())
+           << (property_map.empty()
+                   ? 100.0
+                   : 100.0 * goals_covered / property_map.size())
            << "%)" << eom;
 
   if (get_ui() == ui_message_handlert::PLAIN) {

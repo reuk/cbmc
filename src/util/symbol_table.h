@@ -13,10 +13,10 @@ Author: Daniel Kroening, kroening@kroening.com
  * \brief Symbol table
  *
  * \author Daniel Kroening <kroening@kroening.com>
-*/
+ */
 
 /*! \defgroup gr_symbol_table Symbol Table
-*/
+ */
 
 #include <iosfwd>
 #include <map>

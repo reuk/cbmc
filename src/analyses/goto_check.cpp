@@ -515,8 +515,9 @@ void goto_checkt::integer_overflow_check(const exprt &expr,
 
       std::string kind = type.id() == ID_unsignedbv ? "unsigned" : "signed";
 
-      add_guarded_claim(not_exprt(overflow), "arithmetic overflow on " + kind +
-                                                 " " + expr.id_string(),
+      add_guarded_claim(not_exprt(overflow),
+                        "arithmetic overflow on " + kind + " " +
+                            expr.id_string(),
                         "overflow", expr.find_source_location(), expr, guard);
     }
   } else {
@@ -608,11 +609,11 @@ void goto_checkt::float_overflow_check(const exprt &expr, const guardt &guard) {
       or_exprt overflow_check(op0_inf, op1_inf, not_exprt(new_inf));
 
       std::string kind =
-          expr.id() == ID_plus ? "addition" : expr.id() == ID_minus
-                                                  ? "subtraction"
-                                                  : expr.id() == ID_mult
-                                                        ? "multiplication"
-                                                        : "";
+          expr.id() == ID_plus
+              ? "addition"
+              : expr.id() == ID_minus
+                    ? "subtraction"
+                    : expr.id() == ID_mult ? "multiplication" : "";
 
       add_guarded_claim(overflow_check,
                         "arithmetic overflow on floating-point " + kind,

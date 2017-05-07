@@ -20,7 +20,7 @@ namespace Minisat // NOLINT(readability/namespace)
 {
 class Solver;     // NOLINT(readability/identifiers)
 class SimpSolver; // NOLINT(readability/identifiers)
-}
+} // namespace Minisat
 
 template <typename T> class satcheck_minisat2_baset : public cnf_solvert {
 public:

@@ -14,7 +14,7 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "expr.h"
 
 /*! \brief A statement in a programming language
-*/
+ */
 class codet : public exprt {
 public:
   codet() : exprt(ID_code, typet(ID_code)) {}
@@ -47,7 +47,7 @@ inline codet &to_code(exprt &expr) {
 }
 
 /*! \brief Sequential composition
-*/
+ */
 class code_blockt : public codet {
 public:
   code_blockt() : codet(ID_block) {}
@@ -99,14 +99,14 @@ inline code_blockt &to_code_block(codet &code) {
 }
 
 /*! \brief Skip
-*/
+ */
 class code_skipt : public codet {
 public:
   code_skipt() : codet(ID_skip) {}
 };
 
 /*! \brief Assignment
-*/
+ */
 class code_assignt : public codet {
 public:
   code_assignt() : codet(ID_assign) { operands().resize(2); }
@@ -135,7 +135,7 @@ inline code_assignt &to_code_assign(codet &code) {
 }
 
 /*! \brief A declaration of a local variable
-*/
+ */
 class code_declt : public codet {
 public:
   code_declt() : codet(ID_decl) { operands().resize(1); }
@@ -164,7 +164,7 @@ inline code_declt &to_code_decl(codet &code) {
 }
 
 /*! \brief A removal of a local variable
-*/
+ */
 class code_deadt : public codet {
 public:
   code_deadt() : codet(ID_dead) { operands().resize(1); }
@@ -191,7 +191,7 @@ inline code_deadt &to_code_dead(codet &code) {
 }
 
 /*! \brief An assumption
-*/
+ */
 class code_assumet : public codet {
 public:
   code_assumet() : codet(ID_assume) { operands().resize(1); }
@@ -216,7 +216,7 @@ inline code_assumet &to_code_assume(codet &code) {
 }
 
 /*! \brief An assertion
-*/
+ */
 class code_assertt : public codet {
 public:
   code_assertt() : codet(ID_assert) { operands().resize(1); }
@@ -241,7 +241,7 @@ inline code_assertt &to_code_assert(codet &code) {
 }
 
 /*! \brief An if-then-else
-*/
+ */
 class code_ifthenelset : public codet {
 public:
   code_ifthenelset() : codet(ID_ifthenelse) {
@@ -276,7 +276,7 @@ inline code_ifthenelset &to_code_ifthenelse(codet &code) {
 }
 
 /*! \brief A `switch' instruction
-*/
+ */
 class code_switcht : public codet {
 public:
   code_switcht() : codet(ID_switch) { operands().resize(2); }
@@ -301,7 +301,7 @@ inline code_switcht &to_code_switch(codet &code) {
 }
 
 /*! \brief A `while' instruction
-*/
+ */
 class code_whilet : public codet {
 public:
   code_whilet() : codet(ID_while) { operands().resize(2); }
@@ -326,7 +326,7 @@ inline code_whilet &to_code_while(codet &code) {
 }
 
 /*! \brief A `do while' instruction
-*/
+ */
 class code_dowhilet : public codet {
 public:
   code_dowhilet() : codet(ID_dowhile) { operands().resize(2); }
@@ -351,7 +351,7 @@ inline code_dowhilet &to_code_dowhile(codet &code) {
 }
 
 /*! \brief A `for' instruction
-*/
+ */
 class code_fort : public codet {
 public:
   code_fort() : codet(ID_for) { operands().resize(4); }
@@ -385,7 +385,7 @@ inline code_fort &to_code_for(codet &code) {
 }
 
 /*! \brief A `goto' instruction
-*/
+ */
 class code_gotot : public codet {
 public:
   code_gotot() : codet(ID_goto) {}
@@ -450,7 +450,7 @@ inline code_function_callt &to_code_function_call(codet &code) {
 }
 
 /*! \brief Return from a function
-*/
+ */
 class code_returnt : public codet {
 public:
   code_returnt() : codet(ID_return) {
@@ -484,7 +484,7 @@ inline code_returnt &to_code_return(codet &code) {
 }
 
 /*! \brief A label for branch targets
-*/
+ */
 class code_labelt : public codet {
 public:
   code_labelt() : codet(ID_label) { operands().resize(1); }
@@ -520,7 +520,7 @@ inline code_labelt &to_code_label(codet &code) {
 }
 
 /*! \brief A switch-case
-*/
+ */
 class code_switch_caset : public codet {
 public:
   code_switch_caset() : codet(ID_switch_case) { operands().resize(2); }
@@ -554,7 +554,7 @@ inline code_switch_caset &to_code_switch_case(codet &code) {
 }
 
 /*! \brief A break for `for' and `while' loops
-*/
+ */
 class code_breakt : public codet {
 public:
   code_breakt() : codet(ID_break) {}
@@ -571,7 +571,7 @@ inline code_breakt &to_code_break(codet &code) {
 }
 
 /*! \brief A continue for `for' and `while' loops
-*/
+ */
 class code_continuet : public codet {
 public:
   code_continuet() : codet(ID_continue) {}
@@ -588,7 +588,7 @@ inline code_continuet &to_code_continue(codet &code) {
 }
 
 /*! \brief An inline assembler statement
-*/
+ */
 class code_asmt : public codet {
 public:
   code_asmt() : codet(ID_asm) {}
@@ -613,7 +613,7 @@ inline const code_asmt &to_code_asm(const codet &code) {
 }
 
 /*! \brief An expression statement
-*/
+ */
 class code_expressiont : public codet {
 public:
   code_expressiont() : codet(ID_expression) { operands().resize(1); }
@@ -638,7 +638,7 @@ inline const code_expressiont &to_code_expression(const codet &code) {
 }
 
 /*! \brief An expression containing a side effect
-*/
+ */
 class side_effect_exprt : public exprt {
 public:
   explicit side_effect_exprt(const irep_idt &statement)
@@ -669,7 +669,7 @@ inline const side_effect_exprt &to_side_effect_expr(const exprt &expr) {
 }
 
 /*! \brief A side effect that returns a non-deterministically chosen value
-*/
+ */
 class side_effect_expr_nondett : public side_effect_exprt {
 public:
   side_effect_expr_nondett() : side_effect_exprt(ID_nondet) {}
@@ -679,7 +679,7 @@ public:
 };
 
 /*! \brief A function call side effect
-*/
+ */
 class side_effect_expr_function_callt : public side_effect_exprt {
 public:
   side_effect_expr_function_callt() : side_effect_exprt(ID_function_call) {
@@ -711,7 +711,7 @@ to_side_effect_expr_function_call(const exprt &expr) {
 }
 
 /*! \brief A side effect that throws an exception
-*/
+ */
 class side_effect_expr_throwt : public side_effect_exprt {
 public:
   side_effect_expr_throwt() : side_effect_exprt(ID_throw) {}
@@ -735,7 +735,7 @@ to_side_effect_expr_throw(const exprt &expr) {
   return static_cast<const side_effect_expr_throwt &>(expr);
 }
 /*! \brief A side effect that pushes/pops a catch handler
-*/
+ */
 class side_effect_expr_catcht : public side_effect_exprt {
 public:
   side_effect_expr_catcht() : side_effect_exprt(ID_push_catch) {}
@@ -759,7 +759,7 @@ to_side_effect_expr_catch(const exprt &expr) {
 }
 
 /*! \brief A try/catch block
-*/
+ */
 class code_try_catcht : public codet {
 public:
   code_try_catcht() : codet(ID_try_catch) { operands().resize(1); }

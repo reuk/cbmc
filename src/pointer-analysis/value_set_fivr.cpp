@@ -1088,8 +1088,8 @@ void value_set_fivrt::assign(const exprt &lhs, const exprt &rhs,
         rhs_member = exprt(rhs.id(), subtype);
       } else {
         if (!base_type_eq(rhs.type(), type, ns))
-          throw "type mismatch:\nRHS: " + rhs.type().pretty() + "\n" + "LHS: " +
-              type.pretty();
+          throw "type mismatch:\nRHS: " + rhs.type().pretty() + "\n" +
+              "LHS: " + type.pretty();
 
         if (rhs.id() == ID_struct || rhs.id() == ID_constant) {
           assert(no < rhs.operands().size());
@@ -1422,8 +1422,8 @@ void value_set_fivrt::do_function_call(const irep_idt &function,
   to_target_index = from_target_index;
 
   for (unsigned i = 0; i < arguments.size(); i++) {
-    const std::string identifier = "value_set::" + id2string(function) + "::" +
-                                   "argument$" + std::to_string(i);
+    const std::string identifier = "value_set::" + id2string(function) +
+                                   "::" + "argument$" + std::to_string(i);
     add_var(identifier, "");
     exprt dummy_lhs = symbol_exprt(identifier, arguments[i].type());
     //    std::cout << arguments[i] << std::endl;
@@ -1554,8 +1554,8 @@ void value_set_fivrt::apply_code(const exprt &code, const namespacet &ns) {
   }
 
   else
-    throw code.pretty() + "\n" + "value_set_fivrt: unexpected statement: " +
-        id2string(statement);
+    throw code.pretty() + "\n" +
+        "value_set_fivrt: unexpected statement: " + id2string(statement);
 }
 
 /*******************************************************************\

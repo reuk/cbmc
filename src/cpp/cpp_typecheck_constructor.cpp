@@ -236,8 +236,8 @@ void cpp_typecheckt::default_cpctor(const symbolt &symbol,
                                     cpp_declarationt &cpctor) const {
   source_locationt source_location = symbol.type.source_location();
 
-  source_location.set_function(id2string(symbol.base_name) + "::" +
-                               id2string(symbol.base_name) + "(const " +
+  source_location.set_function(id2string(symbol.base_name) +
+                               "::" + id2string(symbol.base_name) + "(const " +
                                id2string(symbol.base_name) + " &)");
 
   // Produce default constructor first
