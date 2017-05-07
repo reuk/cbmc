@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "value_set.h"
+
 #include <cassert>
 #include <ostream>
 
@@ -26,7 +28,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <iostream>
 #endif
 
-#include "value_set.h"
 #include "add_failed_symbols.h"
 
 const value_sett::object_map_dt value_sett::object_map_dt::blank;

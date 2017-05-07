@@ -6,12 +6,13 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "show_value_sets.h"
+
 #include <iostream>
 
 #include <util/xml.h>
 
 #include "value_set_analysis.h"
-#include "show_value_sets.h"
 
 /*******************************************************************\
 

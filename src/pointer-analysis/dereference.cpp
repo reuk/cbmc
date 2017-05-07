@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "dereference.h"
+
 #ifdef DEBUG
 #include <iostream>
 #include <langapi/language_util.h>
@@ -19,8 +21,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/arith_tools.h>
 
 #include <ansi-c/c_types.h>
-
-#include "dereference.h"
 
 /*******************************************************************\
 

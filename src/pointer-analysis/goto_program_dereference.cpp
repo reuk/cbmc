@@ -6,14 +6,14 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_program_dereference.h"
+
 #include <util/simplify_expr.h>
 #include <util/base_type.h>
 #include <util/std_code.h>
 #include <util/symbol_table.h>
 #include <util/guard.h>
 #include <util/options.h>
-
-#include "goto_program_dereference.h"
 
 /*******************************************************************\
 

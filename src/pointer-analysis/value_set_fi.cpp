@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "value_set_fi.h"
+
 #include <cassert>
 #include <ostream>
 
@@ -19,8 +21,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <langapi/language_util.h>
 #include <ansi-c/c_types.h>
-
-#include "value_set_fi.h"
 
 const value_set_fit::object_map_dt value_set_fit::object_map_dt::blank;
 object_numberingt value_set_fit::object_numbering;

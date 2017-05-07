@@ -7,9 +7,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <util/std_code.h>
-
 #include "value_set_domain_fi.h"
+
+#include <util/std_code.h>
 
 /*******************************************************************\
 

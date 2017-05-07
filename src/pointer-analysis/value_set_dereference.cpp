@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "value_set_dereference.h"
+
 #ifdef DEBUG
 #include <iostream>
 #endif
@@ -36,7 +38,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <langapi/language_util.h>
 
-#include "value_set_dereference.h"
 #include "pointer_offset_sum.h"
 
 // global data, horrible
