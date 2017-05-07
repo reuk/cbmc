@@ -6,6 +6,8 @@ Author: CM Wintersteiger, 2006
 
 \*******************************************************************/
 
+#include "armcc_mode.h"
+
 #ifdef _WIN32
 #define EX_OK 0
 #define EX_USAGE 64
@@ -21,7 +23,6 @@ Author: CM Wintersteiger, 2006
 #include <util/prefix.h>
 #include <util/config.h>
 
-#include "armcc_mode.h"
 #include "compile.h"
 
 /*******************************************************************\

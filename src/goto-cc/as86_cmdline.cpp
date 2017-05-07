@@ -6,12 +6,12 @@ Author: Michael Tautschnig
 
 \*******************************************************************/
 
+#include "as86_cmdline.h"
+
 #include <cassert>
 #include <iostream>
 
 #include <util/prefix.h>
-
-#include "as86_cmdline.h"
 
 /*******************************************************************\
  

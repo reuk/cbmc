@@ -6,12 +6,12 @@ Author: Michael Tautschnig
 
 \*******************************************************************/
 
+#include "bcc_cmdline.h"
+
 #include <cassert>
 #include <iostream>
 
 #include <util/prefix.h>
-
-#include "bcc_cmdline.h"
 
 /*******************************************************************\
  

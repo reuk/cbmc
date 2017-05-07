@@ -8,6 +8,8 @@ Date:   April 2010
 
 \*******************************************************************/
 
+#include "goto_cc_cmdline.h"
+
 #include <cstring>
 #include <cassert>
 #include <iostream>
@@ -15,8 +17,6 @@ Date:   April 2010
 
 #include <util/prefix.h>
 #include <util/tempfile.h>
-
-#include "goto_cc_cmdline.h"
 
 /*******************************************************************\
 

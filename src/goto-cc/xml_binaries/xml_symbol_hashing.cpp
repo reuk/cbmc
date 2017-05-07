@@ -8,8 +8,9 @@ Date: July 2006
 
 \*******************************************************************/
 
-#include "xml_symbol_hashing.h"
 #include "xml_irep_hashing.h"
+
+#include "xml_symbol_hashing.h"
 
 /*******************************************************************\
 

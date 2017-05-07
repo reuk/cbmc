@@ -6,6 +6,8 @@ Author: CM Wintersteiger, 2006
 
 \*******************************************************************/
 
+#include "goto_cc_mode.h"
+
 #include <cstdio>
 #include <iostream>
 
@@ -18,8 +20,6 @@ Author: CM Wintersteiger, 2006
 #endif
 
 #include <cbmc/version.h>
-
-#include "goto_cc_mode.h"
 
 /*******************************************************************\
 

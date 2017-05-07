@@ -6,10 +6,10 @@ Author: Daniel Kroening
 
 \*******************************************************************/
 
+#include "armcc_cmdline.h"
+
 #include <cstring>
 #include <iostream>
-
-#include "armcc_cmdline.h"
 
 /*******************************************************************\
 

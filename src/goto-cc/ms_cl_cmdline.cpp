@@ -6,6 +6,8 @@ Author: Daniel Kroening
 
 \*******************************************************************/
 
+#include "ms_cl_cmdline.h"
+
 #include <cassert>
 #include <cstring>
 #include <cstdlib>
@@ -13,8 +15,6 @@ Author: Daniel Kroening
 #include <fstream>
 
 #include <util/unicode.h>
-
-#include "ms_cl_cmdline.h"
 
 /*******************************************************************\
 

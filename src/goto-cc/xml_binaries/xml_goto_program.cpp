@@ -8,12 +8,12 @@ Date: June 2006
 
 \*******************************************************************/
 
+#include "xml_goto_program.h"
+
 #include <sstream>
 #include <iostream>
 
 #include <util/xml_irep.h>
-
-#include "xml_goto_program.h"
 
 /*******************************************************************\
 
