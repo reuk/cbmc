@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 \*******************************************************************/
 
+#include "language_util.h"
+
 #include <memory>
 
 #include <util/symbol_table.h>
@@ -13,7 +15,6 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 #include <util/language.h>
 #include <util/std_expr.h>
 
-#include "language_util.h"
 #include "mode.h"
 
 /*******************************************************************\
