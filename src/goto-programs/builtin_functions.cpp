@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_convert_class.h"
+
 #include <cassert>
 
 #include <util/rational.h>
@@ -27,7 +29,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <ansi-c/c_types.h>
 #include <ansi-c/string_constant.h>
 
-#include "goto_convert_class.h"
 #include "format_strings.h"
 
 /*******************************************************************\

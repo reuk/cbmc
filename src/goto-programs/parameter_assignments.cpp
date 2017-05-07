@@ -8,10 +8,10 @@ Date:   September 2015
 
 \*******************************************************************/
 
+#include "parameter_assignments.h"
+
 #include <util/std_expr.h>
 #include <util/symbol_table.h>
-
-#include "parameter_assignments.h"
 
 class parameter_assignmentst
 {

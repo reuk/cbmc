@@ -6,10 +6,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "remove_unreachable.h"
+
 #include <set>
 #include <stack>
-
-#include "remove_unreachable.h"
 
 /*******************************************************************\
 

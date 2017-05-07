@@ -6,11 +6,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "set_properties.h"
+
 #include <algorithm>
 #include <unordered_set>
-
-
-#include "set_properties.h"
 
 /*******************************************************************\
 

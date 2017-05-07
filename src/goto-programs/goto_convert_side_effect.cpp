@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_convert_class.h"
+
 #include <util/arith_tools.h>
 #include <util/expr_util.h>
 #include <util/std_expr.h>
@@ -14,8 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/symbol.h>
 
 #include <ansi-c/c_types.h>
-
-#include "goto_convert_class.h"
 
 /*******************************************************************\
 

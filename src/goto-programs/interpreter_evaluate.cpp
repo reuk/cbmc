@@ -6,14 +6,14 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "interpreter_class.h"
+
 #include <cassert>
 #include <iostream>
 
 #include <util/ieee_float.h>
 #include <util/fixedbv.h>
 #include <util/std_expr.h>
-
-#include "interpreter_class.h"
 
 /*******************************************************************\
 

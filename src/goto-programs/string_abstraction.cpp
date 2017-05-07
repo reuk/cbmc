@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "string_abstraction.h"
+
 #include <cstring>
 
 #include <util/std_expr.h>
@@ -17,7 +19,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <ansi-c/c_types.h>
 
 #include "pointer_arithmetic.h"
-#include "string_abstraction.h"
 
 /*******************************************************************\
 

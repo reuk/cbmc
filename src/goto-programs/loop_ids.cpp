@@ -6,14 +6,14 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "loop_ids.h"
+
 #include <iostream>
 
 #include <util/xml.h>
 #include <util/xml_expr.h>
 #include <util/json.h>
 #include <util/json_expr.h>
-
-#include "loop_ids.h"
 
 /*******************************************************************\
 

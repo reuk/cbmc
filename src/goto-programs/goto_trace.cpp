@@ -8,6 +8,8 @@ Author: Daniel Kroening
 
 \*******************************************************************/
 
+#include "goto_trace.h"
+
 #include <cassert>
 #include <ostream>
 
@@ -16,8 +18,6 @@ Author: Daniel Kroening
 
 #include <ansi-c/printf_formatter.h>
 #include <langapi/language_util.h>
-
-#include "goto_trace.h"
 
 /*******************************************************************\
 

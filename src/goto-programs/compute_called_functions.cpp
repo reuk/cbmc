@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <util/std_expr.h>
-
 #include "compute_called_functions.h"
+
+#include <util/std_expr.h>
 
 /*******************************************************************\
 

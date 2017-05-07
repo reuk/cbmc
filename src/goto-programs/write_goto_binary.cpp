@@ -6,13 +6,13 @@ Author: CM Wintersteiger
 
 \*******************************************************************/
 
+#include "write_goto_binary.h"
+
 #include <fstream>
 
 #include <util/message.h>
 #include <util/irep_serialization.h>
 #include <util/symbol_table.h>
-
-#include "write_goto_binary.h"
 
 /*******************************************************************\
 

@@ -8,12 +8,12 @@ Date: April 2016
 
 \*******************************************************************/
 
+#include "class_hierarchy.h"
+
 #include <ostream>
 
 #include <util/std_types.h>
 #include <util/symbol_table.h>
-
-#include "class_hierarchy.h"
 
 /*******************************************************************\
 

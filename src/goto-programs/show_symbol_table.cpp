@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "show_symbol_table.h"
+
 #include <iostream>
 #include <memory>
 
@@ -13,7 +15,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <langapi/mode.h>
 
 #include "goto_model.h"
-#include "show_symbol_table.h"
 
 /*******************************************************************\
 

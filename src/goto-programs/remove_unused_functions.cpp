@@ -6,9 +6,9 @@ Author: CM Wintersteiger
 
 \*******************************************************************/
 
-#include <util/message.h>
-
 #include "remove_unused_functions.h"
+
+#include <util/message.h>
 
 /*******************************************************************\
 

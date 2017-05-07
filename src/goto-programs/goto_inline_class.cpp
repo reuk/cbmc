@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_inline_class.h"
+
 #ifdef DEBUG
 #include <iostream>
 #endif
@@ -21,7 +23,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "remove_skip.h"
 #include "goto_inline.h"
-#include "goto_inline_class.h"
 
 /*******************************************************************\
 

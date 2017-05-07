@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "show_properties.h"
+
 #include <iostream>
 
 #include <util/xml.h>
@@ -15,7 +17,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <langapi/language_util.h>
 
-#include "show_properties.h"
 #include "goto_functions.h"
 #include "goto_model.h"
 

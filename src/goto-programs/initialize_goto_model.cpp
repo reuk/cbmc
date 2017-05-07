@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "initialize_goto_model.h"
+
 #include <fstream>
 #include <iostream>
 
@@ -18,7 +20,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "goto_convert_functions.h"
 #include "read_goto_binary.h"
-#include "initialize_goto_model.h"
 
 /*******************************************************************\
 

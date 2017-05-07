@@ -8,6 +8,8 @@ Date: June 2011
 
 \*******************************************************************/
 
+#include "vcd_goto_trace.h"
+
 #include <ctime>
 #include <ostream>
 #include <cassert>
@@ -15,8 +17,6 @@ Date: June 2011
 #include <util/arith_tools.h>
 #include <util/pointer_offset_size.h>
 #include <util/numbering.h>
-
-#include "vcd_goto_trace.h"
 
 /*******************************************************************\
 

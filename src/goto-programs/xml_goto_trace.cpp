@@ -8,6 +8,8 @@ Author: Daniel Kroening
 
 \*******************************************************************/
 
+#include "xml_goto_trace.h"
+
 #include <cassert>
 
 #include <util/xml_expr.h>
@@ -15,8 +17,6 @@ Author: Daniel Kroening
 
 #include <ansi-c/printf_formatter.h>
 #include <langapi/language_util.h>
-
-#include "xml_goto_trace.h"
 
 /*******************************************************************\
 

@@ -9,14 +9,14 @@ Date:   December 2014
 
 \*******************************************************************/
 
+#include "remove_asm.h"
+
 #include <sstream>
 
 #include <util/std_expr.h>
 
 #include <ansi-c/string_constant.h>
 #include <assembler/assembler_parser.h>
-
-#include "remove_asm.h"
 
 class remove_asmt
 {

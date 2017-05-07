@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_convert_class.h"
+
 #include <cassert>
 
 #include <util/replace_expr.h>
@@ -15,8 +17,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/std_expr.h>
 
 #include <ansi-c/c_types.h>
-
-#include "goto_convert_class.h"
 
 /*******************************************************************\
 

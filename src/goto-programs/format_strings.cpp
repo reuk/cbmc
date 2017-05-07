@@ -6,14 +6,14 @@ Author: CM Wintersteiger
 
 \*******************************************************************/
 
+#include "format_strings.h"
+
 #include <util/std_types.h>
 #include <util/std_expr.h>
 
 #include <ansi-c/c_types.h>
 
 #include <cctype>
-
-#include "format_strings.h"
 
 /*******************************************************************\
 

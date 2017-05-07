@@ -8,13 +8,13 @@ Author: Daniel Kroening
 
 \*******************************************************************/
 
+#include "json_goto_trace.h"
+
 #include <cassert>
 
 #include <util/json_expr.h>
 
 #include <langapi/language_util.h>
-
-#include "json_goto_trace.h"
 
 /*******************************************************************\
 

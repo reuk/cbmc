@@ -6,13 +6,13 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_program.h"
+
 #include <ostream>
 
 #include <util/std_expr.h>
 
 #include <langapi/language_util.h>
-
-#include "goto_program.h"
 
 /*******************************************************************\
 

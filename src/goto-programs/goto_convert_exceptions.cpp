@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <util/std_expr.h>
-
 #include "goto_convert_class.h"
+
+#include <util/std_expr.h>
 
 /*******************************************************************\
 

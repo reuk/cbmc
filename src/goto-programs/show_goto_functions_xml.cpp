@@ -6,9 +6,10 @@ Author: Thomas Kiley
 
 \*******************************************************************/
 
+#include "show_goto_functions_xml.h"
+
 #include <iostream>
 #include <sstream>
-
 
 #include <util/xml_expr.h>
 #include <util/cprover_prefix.h>
@@ -18,8 +19,6 @@ Author: Thomas Kiley
 
 #include "goto_functions.h"
 #include "goto_model.h"
-
-#include "show_goto_functions_xml.h"
 
 /*******************************************************************\
 

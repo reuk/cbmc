@@ -6,10 +6,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "destructor.h"
+
 #include <util/std_types.h>
 #include <util/std_code.h>
-
-#include "destructor.h"
 
 /*******************************************************************\
 

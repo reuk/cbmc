@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_convert_class.h"
+
 #include <util/fresh_symbol.h>
 #include <util/simplify_expr.h>
 #include <util/std_expr.h>
@@ -13,8 +15,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/cprover_prefix.h>
 
 #include <ansi-c/c_types.h>
-
-#include "goto_convert_class.h"
 
 /*******************************************************************\
 

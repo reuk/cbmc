@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <ostream>
-
 #include "goto_program_template.h"
+
+#include <ostream>
 
 /*******************************************************************\
 

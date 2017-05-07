@@ -8,9 +8,9 @@ Date:   September 2014
 
 \*******************************************************************/
 
-#include <util/arith_tools.h>
-
 #include "remove_vector.h"
+
+#include <util/arith_tools.h>
 
 /*******************************************************************\
 

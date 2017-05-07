@@ -8,11 +8,11 @@ Date: May 2007
 
 \*******************************************************************/
 
+#include "goto_program_irep.h"
+
 #include <iostream>
 
 #include <util/string2int.h>
-
-#include "goto_program_irep.h"
 
 /*******************************************************************\
 
