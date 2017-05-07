@@ -6,11 +6,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "qbf_skizzo.h"
+
 #include <cassert>
 #include <cstdlib>
 #include <fstream>
-
-#include "qbf_skizzo.h"
 
 /*******************************************************************\
 

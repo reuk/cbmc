@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "bv_refinement.h"
+
 #ifdef DEBUG
 #include <iostream>
 #include <langapi/language_util.h>
@@ -14,7 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/std_expr.h>
 #include <util/find_symbols.h>
 
-#include "bv_refinement.h"
 #include <solvers/sat/satcheck.h>
 
 /*******************************************************************\

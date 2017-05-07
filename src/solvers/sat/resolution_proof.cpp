@@ -6,10 +6,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "resolution_proof.h"
+
 #include <cassert>
 #include <stack>
-
-#include "resolution_proof.h"
 
 /*******************************************************************\
 

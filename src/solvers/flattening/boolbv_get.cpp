@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "boolbv.h"
+
 #include <cassert>
 
 #include <util/arith_tools.h>
@@ -14,7 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/std_types.h>
 #include <util/simplify_expr.h>
 
-#include "boolbv.h"
 #include "boolbv_type.h"
 
 /*******************************************************************\

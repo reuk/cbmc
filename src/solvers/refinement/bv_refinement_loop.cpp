@@ -6,11 +6,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "bv_refinement.h"
+
 #include <iostream>
 
 #include <util/xml.h>
-
-#include "bv_refinement.h"
 
 /*******************************************************************\
 

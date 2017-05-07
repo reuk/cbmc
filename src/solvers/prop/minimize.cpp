@@ -6,10 +6,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "minimize.h"
+
 #include <util/threeval.h>
 
 #include "literal_expr.h"
-#include "minimize.h"
 
 /*******************************************************************\
 

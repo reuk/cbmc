@@ -6,12 +6,12 @@ Author: Alex Groce
 
 \*******************************************************************/
 
+#include "pbs_dimacs_cnf.h"
+
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <iostream>
-
-#include "pbs_dimacs_cnf.h"
 
 /*******************************************************************\
 

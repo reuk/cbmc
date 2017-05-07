@@ -6,10 +6,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "boolbv.h"
+
 #include <util/arith_tools.h>
 #include <util/base_type.h>
-
-#include "boolbv.h"
 
 /*******************************************************************\
 

@@ -6,11 +6,11 @@ Author: CM Wintersteiger
 
 \*******************************************************************/
 
+#include "qbf_qube.h"
+
 #include <cassert>
 #include <cstdlib>
 #include <fstream>
-
-#include "qbf_qube.h"
 
 /*******************************************************************\
 

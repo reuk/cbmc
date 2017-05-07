@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "smt2_conv.h"
+
 #include <cassert>
 
 #include <util/arith_tools.h>
@@ -26,8 +28,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <solvers/flattening/flatten_byte_operators.h>
 #include <solvers/flattening/c_bit_field_replacement_type.h>
 #include <solvers/floatbv/float_bv.h>
-
-#include "smt2_conv.h"
 
 // Mark different kinds of error condition
 // General

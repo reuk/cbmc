@@ -6,8 +6,9 @@ Author: Romain Brenguier, romain.brenguier@diffblue.com
 
 \*******************************************************************/
 
-#include <ansi-c/string_constant.h>
 #include <solvers/refinement/string_constraint_generator.h>
+
+#include <ansi-c/string_constant.h>
 #include <util/prefix.h>
 #include <util/unicode.h>
 

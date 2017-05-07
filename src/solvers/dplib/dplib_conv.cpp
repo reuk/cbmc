@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "dplib_conv.h"
+
 #include <cassert>
 #include <cctype>
 
@@ -18,8 +20,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/string2int.h>
 
 #include <ansi-c/string_constant.h>
-
-#include "dplib_conv.h"
 
 /*******************************************************************\
 

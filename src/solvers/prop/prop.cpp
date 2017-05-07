@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <cassert>
-
 #include "prop.h"
+
+#include <cassert>
 
 /*******************************************************************\
 

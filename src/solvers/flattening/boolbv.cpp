@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "boolbv.h"
+
 #include <cassert>
 #include <map>
 #include <set>
@@ -22,7 +24,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <ansi-c/string_constant.h>
 
-#include "boolbv.h"
 #include "boolbv_type.h"
 
 #include "../floatbv/float_utils.h"

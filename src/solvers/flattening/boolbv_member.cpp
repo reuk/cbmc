@@ -6,11 +6,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "boolbv.h"
+
 #include <util/base_type.h>
 #include <util/byte_operators.h>
 #include <util/arith_tools.h>
-
-#include "boolbv.h"
 
 /*******************************************************************\
 

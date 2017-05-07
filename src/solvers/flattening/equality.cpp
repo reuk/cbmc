@@ -6,11 +6,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "equality.h"
+
 #ifdef DEBUG
 #include <iostream>
 #endif
 
-#include "equality.h"
 #include "bv_utils.h"
 
 /*******************************************************************\

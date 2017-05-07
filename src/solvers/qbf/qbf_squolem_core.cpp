@@ -6,14 +6,14 @@ Author: CM Wintersteiger
 
 \*******************************************************************/
 
+#include "qbf_squolem_core.h"
+
 #include <algorithm>
 
 #include <util/std_expr.h>
 #include <util/arith_tools.h>
 
 #include <ansi-c/c_types.h> // uint type for indices
-
-#include "qbf_squolem_core.h"
 
 /*******************************************************************\
 

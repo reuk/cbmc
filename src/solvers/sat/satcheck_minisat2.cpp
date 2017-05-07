@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "satcheck_minisat2.h"
+
 #ifndef _MSC_VER
 #include <inttypes.h>
 #endif
@@ -14,8 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <stack>
 
 #include <util/threeval.h>
-
-#include "satcheck_minisat2.h"
 
 #include <minisat/core/Solver.h>
 #include <minisat/simp/SimpSolver.h>

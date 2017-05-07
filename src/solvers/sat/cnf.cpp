@@ -6,12 +6,13 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "cnf.h"
+
 #include <algorithm>
 #include <cassert>
 #include <iostream>
 #include <set>
 
-#include "cnf.h"
 // #define VERBOSE
 
 /*******************************************************************\

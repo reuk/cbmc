@@ -6,14 +6,14 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "boolbv.h"
+
 #include <iostream>
 #include <cassert>
 
 #include <util/arith_tools.h>
 #include <util/byte_operators.h>
 #include <util/endianness_map.h>
-
-#include "boolbv.h"
 
 /*******************************************************************\
 

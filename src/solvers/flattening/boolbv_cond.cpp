@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <iostream>
-
 #include "boolbv.h"
+
+#include <iostream>
 
 /*******************************************************************\
 

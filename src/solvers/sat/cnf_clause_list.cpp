@@ -6,10 +6,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "cnf_clause_list.h"
+
 #include <cassert>
 #include <ostream>
-
-#include "cnf_clause_list.h"
 
 /*******************************************************************\
 

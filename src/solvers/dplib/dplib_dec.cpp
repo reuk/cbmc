@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "dplib_dec.h"
+
 #include <cstring>
 #include <cassert>
 
@@ -25,8 +27,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <util/prefix.h>
 #include <util/string2int.h>
-
-#include "dplib_dec.h"
 
 /*******************************************************************\
 

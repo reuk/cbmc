@@ -7,9 +7,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <iostream>
-
 #include "miniBDD.h"
+
+#include <iostream>
 
 int main()
 {

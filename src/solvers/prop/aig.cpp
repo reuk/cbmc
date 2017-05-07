@@ -6,11 +6,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "aig.h"
+
 #include <cassert>
 #include <ostream>
 #include <string>
-
-#include "aig.h"
 
 /*******************************************************************\
 

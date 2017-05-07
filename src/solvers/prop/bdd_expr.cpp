@@ -6,12 +6,12 @@ Author: Michael Tautschnig, michael.tautschnig@qmul.ac.uk
 
 \*******************************************************************/
 
+#include "bdd_expr.h"
+
 #include <langapi/language_util.h>
 
 #include <util/std_expr.h>
 #include <util/expr_util.h>
-
-#include "bdd_expr.h"
 
 /*******************************************************************\
 

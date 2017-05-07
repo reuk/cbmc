@@ -10,12 +10,13 @@ Author: Alberto Griggio, alberto.griggio@gmail.com
 
 \*******************************************************************/
 
+#include <solvers/refinement/string_refinement.h>
+
 #include <sstream>
 #include <ansi-c/string_constant.h>
 #include <util/cprover_prefix.h>
 #include <util/replace_expr.h>
 #include <solvers/sat/satcheck.h>
-#include <solvers/refinement/string_refinement.h>
 #include <langapi/language_util.h>
 
 string_refinementt::string_refinementt(

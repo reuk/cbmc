@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "flatten_byte_operators.h"
+
 #include <util/expr.h>
 #include <util/std_types.h>
 #include <util/std_expr.h>
@@ -13,8 +15,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/pointer_offset_size.h>
 #include <util/byte_operators.h>
 #include <util/namespace.h>
-
-#include "flatten_byte_operators.h"
 
 /*******************************************************************\
 

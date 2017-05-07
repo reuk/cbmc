@@ -6,13 +6,13 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "boolbv_width.h"
+
 #include <algorithm>
 
 #include <util/arith_tools.h>
 #include <util/config.h>
 #include <util/std_types.h>
-
-#include "boolbv_width.h"
 
 /*******************************************************************\
 

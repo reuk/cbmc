@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <util/arith_tools.h>
-
 #include "boolbv.h"
+
+#include <util/arith_tools.h>
 
 /*******************************************************************\
 

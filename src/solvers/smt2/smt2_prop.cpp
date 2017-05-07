@@ -6,10 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <cassert>
-
-
 #include "smt2_prop.h"
+
+#include <cassert>
 
 /*******************************************************************\
 

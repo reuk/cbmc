@@ -6,12 +6,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "dplib_prop.h"
+
 #include <cassert>
 
 #include <set>
-
-
-#include "dplib_prop.h"
 
 /*******************************************************************\
 

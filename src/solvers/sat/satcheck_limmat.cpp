@@ -6,10 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <cassert>
-
-
 #include "satcheck_limmat.h"
+
+#include <cassert>
 
 extern "C"
 {

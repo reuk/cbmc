@@ -6,11 +6,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "bv_utils.h"
+
 #include <cassert>
 
 #include <util/arith_tools.h>
-
-#include "bv_utils.h"
 
 /*******************************************************************\
 

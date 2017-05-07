@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "smt1_dec.h"
+
 #include <cstdlib>
 
 #if defined(__linux__) || \
@@ -23,8 +25,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/arith_tools.h>
 #include <util/string2int.h>
 #include <util/prefix.h>
-
-#include "smt1_dec.h"
 
 /*******************************************************************\
 

@@ -8,10 +8,9 @@ Revisions: Roberto Bruttomesso, roberto.bruttomesso@unisi.ch
 
 \*******************************************************************/
 
-#include <cassert>
-
-
 #include "smt1_prop.h"
+
+#include <cassert>
 
 /*******************************************************************\
 

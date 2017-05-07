@@ -6,13 +6,13 @@ Author: CM Wintersteiger
 
 \*******************************************************************/
 
+#include "qbf_qube_core.h"
+
 #include <cassert>
 #include <cstdlib>
 #include <fstream>
 
 #include <util/mp_arith.h>
-
-#include "qbf_qube_core.h"
 
 /*******************************************************************\
 

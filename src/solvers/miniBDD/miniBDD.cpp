@@ -7,11 +7,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "miniBDD.h"
+
 #include <cassert>
 
 #include <iostream>
-
-#include "miniBDD.h"
 
 #define forall_nodes(it) for(nodest::const_iterator it=nodes.begin(); \
   it!=nodes.end(); it++)

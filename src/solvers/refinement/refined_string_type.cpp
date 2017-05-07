@@ -10,9 +10,9 @@ Author: Romain Brenguier, romain.brenguier@diffblue.com
 
 \*******************************************************************/
 
-#include <util/cprover_prefix.h>
-
 #include "refined_string_type.h"
+
+#include <util/cprover_prefix.h>
 
 /*******************************************************************\
 

@@ -6,12 +6,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "functions.h"
+
 #include <cassert>
 
 #include <util/std_types.h>
 #include <util/std_expr.h>
-
-#include "functions.h"
 
 /*******************************************************************\
 

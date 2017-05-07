@@ -6,11 +6,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "cvc_prop.h"
+
 #include <cassert>
 #include <set>
-
-
-#include "cvc_prop.h"
 
 /*******************************************************************\
 

@@ -6,10 +6,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "cover_goals.h"
+
 #include <util/threeval.h>
 
 #include "literal_expr.h"
-#include "cover_goals.h"
 
 /*******************************************************************\
 
