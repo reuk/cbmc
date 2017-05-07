@@ -8,6 +8,8 @@ Date: March 2016
 
 \*******************************************************************/
 
+#include "symex_coverage.h"
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -20,8 +22,6 @@ Date: March 2016
 
 #include <goto-programs/goto_functions.h>
 #include <goto-programs/remove_returns.h>
-
-#include "symex_coverage.h"
 
 class coverage_recordt
 {

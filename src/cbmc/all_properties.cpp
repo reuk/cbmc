@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "all_properties_class.h"
+
 #include <iostream>
 
 #include <util/time_stopping.h>
@@ -20,8 +22,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <goto-programs/json_goto_trace.h>
 
 #include "bv_cbmc.h"
-
-#include "all_properties_class.h"
 
 /*******************************************************************\
 

@@ -6,12 +6,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "cbmc_dimacs.h"
+
 #include <fstream>
 #include <iostream>
 
 #include <solvers/sat/dimacs_cnf.h>
-
-#include "cbmc_dimacs.h"
 
 /*******************************************************************\
 

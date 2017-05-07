@@ -14,13 +14,13 @@ Author: Daniel Kroening, kroening@kroening.com
 
 */
 
+#include "cbmc_parse_options.h"
+
 #include <util/unicode.h>
 
 #ifdef IREP_HASH_STATS
 #include <iostream>
 #endif
-
-#include "cbmc_parse_options.h"
 
 /*******************************************************************\
 

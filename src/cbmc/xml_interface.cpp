@@ -6,13 +6,13 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "xml_interface.h"
+
 #include <iostream>
 
 #include <util/message.h>
 
 #include <xmllang/xml_parser.h>
-
-#include "xml_interface.h"
 
 /*******************************************************************\
 

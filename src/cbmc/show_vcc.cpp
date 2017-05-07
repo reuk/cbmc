@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "bmc.h"
+
 #include <iostream>
 #include <fstream>
 
@@ -17,8 +19,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <util/json.h>
 #include <util/json_expr.h>
-
-#include "bmc.h"
 
 /*******************************************************************\
 

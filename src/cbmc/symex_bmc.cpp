@@ -6,12 +6,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "symex_bmc.h"
+
 #include <limits>
 
 #include <util/source_location.h>
 #include <util/simplify_expr.h>
-
-#include "symex_bmc.h"
 
 /*******************************************************************\
 

@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "bmc.h"
+
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -37,7 +39,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "counterexample_beautification.h"
 #include "fault_localization.h"
-#include "bmc.h"
 
 /*******************************************************************\
 

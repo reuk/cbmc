@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "cbmc_parse_options.h"
+
 #include <fstream>
 #include <cstdlib> // exit()
 #include <iostream>
@@ -53,7 +55,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <langapi/mode.h>
 
 #include "cbmc_solvers.h"
-#include "cbmc_parse_options.h"
 #include "bmc.h"
 #include "version.h"
 #include "xml_interface.h"

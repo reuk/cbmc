@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "cbmc_solvers.h"
+
 #include <memory>
 #include <iostream>
 #include <fstream>
@@ -20,7 +22,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <solvers/prop/aig_prop.h>
 #include <solvers/sat/dimacs_cnf.h>
 
-#include "cbmc_solvers.h"
 #include "bv_cbmc.h"
 #include "cbmc_dimacs.h"
 #include "counterexample_beautification.h"
