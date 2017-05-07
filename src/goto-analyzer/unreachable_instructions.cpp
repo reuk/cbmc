@@ -8,6 +8,8 @@ Date: April 2016
 
 \*******************************************************************/
 
+#include "unreachable_instructions.h"
+
 #include <sstream>
 
 #include <util/json.h>
@@ -18,8 +20,6 @@ Date: April 2016
 
 #include <goto-programs/goto_model.h>
 #include <goto-programs/compute_called_functions.h>
-
-#include "unreachable_instructions.h"
 
 typedef std::map<unsigned, goto_programt::const_targett> dead_mapt;
 

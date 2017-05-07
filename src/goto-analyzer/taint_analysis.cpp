@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "taint_analysis.h"
+
 #include <iostream>
 #include <fstream>
 
@@ -19,7 +21,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <analyses/custom_bitvector_analysis.h>
 
-#include "taint_analysis.h"
 #include "taint_parser.h"
 
 /*******************************************************************\

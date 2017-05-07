@@ -6,13 +6,13 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "taint_parser.h"
+
 #include <ostream>
 
 #include <util/string2int.h>
 
 #include <json/json_parser.h>
-
-#include "taint_parser.h"
 
 /*******************************************************************\
 
