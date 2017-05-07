@@ -26,16 +26,15 @@ Function: path_symex_stept::output
 
 \*******************************************************************/
 
-void path_symex_stept::output(std::ostream &out) const
-{
+void path_symex_stept::output(std::ostream &out) const {
   out << "PCs:";
 
-/*
-    for(pc_vectort::const_iterator p_it=s_it->pc_vector.begin();
-        p_it!=pc_vector.end();
-        p_it++)
-      out << " " << *p_it;
- */
+  /*
+      for(pc_vectort::const_iterator p_it=s_it->pc_vector.begin();
+          p_it!=pc_vector.end();
+          p_it++)
+        out << " " << *p_it;
+   */
   out << "\n";
 
   out << "Guard: " << from_expr(guard) << "\n";
@@ -57,12 +56,11 @@ Function: path_symex_stept::convert
 
 \*******************************************************************/
 
-void path_symex_stept::convert(decision_proceduret &dest) const
-{
-  if(ssa_rhs.is_not_nil())
+void path_symex_stept::convert(decision_proceduret &dest) const {
+  if (ssa_rhs.is_not_nil())
     dest << equal_exprt(ssa_lhs, ssa_rhs);
 
-  if(guard.is_not_nil())
+  if (guard.is_not_nil())
     dest << guard;
 }
 
@@ -79,13 +77,11 @@ Function: path_symex_step_reft::build_history
 \*******************************************************************/
 
 void path_symex_step_reft::build_history(
-  std::vector<path_symex_step_reft> &dest) const
-{
+    std::vector<path_symex_step_reft> &dest) const {
   dest.clear();
 
-  path_symex_step_reft s=*this;
-  while(!s.is_nil())
-  {
+  path_symex_step_reft s = *this;
+  while (!s.is_nil()) {
     dest.push_back(s);
     --s;
   }

@@ -12,12 +12,9 @@ Date: April 2016
 #define CPROVER_GOTO_DIFF_CHANGE_IMPACT_H
 
 class goto_modelt;
-typedef enum {FORWARD, BACKWARD, BOTH} impact_modet;
+typedef enum { FORWARD, BACKWARD, BOTH } impact_modet;
 
-void change_impact(
-  const goto_modelt &model_old,
-  const goto_modelt &model_new,
-  impact_modet impact_mode,
-  bool compact_output);
+void change_impact(const goto_modelt &model_old, const goto_modelt &model_new,
+                   impact_modet impact_mode, bool compact_output);
 
 #endif // CPROVER_GOTO_DIFF_CHANGE_IMPACT_H

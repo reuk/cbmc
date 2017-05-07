@@ -10,14 +10,14 @@ Revision: Roberto Bruttomesso, roberto.bruttomesso@unisi.ch
 #ifndef CPROVER_SOLVERS_SMT1_SMT1_CONV_H
 #define CPROVER_SOLVERS_SMT1_SMT1_CONV_H
 
-#include <sstream>
 #include <set>
+#include <sstream>
 
 #include <util/std_expr.h>
 
-#include <solvers/prop/prop_conv.h>
-#include <solvers/flattening/pointer_logic.h>
 #include <solvers/flattening/boolbv_width.h>
+#include <solvers/flattening/pointer_logic.h>
+#include <solvers/prop/prop_conv.h>
 
 class byte_extract_exprt;
 class typecast_exprt;
@@ -25,34 +25,29 @@ class constant_exprt;
 class index_exprt;
 class member_exprt;
 
-class smt1_convt:public prop_convt
-{
+class smt1_convt : public prop_convt {
 public:
-  typedef enum
-  { GENERIC, BOOLECTOR, CVC3, CVC4, MATHSAT, OPENSMT, YICES, Z3 } solvert;
+  typedef enum {
+    GENERIC,
+    BOOLECTOR,
+    CVC3,
+    CVC4,
+    MATHSAT,
+    OPENSMT,
+    YICES,
+    Z3
+  } solvert;
 
-  smt1_convt(
-    const namespacet &_ns,
-    const std::string &_benchmark,
-    const std::string &_source,
-    const std::string &_logic,
-    solvert _solver,
-    std::ostream &_out):
-    prop_convt(_ns),
-    benchmark(_benchmark),
-    source(_source),
-    logic(_logic),
-    solver(_solver),
-    out(_out),
-    boolbv_width(_ns),
-    pointer_logic(_ns),
-    array_index_bits(32),
-    no_boolean_variables(0)
-  {
+  smt1_convt(const namespacet &_ns, const std::string &_benchmark,
+             const std::string &_source, const std::string &_logic,
+             solvert _solver, std::ostream &_out)
+      : prop_convt(_ns), benchmark(_benchmark), source(_source), logic(_logic),
+        solver(_solver), out(_out), boolbv_width(_ns), pointer_logic(_ns),
+        array_index_bits(32), no_boolean_variables(0) {
     write_header();
   }
 
-  virtual ~smt1_convt() { }
+  virtual ~smt1_convt() {}
   virtual resultt dec_solve();
 
   // overloading interfaces
@@ -78,9 +73,7 @@ protected:
 
   // specific expressions go here
   void convert_byte_update(const exprt &expr, bool bool_as_bv);
-  void convert_byte_extract(
-    const byte_extract_exprt &expr,
-    bool bool_as_bv);
+  void convert_byte_extract(const byte_extract_exprt &expr, bool bool_as_bv);
   void convert_typecast(const typecast_exprt &expr, bool bool_as_bv);
   void convert_struct(const exprt &expr);
   void convert_union(const exprt &expr);
@@ -124,39 +117,31 @@ protected:
 
   // pointers
   pointer_logict pointer_logic;
-  void convert_address_of_rec(
-    const exprt &expr, const pointer_typet &result_type);
+  void convert_address_of_rec(const exprt &expr,
+                              const pointer_typet &result_type);
 
   // keeps track of all symbols
-  struct identifiert
-  {
+  struct identifiert {
     typet type;
     exprt value;
 
-    identifiert()
-    {
+    identifiert() {
       type.make_nil();
       value.make_nil();
     }
   };
 
-  void set_value(
-    identifiert &identifier,
-    const std::string &index,
-    const std::string &value)
-  {
-    exprt tmp=ce_value(identifier.type, index, value, false);
-    if(tmp.id()=="array-list" && identifier.value.id()=="array-list")
-    {
-      forall_operands(it, tmp)
-        identifier.value.copy_to_operands(*it);
-    }
-    else
-      identifier.value=tmp;
+  void set_value(identifiert &identifier, const std::string &index,
+                 const std::string &value) {
+    exprt tmp = ce_value(identifier.type, index, value, false);
+    if (tmp.id() == "array-list" && identifier.value.id() == "array-list") {
+      forall_operands(it, tmp) identifier.value.copy_to_operands(*it);
+    } else
+      identifier.value = tmp;
   }
 
   typedef std::unordered_map<irep_idt, identifiert, irep_id_hash>
-    identifier_mapt;
+      identifier_mapt;
 
   identifier_mapt identifier_map;
 
@@ -174,24 +159,17 @@ protected:
   typedef std::map<exprt, exprt> string2array_mapt;
   string2array_mapt string2array_map;
 
-  exprt ce_value(
-    const typet &type,
-    const std::string &index,
-    const std::string &v,
-    bool in_struct) const;
+  exprt ce_value(const typet &type, const std::string &index,
+                 const std::string &v, bool in_struct) const;
 
-  exprt binary2struct(
-    const struct_typet &type,
-    const std::string &binary) const;
+  exprt binary2struct(const struct_typet &type,
+                      const std::string &binary) const;
 
-  exprt binary2union(
-    const union_typet &type,
-    const std::string &binary) const;
+  exprt binary2union(const union_typet &type, const std::string &binary) const;
 
   // flattens multi-operand expressions into binary
   // expressions
-  void convert_nary(const exprt &expr,
-                    const irep_idt op_string,
+  void convert_nary(const exprt &expr, const irep_idt op_string,
                     bool bool_as_bv);
 
   // Boolean part

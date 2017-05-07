@@ -21,14 +21,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-class local_cfgt
-{
+class local_cfgt {
 public:
   typedef std::size_t node_nrt;
   typedef std::vector<node_nrt> successorst;
 
-  class nodet
-  {
+  class nodet {
   public:
     goto_programt::const_targett t;
     successorst successors;
@@ -40,8 +38,7 @@ public:
   typedef std::vector<nodet> nodest;
   nodest nodes;
 
-  explicit local_cfgt(const goto_programt &_goto_program)
-  {
+  explicit local_cfgt(const goto_programt &_goto_program) {
     build(_goto_program);
   }
 

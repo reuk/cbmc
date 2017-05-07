@@ -14,14 +14,13 @@ Author: Thomas Kiley
 class goto_functionst;
 class namespacet;
 
-class show_goto_functions_jsont
-{
+class show_goto_functions_jsont {
 public:
   explicit show_goto_functions_jsont(const namespacet &ns);
 
   json_objectt convert(const goto_functionst &goto_functions);
-  void operator()(
-    const goto_functionst &goto_functions, std::ostream &out, bool append=true);
+  void operator()(const goto_functionst &goto_functions, std::ostream &out,
+                  bool append = true);
 
 private:
   const namespacet &ns;

@@ -20,8 +20,7 @@ Function: main
 
 \*******************************************************************/
 
-int main(int argc, const char **argv)
-{
+int main(int argc, const char **argv) {
   goto_fence_inserter_parse_optionst parse_options(argc, argv);
   return parse_options.main();
 }

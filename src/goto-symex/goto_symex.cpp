@@ -10,8 +10,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "goto_symex.h"
 
-unsigned goto_symext::nondet_count=0;
-unsigned goto_symext::dynamic_counter=0;
+unsigned goto_symext::nondet_count = 0;
+unsigned goto_symext::dynamic_counter = 0;
 
 /*******************************************************************\
 
@@ -25,9 +25,8 @@ Function: goto_symext::do_simplify
 
 \*******************************************************************/
 
-void goto_symext::do_simplify(exprt &expr)
-{
-  if(options.get_bool_option("simplify"))
+void goto_symext::do_simplify(exprt &expr) {
+  if (options.get_bool_option("simplify"))
     simplify(expr, ns);
 }
 
@@ -43,17 +42,13 @@ Function: goto_symext::replace_nondet
 
 \*******************************************************************/
 
-void goto_symext::replace_nondet(exprt &expr)
-{
-  if(expr.id()==ID_side_effect &&
-     expr.get(ID_statement)==ID_nondet)
-  {
+void goto_symext::replace_nondet(exprt &expr) {
+  if (expr.id() == ID_side_effect && expr.get(ID_statement) == ID_nondet) {
     exprt new_expr(ID_nondet_symbol, expr.type());
-    new_expr.set(ID_identifier, "symex::nondet"+std::to_string(nondet_count++));
-    new_expr.add_source_location()=expr.source_location();
+    new_expr.set(ID_identifier,
+                 "symex::nondet" + std::to_string(nondet_count++));
+    new_expr.add_source_location() = expr.source_location();
     expr.swap(new_expr);
-  }
-  else
-    Forall_operands(it, expr)
-      replace_nondet(*it);
+  } else
+    Forall_operands(it, expr) replace_nondet(*it);
 }

@@ -31,14 +31,13 @@ Function: goto_cc_modet::register_languages
 
 \*******************************************************************/
 
-void goto_cc_modet::register_languages()
-{
+void goto_cc_modet::register_languages() {
   register_language(new_ansi_c_language);
   register_language(new_cpp_language);
   register_language(new_java_bytecode_language);
   register_language(new_jsil_language);
 
-  #ifdef HAVE_SPECC
+#ifdef HAVE_SPECC
   register_language(new_specc_language);
-  #endif
+#endif
 }

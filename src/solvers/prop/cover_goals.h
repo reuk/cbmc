@@ -23,13 +23,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-class cover_goalst:public messaget
-{
+class cover_goalst : public messaget {
 public:
-  explicit cover_goalst(prop_convt &_prop_conv):
-    prop_conv(_prop_conv)
-  {
-  }
+  explicit cover_goalst(prop_convt &_prop_conv) : prop_conv(_prop_conv) {}
 
   virtual ~cover_goalst();
 
@@ -38,14 +34,11 @@ public:
 
   // the goals
 
-  struct goalt
-  {
+  struct goalt {
     literalt condition;
     enum class statust { UNKNOWN, COVERED, UNCOVERED, ERROR } status;
 
-    goalt():status(statust::UNKNOWN)
-    {
-    }
+    goalt() : status(statust::UNKNOWN) {}
   };
 
   typedef std::list<goalt> goalst;
@@ -53,43 +46,29 @@ public:
 
   // statistics
 
-  std::size_t number_covered() const
-  {
-    return _number_covered;
-  }
+  std::size_t number_covered() const { return _number_covered; }
 
-  unsigned iterations() const
-  {
-    return _iterations;
-  }
+  unsigned iterations() const { return _iterations; }
 
-  goalst::size_type size() const
-  {
-    return goals.size();
-  }
+  goalst::size_type size() const { return goals.size(); }
 
   // managing the goals
 
-  void add(const literalt condition)
-  {
+  void add(const literalt condition) {
     goals.push_back(goalt());
-    goals.back().condition=condition;
+    goals.back().condition = condition;
   }
 
   // register an observer if you want to be told
   // about satisfying assignments
 
-  class observert
-  {
+  class observert {
   public:
-    virtual void goal_covered(const goalt &) { }
-    virtual void satisfying_assignment() { }
+    virtual void goal_covered(const goalt &) {}
+    virtual void satisfying_assignment() {}
   };
 
-  void register_observer(observert &o)
-  {
-    observers.push_back(&o);
-  }
+  void register_observer(observert &o) { observers.push_back(&o); }
 
 protected:
   std::size_t _number_covered;

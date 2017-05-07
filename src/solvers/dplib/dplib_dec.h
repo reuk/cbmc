@@ -13,8 +13,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "dplib_conv.h"
 
-class dplib_temp_filet
-{
+class dplib_temp_filet {
 public:
   dplib_temp_filet();
   ~dplib_temp_filet();
@@ -24,13 +23,9 @@ protected:
   std::string temp_out_filename, temp_result_filename;
 };
 
-class dplib_dect:protected dplib_temp_filet, public dplib_convt
-{
+class dplib_dect : protected dplib_temp_filet, public dplib_convt {
 public:
-  explicit dplib_dect(const namespacet &_ns):
-    dplib_convt(_ns, temp_out)
-  {
-  }
+  explicit dplib_dect(const namespacet &_ns) : dplib_convt(_ns, temp_out) {}
 
   virtual resultt dec_solve();
 

@@ -13,9 +13,8 @@ class exprt;
 class namespacet;
 class symbol_typet;
 
-exprt get_class_identifier_field(
-  const exprt &this_expr,
-  const symbol_typet &suggested_type,
-  const namespacet &ns);
+exprt get_class_identifier_field(const exprt &this_expr,
+                                 const symbol_typet &suggested_type,
+                                 const namespacet &ns);
 
 #endif

@@ -12,8 +12,7 @@ Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
 
 #include "satcheck_picosat.h"
 
-extern "C"
-{
+extern "C" {
 #include <picosat.h>
 }
 
@@ -33,21 +32,20 @@ Function: satcheck_picosatt::l_get
 
 \*******************************************************************/
 
-tvt satcheck_picosatt::l_get(literalt a) const
-{
-  if(a.is_constant())
+tvt satcheck_picosatt::l_get(literalt a) const {
+  if (a.is_constant())
     return tvt(a.sign());
 
   tvt result;
 
-  if(static_cast<int>(a.var_no())>picosat_variables(picosat))
+  if (static_cast<int>(a.var_no()) > picosat_variables(picosat))
     return tvt(tvt::tv_enumt::TV_UNKNOWN);
 
-  const int val=picosat_deref(picosat, a.dimacs());
-  if(val>0)
-    result=tvt(true);
-  else if(val<0)
-    result=tvt(false);
+  const int val = picosat_deref(picosat, a.dimacs());
+  if (val > 0)
+    result = tvt(true);
+  else if (val < 0)
+    result = tvt(false);
   else
     return tvt(tvt::tv_enumt::TV_UNKNOWN);
 
@@ -66,10 +64,7 @@ Function: satcheck_picosatt::solver_text
 
 \*******************************************************************/
 
-const std::string satcheck_picosatt::solver_text()
-{
-  return "PicoSAT";
-}
+const std::string satcheck_picosatt::solver_text() { return "PicoSAT"; }
 
 /*******************************************************************\
 
@@ -83,17 +78,15 @@ Function: satcheck_picosatt::lcnf
 
 \*******************************************************************/
 
-void satcheck_picosatt::lcnf(const bvt &bv)
-{
+void satcheck_picosatt::lcnf(const bvt &bv) {
   bvt new_bv;
 
-  if(process_clause(bv, new_bv))
+  if (process_clause(bv, new_bv))
     return;
 
   picosat_adjust(picosat, _no_variables);
 
-  forall_literals(it, new_bv)
-    picosat_add(picosat, it->dimacs());
+  forall_literals(it, new_bv) picosat_add(picosat, it->dimacs());
 
   picosat_add(picosat, 0);
 
@@ -112,38 +105,33 @@ Function: satcheck_picosatt::prop_solve
 
 \*******************************************************************/
 
-propt::resultt satcheck_picosatt::prop_solve()
-{
-  assert(status!=ERROR);
+propt::resultt satcheck_picosatt::prop_solve() {
+  assert(status != ERROR);
 
   {
-    std::string msg=
-      std::to_string(_no_variables-1)+" variables, "+
-      std::to_string(picosat_added_original_clauses(picosat))+" clauses";
+    std::string msg = std::to_string(_no_variables - 1) + " variables, " +
+                      std::to_string(picosat_added_original_clauses(picosat)) +
+                      " clauses";
     messaget::status() << msg << messaget::eom;
   }
 
   std::string msg;
 
-  forall_literals(it, assumptions)
-    picosat_assume(picosat, it->dimacs());
+  forall_literals(it, assumptions) picosat_assume(picosat, it->dimacs());
 
-  const int res=picosat_sat(picosat, -1);
-  if(res==PICOSAT_SATISFIABLE)
-  {
-    msg="SAT checker: instance is SATISFIABLE";
+  const int res = picosat_sat(picosat, -1);
+  if (res == PICOSAT_SATISFIABLE) {
+    msg = "SAT checker: instance is SATISFIABLE";
     messaget::status() << msg << messaget::eom;
-    status=SAT;
+    status = SAT;
     return P_SATISFIABLE;
-  }
-  else
-  {
-    assert(res==PICOSAT_UNSATISFIABLE);
-    msg="SAT checker: instance is UNSATISFIABLE";
+  } else {
+    assert(res == PICOSAT_UNSATISFIABLE);
+    msg = "SAT checker: instance is UNSATISFIABLE";
     messaget::status() << msg << messaget::eom;
   }
 
-  status=UNSAT;
+  status = UNSAT;
   return P_UNSATISFIABLE;
 }
 
@@ -159,8 +147,7 @@ Function: satcheck_picosatt::set_assignment
 
 \*******************************************************************/
 
-void satcheck_picosatt::set_assignment(literalt a, bool value)
-{
+void satcheck_picosatt::set_assignment(literalt a, bool value) {
   assert(false);
 }
 
@@ -176,10 +163,7 @@ Function: satcheck_picosatt::satcheck_picosatt
 
 \*******************************************************************/
 
-satcheck_picosatt::satcheck_picosatt()
-{
-  picosat = picosat_init();
-}
+satcheck_picosatt::satcheck_picosatt() { picosat = picosat_init(); }
 
 /*******************************************************************\
 
@@ -193,10 +177,7 @@ Function: satcheck_picosatt::~satcheck_picosatt
 
 \*******************************************************************/
 
-satcheck_picosatt::~satcheck_picosatt()
-{
-  picosat_reset(picosat);
-}
+satcheck_picosatt::~satcheck_picosatt() { picosat_reset(picosat); }
 
 /*******************************************************************\
 
@@ -210,11 +191,10 @@ Function: satcheck_picosatt::is_in_conflict
 
 \*******************************************************************/
 
-bool satcheck_picosatt::is_in_conflict(literalt a) const
-{
+bool satcheck_picosatt::is_in_conflict(literalt a) const {
   assert(!a.is_constant());
 
-  return picosat_failed_assumption(picosat, a.dimacs())!=0;
+  return picosat_failed_assumption(picosat, a.dimacs()) != 0;
 }
 
 /*******************************************************************\
@@ -229,10 +209,8 @@ Function: satcheck_picosatt::set_assumptions
 
 \*******************************************************************/
 
-void satcheck_picosatt::set_assumptions(const bvt &bv)
-{
-  assumptions=bv;
+void satcheck_picosatt::set_assumptions(const bvt &bv) {
+  assumptions = bv;
 
-  forall_literals(it, assumptions)
-    assert(!it->is_constant());
+  forall_literals(it, assumptions) assert(!it->is_constant());
 }

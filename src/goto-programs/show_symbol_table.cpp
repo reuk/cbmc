@@ -9,8 +9,8 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <iostream>
 #include <memory>
 
-#include <util/language.h>
 #include <langapi/mode.h>
+#include <util/language.h>
 
 #include "goto_model.h"
 #include "show_symbol_table.h"
@@ -27,9 +27,7 @@ Function: show_symbol_table_xml_ui
 
 \*******************************************************************/
 
-void show_symbol_table_xml_ui()
-{
-}
+void show_symbol_table_xml_ui() {}
 
 /*******************************************************************\
 
@@ -43,42 +41,37 @@ Function: show_symbol_table_plain
 
 \*******************************************************************/
 
-void show_symbol_table_plain(
-  const goto_modelt &goto_model,
-  std::ostream &out)
-{
+void show_symbol_table_plain(const goto_modelt &goto_model, std::ostream &out) {
   out << '\n' << "Symbols:" << '\n' << '\n';
 
   // we want to sort alphabetically
   std::set<std::string> symbols;
 
   forall_symbols(it, goto_model.symbol_table.symbols)
-    symbols.insert(id2string(it->first));
+      symbols.insert(id2string(it->first));
 
   const namespacet ns(goto_model.symbol_table);
 
-  for(const std::string &id : symbols)
-  {
-    const symbolt &symbol=ns.lookup(id);
+  for (const std::string &id : symbols) {
+    const symbolt &symbol = ns.lookup(id);
 
     languaget *ptr;
 
-    if(symbol.mode=="")
-      ptr=get_default_language();
-    else
-    {
-      ptr=get_language_from_mode(symbol.mode);
-      if(ptr==NULL)
-        throw "symbol "+id2string(symbol.name)+" has unknown mode";
+    if (symbol.mode == "")
+      ptr = get_default_language();
+    else {
+      ptr = get_language_from_mode(symbol.mode);
+      if (ptr == NULL)
+        throw "symbol " + id2string(symbol.name) + " has unknown mode";
     }
 
     std::unique_ptr<languaget> p(ptr);
     std::string type_str, value_str;
 
-    if(symbol.type.is_not_nil())
+    if (symbol.type.is_not_nil())
       p->from_type(symbol.type, type_str, ns);
 
-    if(symbol.value.is_not_nil())
+    if (symbol.value.is_not_nil())
       p->from_expr(symbol.value, value_str, ns);
 
     out << "Symbol......: " << symbol.name << '\n' << std::flush;
@@ -90,37 +83,37 @@ void show_symbol_table_plain(
     out << "Value.......: " << value_str << '\n';
     out << "Flags.......:";
 
-    if(symbol.is_lvalue)
+    if (symbol.is_lvalue)
       out << " lvalue";
-    if(symbol.is_static_lifetime)
+    if (symbol.is_static_lifetime)
       out << " static_lifetime";
-    if(symbol.is_thread_local)
+    if (symbol.is_thread_local)
       out << " thread_local";
-    if(symbol.is_file_local)
+    if (symbol.is_file_local)
       out << " file_local";
-    if(symbol.is_type)
+    if (symbol.is_type)
       out << " type";
-    if(symbol.is_extern)
+    if (symbol.is_extern)
       out << " extern";
-    if(symbol.is_input)
+    if (symbol.is_input)
       out << " input";
-    if(symbol.is_output)
+    if (symbol.is_output)
       out << " output";
-    if(symbol.is_macro)
+    if (symbol.is_macro)
       out << " macro";
-    if(symbol.is_parameter)
+    if (symbol.is_parameter)
       out << " parameter";
-    if(symbol.is_auxiliary)
+    if (symbol.is_auxiliary)
       out << " auxiliary";
-    if(symbol.is_weak)
+    if (symbol.is_weak)
       out << " weak";
-    if(symbol.is_property)
+    if (symbol.is_property)
       out << " property";
-    if(symbol.is_state_var)
+    if (symbol.is_state_var)
       out << " state_var";
-    if(symbol.is_exported)
+    if (symbol.is_exported)
       out << " exported";
-    if(symbol.is_volatile)
+    if (symbol.is_volatile)
       out << " volatile";
 
     out << '\n';
@@ -142,12 +135,9 @@ Function: show_symbol_table
 
 \*******************************************************************/
 
-void show_symbol_table(
-  const goto_modelt &goto_model,
-  ui_message_handlert::uit ui)
-{
-  switch(ui)
-  {
+void show_symbol_table(const goto_modelt &goto_model,
+                       ui_message_handlert::uit ui) {
+  switch (ui) {
   case ui_message_handlert::PLAIN:
     show_symbol_table_plain(goto_model, std::cout);
     break;

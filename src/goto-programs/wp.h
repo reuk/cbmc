@@ -24,10 +24,7 @@ class namespacet;
  *
  * \ingroup gr_wp
 */
-exprt wp(
-  const codet &code,
-  const exprt &post,
-  const namespacet &ns);
+exprt wp(const codet &code, const exprt &post, const namespacet &ns);
 
 /*! \brief approximate the non-deterministic choice
            in a way cheaper than by (proper) quantification

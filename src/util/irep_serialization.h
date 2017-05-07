@@ -11,24 +11,22 @@ Date: May 2007
 #ifndef CPROVER_UTIL_IREP_SERIALIZATION_H
 #define CPROVER_UTIL_IREP_SERIALIZATION_H
 
-#include <map>
 #include <iosfwd>
+#include <map>
 #include <string>
 #include <vector>
 
-#include "irep_hash_container.h"
 #include "irep.h"
+#include "irep_hash_container.h"
 
 void write_gb_word(std::ostream &, std::size_t);
 void write_gb_string(std::ostream &, const std::string &);
 
-class irep_serializationt
-{
+class irep_serializationt {
 public:
-  class ireps_containert
-  {
+  class ireps_containert {
   public:
-    typedef std::vector<std::pair<bool, irept> > ireps_on_readt;
+    typedef std::vector<std::pair<bool, irept>> ireps_on_readt;
     ireps_on_readt ireps_on_read;
 
     irep_full_hash_containert irep_full_hash_container;
@@ -38,11 +36,10 @@ public:
     typedef std::vector<bool> string_mapt;
     string_mapt string_map;
 
-    typedef std::vector<std::pair<bool, irep_idt> > string_rev_mapt;
+    typedef std::vector<std::pair<bool, irep_idt>> string_rev_mapt;
     string_rev_mapt string_rev_map;
 
-    void clear()
-    {
+    void clear() {
       irep_full_hash_container.clear();
       ireps_on_write.clear();
       ireps_on_read.clear();
@@ -51,9 +48,7 @@ public:
     }
   };
 
-  explicit irep_serializationt(ireps_containert &ic):
-    ireps_container(ic)
-  {
+  explicit irep_serializationt(ireps_containert &ic) : ireps_container(ic) {
     read_buffer.resize(1, 0);
     clear();
   };

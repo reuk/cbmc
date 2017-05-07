@@ -7,10 +7,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <util/prefix.h>
 #include <util/cprover_prefix.h>
-#include <util/xml_irep.h>
+#include <util/prefix.h>
 #include <util/symbol_table.h>
+#include <util/xml_irep.h>
 
 #include <langapi/language_util.h>
 
@@ -28,9 +28,7 @@ Function: value_set_analysis_fit::initialize
 
 \*******************************************************************/
 
-void value_set_analysis_fit::initialize(
-  const goto_programt &goto_program)
-{
+void value_set_analysis_fit::initialize(const goto_programt &goto_program) {
   baset::initialize(goto_program);
   add_vars(goto_program);
 }
@@ -47,9 +45,7 @@ Function: value_set_analysis_fit::initialize
 
 \*******************************************************************/
 
-void value_set_analysis_fit::initialize(
-  const goto_functionst &goto_functions)
-{
+void value_set_analysis_fit::initialize(const goto_functionst &goto_functions) {
   baset::initialize(goto_functions);
   add_vars(goto_functions);
 }
@@ -66,9 +62,7 @@ Function: value_set_analysis_fit::add_vars
 
 \*******************************************************************/
 
-void value_set_analysis_fit::add_vars(
-  const goto_programt &goto_program)
-{
+void value_set_analysis_fit::add_vars(const goto_programt &goto_program) {
   typedef std::list<value_set_fit::entryt> entry_listt;
 
   // get the globals
@@ -83,32 +77,25 @@ void value_set_analysis_fit::add_vars(
   typedef std::unordered_map<irep_idt, entry_listt, irep_id_hash> entry_cachet;
   entry_cachet entry_cache;
 
-  value_set_fit &v=state.value_set;
+  value_set_fit &v = state.value_set;
 
-  for(goto_programt::instructionst::const_iterator
-      i_it=goto_program.instructions.begin();
-      i_it!=goto_program.instructions.end();
-      i_it++)
-  {
+  for (goto_programt::instructionst::const_iterator i_it =
+           goto_program.instructions.begin();
+       i_it != goto_program.instructions.end(); i_it++) {
     v.add_vars(globals);
 
-    for(goto_programt::decl_identifierst::const_iterator
-        l_it=locals.begin();
-        l_it!=locals.end();
-        l_it++)
-    {
+    for (goto_programt::decl_identifierst::const_iterator l_it = locals.begin();
+         l_it != locals.end(); l_it++) {
       // cache hit?
-      entry_cachet::const_iterator e_it=entry_cache.find(*l_it);
+      entry_cachet::const_iterator e_it = entry_cache.find(*l_it);
 
-      if(e_it==entry_cache.end())
-      {
-        const symbolt &symbol=ns.lookup(*l_it);
+      if (e_it == entry_cache.end()) {
+        const symbolt &symbol = ns.lookup(*l_it);
 
-        std::list<value_set_fit::entryt> &entries=entry_cache[*l_it];
+        std::list<value_set_fit::entryt> &entries = entry_cache[*l_it];
         get_entries(symbol, entries);
         v.add_vars(entries);
-      }
-      else
+      } else
         v.add_vars(e_it->second);
     }
   }
@@ -127,9 +114,7 @@ Function: value_set_analysis_fit::get_entries
 \*******************************************************************/
 
 void value_set_analysis_fit::get_entries(
-  const symbolt &symbol,
-  std::list<value_set_fit::entryt> &dest)
-{
+    const symbolt &symbol, std::list<value_set_fit::entryt> &dest) {
   get_entries_rec(symbol.name, "", symbol.type, dest);
 }
 
@@ -146,38 +131,23 @@ Function: value_set_analysis_fit::get_entries
 \*******************************************************************/
 
 void value_set_analysis_fit::get_entries_rec(
-  const irep_idt &identifier,
-  const std::string &suffix,
-  const typet &type,
-  std::list<value_set_fit::entryt> &dest)
-{
-  const typet &t=ns.follow(type);
+    const irep_idt &identifier, const std::string &suffix, const typet &type,
+    std::list<value_set_fit::entryt> &dest) {
+  const typet &t = ns.follow(type);
 
-  if(t.id()==ID_struct ||
-     t.id()==ID_union)
-  {
-    const struct_union_typet &struct_type=to_struct_union_type(t);
+  if (t.id() == ID_struct || t.id() == ID_union) {
+    const struct_union_typet &struct_type = to_struct_union_type(t);
 
-    const struct_typet::componentst &c=struct_type.components();
+    const struct_typet::componentst &c = struct_type.components();
 
-    for(struct_typet::componentst::const_iterator
-        it=c.begin();
-        it!=c.end();
-        it++)
-    {
-      get_entries_rec(
-        identifier,
-        suffix+"."+it->get_string(ID_name),
-        it->type(),
-        dest);
+    for (struct_typet::componentst::const_iterator it = c.begin();
+         it != c.end(); it++) {
+      get_entries_rec(identifier, suffix + "." + it->get_string(ID_name),
+                      it->type(), dest);
     }
-  }
-  else if(t.id()==ID_array)
-  {
-    get_entries_rec(identifier, suffix+"[]", t.subtype(), dest);
-  }
-  else if(check_type(t))
-  {
+  } else if (t.id() == ID_array) {
+    get_entries_rec(identifier, suffix + "[]", t.subtype(), dest);
+  } else if (check_type(t)) {
     dest.push_back(value_set_fit::entryt(identifier, suffix));
   }
 }
@@ -194,25 +164,21 @@ Function: value_set_analysis_fit::add_vars
 
 \*******************************************************************/
 
-void value_set_analysis_fit::add_vars(
-  const goto_functionst &goto_functions)
-{
+void value_set_analysis_fit::add_vars(const goto_functionst &goto_functions) {
   // get the globals
   std::list<value_set_fit::entryt> globals;
   get_globals(globals);
 
-  value_set_fit &v=state.value_set;
+  value_set_fit &v = state.value_set;
   v.add_vars(globals);
 
-  forall_goto_functions(f_it, goto_functions)
-  {
+  forall_goto_functions(f_it, goto_functions) {
     // get the locals
     std::set<irep_idt> locals;
     get_local_identifiers(f_it->second, locals);
 
-    for(auto l : locals)
-    {
-      const symbolt &symbol=ns.lookup(l);
+    for (auto l : locals) {
+      const symbolt &symbol = ns.lookup(l);
 
       std::list<value_set_fit::entryt> entries;
       get_entries(symbol, entries);
@@ -234,12 +200,11 @@ Function: value_set_analysis_fit::get_globals
 \*******************************************************************/
 
 void value_set_analysis_fit::get_globals(
-  std::list<value_set_fit::entryt> &dest)
-{
+    std::list<value_set_fit::entryt> &dest) {
   // static ones
-  forall_symbols(it, ns.get_symbol_table().symbols)
-    if(it->second.is_lvalue &&
-       it->second.is_static_lifetime)
+  forall_symbols(
+      it, ns.get_symbol_table().symbols) if (it->second.is_lvalue &&
+                                             it->second.is_static_lifetime)
       get_entries(it->second, dest);
 }
 
@@ -255,50 +220,40 @@ Function: value_set_analysis_fit::check_type
 
 \*******************************************************************/
 
-bool value_set_analysis_fit::check_type(const typet &type)
-{
-  if(type.id()==ID_pointer)
-  {
-    switch(track_options)
-    {
-      case TRACK_ALL_POINTERS:
-        { return true; break; }
-      case TRACK_FUNCTION_POINTERS:
-      {
-        if(type.id()==ID_pointer)
-        {
-          const typet *t = &type;
-          while(t->id()==ID_pointer) t = &(t->subtype());
-
-          return (t->id()==ID_code);
-        }
-
-        break;
-      }
-      default: // don't track.
-        break;
+bool value_set_analysis_fit::check_type(const typet &type) {
+  if (type.id() == ID_pointer) {
+    switch (track_options) {
+    case TRACK_ALL_POINTERS: {
+      return true;
+      break;
     }
-  }
-  else if(type.id()==ID_struct ||
-          type.id()==ID_union)
-  {
-    const struct_union_typet &struct_type=to_struct_union_type(type);
+    case TRACK_FUNCTION_POINTERS: {
+      if (type.id() == ID_pointer) {
+        const typet *t = &type;
+        while (t->id() == ID_pointer)
+          t = &(t->subtype());
 
-    const struct_typet::componentst &components=
-      struct_type.components();
+        return (t->id() == ID_code);
+      }
 
-    for(struct_typet::componentst::const_iterator
-        it=components.begin();
-        it!=components.end();
-        it++)
-    {
-      if(check_type(it->type()))
+      break;
+    }
+    default: // don't track.
+      break;
+    }
+  } else if (type.id() == ID_struct || type.id() == ID_union) {
+    const struct_union_typet &struct_type = to_struct_union_type(type);
+
+    const struct_typet::componentst &components = struct_type.components();
+
+    for (struct_typet::componentst::const_iterator it = components.begin();
+         it != components.end(); it++) {
+      if (check_type(it->type()))
         return true;
     }
-  }
-  else if(type.id()==ID_array)
+  } else if (type.id() == ID_array)
     return check_type(type.subtype());
-  else if(type.id()==ID_symbol)
+  else if (type.id() == ID_symbol)
     return check_type(ns.follow(type));
 
   return false;

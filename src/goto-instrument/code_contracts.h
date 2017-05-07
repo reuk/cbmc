@@ -14,8 +14,7 @@ Date: February 2016
 class goto_functionst;
 class symbol_tablet;
 
-void code_contracts(
-  symbol_tablet &symbol_table,
-  goto_functionst &goto_functions);
+void code_contracts(symbol_tablet &symbol_table,
+                    goto_functionst &goto_functions);
 
 #endif // CPROVER_GOTO_INSTRUMENT_CODE_CONTRACTS_H

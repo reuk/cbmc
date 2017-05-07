@@ -20,8 +20,7 @@ Function: memory_model_psot::operator()
 
 \*******************************************************************/
 
-void memory_model_psot::operator()(symex_target_equationt &equation)
-{
+void memory_model_psot::operator()(symex_target_equationt &equation) {
   print(8, "Adding PSO constraints");
 
   build_event_lists(equation);
@@ -48,20 +47,19 @@ Function: memory_model_psot::program_order_is_relaxed
 \*******************************************************************/
 
 bool memory_model_psot::program_order_is_relaxed(
-  partial_order_concurrencyt::event_it e1,
-  partial_order_concurrencyt::event_it e2) const
-{
+    partial_order_concurrencyt::event_it e1,
+    partial_order_concurrencyt::event_it e2) const {
   assert(e1->is_shared_read() || e1->is_shared_write());
   assert(e2->is_shared_read() || e2->is_shared_write());
 
   // no po relaxation within atomic sections
-  if(e1->atomic_section_id!=0 &&
-     e1->atomic_section_id==e2->atomic_section_id)
+  if (e1->atomic_section_id != 0 &&
+      e1->atomic_section_id == e2->atomic_section_id)
     return false;
 
   // no relaxation if induced wsi
-  if(e1->is_shared_write() && e2->is_shared_write() &&
-     address(e1)==address(e2))
+  if (e1->is_shared_write() && e2->is_shared_write() &&
+      address(e1) == address(e2))
     return false;
 
   // only read/read and read/write are maintained

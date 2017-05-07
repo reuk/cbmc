@@ -13,32 +13,28 @@ Author: Romain Brenguier, romain.brenguier@diffblue.com
 #ifndef CPROVER_SOLVERS_REFINEMENT_REFINED_STRING_TYPE_H
 #define CPROVER_SOLVERS_REFINEMENT_REFINED_STRING_TYPE_H
 
-#include <util/std_types.h>
-#include <util/std_expr.h>
 #include <util/arith_tools.h>
 #include <util/expr_util.h>
+#include <util/std_expr.h>
+#include <util/std_types.h>
 
 // Internal type used for string refinement
-class refined_string_typet: public struct_typet
-{
+class refined_string_typet : public struct_typet {
 public:
   refined_string_typet(const typet &index_type, const typet &char_type);
 
   // Type for the content (list of characters) of a string
-  const array_typet &get_content_type() const
-  {
-    assert(components().size()==2);
+  const array_typet &get_content_type() const {
+    assert(components().size() == 2);
     return to_array_type(components()[1].type());
   }
 
-  const typet &get_char_type() const
-  {
-    assert(components().size()==2);
+  const typet &get_char_type() const {
+    assert(components().size() == 2);
     return components()[0].type();
   }
 
-  const typet &get_index_type() const
-  {
+  const typet &get_index_type() const {
     return get_content_type().size().type();
   }
 
@@ -55,29 +51,23 @@ public:
 
   static bool is_java_char_sequence_type(const typet &type);
 
-  static bool is_unrefined_string_type(const typet &type)
-  {
-    return (
-      is_c_string_type(type) ||
-      is_java_string_pointer_type(type) ||
-      is_java_string_builder_type(type) ||
-      is_java_char_sequence_type(type));
+  static bool is_unrefined_string_type(const typet &type) {
+    return (is_c_string_type(type) || is_java_string_pointer_type(type) ||
+            is_java_string_builder_type(type) ||
+            is_java_char_sequence_type(type));
   }
 
-  static bool is_unrefined_string(const exprt &expr)
-  {
+  static bool is_unrefined_string(const exprt &expr) {
     return (is_unrefined_string_type(expr.type()));
   }
 
-  constant_exprt index_of_int(int i) const
-  {
+  constant_exprt index_of_int(int i) const {
     return from_integer(i, get_index_type());
   }
 };
 
-const refined_string_typet &to_refined_string_type(const typet &type)
-{
-  assert(type.id()==ID_struct);
+const refined_string_typet &to_refined_string_type(const typet &type) {
+  assert(type.id() == ID_struct);
   return static_cast<const refined_string_typet &>(type);
 }
 

@@ -11,22 +11,13 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "bv_cbmc.h"
 
-class cbmc_dimacst:public bv_cbmct
-{
+class cbmc_dimacst : public bv_cbmct {
 public:
-  cbmc_dimacst(
-    const namespacet &_ns,
-    propt &_prop,
-    const std::string &_filename):
-    bv_cbmct(_ns, _prop),
-    filename(_filename)
-  {
-  }
+  cbmc_dimacst(const namespacet &_ns, propt &_prop,
+               const std::string &_filename)
+      : bv_cbmct(_ns, _prop), filename(_filename) {}
 
-  virtual ~cbmc_dimacst()
-  {
-    write_dimacs(filename);
-  }
+  virtual ~cbmc_dimacst() { write_dimacs(filename); }
 
 protected:
   std::string filename;

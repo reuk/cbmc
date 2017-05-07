@@ -31,12 +31,10 @@ Function: goto_programt::output_instruction
 
 \*******************************************************************/
 
-std::ostream &goto_programt::output_instruction(
-  const class namespacet &ns,
-  const irep_idt &identifier,
-  std::ostream &out,
-  instructionst::const_iterator it) const
-{
+std::ostream &
+goto_programt::output_instruction(const class namespacet &ns,
+                                  const irep_idt &identifier, std::ostream &out,
+                                  instructionst::const_iterator it) const {
   return output_instruction(ns, identifier, out, *it);
 }
 
@@ -61,56 +59,46 @@ Function: goto_programt::output_instruction
 \*******************************************************************/
 
 std::ostream &goto_programt::output_instruction(
-  const namespacet &ns,
-  const irep_idt &identifier,
-  std::ostream &out,
-  const goto_program_templatet::instructiont &instruction) const
-{
+    const namespacet &ns, const irep_idt &identifier, std::ostream &out,
+    const goto_program_templatet::instructiont &instruction) const {
   out << "        // " << instruction.location_number << " ";
 
-  if(!instruction.source_location.is_nil())
+  if (!instruction.source_location.is_nil())
     out << instruction.source_location.as_string();
   else
     out << "no location";
 
   out << "\n";
 
-  if(!instruction.labels.empty())
-  {
+  if (!instruction.labels.empty()) {
     out << "        // Labels:";
-    for(const auto &label : instruction.labels)
+    for (const auto &label : instruction.labels)
       out << " " << label;
 
     out << '\n';
   }
 
-  if(instruction.is_target())
+  if (instruction.is_target())
     out << std::setw(6) << instruction.target_number << ": ";
   else
     out << "        ";
 
-  switch(instruction.type)
-  {
+  switch (instruction.type) {
   case NO_INSTRUCTION_TYPE:
     out << "NO INSTRUCTION TYPE SET" << '\n';
     break;
 
   case GOTO:
-    if(!instruction.guard.is_true())
-    {
-      out << "IF "
-          << from_expr(ns, identifier, instruction.guard)
-          << " THEN ";
+    if (!instruction.guard.is_true()) {
+      out << "IF " << from_expr(ns, identifier, instruction.guard) << " THEN ";
     }
 
     out << "GOTO ";
 
-    for(instructiont::targetst::const_iterator
-        gt_it=instruction.targets.begin();
-        gt_it!=instruction.targets.end();
-        gt_it++)
-    {
-      if(gt_it!=instruction.targets.begin())
+    for (instructiont::targetst::const_iterator gt_it =
+             instruction.targets.begin();
+         gt_it != instruction.targets.end(); gt_it++) {
+      if (gt_it != instruction.targets.begin())
         out << ", ";
       out << (*gt_it)->target_number;
     }
@@ -129,7 +117,7 @@ std::ostream &goto_programt::output_instruction(
 
   case ASSUME:
   case ASSERT:
-    if(instruction.is_assume())
+    if (instruction.is_assume())
       out << "ASSUME ";
     else
       out << "ASSERT ";
@@ -137,8 +125,8 @@ std::ostream &goto_programt::output_instruction(
     {
       out << from_expr(ns, identifier, instruction.guard);
 
-      const irep_idt &comment=instruction.source_location.get_comment();
-      if(comment!="")
+      const irep_idt &comment = instruction.source_location.get_comment();
+      if (comment != "")
         out << " // " << comment;
     }
 
@@ -161,41 +149,35 @@ std::ostream &goto_programt::output_instruction(
     out << "THROW";
 
     {
-      const irept::subt &exception_list=
-        instruction.code.find(ID_exception_list).get_sub();
+      const irept::subt &exception_list =
+          instruction.code.find(ID_exception_list).get_sub();
 
-      for(const auto &ex : exception_list)
+      for (const auto &ex : exception_list)
         out << " " << ex.id();
     }
 
-    if(instruction.code.operands().size()==1)
+    if (instruction.code.operands().size() == 1)
       out << ": " << from_expr(ns, identifier, instruction.code.op0());
 
     out << '\n';
     break;
 
   case CATCH:
-    if(!instruction.targets.empty())
-    {
+    if (!instruction.targets.empty()) {
       out << "CATCH-PUSH ";
 
-      unsigned i=0;
-      const irept::subt &exception_list=
-        instruction.code.find(ID_exception_list).get_sub();
-      assert(instruction.targets.size()==exception_list.size());
-      for(instructiont::targetst::const_iterator
-          gt_it=instruction.targets.begin();
-          gt_it!=instruction.targets.end();
-          gt_it++,
-          i++)
-      {
-        if(gt_it!=instruction.targets.begin())
+      unsigned i = 0;
+      const irept::subt &exception_list =
+          instruction.code.find(ID_exception_list).get_sub();
+      assert(instruction.targets.size() == exception_list.size());
+      for (instructiont::targetst::const_iterator
+               gt_it = instruction.targets.begin();
+           gt_it != instruction.targets.end(); gt_it++, i++) {
+        if (gt_it != instruction.targets.begin())
           out << ", ";
-        out << exception_list[i].id() << "->"
-            << (*gt_it)->target_number;
+        out << exception_list[i].id() << "->" << (*gt_it)->target_number;
       }
-    }
-    else
+    } else
       out << "CATCH-POP";
 
     out << '\n';
@@ -212,7 +194,7 @@ std::ostream &goto_programt::output_instruction(
   case START_THREAD:
     out << "START THREAD ";
 
-    if(instruction.targets.size()==1)
+    if (instruction.targets.size() == 1)
       out << instruction.targets.front()->target_number;
 
     out << '\n';
@@ -242,15 +224,12 @@ Function: goto_programt::get_decl_identifiers
 \*******************************************************************/
 
 void goto_programt::get_decl_identifiers(
-  decl_identifierst &decl_identifiers) const
-{
-  forall_goto_program_instructions(it, (*this))
-  {
-    if(it->is_decl())
-    {
-      assert(it->code.get_statement()==ID_decl);
-      assert(it->code.operands().size()==1);
-      const symbol_exprt &symbol_expr=to_symbol_expr(it->code.op0());
+    decl_identifierst &decl_identifiers) const {
+  forall_goto_program_instructions(it, (*this)) {
+    if (it->is_decl()) {
+      assert(it->code.get_statement() == ID_decl);
+      assert(it->code.operands().size() == 1);
+      const symbol_exprt &symbol_expr = to_symbol_expr(it->code.op0());
       decl_identifiers.insert(symbol_expr.get_identifier());
     }
   }
@@ -268,27 +247,19 @@ Function: parse_lhs_read
 
 \*******************************************************************/
 
-void parse_lhs_read(const exprt &src, std::list<exprt> &dest)
-{
-  if(src.id()==ID_dereference)
-  {
-    assert(src.operands().size()==1);
+void parse_lhs_read(const exprt &src, std::list<exprt> &dest) {
+  if (src.id() == ID_dereference) {
+    assert(src.operands().size() == 1);
     dest.push_back(src.op0());
-  }
-  else if(src.id()==ID_index)
-  {
-    assert(src.operands().size()==2);
+  } else if (src.id() == ID_index) {
+    assert(src.operands().size() == 2);
     dest.push_back(src.op1());
     parse_lhs_read(src.op0(), dest);
-  }
-  else if(src.id()==ID_member)
-  {
-    assert(src.operands().size()==1);
+  } else if (src.id() == ID_member) {
+    assert(src.operands().size() == 1);
     parse_lhs_read(src.op0(), dest);
-  }
-  else if(src.id()==ID_if)
-  {
-    assert(src.operands().size()==3);
+  } else if (src.id() == ID_if) {
+    assert(src.operands().size() == 3);
     dest.push_back(src.op0());
     parse_lhs_read(src.op1(), dest);
     parse_lhs_read(src.op2(), dest);
@@ -307,13 +278,11 @@ Function: expressions_read
 
 \*******************************************************************/
 
-std::list<exprt> expressions_read(
-  const goto_programt::instructiont &instruction)
-{
+std::list<exprt>
+expressions_read(const goto_programt::instructiont &instruction) {
   std::list<exprt> dest;
 
-  switch(instruction.type)
-  {
+  switch (instruction.type) {
   case ASSUME:
   case ASSERT:
   case GOTO:
@@ -321,32 +290,25 @@ std::list<exprt> expressions_read(
     break;
 
   case RETURN:
-    if(to_code_return(instruction.code).return_value().is_not_nil())
+    if (to_code_return(instruction.code).return_value().is_not_nil())
       dest.push_back(to_code_return(instruction.code).return_value());
     break;
 
-  case FUNCTION_CALL:
-    {
-      const code_function_callt &function_call=
+  case FUNCTION_CALL: {
+    const code_function_callt &function_call =
         to_code_function_call(instruction.code);
-      forall_expr(it, function_call.arguments())
-        dest.push_back(*it);
-      if(function_call.lhs().is_not_nil())
-        parse_lhs_read(function_call.lhs(), dest);
-    }
-    break;
+    forall_expr(it, function_call.arguments()) dest.push_back(*it);
+    if (function_call.lhs().is_not_nil())
+      parse_lhs_read(function_call.lhs(), dest);
+  } break;
 
-  case ASSIGN:
-    {
-      const code_assignt &assignment=to_code_assign(instruction.code);
-      dest.push_back(assignment.rhs());
-      parse_lhs_read(assignment.lhs(), dest);
-    }
-    break;
+  case ASSIGN: {
+    const code_assignt &assignment = to_code_assign(instruction.code);
+    dest.push_back(assignment.rhs());
+    parse_lhs_read(assignment.lhs(), dest);
+  } break;
 
-  default:
-    {
-    }
+  default: {}
   }
 
   return dest;
@@ -364,29 +326,23 @@ Function: expressions_written
 
 \*******************************************************************/
 
-std::list<exprt> expressions_written(
-  const goto_programt::instructiont &instruction)
-{
+std::list<exprt>
+expressions_written(const goto_programt::instructiont &instruction) {
   std::list<exprt> dest;
 
-  switch(instruction.type)
-  {
-  case FUNCTION_CALL:
-    {
-      const code_function_callt &function_call=
+  switch (instruction.type) {
+  case FUNCTION_CALL: {
+    const code_function_callt &function_call =
         to_code_function_call(instruction.code);
-      if(function_call.lhs().is_not_nil())
-        dest.push_back(function_call.lhs());
-    }
-    break;
+    if (function_call.lhs().is_not_nil())
+      dest.push_back(function_call.lhs());
+  } break;
 
   case ASSIGN:
     dest.push_back(to_code_assign(instruction.code).lhs());
     break;
 
-  default:
-    {
-    }
+  default: {}
   }
 
   return dest;
@@ -404,27 +360,18 @@ Function: get_objects_read
 
 \*******************************************************************/
 
-void objects_read(
-  const exprt &src,
-  std::list<exprt> &dest)
-{
-  if(src.id()==ID_symbol)
+void objects_read(const exprt &src, std::list<exprt> &dest) {
+  if (src.id() == ID_symbol)
     dest.push_back(src);
-  else if(src.id()==ID_address_of)
-  {
+  else if (src.id() == ID_address_of) {
     // don't traverse!
-  }
-  else if(src.id()==ID_dereference)
-  {
+  } else if (src.id() == ID_dereference) {
     // this reads what is pointed to plus the pointer
-    assert(src.operands().size()==1);
+    assert(src.operands().size() == 1);
     dest.push_back(src);
     objects_read(src.op0(), dest);
-  }
-  else
-  {
-    forall_operands(it, src)
-      objects_read(*it, dest);
+  } else {
+    forall_operands(it, src) objects_read(*it, dest);
   }
 }
 
@@ -440,15 +387,12 @@ Function: objects_read
 
 \*******************************************************************/
 
-std::list<exprt> objects_read(
-  const goto_programt::instructiont &instruction)
-{
-  std::list<exprt> expressions=expressions_read(instruction);
+std::list<exprt> objects_read(const goto_programt::instructiont &instruction) {
+  std::list<exprt> expressions = expressions_read(instruction);
 
   std::list<exprt> dest;
 
-  forall_expr_list(it, expressions)
-    objects_read(*it, dest);
+  forall_expr_list(it, expressions) objects_read(*it, dest);
 
   return dest;
 }
@@ -465,17 +409,12 @@ Function: objects_written
 
 \*******************************************************************/
 
-void objects_written(
-  const exprt &src,
-  std::list<exprt> &dest)
-{
-  if(src.id()==ID_if)
-  {
-    assert(src.operands().size()==3);
+void objects_written(const exprt &src, std::list<exprt> &dest) {
+  if (src.id() == ID_if) {
+    assert(src.operands().size() == 3);
     objects_written(src.op1(), dest);
     objects_written(src.op2(), dest);
-  }
-  else
+  } else
     dest.push_back(src);
 }
 
@@ -491,15 +430,13 @@ Function: objects_written
 
 \*******************************************************************/
 
-std::list<exprt> objects_written(
-  const goto_programt::instructiont &instruction)
-{
-  std::list<exprt> expressions=expressions_written(instruction);
+std::list<exprt>
+objects_written(const goto_programt::instructiont &instruction) {
+  std::list<exprt> expressions = expressions_written(instruction);
 
   std::list<exprt> dest;
 
-  forall_expr_list(it, expressions)
-    objects_written(*it, dest);
+  forall_expr_list(it, expressions) objects_written(*it, dest);
 
   return dest;
 }
@@ -516,35 +453,27 @@ Function: as_string
 
 \*******************************************************************/
 
-std::string as_string(
-  const class namespacet &ns,
-  const goto_programt::instructiont &i)
-{
+std::string as_string(const class namespacet &ns,
+                      const goto_programt::instructiont &i) {
   std::string result;
 
-  switch(i.type)
-  {
+  switch (i.type) {
   case NO_INSTRUCTION_TYPE:
     return "(NO INSTRUCTION TYPE)";
 
   case GOTO:
-    if(!i.guard.is_true())
-    {
-      result+="IF "
-            +from_expr(ns, i.function, i.guard)
-            +" THEN ";
+    if (!i.guard.is_true()) {
+      result += "IF " + from_expr(ns, i.function, i.guard) + " THEN ";
     }
 
-    result+="GOTO ";
+    result += "GOTO ";
 
-    for(goto_programt::instructiont::targetst::const_iterator
-        gt_it=i.targets.begin();
-        gt_it!=i.targets.end();
-        gt_it++)
-    {
-      if(gt_it!=i.targets.begin())
-        result+=", ";
-      result+=std::to_string((*gt_it)->target_number);
+    for (goto_programt::instructiont::targetst::const_iterator gt_it =
+             i.targets.begin();
+         gt_it != i.targets.end(); gt_it++) {
+      if (gt_it != i.targets.begin())
+        result += ", ";
+      result += std::to_string((*gt_it)->target_number);
     }
     return result;
 
@@ -558,17 +487,17 @@ std::string as_string(
 
   case ASSUME:
   case ASSERT:
-    if(i.is_assume())
-      result+="ASSUME ";
+    if (i.is_assume())
+      result += "ASSUME ";
     else
-      result+="ASSERT ";
+      result += "ASSERT ";
 
-    result+=from_expr(ns, i.function, i.guard);
+    result += from_expr(ns, i.function, i.guard);
 
     {
-      const irep_idt &comment=i.source_location.get_comment();
-      if(comment!="")
-        result+=" /* "+id2string(comment)+" */";
+      const irep_idt &comment = i.source_location.get_comment();
+      if (comment != "")
+        result += " /* " + id2string(comment) + " */";
     }
     return result;
 
@@ -594,10 +523,10 @@ std::string as_string(
     return "ATOMIC_END";
 
   case START_THREAD:
-    result+="START THREAD ";
+    result += "START THREAD ";
 
-    if(i.targets.size()==1)
-      result+=std::to_string(i.targets.front()->target_number);
+    if (i.targets.size() == 1)
+      result += std::to_string(i.targets.front()->target_number);
     return result;
 
   case END_THREAD:

@@ -11,13 +11,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "goto_model.h"
 
-void set_properties(
-  goto_functionst &goto_functions,
-  const std::list<std::string> &properties);
+void set_properties(goto_functionst &goto_functions,
+                    const std::list<std::string> &properties);
 
-void set_properties(
-  goto_modelt &goto_model,
-  const std::list<std::string> &properties);
+void set_properties(goto_modelt &goto_model,
+                    const std::list<std::string> &properties);
 
 void make_assertions_false(goto_functionst &);
 void make_assertions_false(goto_modelt &);

@@ -12,12 +12,12 @@ Date: February 2006
 #define CPROVER_GOTO_INSTRUMENT_RW_SET_H
 
 #include <iosfwd>
-#include <vector>
 #include <set>
+#include <vector>
 
 #include <util/guard.h>
-#include <util/std_code.h>
 #include <util/namespace.h>
+#include <util/std_code.h>
 #include <util/std_expr.h>
 
 #include <goto-programs/goto_functions.h>
@@ -29,56 +29,42 @@ Date: February 2006
 
 // a container for read/write sets
 
-class rw_set_baset
-{
+class rw_set_baset {
 public:
-  explicit rw_set_baset(const namespacet &_ns)
-    :ns(_ns)
-  {
-  }
+  explicit rw_set_baset(const namespacet &_ns) : ns(_ns) {}
 
   ~rw_set_baset() {}
 
-  struct entryt
-  {
+  struct entryt {
     symbol_exprt symbol_expr;
     irep_idt object;
     exprt guard;
 
-    entryt():guard(true_exprt())
-    {
-    }
+    entryt() : guard(true_exprt()) {}
   };
 
   typedef std::unordered_map<irep_idt, entryt, irep_id_hash> entriest;
   entriest r_entries, w_entries;
 
-  void swap(rw_set_baset &other)
-  {
+  void swap(rw_set_baset &other) {
     std::swap(other.r_entries, r_entries);
     std::swap(other.w_entries, w_entries);
   }
 
-  rw_set_baset &operator+=(const rw_set_baset &other)
-  {
+  rw_set_baset &operator+=(const rw_set_baset &other) {
     r_entries.insert(other.r_entries.begin(), other.r_entries.end());
     w_entries.insert(other.w_entries.begin(), other.w_entries.end());
     return *this;
   }
 
-  bool empty() const
-  {
-    return r_entries.empty() && w_entries.empty();
+  bool empty() const { return r_entries.empty() && w_entries.empty(); }
+
+  bool has_w_entry(irep_idt object) const {
+    return w_entries.find(object) != w_entries.end();
   }
 
-  bool has_w_entry(irep_idt object) const
-  {
-    return w_entries.find(object)!=w_entries.end();
-  }
-
-  bool has_r_entry(irep_idt object) const
-  {
-    return r_entries.find(object)!=r_entries.end();
+  bool has_r_entry(irep_idt object) const {
+    return r_entries.find(object) != r_entries.end();
   }
 
   void output(std::ostream &out) const;
@@ -91,44 +77,32 @@ protected:
   const namespacet &ns;
 };
 
-inline std::ostream &operator<<(
-  std::ostream &out, const rw_set_baset &rw_set)
-{
+inline std::ostream &operator<<(std::ostream &out, const rw_set_baset &rw_set) {
   rw_set.output(out);
   return out;
 }
 
-#define forall_rw_set_r_entries(it, rw_set) \
-  for(rw_set_baset::entriest::const_iterator it=(rw_set).r_entries.begin(); \
-      it!=(rw_set).r_entries.end(); it++)
+#define forall_rw_set_r_entries(it, rw_set)                                    \
+  for (rw_set_baset::entriest::const_iterator it = (rw_set).r_entries.begin(); \
+       it != (rw_set).r_entries.end(); it++)
 
-#define forall_rw_set_w_entries(it, rw_set) \
-  for(rw_set_baset::entriest::const_iterator it=(rw_set).w_entries.begin(); \
-      it!=(rw_set).w_entries.end(); it++)
+#define forall_rw_set_w_entries(it, rw_set)                                    \
+  for (rw_set_baset::entriest::const_iterator it = (rw_set).w_entries.begin(); \
+       it != (rw_set).w_entries.end(); it++)
 
 // a producer of read/write sets
 
-class _rw_set_loct:public rw_set_baset
-{
+class _rw_set_loct : public rw_set_baset {
 public:
 #ifdef LOCAL_MAY
-  _rw_set_loct(
-    const namespacet &_ns,
-    value_setst &_value_sets,
-    goto_programt::const_targett _target,
-    local_may_aliast &may):
-    rw_set_baset(_ns),
-    value_sets(_value_sets),
-    target(_target),
-    local_may(may)
+  _rw_set_loct(const namespacet &_ns, value_setst &_value_sets,
+               goto_programt::const_targett _target, local_may_aliast &may)
+      : rw_set_baset(_ns), value_sets(_value_sets), target(_target),
+        local_may(may)
 #else
-  _rw_set_loct(
-    const namespacet &_ns,
-    value_setst &_value_sets,
-    goto_programt::const_targett _target):
-    rw_set_baset(_ns),
-    value_sets(_value_sets),
-    target(_target)
+  _rw_set_loct(const namespacet &_ns, value_setst &_value_sets,
+               goto_programt::const_targett _target)
+      : rw_set_baset(_ns), value_sets(_value_sets), target(_target)
 #endif
   {
   }
@@ -143,18 +117,15 @@ protected:
   local_may_aliast &local_may;
 #endif
 
-  void read(const exprt &expr)
-  {
+  void read(const exprt &expr) {
     read_write_rec(expr, true, false, "", guardt());
   }
 
-  void read(const exprt &expr, const guardt &guard)
-  {
+  void read(const exprt &expr, const guardt &guard) {
     read_write_rec(expr, true, false, "", guard);
   }
 
-  void write(const exprt &expr)
-  {
+  void write(const exprt &expr) {
     read_write_rec(expr, false, true, "", guardt());
   }
 
@@ -162,29 +133,20 @@ protected:
 
   void assign(const exprt &lhs, const exprt &rhs);
 
-  void read_write_rec(
-    const exprt &expr,
-    bool r, bool w,
-    const std::string &suffix,
-    const guardt &guard);
+  void read_write_rec(const exprt &expr, bool r, bool w,
+                      const std::string &suffix, const guardt &guard);
 };
 
-class rw_set_loct:public _rw_set_loct
-{
+class rw_set_loct : public _rw_set_loct {
 public:
 #ifdef LOCAL_MAY
-  rw_set_loct(
-    const namespacet &_ns,
-    value_setst &_value_sets,
-    goto_programt::const_targett _target,
-    local_may_aliast &may):
-    _rw_set_loct(_ns, _value_sets, _target, may)
+  rw_set_loct(const namespacet &_ns, value_setst &_value_sets,
+              goto_programt::const_targett _target, local_may_aliast &may)
+      : _rw_set_loct(_ns, _value_sets, _target, may)
 #else
-  rw_set_loct(
-    const namespacet &_ns,
-    value_setst &_value_sets,
-    goto_programt::const_targett _target):
-    _rw_set_loct(_ns, _value_sets, _target)
+  rw_set_loct(const namespacet &_ns, value_setst &_value_sets,
+              goto_programt::const_targett _target)
+      : _rw_set_loct(_ns, _value_sets, _target)
 #endif
   {
     compute();
@@ -195,18 +157,13 @@ public:
 
 // another producer, this time for entire functions
 
-class rw_set_functiont:public rw_set_baset
-{
+class rw_set_functiont : public rw_set_baset {
 public:
-  rw_set_functiont(
-    value_setst &_value_sets,
-    const namespacet &_ns,
-    const goto_functionst &_goto_functions,
-    const exprt &function):
-    rw_set_baset(_ns),
-    value_sets(_value_sets),
-    goto_functions(_goto_functions)
-  {
+  rw_set_functiont(value_setst &_value_sets, const namespacet &_ns,
+                   const goto_functionst &_goto_functions,
+                   const exprt &function)
+      : rw_set_baset(_ns), value_sets(_value_sets),
+        goto_functions(_goto_functions) {
     compute_rec(function);
   }
 
@@ -221,8 +178,7 @@ protected:
 
 /* rw_set_loc keeping track of the dereference path */
 
-class rw_set_with_trackt:public _rw_set_loct
-{
+class rw_set_with_trackt : public _rw_set_loct {
 public:
   // NOTE: combine this with entriest to avoid double copy
   /* keeps track of who is dereferenced from who.
@@ -235,20 +191,14 @@ public:
   std::set<irep_idt> set_reads;
 
 #ifdef LOCAL_MAY
-  rw_set_with_trackt(
-    const namespacet &_ns,
-    value_setst &_value_sets,
-    goto_programt::const_targett _target,
-    local_may_aliast &may):
-    _rw_set_loct(_ns, _value_sets, _target, may),
-    dereferencing(false)
+  rw_set_with_trackt(const namespacet &_ns, value_setst &_value_sets,
+                     goto_programt::const_targett _target,
+                     local_may_aliast &may)
+      : _rw_set_loct(_ns, _value_sets, _target, may), dereferencing(false)
 #else
-  rw_set_with_trackt(
-    const namespacet &_ns,
-    value_setst &_value_sets,
-    goto_programt::const_targett _target):
-    _rw_set_loct(_ns, _value_sets, _target),
-    dereferencing(false)
+  rw_set_with_trackt(const namespacet &_ns, value_setst &_value_sets,
+                     goto_programt::const_targett _target)
+      : _rw_set_loct(_ns, _value_sets, _target), dereferencing(false)
 #endif
   {
     compute();
@@ -261,27 +211,20 @@ protected:
   bool dereferencing;
   std::vector<entryt> dereferenced;
 
-  void track_deref(const entryt &entry, bool read)
-  {
-    if(dereferencing && dereferenced.size()==0)
-    {
+  void track_deref(const entryt &entry, bool read) {
+    if (dereferencing && dereferenced.size() == 0) {
       dereferenced.insert(dereferenced.begin(), entry);
-      if(read)
+      if (read)
         set_reads.insert(entry.object);
-    }
-    else if(dereferencing && dereferenced.size()>0)
+    } else if (dereferencing && dereferenced.size() > 0)
       dereferenced_from.insert(
-        std::make_pair(entry.object, dereferenced.front().object));
+          std::make_pair(entry.object, dereferenced.front().object));
   }
 
-  void set_track_deref()
-  {
-    dereferencing=true;
-  }
+  void set_track_deref() { dereferencing = true; }
 
-  void reset_track_deref()
-  {
-    dereferencing=false;
+  void reset_track_deref() {
+    dereferencing = false;
     dereferenced.clear();
   }
 };

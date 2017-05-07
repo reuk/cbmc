@@ -9,12 +9,11 @@ Author: Daniel Kroening, kroening@kroening.com
 #ifndef CPROVER_SOLVERS_SAT_SATCHECK_LIMMAT_H
 #define CPROVER_SOLVERS_SAT_SATCHECK_LIMMAT_H
 
-#include <vector>
 #include "dimacs_cnf.h"
+#include <vector>
 
-class satcheck_limmatt:public dimacs_cnft
-{
- public:
+class satcheck_limmatt : public dimacs_cnft {
+public:
   satcheck_limmatt();
   virtual ~satcheck_limmatt();
 
@@ -24,7 +23,7 @@ class satcheck_limmatt:public dimacs_cnft
 
   void copy_cnf();
 
- protected:
+protected:
   struct Limmat *solver;
   std::vector<unsigned char> assignment;
 };

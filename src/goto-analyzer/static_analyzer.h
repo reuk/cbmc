@@ -17,13 +17,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <goto-programs/goto_model.h>
 
-bool static_analyzer(
-  const goto_modelt &,
-  const optionst &,
-  message_handlert &);
+bool static_analyzer(const goto_modelt &, const optionst &, message_handlert &);
 
-void show_intervals(
-  const goto_modelt &,
-  std::ostream &);
+void show_intervals(const goto_modelt &, std::ostream &);
 
 #endif // CPROVER_GOTO_ANALYZER_STATIC_ANALYZER_H

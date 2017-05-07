@@ -10,26 +10,16 @@ Author: Daniel Kroening, kroening@kroening.com
 #define CPROVER_PATH_SYMEX_PATH_SYMEX_STATE_H
 
 #include "locs.h"
-#include "var_map.h"
 #include "path_symex_history.h"
+#include "var_map.h"
 
-struct path_symex_statet
-{
+struct path_symex_statet {
 public:
-  path_symex_statet(
-    var_mapt &_var_map,
-    const locst &_locs,
-    path_symex_historyt &_path_symex_history):
-    var_map(_var_map),
-    locs(_locs),
-    inside_atomic_section(false),
-    history(_path_symex_history),
-    current_thread(0),
-    no_thread_interleavings(0),
-    no_branches(0),
-    depth(0)
-  {
-  }
+  path_symex_statet(var_mapt &_var_map, const locst &_locs,
+                    path_symex_historyt &_path_symex_history)
+      : var_map(_var_map), locs(_locs), inside_atomic_section(false),
+        history(_path_symex_history), current_thread(0),
+        no_thread_interleavings(0), no_branches(0), depth(0) {}
 
   typedef path_symex_stept stept;
 
@@ -39,8 +29,7 @@ public:
   const locst &locs;
 
   // the value of a variable
-  struct var_statet
-  {
+  struct var_statet {
     // it's a given explicit value or a symbol with given identifier
     exprt value;
     symbol_exprt ssa_symbol;
@@ -49,11 +38,7 @@ public:
     typedef std::set<exprt> index_sett;
     index_sett index_set;
 
-    var_statet():
-      value(nil_exprt()),
-      ssa_symbol(irep_idt())
-    {
-    }
+    var_statet() : value(nil_exprt()), ssa_symbol(irep_idt()) {}
   };
 
   // the values of the shared variables
@@ -64,8 +49,7 @@ public:
   typedef std::map<unsigned, var_statet> var_state_mapt;
 
   // procedure frame
-  struct framet
-  {
+  struct framet {
     irep_idt current_function;
     loc_reft return_location;
     exprt return_lhs;
@@ -77,17 +61,14 @@ public:
   typedef std::vector<framet> call_stackt;
 
   // the state of a thread
-  struct threadt
-  {
+  struct threadt {
   public:
     loc_reft pc;
     call_stackt call_stack; // the call stack
-    var_valt local_vars; // thread-local variables
+    var_valt local_vars;    // thread-local variables
     bool active;
 
-    threadt():active(true)
-    {
-    }
+    threadt() : active(true) {}
   };
 
   typedef std::vector<threadt> threadst;
@@ -98,27 +79,18 @@ public:
 
   bool inside_atomic_section;
 
-  unsigned get_current_thread() const
-  {
-    return current_thread;
-  }
+  unsigned get_current_thread() const { return current_thread; }
 
-  void set_current_thread(unsigned _thread)
-  {
-    current_thread=_thread;
-  }
+  void set_current_thread(unsigned _thread) { current_thread = _thread; }
 
   loc_reft get_pc() const;
 
-  goto_programt::const_targett get_instruction() const
-  {
+  goto_programt::const_targett get_instruction() const {
     return locs[get_pc()].target;
   }
 
-  bool is_executable() const
-  {
-    return !threads.empty() &&
-           threads[current_thread].active;
+  bool is_executable() const {
+    return !threads.empty() && threads[current_thread].active;
   }
 
   // execution history
@@ -129,69 +101,42 @@ public:
 
   // various state transformers
 
-  threadt &add_thread()
-  {
-    threads.resize(threads.size()+1);
+  threadt &add_thread() {
+    threads.resize(threads.size() + 1);
     return threads.back();
   }
 
-  void disable_current_thread()
-  {
-    threads[current_thread].active=false;
-  }
+  void disable_current_thread() { threads[current_thread].active = false; }
 
-  loc_reft pc() const
-  {
-    return threads[current_thread].pc;
-  }
+  loc_reft pc() const { return threads[current_thread].pc; }
 
-  void next_pc()
-  {
-    threads[current_thread].pc.increase();
-  }
+  void next_pc() { threads[current_thread].pc.increase(); }
 
-  void set_pc(loc_reft new_pc)
-  {
-    threads[current_thread].pc=new_pc;
-  }
+  void set_pc(loc_reft new_pc) { threads[current_thread].pc = new_pc; }
 
   // output
   void output(std::ostream &out) const;
   void output(const threadt &thread, std::ostream &out) const;
 
   // instantiate expressions with propagation
-  exprt read(const exprt &src)
-  {
-    return read(src, true);
-  }
+  exprt read(const exprt &src) { return read(src, true); }
 
   // instantiate without constant propagation
-  exprt read_no_propagate(const exprt &src)
-  {
-    return read(src, false);
-  }
+  exprt read_no_propagate(const exprt &src) { return read(src, false); }
 
   exprt dereference_rec(const exprt &src, bool propagate);
 
   std::string array_index_as_string(const exprt &) const;
 
-  unsigned get_no_thread_interleavings() const
-  {
+  unsigned get_no_thread_interleavings() const {
     return no_thread_interleavings;
   }
 
-  unsigned get_depth() const
-  {
-    return depth;
-  }
+  unsigned get_depth() const { return depth; }
 
-  unsigned get_no_branches() const
-  {
-    return no_branches;
-  }
+  unsigned get_no_branches() const { return no_branches; }
 
-  bool last_was_branch() const
-  {
+  bool last_was_branch() const {
     return !history.is_nil() && history->is_branch();
   }
 
@@ -213,31 +158,21 @@ protected:
   unsigned no_branches;
   unsigned depth;
 
-  exprt read(
-    const exprt &src,
-    bool propagate);
+  exprt read(const exprt &src, bool propagate);
 
-  exprt instantiate_rec(
-    const exprt &src,
-    bool propagate);
+  exprt instantiate_rec(const exprt &src, bool propagate);
 
   exprt expand_structs_and_arrays(const exprt &src);
   exprt array_theory(const exprt &src, bool propagate);
 
-  exprt instantiate_rec_address(
-    const exprt &src,
-    bool propagate);
+  exprt instantiate_rec_address(const exprt &src, bool propagate);
 
-  exprt read_symbol_member_index(
-    const exprt &src,
-    bool propagate);
+  exprt read_symbol_member_index(const exprt &src, bool propagate);
 
   bool is_symbol_member_index(const exprt &src) const;
 };
 
-path_symex_statet initial_state(
-  var_mapt &var_map,
-  const locst &locs,
-  path_symex_historyt &);
+path_symex_statet initial_state(var_mapt &var_map, const locst &locs,
+                                path_symex_historyt &);
 
 #endif // CPROVER_PATH_SYMEX_PATH_SYMEX_STATE_H

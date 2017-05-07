@@ -23,8 +23,7 @@ class symbolt;
 
 /*! \brief TO_BE_DOCUMENTED
 */
-class value_set_dereferencet
-{
+class value_set_dereferencet {
 public:
   /*! \brief Constructor
    * \param _ns Namespace
@@ -33,20 +32,16 @@ public:
             to be performed
    * \param _dereference_callback Callback object for error reporting
   */
-  value_set_dereferencet(
-    const namespacet &_ns,
-    symbol_tablet &_new_symbol_table,
-    const optionst &_options,
-    dereference_callbackt &_dereference_callback,
-    const irep_idt _language_mode):
-    ns(_ns),
-    new_symbol_table(_new_symbol_table),
-    options(_options),
-    dereference_callback(_dereference_callback),
-    language_mode(_language_mode)
-  { }
+  value_set_dereferencet(const namespacet &_ns,
+                         symbol_tablet &_new_symbol_table,
+                         const optionst &_options,
+                         dereference_callbackt &_dereference_callback,
+                         const irep_idt _language_mode)
+      : ns(_ns), new_symbol_table(_new_symbol_table), options(_options),
+        dereference_callback(_dereference_callback),
+        language_mode(_language_mode) {}
 
-  virtual ~value_set_dereferencet() { }
+  virtual ~value_set_dereferencet() {}
 
   typedef enum { READ, WRITE } modet;
 
@@ -64,10 +59,8 @@ public:
             is a load or store.
   */
 
-  virtual exprt dereference(
-    const exprt &pointer,
-    const guardt &guard,
-    const modet mode);
+  virtual exprt dereference(const exprt &pointer, const guardt &guard,
+                            const modet mode);
 
   /*! \brief Returns 'true' iff the given expression contains unary '*'
   */
@@ -85,35 +78,23 @@ private:
   const irep_idt language_mode;
   static unsigned invalid_counter;
 
-  bool dereference_type_compare(
-    const typet &object_type,
-    const typet &dereference_type) const;
+  bool dereference_type_compare(const typet &object_type,
+                                const typet &dereference_type) const;
 
-  void offset_sum(
-    exprt &dest,
-    const exprt &offset) const;
+  void offset_sum(exprt &dest, const exprt &offset) const;
 
-  class valuet
-  {
+  class valuet {
   public:
     exprt value;
     exprt pointer_guard;
 
-    valuet():value(nil_exprt()), pointer_guard(false_exprt())
-    {
-    }
+    valuet() : value(nil_exprt()), pointer_guard(false_exprt()) {}
   };
 
-  valuet build_reference_to(
-    const exprt &what,
-    const modet mode,
-    const exprt &pointer,
-    const guardt &guard);
+  valuet build_reference_to(const exprt &what, const modet mode,
+                            const exprt &pointer, const guardt &guard);
 
-  bool get_value_guard(
-    const exprt &symbol,
-    const exprt &premise,
-    exprt &value);
+  bool get_value_guard(const exprt &symbol, const exprt &premise, exprt &value);
 
   static const exprt &get_symbol(const exprt &object);
 
@@ -122,23 +103,14 @@ private:
 
   void invalid_pointer(const exprt &expr, const guardt &guard);
 
-  bool memory_model(
-    exprt &value,
-    const typet &type,
-    const guardt &guard,
-    const exprt &offset);
+  bool memory_model(exprt &value, const typet &type, const guardt &guard,
+                    const exprt &offset);
 
-  bool memory_model_conversion(
-    exprt &value,
-    const typet &type,
-    const guardt &guard,
-    const exprt &offset);
+  bool memory_model_conversion(exprt &value, const typet &type,
+                               const guardt &guard, const exprt &offset);
 
-  bool memory_model_bytes(
-    exprt &value,
-    const typet &type,
-    const guardt &guard,
-    const exprt &offset);
+  bool memory_model_bytes(exprt &value, const typet &type, const guardt &guard,
+                          const exprt &offset);
 };
 
 #endif // CPROVER_POINTER_ANALYSIS_VALUE_SET_DEREFERENCE_H

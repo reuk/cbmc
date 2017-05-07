@@ -6,8 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <iostream>
 #include <cassert>
+#include <iostream>
 
 #include "qdimacs_cnf.h"
 
@@ -23,8 +23,7 @@ Function: qdimacs_cnft::write_qdimacs_cnf
 
 \*******************************************************************/
 
-void qdimacs_cnft::write_qdimacs_cnf(std::ostream &out)
-{
+void qdimacs_cnft::write_qdimacs_cnf(std::ostream &out) {
   write_problem_line(out);
   write_prefix(out);
   write_clauses(out);
@@ -42,26 +41,21 @@ Function: qdimacs_cnft::write_prefix
 
 \*******************************************************************/
 
-void qdimacs_cnft::write_prefix(std::ostream &out) const
-{
+void qdimacs_cnft::write_prefix(std::ostream &out) const {
   std::vector<bool> quantified;
 
   quantified.resize(no_variables(), false);
 
-  for(quantifierst::const_iterator
-      it=quantifiers.begin();
-      it!=quantifiers.end();
-      it++)
-  {
-    const quantifiert &quantifier=*it;
+  for (quantifierst::const_iterator it = quantifiers.begin();
+       it != quantifiers.end(); it++) {
+    const quantifiert &quantifier = *it;
 
-    assert(quantifier.var_no<no_variables());
+    assert(quantifier.var_no < no_variables());
     // double quantification?
     assert(!quantified[quantifier.var_no]);
-    quantified[quantifier.var_no]=true;
+    quantified[quantifier.var_no] = true;
 
-    switch(quantifier.type)
-    {
+    switch (quantifier.type) {
     case quantifiert::UNIVERSAL:
       out << "a";
       break;
@@ -80,8 +74,8 @@ void qdimacs_cnft::write_prefix(std::ostream &out) const
   // variables that are not quantified
   // will be quantified existentially in the innermost scope
 
-  for(std::size_t i=1; i<no_variables(); i++)
-    if(!quantified[i])
+  for (std::size_t i = 1; i < no_variables(); i++)
+    if (!quantified[i])
       out << "e " << i << " 0" << std::endl;
 }
 
@@ -97,9 +91,8 @@ Function: qdimacs_cnft::operator==
 
 \*******************************************************************/
 
-bool qdimacs_cnft::operator==(const qdimacs_cnft &other) const
-{
-  return quantifiers==other.quantifiers && clauses==other.clauses;
+bool qdimacs_cnft::operator==(const qdimacs_cnft &other) const {
+  return quantifiers == other.quantifiers && clauses == other.clauses;
 }
 
 /*******************************************************************\
@@ -114,16 +107,12 @@ Function: qdimacs_cnft::set_quantifier
 
 \*******************************************************************/
 
-void qdimacs_cnft::set_quantifier(
-  const quantifiert::typet type,
-  const literalt l)
-{
-  for(quantifierst::iterator it=quantifiers.begin();
-      it!=quantifiers.end();
-      it++)
-    if(it->var_no==l.var_no())
-    {
-      it->type=type;
+void qdimacs_cnft::set_quantifier(const quantifiert::typet type,
+                                  const literalt l) {
+  for (quantifierst::iterator it = quantifiers.begin(); it != quantifiers.end();
+       it++)
+    if (it->var_no == l.var_no()) {
+      it->type = type;
       return;
     }
 
@@ -143,20 +132,14 @@ Function: qdimacs_cnft::copy_to
 
 \*******************************************************************/
 
-void qdimacs_cnft::copy_to(qdimacs_cnft &cnf) const
-{
+void qdimacs_cnft::copy_to(qdimacs_cnft &cnf) const {
   cnf.set_no_variables(_no_variables);
 
-  for(quantifierst::const_iterator
-      it=quantifiers.begin();
-      it!=quantifiers.end();
-      it++)
+  for (quantifierst::const_iterator it = quantifiers.begin();
+       it != quantifiers.end(); it++)
     cnf.add_quantifier(*it);
 
-  for(clausest::const_iterator
-      it=clauses.begin();
-      it!=clauses.end();
-      it++)
+  for (clausest::const_iterator it = clauses.begin(); it != clauses.end(); it++)
     cnf.lcnf(*it);
 }
 
@@ -172,16 +155,14 @@ Function: qdimacs_cnft::hash
 
 \*******************************************************************/
 
-size_t qdimacs_cnft::hash() const
-{
-  size_t result=0;
+size_t qdimacs_cnft::hash() const {
+  size_t result = 0;
 
-  for(quantifierst::const_iterator it=quantifiers.begin();
-      it!=quantifiers.end();
-      it++)
-    result=((result<<1)^it->hash())-result;
+  for (quantifierst::const_iterator it = quantifiers.begin();
+       it != quantifiers.end(); it++)
+    result = ((result << 1) ^ it->hash()) - result;
 
-  return result^cnf_clause_listt::hash();
+  return result ^ cnf_clause_listt::hash();
 }
 
 /*******************************************************************\
@@ -196,12 +177,10 @@ Function: qdimacs_cnft::is_quantified
 
 \*******************************************************************/
 
-bool qdimacs_cnft::is_quantified(const literalt l) const
-{
-  for(quantifierst::const_iterator it=quantifiers.begin();
-      it!=quantifiers.end();
-      it++)
-    if(it->var_no==l.var_no())
+bool qdimacs_cnft::is_quantified(const literalt l) const {
+  for (quantifierst::const_iterator it = quantifiers.begin();
+       it != quantifiers.end(); it++)
+    if (it->var_no == l.var_no())
       return true;
 
   return false;
@@ -219,14 +198,11 @@ Function: qdimacs_cnft::find_quantifier
 
 \*******************************************************************/
 
-bool qdimacs_cnft::find_quantifier(const literalt l, quantifiert &q) const
-{
-  for(quantifierst::const_iterator it=quantifiers.begin();
-      it!=quantifiers.end();
-      it++)
-    if(it->var_no==l.var_no())
-    {
-      q=*it;
+bool qdimacs_cnft::find_quantifier(const literalt l, quantifiert &q) const {
+  for (quantifierst::const_iterator it = quantifiers.begin();
+       it != quantifiers.end(); it++)
+    if (it->var_no == l.var_no()) {
+      q = *it;
       return true;
     }
 

@@ -14,18 +14,13 @@ Author: Daniel Poetzl
 
 std::string strip_string(const std::string &s);
 
-void split_string(
-  const std::string &s,
-  char delim, // must not be a whitespace character
-  std::vector<std::string> &result,
-  bool strip=false, // strip whitespace from elements
-  bool remove_empty=false); // remove empty elements
+void split_string(const std::string &s,
+                  char delim, // must not be a whitespace character
+                  std::vector<std::string> &result,
+                  bool strip = false,         // strip whitespace from elements
+                  bool remove_empty = false); // remove empty elements
 
-void split_string(
-  const std::string &s,
-  char delim,
-  std::string &left,
-  std::string &right,
-  bool strip=false);
+void split_string(const std::string &s, char delim, std::string &left,
+                  std::string &right, bool strip = false);
 
 #endif

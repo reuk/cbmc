@@ -24,12 +24,9 @@ Function: jsont::escape_string
 
 \*******************************************************************/
 
-void jsont::escape_string(const std::string &src, std::ostream &out)
-{
-  for(const auto &ch : src)
-  {
-    switch(ch)
-    {
+void jsont::escape_string(const std::string &src, std::ostream &out) {
+  for (const auto &ch : src) {
+    switch (ch) {
     case '\\':
     case '"':
       out << '\\';
@@ -74,10 +71,8 @@ Function: jsont::output_rec
 
 \*******************************************************************/
 
-void jsont::output_rec(std::ostream &out, unsigned indent) const
-{
-  switch(kind)
-  {
+void jsont::output_rec(std::ostream &out, unsigned indent) const {
+  switch (kind) {
   case J_STRING:
     out << '"';
     escape_string(value, out);
@@ -90,27 +85,24 @@ void jsont::output_rec(std::ostream &out, unsigned indent) const
 
   case J_OBJECT:
     out << '{';
-    for(objectt::const_iterator o_it=object.begin();
-        o_it!=object.end();
-        o_it++)
-    {
-      if(o_it!=object.begin())
+    for (objectt::const_iterator o_it = object.begin(); o_it != object.end();
+         o_it++) {
+      if (o_it != object.begin())
         out << ',';
 
       out << '\n';
 
-      out << std::string((indent+1)*2, ' ');
+      out << std::string((indent + 1) * 2, ' ');
 
       out << '"';
       escape_string(o_it->first, out);
       out << '"';
       out << ": ";
-      o_it->second.output_rec(out, indent+1);
+      o_it->second.output_rec(out, indent + 1);
     }
-    if(!object.empty())
-    {
+    if (!object.empty()) {
       out << '\n';
-      out << std::string(indent*2, ' ');
+      out << std::string(indent * 2, ' ');
     }
     out << '}';
     break;
@@ -118,30 +110,25 @@ void jsont::output_rec(std::ostream &out, unsigned indent) const
   case J_ARRAY:
     out << '[';
 
-    if(array.empty())
+    if (array.empty())
       out << ' ';
-    else
-    {
-      for(arrayt::const_iterator a_it=array.begin();
-          a_it!=array.end();
-          a_it++)
-      {
-        if(a_it!=array.begin())
+    else {
+      for (arrayt::const_iterator a_it = array.begin(); a_it != array.end();
+           a_it++) {
+        if (a_it != array.begin())
           out << ',';
 
-        if(a_it->is_object())
-        {
+        if (a_it->is_object()) {
           out << '\n';
-          out << std::string((indent+1)*2, ' ');
-        }
-        else
+          out << std::string((indent + 1) * 2, ' ');
+        } else
           out << ' ';
 
-        a_it->output_rec(out, indent+1);
+        a_it->output_rec(out, indent + 1);
       }
 
-      if(array.back().is_object())
-        out << '\n' << std::string(indent*2, ' ');
+      if (array.back().is_object())
+        out << '\n' << std::string(indent * 2, ' ');
       else
         out << ' ';
     }
@@ -149,11 +136,17 @@ void jsont::output_rec(std::ostream &out, unsigned indent) const
     out << ']';
     break;
 
-  case J_TRUE: out << "true"; break;
+  case J_TRUE:
+    out << "true";
+    break;
 
-  case J_FALSE: out << "false"; break;
+  case J_FALSE:
+    out << "false";
+    break;
 
-  case J_NULL: out << "null"; break;
+  case J_NULL:
+    out << "null";
+    break;
   }
 }
 
@@ -169,8 +162,7 @@ Function: jsont::swap
 
 \*******************************************************************/
 
-void jsont::swap(jsont &other)
-{
+void jsont::swap(jsont &other) {
   std::swap(other.kind, kind);
   other.array.swap(array);
   other.object.swap(object);

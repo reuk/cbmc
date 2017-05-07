@@ -11,13 +11,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <util/cmdline.h>
 
-class xml_interfacet
-{
+class xml_interfacet {
 public:
-  explicit xml_interfacet(cmdlinet &_cmdline)
-  {
-    get_xml_options(_cmdline);
-  }
+  explicit xml_interfacet(cmdlinet &_cmdline) { get_xml_options(_cmdline); }
 
 protected:
   void get_xml_options(cmdlinet &cmdline);

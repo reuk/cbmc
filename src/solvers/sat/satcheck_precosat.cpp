@@ -18,7 +18,7 @@ Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
 #error "Expected HAVE_PRECOSAT"
 #endif
 
-#define precosat_lit(a) ((a).var_no()*2 + !(a).sign())
+#define precosat_lit(a) ((a).var_no() * 2 + !(a).sign())
 
 /*******************************************************************\
 
@@ -32,21 +32,20 @@ Function: satcheck_precosatt::l_get
 
 \*******************************************************************/
 
-tvt satcheck_precosatt::l_get(literalt a) const
-{
-  if(a.is_constant())
+tvt satcheck_precosatt::l_get(literalt a) const {
+  if (a.is_constant())
     return tvt(a.sign());
 
   tvt result;
 
-  if(a.var_no()>solver->getMaxVar())
+  if (a.var_no() > solver->getMaxVar())
     return tvt(tvt::tv_enumt::TV_UNKNOWN);
 
-  const int val=solver->val(precosat_lit(a));
-  if(val>0)
-    result=tvt(true);
-  else if(val<0)
-    result=tvt(false);
+  const int val = solver->val(precosat_lit(a));
+  if (val > 0)
+    result = tvt(true);
+  else if (val < 0)
+    result = tvt(false);
   else
     return tvt(tvt::tv_enumt::TV_UNKNOWN);
 
@@ -65,10 +64,7 @@ Function: satcheck_precosatt::solver_text
 
 \*******************************************************************/
 
-const std::string satcheck_precosatt::solver_text()
-{
-  return "PrecoSAT";
-}
+const std::string satcheck_precosatt::solver_text() { return "PrecoSAT"; }
 
 /*******************************************************************\
 
@@ -82,15 +78,13 @@ Function: satcheck_precosatt::lcnf
 
 \*******************************************************************/
 
-void satcheck_precosatt::lcnf(const bvt &bv)
-{
+void satcheck_precosatt::lcnf(const bvt &bv) {
   bvt new_bv;
 
-  if(process_clause(bv, new_bv))
+  if (process_clause(bv, new_bv))
     return;
 
-  forall_literals(it, new_bv)
-    solver->add(precosat_lit(*it));
+  forall_literals(it, new_bv) solver->add(precosat_lit(*it));
 
   solver->add(0);
 
@@ -109,36 +103,32 @@ Function: satcheck_precosatt::prop_solve
 
 \*******************************************************************/
 
-propt::resultt satcheck_precosatt::prop_solve()
-{
-  assert(status!=ERROR);
+propt::resultt satcheck_precosatt::prop_solve() {
+  assert(status != ERROR);
 
   // We start counting at 1, thus there is one variable fewer.
   {
-    std::string msg=
-      std::to_string(no_variables()-1)+" variables, "+
-      std::to_string(solver->getAddedOrigClauses())+" clauses";
+    std::string msg = std::to_string(no_variables() - 1) + " variables, " +
+                      std::to_string(solver->getAddedOrigClauses()) +
+                      " clauses";
     messaget::status() << msg << messaget::eom;
   }
 
   std::string msg;
 
-  const int res=solver->solve();
-  if(res==1)
-  {
-    msg="SAT checker: instance is SATISFIABLE";
+  const int res = solver->solve();
+  if (res == 1) {
+    msg = "SAT checker: instance is SATISFIABLE";
     messaget::status() << msg << messaget::eom;
-    status=SAT;
+    status = SAT;
     return P_SATISFIABLE;
-  }
-  else
-  {
-    assert(res==-1);
-    msg="SAT checker: instance is UNSATISFIABLE";
+  } else {
+    assert(res == -1);
+    msg = "SAT checker: instance is UNSATISFIABLE";
     messaget::status() << msg << messaget::eom;
   }
 
-  status=UNSAT;
+  status = UNSAT;
   return P_UNSATISFIABLE;
 }
 
@@ -154,8 +144,7 @@ Function: satcheck_precosatt::set_assignment
 
 \*******************************************************************/
 
-void satcheck_precosatt::set_assignment(literalt a, bool value)
-{
+void satcheck_precosatt::set_assignment(literalt a, bool value) {
   assert(false);
 }
 
@@ -171,9 +160,7 @@ Function: satcheck_precosatt::satcheck_precosatt
 
 \*******************************************************************/
 
-satcheck_precosatt::satcheck_precosatt() :
-  solver(new PrecoSat::Solver())
-{
+satcheck_precosatt::satcheck_precosatt() : solver(new PrecoSat::Solver()) {
   solver->init();
 }
 
@@ -189,10 +176,7 @@ Function: satcheck_precosatt::~satcheck_precosatt
 
 \*******************************************************************/
 
-satcheck_precosatt::~satcheck_precosatt()
-{
-  delete solver;
-}
+satcheck_precosatt::~satcheck_precosatt() { delete solver; }
 
 /*******************************************************************\
 

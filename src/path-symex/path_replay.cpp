@@ -20,10 +20,8 @@ Function: path_replayt::get_branches
 
 \*******************************************************************/
 
-void get_branches(path_symex_step_reft history)
-{
+void get_branches(path_symex_step_reft history) {
   // history trees are traversed effectively only backwards
-  for(; !history.is_nil(); --history)
-  {
+  for (; !history.is_nil(); --history) {
   }
 }

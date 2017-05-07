@@ -15,8 +15,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "smt1_conv.h"
 
-class smt1_temp_filet
-{
+class smt1_temp_filet {
 public:
   smt1_temp_filet();
   ~smt1_temp_filet();
@@ -29,21 +28,14 @@ protected:
 /*! \brief Decision procedure interface for various SMT 1.x solvers
     \ingroup gr_smt1
 */
-class smt1_dect:protected smt1_temp_filet, public smt1_convt
-{
+class smt1_dect : protected smt1_temp_filet, public smt1_convt {
 public:
-  smt1_dect(
-    const namespacet &_ns,
-    const std::string &_benchmark,
-    const std::string &_source,
-    const std::string &_logic,
-    solvert _solver):
-    smt1_temp_filet(),
-    smt1_convt(_ns, _benchmark, _source, _logic, _solver, temp_out),
-    logic(_logic),
-    dec_solve_was_called(false)
-  {
-  }
+  smt1_dect(const namespacet &_ns, const std::string &_benchmark,
+            const std::string &_source, const std::string &_logic,
+            solvert _solver)
+      : smt1_temp_filet(),
+        smt1_convt(_ns, _benchmark, _source, _logic, _solver, temp_out),
+        logic(_logic), dec_solve_was_called(false) {}
 
   virtual resultt dec_solve();
   virtual std::string decision_procedure_text() const;
@@ -59,14 +51,12 @@ protected:
   resultt read_result_yices(std::istream &in);
   resultt read_result_z3(std::istream &in);
 
-  bool string_to_expr_z3(
-    const typet &type,
-    const std::string &value, exprt &e) const;
+  bool string_to_expr_z3(const typet &type, const std::string &value,
+                         exprt &e) const;
 
   std::string mathsat_value(const std::string &src);
 
-  struct valuet
-  {
+  struct valuet {
     // map from array index to value
     typedef std::map<std::string, std::string> index_value_mapt;
     index_value_mapt index_value_map;

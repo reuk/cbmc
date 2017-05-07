@@ -8,8 +8,8 @@ Date:
 
 \*******************************************************************/
 
-#include <sstream>
 #include <cassert>
+#include <sstream>
 
 #include "timer.h"
 
@@ -25,9 +25,7 @@ Function:
 
 \*******************************************************************/
 
-timert::~timert()
-{
-}
+timert::~timert() {}
 
 /*******************************************************************\
 
@@ -41,8 +39,7 @@ Function:
 
 \*******************************************************************/
 
-void timert::start()
-{
+void timert::start() {
   assert(!started);
   started = true;
 
@@ -62,8 +59,7 @@ Function:
 
 \*******************************************************************/
 
-void timert::stop()
-{
+void timert::stop() {
   assert(started);
   started = false;
 
@@ -83,8 +79,7 @@ Function:
 
 \*******************************************************************/
 
-void timert::clear()
-{
+void timert::clear() {
   _total_time.clear();
   _start_time.clear();
 }

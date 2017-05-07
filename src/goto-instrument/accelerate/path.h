@@ -12,26 +12,18 @@ Author: Matt Lewis
 #include <iosfwd>
 #include <list>
 
-#include <util/std_expr.h>
 #include <util/namespace.h>
+#include <util/std_expr.h>
 
 #include <goto-programs/goto_program.h>
 
-class path_nodet
-{
+class path_nodet {
 public:
-  explicit path_nodet(const goto_programt::targett &_loc):
-    loc(_loc),
-    guard(nil_exprt())
-  {
-  }
+  explicit path_nodet(const goto_programt::targett &_loc)
+      : loc(_loc), guard(nil_exprt()) {}
 
-  path_nodet(const goto_programt::targett &_loc,
-             const exprt &_guard) :
-      loc(_loc),
-      guard(_guard)
-  {
-  }
+  path_nodet(const goto_programt::targett &_loc, const exprt &_guard)
+      : loc(_loc), guard(_guard) {}
 
   void output(const goto_programt &program, std::ostream &str);
 
@@ -42,10 +34,7 @@ public:
 typedef std::list<path_nodet> patht;
 typedef std::list<patht> pathst;
 
-void output_path(
-  const patht &path,
-  const goto_programt &program,
-  const namespacet &ns,
-  std::ostream &str);
+void output_path(const patht &path, const goto_programt &program,
+                 const namespacet &ns, std::ostream &str);
 
 #endif // CPROVER_GOTO_INSTRUMENT_ACCELERATE_PATH_H

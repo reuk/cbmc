@@ -9,45 +9,32 @@ Author: Daniel Kroening, kroening@kroening.com
 #ifndef CPROVER_GOTO_INSTRUMENT_OBJECT_ID_H
 #define CPROVER_GOTO_INSTRUMENT_OBJECT_ID_H
 
-#include <set>
 #include <ostream>
+#include <set>
 
-#include <util/std_expr.h>
 #include <util/std_code.h>
+#include <util/std_expr.h>
 
-class object_idt
-{
+class object_idt {
 public:
-  object_idt() { }
+  object_idt() {}
 
-  explicit object_idt(const symbol_exprt &symbol_expr)
-  {
-    id=symbol_expr.get_identifier();
+  explicit object_idt(const symbol_exprt &symbol_expr) {
+    id = symbol_expr.get_identifier();
   }
 
-  explicit object_idt(const irep_idt &identifier)
-  {
-    id=identifier;
-  }
+  explicit object_idt(const irep_idt &identifier) { id = identifier; }
 
-  bool operator<(const object_idt &other) const
-  {
-    return id<other.id;
-  }
+  bool operator<(const object_idt &other) const { return id < other.id; }
 
-  const irep_idt &get_id() const
-  {
-    return id;
-  }
+  const irep_idt &get_id() const { return id; }
 
 protected:
   irep_idt id;
 };
 
-inline std::ostream &operator<<(
-  std::ostream &out,
-  const object_idt &object_id)
-{
+inline std::ostream &operator<<(std::ostream &out,
+                                const object_idt &object_id) {
   return out << object_id.get_id();
 }
 

@@ -10,31 +10,30 @@ Author:
 #define CPROVER_UTIL_PIPE_STREAM_H
 
 #include <iosfwd>
-#include <string>
 #include <list>
+#include <string>
 
 #ifdef _WIN32
 #include <windows.h>
 #else
-#include <unistd.h>
 #include <sys/types.h>
+#include <unistd.h>
 #endif
 
 // a class much like __gnu_cxx::stdio_filebuf
 
-class filedescriptor_streambuft:public std::streambuf
-{
+class filedescriptor_streambuft : public std::streambuf {
 public:
-  #ifndef _WIN32
+#ifndef _WIN32
   // NOLINTNEXTLINE(readability/identifiers)
   typedef int HANDLE;
-  #endif
+#endif
 
   filedescriptor_streambuft();
 
   // these are closed automatically on destruction
-  void set_in(HANDLE in) { proc_in=in; }
-  void set_out(HANDLE out) { proc_out=out; }
+  void set_in(HANDLE in) { proc_in = in; }
+  void set_out(HANDLE out) { proc_out = out; }
 
   ~filedescriptor_streambuft();
 
@@ -49,12 +48,10 @@ protected:
   std::streamsize showmanyc();
 };
 
-class pipe_streamt:public std::iostream
-{
+class pipe_streamt : public std::iostream {
 public:
-  pipe_streamt(
-    const std::string &_executable,
-    const std::list<std::string> &_args);
+  pipe_streamt(const std::string &_executable,
+               const std::list<std::string> &_args);
 
   int run();
   int wait();
@@ -63,11 +60,11 @@ protected:
   std::string executable;
   std::list<std::string> args;
 
-  #ifdef _WIN32
+#ifdef _WIN32
   PROCESS_INFORMATION pi;
-  #else
+#else
   pid_t pid;
-  #endif
+#endif
 
   filedescriptor_streambuft buffer;
 };

@@ -20,25 +20,20 @@ Function:
 
 \*******************************************************************/
 
-bool typecheckt::typecheck_main()
-{
-  try
-  {
+bool typecheckt::typecheck_main() {
+  try {
     typecheck();
   }
 
-  catch(int)
-  {
-    error_found=true;
+  catch (int) {
+    error_found = true;
   }
 
-  catch(const char *e)
-  {
+  catch (const char *e) {
     error() << e << eom;
   }
 
-  catch(const std::string &e)
-  {
+  catch (const std::string &e) {
     error() << e << eom;
   }
 

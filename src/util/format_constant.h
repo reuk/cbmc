@@ -15,8 +15,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 class exprt;
 
-class format_constantt:public format_spect
-{
+class format_constantt : public format_spect {
 public:
   std::string operator()(const exprt &expr);
 };

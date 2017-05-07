@@ -15,14 +15,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <solvers/prop/prop.h>
 
-class smt1_propt:public propt
-{
+class smt1_propt : public propt {
 public:
-  smt1_propt(
-    const std::string &_benchmark,
-    const std::string &_source,
-    const std::string &_logic,
-    std::ostream &_out);
+  smt1_propt(const std::string &_benchmark, const std::string &_source,
+             const std::string &_logic, std::ostream &_out);
   virtual ~smt1_propt();
 
   virtual literalt land(literalt a, literalt b);
@@ -43,21 +39,16 @@ public:
 
   virtual void lcnf(const bvt &bv);
 
-  virtual const std::string solver_text()
-  { return "SMT"; }
+  virtual const std::string solver_text() { return "SMT"; }
 
   virtual tvt l_get(literalt literal) const;
   virtual void set_assignment(literalt a, bool value);
 
   virtual propt::resultt prop_solve();
 
-  virtual void clear()
-  {
-    assignment.clear();
-  }
+  virtual void clear() { assignment.clear(); }
 
-  virtual void reset_assignment()
-  {
+  virtual void reset_assignment() {
     assignment.clear();
     assignment.resize(no_variables(), tvt(tvt::tv_enumt::TV_UNKNOWN));
   }

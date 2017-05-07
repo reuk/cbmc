@@ -25,28 +25,20 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-class bmc_all_propertiest:
-  public cover_goalst::observert,
-  public messaget
-{
+class bmc_all_propertiest : public cover_goalst::observert, public messaget {
 public:
-  bmc_all_propertiest(
-    const goto_functionst &_goto_functions,
-    prop_convt &_solver,
-    bmct &_bmc):
-    goto_functions(_goto_functions), solver(_solver), bmc(_bmc)
-  {
-  }
+  bmc_all_propertiest(const goto_functionst &_goto_functions,
+                      prop_convt &_solver, bmct &_bmc)
+      : goto_functions(_goto_functions), solver(_solver), bmc(_bmc) {}
 
   safety_checkert::resultt operator()();
 
   virtual void goal_covered(const cover_goalst::goalt &);
 
-  struct goalt
-  {
+  struct goalt {
     // a property holds if all instances of it are true
     typedef std::vector<symex_target_equationt::SSA_stepst::iterator>
-      instancest;
+        instancest;
     instancest instances;
     std::string description;
 
@@ -54,14 +46,16 @@ public:
     enum statust { UNKNOWN, FAILURE, SUCCESS, ERROR } status;
     goto_tracet goto_trace;
 
-    std::string status_string() const
-    {
-      switch(status)
-      {
-      case UNKNOWN: return "UNKNOWN";
-      case FAILURE: return "FAILURE";
-      case SUCCESS: return "SUCCESS";
-      case ERROR: return "ERROR";
+    std::string status_string() const {
+      switch (status) {
+      case UNKNOWN:
+        return "UNKNOWN";
+      case FAILURE:
+        return "FAILURE";
+      case SUCCESS:
+        return "SUCCESS";
+      case ERROR:
+        return "ERROR";
       }
 
       // make some poor compilers happy
@@ -69,22 +63,17 @@ public:
       return "";
     }
 
-    explicit goalt(
-      const goto_programt::instructiont &instruction):
-      status(statust::UNKNOWN)
-    {
-      description=id2string(instruction.source_location.get_comment());
+    explicit goalt(const goto_programt::instructiont &instruction)
+        : status(statust::UNKNOWN) {
+      description = id2string(instruction.source_location.get_comment());
     }
 
-    goalt():status(statust::UNKNOWN)
-    {
-    }
+    goalt() : status(statust::UNKNOWN) {}
 
-    exprt as_expr() const
-    {
+    exprt as_expr() const {
       std::vector<exprt> tmp;
       tmp.reserve(instances.size());
-      for(const auto &inst : instances)
+      for (const auto &inst : instances)
         tmp.push_back(literal_exprt(inst->cond_literal));
       return conjunction(tmp);
     }

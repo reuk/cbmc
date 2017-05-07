@@ -15,12 +15,10 @@ Date: February 2012
 
 class namespacet;
 
-bool is_fence(
-  const goto_programt::instructiont &instruction,
-  const namespacet &ns);
+bool is_fence(const goto_programt::instructiont &instruction,
+              const namespacet &ns);
 
-bool is_lwfence(
-  const goto_programt::instructiont &instruction,
-  const namespacet &ns);
+bool is_lwfence(const goto_programt::instructiont &instruction,
+                const namespacet &ns);
 
 #endif // CPROVER_GOTO_INSTRUMENT_WMM_FENCE_H

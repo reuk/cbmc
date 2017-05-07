@@ -11,8 +11,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "qdimacs_cnf.h"
 
-class qbf_quantort:public qdimacs_cnft
-{
+class qbf_quantort : public qdimacs_cnft {
 public:
   qbf_quantort();
   virtual ~qbf_quantort();

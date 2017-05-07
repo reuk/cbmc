@@ -10,13 +10,13 @@ Date: September 2011
 
 #include <util/cprover_prefix.h>
 
-#include <goto-programs/goto_program.h>
 #include <goto-programs/goto_functions.h>
+#include <goto-programs/goto_program.h>
 
 #if 0
-#include <util/std_expr.h>
 #include <util/guard.h>
 #include <util/prefix.h>
+#include <util/std_expr.h>
 
 #include <goto-programs/remove_skip.h>
 #endif
@@ -42,36 +42,32 @@ Function: mmio
 
 \*******************************************************************/
 
-void mmio(
-  value_setst &value_sets,
-  const symbol_tablet &symbol_table,
+void mmio(value_setst &value_sets, const symbol_tablet &symbol_table,
 #ifdef LOCAL_MAY
-  const goto_functionst::goto_functiont &goto_function,
+          const goto_functionst::goto_functiont &goto_function,
 #endif
-  goto_programt &goto_program)
-{
+          goto_programt &goto_program) {
   namespacet ns(symbol_table);
 
 #ifdef LOCAL_MAY
   local_may_aliast local_may(goto_function);
 #endif
 
-  Forall_goto_program_instructions(i_it, goto_program)
-  {
-    goto_programt::instructiont &instruction=*i_it;
+  Forall_goto_program_instructions(i_it, goto_program) {
+    goto_programt::instructiont &instruction = *i_it;
 
-    if(instruction.is_assign())
-    {
+    if (instruction.is_assign()) {
       rw_set_loct rw_set(ns, value_sets, i_it
 #ifdef LOCAL_MAY
-        , local_may
+                         ,
+                         local_may
 #endif
-      ); // NOLINT(whitespace/parens)
+                         ); // NOLINT(whitespace/parens)
 
-      if(rw_set.empty())
+      if (rw_set.empty())
         continue;
 
-      #if 0
+#if 0
       goto_programt::instructiont original_instruction;
       original_instruction.swap(instruction);
       const locationt &location=original_instruction.location;
@@ -166,7 +162,7 @@ void mmio(
       i_it++;
 
       i_it--; // the for loop already counts us up
-      #endif
+#endif
     }
   }
 }
@@ -183,25 +179,20 @@ Function: mmio
 
 \*******************************************************************/
 
-void mmio(
-  value_setst &value_sets,
-  class symbol_tablet &symbol_table,
-  goto_functionst &goto_functions)
-{
+void mmio(value_setst &value_sets, class symbol_tablet &symbol_table,
+          goto_functionst &goto_functions) {
   // we first figure out which objects are read/written by the ISR
-
-
 
   // now instrument
 
-  Forall_goto_functions(f_it, goto_functions)
-    if(f_it->first!=CPROVER_PREFIX "initialize" &&
-       f_it->first!=goto_functionst::entry_point())
+  Forall_goto_functions(
+      f_it, goto_functions) if (f_it->first != CPROVER_PREFIX "initialize" &&
+                                f_it->first != goto_functionst::entry_point())
       mmio(value_sets, symbol_table,
 #ifdef LOCAL_MAY
-        f_it->second,
+           f_it->second,
 #endif
-        f_it->second.body);
+           f_it->second.body);
 
   goto_functions.update();
 }

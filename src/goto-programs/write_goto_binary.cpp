@@ -8,8 +8,8 @@ Author: CM Wintersteiger
 
 #include <fstream>
 
-#include <util/message.h>
 #include <util/irep_serialization.h>
+#include <util/message.h>
 #include <util/symbol_table.h>
 
 #include "write_goto_binary.h"
@@ -26,18 +26,14 @@ Function: goto_programt::write_goto_binary_v3
 
 \*******************************************************************/
 
-bool write_goto_binary_v3(
-  std::ostream &out,
-  const symbol_tablet &lsymbol_table,
-  const goto_functionst &functions,
-  irep_serializationt &irepconverter)
-{
+bool write_goto_binary_v3(std::ostream &out, const symbol_tablet &lsymbol_table,
+                          const goto_functionst &functions,
+                          irep_serializationt &irepconverter) {
   // first write symbol table
 
   write_gb_word(out, lsymbol_table.symbols.size());
 
-  forall_symbols(it, lsymbol_table.symbols)
-  {
+  forall_symbols(it, lsymbol_table.symbols) {
     // Since version 2, symbols are not converted to ireps,
     // instead they are saved in a custom binary format
 
@@ -55,7 +51,7 @@ bool write_goto_binary_v3(
 
     write_gb_word(out, 0); // old: sym.ordering
 
-    unsigned flags=0;
+    unsigned flags = 0;
     flags = (flags << 1) | static_cast<int>(sym.is_weak);
     flags = (flags << 1) | static_cast<int>(sym.is_type);
     flags = (flags << 1) | static_cast<int>(sym.is_property);
@@ -79,25 +75,20 @@ bool write_goto_binary_v3(
 
   // now write functions, but only those with body
 
-  unsigned cnt=0;
-  forall_goto_functions(it, functions)
-    if(it->second.body_available())
-      cnt++;
+  unsigned cnt = 0;
+  forall_goto_functions(it, functions) if (it->second.body_available()) cnt++;
 
   write_gb_word(out, cnt);
 
-  for(const auto &fct : functions.function_map)
-  {
-    if(fct.second.body_available())
-    {
+  for (const auto &fct : functions.function_map) {
+    if (fct.second.body_available()) {
       // Since version 2, goto functions are not converted to ireps,
       // instead they are saved in a custom binary format
 
-      write_gb_string(out, id2string(fct.first)); // name
+      write_gb_string(out, id2string(fct.first));              // name
       write_gb_word(out, fct.second.body.instructions.size()); // # instructions
 
-      forall_goto_program_instructions(i_it, fct.second.body)
-      {
+      forall_goto_program_instructions(i_it, fct.second.body) {
         const goto_programt::instructiont &instruction = *i_it;
 
         irepconverter.reference_convert(instruction.code, out);
@@ -110,12 +101,12 @@ bool write_goto_binary_v3(
 
         write_gb_word(out, instruction.targets.size());
 
-        for(const auto &t_it : instruction.targets)
+        for (const auto &t_it : instruction.targets)
           write_gb_word(out, t_it->target_number);
 
         write_gb_word(out, instruction.labels.size());
 
-        for(const auto &l_it : instruction.labels)
+        for (const auto &l_it : instruction.labels)
           irepconverter.write_string_ref(out, l_it);
       }
     }
@@ -139,12 +130,8 @@ Function: goto_programt::write_goto_binary
 
 \*******************************************************************/
 
-bool write_goto_binary(
-  std::ostream &out,
-  const symbol_tablet &lsymbol_table,
-  const goto_functionst &functions,
-  int version)
-{
+bool write_goto_binary(std::ostream &out, const symbol_tablet &lsymbol_table,
+                       const goto_functionst &functions, int version) {
   // header
   out << char(0x7f) << "GBF";
   write_gb_word(out, version);
@@ -152,8 +139,7 @@ bool write_goto_binary(
   irep_serializationt::ireps_containert irepc;
   irep_serializationt irepconverter(irepc);
 
-  switch(version)
-  {
+  switch (version) {
   case 1:
     throw "version 1 no longer supported";
 
@@ -161,9 +147,7 @@ bool write_goto_binary(
     throw "version 2 no longer supported";
 
   case 3:
-    return write_goto_binary_v3(
-      out, lsymbol_table, functions,
-      irepconverter);
+    return write_goto_binary_v3(out, lsymbol_table, functions, irepconverter);
 
   default:
     throw "unknown goto binary version";
@@ -184,19 +168,15 @@ Function: goto_programt::write_goto_binary
 
 \*******************************************************************/
 
-bool write_goto_binary(
-  const std::string &filename,
-  const symbol_tablet &symbol_table,
-  const goto_functionst &goto_functions,
-  message_handlert &message_handler)
-{
+bool write_goto_binary(const std::string &filename,
+                       const symbol_tablet &symbol_table,
+                       const goto_functionst &goto_functions,
+                       message_handlert &message_handler) {
   std::ofstream out(filename, std::ios::binary);
 
-  if(!out)
-  {
+  if (!out) {
     messaget message(message_handler);
-    message.error() <<
-      "Failed to open `" << filename << "'";
+    message.error() << "Failed to open `" << filename << "'";
     return true;
   }
 

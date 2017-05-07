@@ -11,8 +11,7 @@ Author: CM Wintersteiger
 
 #include "qdimacs_cnf.h"
 
-class qbf_qubet:public qdimacs_cnft
-{
+class qbf_qubet : public qdimacs_cnft {
 public:
   qbf_qubet();
   virtual ~qbf_qubet();

@@ -11,8 +11,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <iosfwd>
 
-#include <goto-programs/goto_functions.h>
 #include <goto-programs/cfg.h>
+#include <goto-programs/goto_functions.h>
 
 #include "object_id.h"
 
@@ -24,15 +24,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-class points_tot
-{
+class points_tot {
 public:
-  points_tot()
-  {
-  }
+  points_tot() {}
 
-  void operator()(goto_functionst &goto_functions)
-  {
+  void operator()(goto_functionst &goto_functions) {
     // build the CFG data structure
     cfg(goto_functions);
 
@@ -40,10 +36,9 @@ public:
     fixedpoint();
   }
 
-  const object_id_sett &operator[](const object_idt &object_id)
-  {
-    value_mapt::const_iterator it=value_map.find(object_id);
-    if(it!=value_map.end())
+  const object_id_sett &operator[](const object_idt &object_id) {
+    value_mapt::const_iterator it = value_map.find(object_id);
+    if (it != value_map.end())
       return it->second;
     return empty_set;
   }
@@ -58,15 +53,13 @@ protected:
   value_mapt value_map;
 
   void fixedpoint();
-  bool transform(const cfgt::nodet&);
+  bool transform(const cfgt::nodet &);
 
   const object_id_sett empty_set;
 };
 
-inline std::ostream &operator<<(
-  std::ostream &out,
-  const points_tot &points_to)
-{
+inline std::ostream &operator<<(std::ostream &out,
+                                const points_tot &points_to) {
   points_to.output(out);
   return out;
 }

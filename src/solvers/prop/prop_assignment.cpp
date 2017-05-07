@@ -20,6 +20,4 @@ Function: prop_assignmentt::~prop_assignmentt
 
 \*******************************************************************/
 
-prop_assignmentt::~prop_assignmentt()
-{
-}
+prop_assignmentt::~prop_assignmentt() {}

@@ -23,12 +23,10 @@ Function: main / wmain
 \*******************************************************************/
 
 #ifdef _MSC_VER
-int wmain(int argc, const wchar_t **argv_wide)
-{
-  const char **argv=narrow_argv(argc, argv_wide);
+int wmain(int argc, const wchar_t **argv_wide) {
+  const char **argv = narrow_argv(argc, argv_wide);
 #else
-int main(int argc, const char **argv)
-{
+int main(int argc, const char **argv) {
 #endif
   mmcc_parse_optionst parse_options(argc, argv);
 

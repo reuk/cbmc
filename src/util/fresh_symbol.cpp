@@ -27,36 +27,26 @@ Function: get_fresh_aux_symbol
 
 \*******************************************************************/
 
-symbolt &get_fresh_aux_symbol(
-  const typet &type,
-  const std::string &name_prefix,
-  const std::string &basename_prefix,
-  const source_locationt &source_location,
-  const irep_idt &symbol_mode,
-  symbol_tablet &symbol_table)
-{
-  static size_t temporary_counter=0;
+symbolt &get_fresh_aux_symbol(const typet &type, const std::string &name_prefix,
+                              const std::string &basename_prefix,
+                              const source_locationt &source_location,
+                              const irep_idt &symbol_mode,
+                              symbol_tablet &symbol_table) {
+  static size_t temporary_counter = 0;
   auxiliary_symbolt new_symbol;
   symbolt *symbol_ptr;
 
-  do
-  {
-    new_symbol.base_name=
-      basename_prefix+
-      "$"+
-      std::to_string(++temporary_counter);
-    if(name_prefix.empty())
-      new_symbol.name=new_symbol.base_name;
+  do {
+    new_symbol.base_name =
+        basename_prefix + "$" + std::to_string(++temporary_counter);
+    if (name_prefix.empty())
+      new_symbol.name = new_symbol.base_name;
     else
-      new_symbol.name=
-        name_prefix+
-        "::"+
-        id2string(new_symbol.base_name);
-    new_symbol.type=type;
-    new_symbol.location=source_location;
-    new_symbol.mode=symbol_mode;
-  }
-  while(symbol_table.move(new_symbol, symbol_ptr));
+      new_symbol.name = name_prefix + "::" + id2string(new_symbol.base_name);
+    new_symbol.type = type;
+    new_symbol.location = source_location;
+    new_symbol.mode = symbol_mode;
+  } while (symbol_table.move(new_symbol, symbol_ptr));
 
   return *symbol_ptr;
 }

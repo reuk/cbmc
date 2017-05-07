@@ -9,7 +9,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <cassert>
 #include <set>
 
-
 #include "cvc_prop.h"
 
 /*******************************************************************\
@@ -24,9 +23,8 @@ Function: cvc_propt::cvc_propt
 
 \*******************************************************************/
 
-explicit cvc_propt::cvc_propt(std::ostream &_out):out(_out)
-{
-  _no_variables=0;
+explicit cvc_propt::cvc_propt(std::ostream &_out) : out(_out) {
+  _no_variables = 0;
 }
 
 /*******************************************************************\
@@ -41,9 +39,7 @@ Function: cvc_propt::~cvc_propt
 
 \*******************************************************************/
 
-cvc_propt::~cvc_propt()
-{
-}
+cvc_propt::~cvc_propt() {}
 
 /*******************************************************************\
 
@@ -57,12 +53,11 @@ Function: cvc_propt::land
 
 \*******************************************************************/
 
-void cvc_propt::land(literalt a, literalt b, literalt o)
-{
+void cvc_propt::land(literalt a, literalt b, literalt o) {
   out << "%% land" << std::endl;
-  out << "ASSERT (" << cvc_literal(a) << " AND "
-      << cvc_literal(b) << ") <=> " << cvc_literal(o)
-      << ";" << std::endl << std::endl;
+  out << "ASSERT (" << cvc_literal(a) << " AND " << cvc_literal(b) << ") <=> "
+      << cvc_literal(o) << ";" << std::endl
+      << std::endl;
 }
 
 /*******************************************************************\
@@ -77,12 +72,11 @@ Function: cvc_propt::lor
 
 \*******************************************************************/
 
-void cvc_propt::lor(literalt a, literalt b, literalt o)
-{
+void cvc_propt::lor(literalt a, literalt b, literalt o) {
   out << "%% lor" << std::endl;
-  out << "ASSERT (" << cvc_literal(a) << " OR "
-      << cvc_literal(b) << ") <=> " << cvc_literal(o)
-      << ";" << std::endl << std::endl;
+  out << "ASSERT (" << cvc_literal(a) << " OR " << cvc_literal(b) << ") <=> "
+      << cvc_literal(o) << ";" << std::endl
+      << std::endl;
 }
 
 /*******************************************************************\
@@ -97,12 +91,11 @@ Function: cvc_propt::lxor
 
 \*******************************************************************/
 
-void cvc_propt::lxor(literalt a, literalt b, literalt o)
-{
+void cvc_propt::lxor(literalt a, literalt b, literalt o) {
   out << "%% lxor" << std::endl;
-  out << "ASSERT (" << cvc_literal(a) << " XOR "
-      << cvc_literal(b) << ") <=> " << cvc_literal(o)
-      << ";" << std::endl << std::endl;
+  out << "ASSERT (" << cvc_literal(a) << " XOR " << cvc_literal(b) << ") <=> "
+      << cvc_literal(o) << ";" << std::endl
+      << std::endl;
 }
 
 /*******************************************************************\
@@ -117,12 +110,11 @@ Function: cvc_propt::lnand
 
 \*******************************************************************/
 
-void cvc_propt::lnand(literalt a, literalt b, literalt o)
-{
+void cvc_propt::lnand(literalt a, literalt b, literalt o) {
   out << "%% lnand" << std::endl;
-  out << "ASSERT (NOT (" << cvc_literal(a) << " AND "
-      << cvc_literal(b) << ")) <=> " << cvc_literal(o)
-      << ";" << std::endl << std::endl;
+  out << "ASSERT (NOT (" << cvc_literal(a) << " AND " << cvc_literal(b)
+      << ")) <=> " << cvc_literal(o) << ";" << std::endl
+      << std::endl;
 }
 
 /*******************************************************************\
@@ -137,12 +129,11 @@ Function: cvc_propt::lnor
 
 \*******************************************************************/
 
-void cvc_propt::lnor(literalt a, literalt b, literalt o)
-{
+void cvc_propt::lnor(literalt a, literalt b, literalt o) {
   out << "%% lnor" << std::endl;
-  out << "ASSERT (NOT (" << cvc_literal(a) << " OR "
-      << cvc_literal(b) << ")) <=> " << cvc_literal(o)
-      << ";" << std::endl << std::endl;
+  out << "ASSERT (NOT (" << cvc_literal(a) << " OR " << cvc_literal(b)
+      << ")) <=> " << cvc_literal(o) << ";" << std::endl
+      << std::endl;
 }
 
 /*******************************************************************\
@@ -157,12 +148,11 @@ Function: cvc_propt::lequal
 
 \*******************************************************************/
 
-void cvc_propt::lequal(literalt a, literalt b, literalt o)
-{
+void cvc_propt::lequal(literalt a, literalt b, literalt o) {
   out << "%% lequal" << std::endl;
-  out << "ASSERT (" << cvc_literal(a) << " <=> "
-      << cvc_literal(b) << ") <=> " << cvc_literal(o)
-      << ";" << std::endl << std::endl;
+  out << "ASSERT (" << cvc_literal(a) << " <=> " << cvc_literal(b) << ") <=> "
+      << cvc_literal(o) << ";" << std::endl
+      << std::endl;
 }
 
 /*******************************************************************\
@@ -177,12 +167,11 @@ Function: cvc_propt::limplies
 
 \*******************************************************************/
 
-void cvc_propt::limplies(literalt a, literalt b, literalt o)
-{
+void cvc_propt::limplies(literalt a, literalt b, literalt o) {
   out << "%% limplies" << std::endl;
-  out << "ASSERT (" << cvc_literal(a) << " => "
-      << cvc_literal(b) << ") <=> " << cvc_literal(o)
-      << ";" << std::endl << std::endl;
+  out << "ASSERT (" << cvc_literal(a) << " => " << cvc_literal(b) << ") <=> "
+      << cvc_literal(o) << ";" << std::endl
+      << std::endl;
 }
 
 /*******************************************************************\
@@ -197,15 +186,13 @@ Function: cvc_propt::land
 
 \*******************************************************************/
 
-literalt cvc_propt::land(const bvt &bv)
-{
+literalt cvc_propt::land(const bvt &bv) {
   out << "%% land" << std::endl;
 
-  literalt literal=def_cvc_literal();
+  literalt literal = def_cvc_literal();
 
-  forall_literals(it, bv)
-  {
-    if(it!=bv.begin())
+  forall_literals(it, bv) {
+    if (it != bv.begin())
       out << " AND ";
     out << cvc_literal(*it);
   }
@@ -227,15 +214,13 @@ Function: cvc_propt::lor
 
 \*******************************************************************/
 
-literalt cvc_propt::lor(const bvt &bv)
-{
+literalt cvc_propt::lor(const bvt &bv) {
   out << "%% lor" << std::endl;
 
-  literalt literal=def_cvc_literal();
+  literalt literal = def_cvc_literal();
 
-  forall_literals(it, bv)
-  {
-    if(it!=bv.begin())
+  forall_literals(it, bv) {
+    if (it != bv.begin())
       out << " OR ";
     out << cvc_literal(*it);
   }
@@ -257,19 +242,17 @@ Function: cvc_propt::lxor
 
 \*******************************************************************/
 
-literalt cvc_propt::lxor(const bvt &bv)
-{
-  if(bv.empty())
+literalt cvc_propt::lxor(const bvt &bv) {
+  if (bv.empty())
     return const_literal(false);
-  if(bv.size()==1)
+  if (bv.size() == 1)
     return bv[0];
-  if(bv.size()==2)
+  if (bv.size() == 2)
     return lxor(bv[0], bv[1]);
 
-  literalt literal=const_literal(false);
+  literalt literal = const_literal(false);
 
-  forall_literals(it, bv)
-    literal=lxor(*it, literal);
+  forall_literals(it, bv) literal = lxor(*it, literal);
 
   return literal;
 }
@@ -286,25 +269,24 @@ Function: cvc_propt::land
 
 \*******************************************************************/
 
-literalt cvc_propt::land(literalt a, literalt b)
-{
-  if(a==const_literal(true))
+literalt cvc_propt::land(literalt a, literalt b) {
+  if (a == const_literal(true))
     return b;
-  if(b==const_literal(true))
+  if (b == const_literal(true))
     return a;
-  if(a==const_literal(false))
+  if (a == const_literal(false))
     return const_literal(false);
-  if(b==const_literal(false))
+  if (b == const_literal(false))
     return const_literal(false);
-  if(a==b)
+  if (a == b)
     return a;
 
   out << "%% land" << std::endl;
 
-  literalt o=def_cvc_literal();
+  literalt o = def_cvc_literal();
 
-  out << cvc_literal(a) << " AND " << cvc_literal(b) << ";"
-      << std::endl << std::endl;
+  out << cvc_literal(a) << " AND " << cvc_literal(b) << ";" << std::endl
+      << std::endl;
 
   return o;
 }
@@ -321,25 +303,24 @@ Function: cvc_propt::lor
 
 \*******************************************************************/
 
-literalt cvc_propt::lor(literalt a, literalt b)
-{
-  if(a==const_literal(false))
+literalt cvc_propt::lor(literalt a, literalt b) {
+  if (a == const_literal(false))
     return b;
-  if(b==const_literal(false))
+  if (b == const_literal(false))
     return a;
-  if(a==const_literal(true))
+  if (a == const_literal(true))
     return const_literal(true);
-  if(b==const_literal(true))
+  if (b == const_literal(true))
     return const_literal(true);
-  if(a==b)
+  if (a == b)
     return a;
 
   out << "%% lor" << std::endl;
 
-  literalt o=def_cvc_literal();
+  literalt o = def_cvc_literal();
 
-  out << cvc_literal(a) << " OR " << cvc_literal(b) << ";"
-      << std::endl << std::endl;
+  out << cvc_literal(a) << " OR " << cvc_literal(b) << ";" << std::endl
+      << std::endl;
 
   return o;
 }
@@ -356,23 +337,22 @@ Function: cvc_propt::lxor
 
 \*******************************************************************/
 
-literalt cvc_propt::lxor(literalt a, literalt b)
-{
-  if(a==const_literal(false))
+literalt cvc_propt::lxor(literalt a, literalt b) {
+  if (a == const_literal(false))
     return b;
-  if(b==const_literal(false))
+  if (b == const_literal(false))
     return a;
-  if(a==const_literal(true))
+  if (a == const_literal(true))
     return !b;
-  if(b==const_literal(true))
+  if (b == const_literal(true))
     return !a;
 
   out << "%% lxor" << std::endl;
 
-  literalt o=def_cvc_literal();
+  literalt o = def_cvc_literal();
 
-  out << cvc_literal(a) << " XOR " << cvc_literal(b) << ";"
-      << std::endl << std::endl;
+  out << cvc_literal(a) << " XOR " << cvc_literal(b) << ";" << std::endl
+      << std::endl;
 
   return o;
 }
@@ -389,10 +369,7 @@ Function: cvc_propt::lnand
 
 \*******************************************************************/
 
-literalt cvc_propt::lnand(literalt a, literalt b)
-{
-  return !land(a, b);
-}
+literalt cvc_propt::lnand(literalt a, literalt b) { return !land(a, b); }
 
 /*******************************************************************\
 
@@ -406,10 +383,7 @@ Function: cvc_propt::lnor
 
 \*******************************************************************/
 
-literalt cvc_propt::lnor(literalt a, literalt b)
-{
-  return !lor(a, b);
-}
+literalt cvc_propt::lnor(literalt a, literalt b) { return !lor(a, b); }
 
 /*******************************************************************\
 
@@ -423,10 +397,7 @@ Function: cvc_propt::lequal
 
 \*******************************************************************/
 
-literalt cvc_propt::lequal(literalt a, literalt b)
-{
-  return !lxor(a, b);
-}
+literalt cvc_propt::lequal(literalt a, literalt b) { return !lxor(a, b); }
 
 /*******************************************************************\
 
@@ -440,10 +411,7 @@ Function: cvc_propt::limplies
 
 \*******************************************************************/
 
-literalt cvc_propt::limplies(literalt a, literalt b)
-{
-  return lor(!a, b);
-}
+literalt cvc_propt::limplies(literalt a, literalt b) { return lor(!a, b); }
 
 /*******************************************************************\
 
@@ -457,23 +425,21 @@ Function: cvc_propt::lselect
 
 \*******************************************************************/
 
-literalt cvc_propt::lselect(literalt a, literalt b, literalt c)
-{
-  if(a==const_literal(true))
+literalt cvc_propt::lselect(literalt a, literalt b, literalt c) {
+  if (a == const_literal(true))
     return b;
-  if(a==const_literal(false))
+  if (a == const_literal(false))
     return c;
-  if(b==c)
+  if (b == c)
     return b;
 
   out << "%% lselect" << std::endl;
 
-  literalt o=def_cvc_literal();
+  literalt o = def_cvc_literal();
 
-  out << "IF " << cvc_literal(a) << " THEN "
-      << cvc_literal(b) << " ELSE "
-      << cvc_literal(c) << " ENDIF;"
-      << std::endl << std::endl;
+  out << "IF " << cvc_literal(a) << " THEN " << cvc_literal(b) << " ELSE "
+      << cvc_literal(c) << " ENDIF;" << std::endl
+      << std::endl;
 
   return o;
 }
@@ -490,8 +456,7 @@ Function: cvc_propt::new_variable
 
 \*******************************************************************/
 
-literalt cvc_propt::new_variable()
-{
+literalt cvc_propt::new_variable() {
   out << "l" << _no_variables << ": BOOLEAN;" << std::endl;
   literalt l;
   l.set(_no_variables, false);
@@ -511,8 +476,7 @@ Function: cvc_propt::def_cvc_literal
 
 \*******************************************************************/
 
-literalt cvc_propt::def_cvc_literal()
-{
+literalt cvc_propt::def_cvc_literal() {
   out << "l" << _no_variables << ": BOOLEAN = ";
   literalt l;
   l.set(_no_variables, false);
@@ -532,9 +496,8 @@ Function: cvc_propt::lcnf
 
 \*******************************************************************/
 
-void cvc_propt::lcnf(const bvt &bv)
-{
-  if(bv.empty())
+void cvc_propt::lcnf(const bvt &bv) {
+  if (bv.empty())
     return;
   bvt new_bv;
 
@@ -542,15 +505,14 @@ void cvc_propt::lcnf(const bvt &bv)
 
   new_bv.reserve(bv.size());
 
-  for(bvt::const_iterator it=bv.begin(); it!=bv.end(); it++)
-  {
-    if(s.insert(*it).second)
+  for (bvt::const_iterator it = bv.begin(); it != bv.end(); it++) {
+    if (s.insert(*it).second)
       new_bv.push_back(*it);
 
-    if(s.find(!*it)!=s.end())
+    if (s.find(!*it) != s.end())
       return; // clause satisfied
 
-    assert(it->var_no()<_no_variables);
+    assert(it->var_no() < _no_variables);
   }
 
   assert(!new_bv.empty());
@@ -558,9 +520,8 @@ void cvc_propt::lcnf(const bvt &bv)
   out << "%% lcnf" << std::endl;
   out << "ASSERT ";
 
-  for(bvt::const_iterator it=new_bv.begin(); it!=new_bv.end(); it++)
-  {
-    if(it!=new_bv.begin())
+  for (bvt::const_iterator it = new_bv.begin(); it != new_bv.end(); it++) {
+    if (it != new_bv.begin())
       out << " OR ";
     out << cvc_literal(*it);
   }
@@ -580,17 +541,16 @@ Function: cvc_propt::cvc_literal
 
 \*******************************************************************/
 
-std::string cvc_propt::cvc_literal(literalt l)
-{
-  if(l==const_literal(false))
+std::string cvc_propt::cvc_literal(literalt l) {
+  if (l == const_literal(false))
     return "FALSE";
-  else if(l==const_literal(true))
+  else if (l == const_literal(true))
     return "TRUE";
 
-  if(l.sign())
-    return "(NOT l"+std::to_string(l.var_no())+")";
+  if (l.sign())
+    return "(NOT l" + std::to_string(l.var_no()) + ")";
 
-  return "l"+std::to_string(l.var_no());
+  return "l" + std::to_string(l.var_no());
 }
 
 /*******************************************************************\
@@ -605,8 +565,7 @@ Function: cvc_propt::prop_solve
 
 \*******************************************************************/
 
-propt::resultt cvc_propt::prop_solve()
-{
+propt::resultt cvc_propt::prop_solve() {
   out << "QUERY FALSE;" << std::endl;
   return P_ERROR;
 }

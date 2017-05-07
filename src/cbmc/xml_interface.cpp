@@ -26,10 +26,8 @@ Function: xml_interfacet::get_xml_options
 
 \*******************************************************************/
 
-void xml_interfacet::get_xml_options(cmdlinet &cmdline)
-{
-  if(cmdline.isset("xml-interface"))
-  {
+void xml_interfacet::get_xml_options(cmdlinet &cmdline) {
+  if (cmdline.isset("xml-interface")) {
     null_message_handlert message_handler;
     xmlt xml;
 
@@ -53,30 +51,22 @@ Function: xml_interfacet::get_xml_options
 
 \*******************************************************************/
 
-void xml_interfacet::get_xml_options(
-  const xmlt &xml,
-  cmdlinet &cmdline)
-{
-  for(const auto &e : xml.elements)
-  {
+void xml_interfacet::get_xml_options(const xmlt &xml, cmdlinet &cmdline) {
+  for (const auto &e : xml.elements) {
     // recursive call
     get_xml_options(e, cmdline);
   }
 
-  if(xml.name=="valueOption")
-  {
-    std::string name=xml.get_attribute("name");
-    std::string value=xml.get_attribute("actual");
+  if (xml.name == "valueOption") {
+    std::string name = xml.get_attribute("name");
+    std::string value = xml.get_attribute("actual");
 
-    if(name=="")
+    if (name == "")
       cmdline.args.push_back(value);
     else
       cmdline.set(name, value);
-  }
-  else if(xml.name=="flagOption")
-  {
-    if(xml.get_attribute("actual")=="on")
-    {
+  } else if (xml.name == "flagOption") {
+    if (xml.get_attribute("actual") == "on") {
       cmdline.set(xml.get_attribute("name"));
     }
   }

@@ -13,8 +13,8 @@ Author: Matt Lewis
 
 #include <util/symbol_table.h>
 
-#include <goto-programs/goto_program.h>
 #include <goto-programs/goto_functions.h>
+#include <goto-programs/goto_program.h>
 
 #include <goto-symex/goto_symex.h>
 #include <goto-symex/symex_target_equation.h>
@@ -26,26 +26,17 @@ Author: Matt Lewis
 
 #include "path.h"
 
-class scratch_programt:public goto_programt
-{
+class scratch_programt : public goto_programt {
 public:
-  explicit scratch_programt(symbol_tablet &_symbol_table):
-    constant_propagation(true),
-    symbol_table(_symbol_table),
-    ns(symbol_table),
-    equation(ns),
-    symex(ns, symbol_table, equation),
-    satcheck(new satcheckt),
-    satchecker(ns, *satcheck),
-    z3(ns, "accelerate", "", "", smt2_dect::Z3),
-    checker(&z3) // checker(&satchecker)
-  {
-  }
+  explicit scratch_programt(symbol_tablet &_symbol_table)
+      : constant_propagation(true), symbol_table(_symbol_table),
+        ns(symbol_table), equation(ns), symex(ns, symbol_table, equation),
+        satcheck(new satcheckt), satchecker(ns, *satcheck),
+        z3(ns, "accelerate", "", "", smt2_dect::Z3),
+        checker(&z3) // checker(&satchecker)
+  {}
 
-  ~scratch_programt()
-  {
-    delete satcheck;
-  }
+  ~scratch_programt() { delete satcheck; }
 
   void append(goto_programt::instructionst &instructions);
   void append(goto_programt &program);
@@ -57,10 +48,7 @@ public:
 
   bool check_sat(bool do_slice);
 
-  bool check_sat()
-  {
-    return check_sat(true);
-  }
+  bool check_sat() { return check_sat(true); }
 
   exprt eval(const exprt &e);
 

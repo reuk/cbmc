@@ -18,9 +18,7 @@ class namespacet;
 
 typedef std::unordered_set<irep_idt, irep_id_hash> find_macros_sett;
 
-void find_macros(
-  const exprt &src,
-  const namespacet &ns,
-  find_macros_sett &dest);
+void find_macros(const exprt &src, const namespacet &ns,
+                 find_macros_sett &dest);
 
 #endif // CPROVER_UTIL_FIND_MACROS_H

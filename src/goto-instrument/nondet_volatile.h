@@ -11,12 +11,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <goto-programs/goto_functions.h>
 
-bool is_volatile(
-  const symbol_tablet &symbol_table,
-  const typet &type);
+bool is_volatile(const symbol_tablet &symbol_table, const typet &type);
 
-void nondet_volatile(
-  symbol_tablet &symbol_table,
-  goto_functionst &goto_functions);
+void nondet_volatile(symbol_tablet &symbol_table,
+                     goto_functionst &goto_functions);
 
 #endif // CPROVER_GOTO_INSTRUMENT_NONDET_VOLATILE_H

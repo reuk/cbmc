@@ -2,7 +2,7 @@
 
 Module: String support via creating string constraints and progressively
         instantiating the universal constraints as needed.
-	The procedure is described in the PASS paper at HVC'13:
+        The procedure is described in the PASS paper at HVC'13:
         "PASS: String Solving with Parameterized Array and Interval Automaton"
         by Guodong Li and Indradeep Ghosh
 
@@ -13,9 +13,9 @@ Author: Alberto Griggio, alberto.griggio@gmail.com
 #ifndef CPROVER_SOLVERS_REFINEMENT_STRING_REFINEMENT_H
 #define CPROVER_SOLVERS_REFINEMENT_STRING_REFINEMENT_H
 
-#include <util/string_expr.h>
 #include <solvers/refinement/string_constraint.h>
 #include <solvers/refinement/string_constraint_generator.h>
+#include <util/string_expr.h>
 
 // Defines a limit on the string witnesses we will output.
 // Longer strings are still concidered possible by the solver but
@@ -24,21 +24,19 @@ Author: Alberto Griggio, alberto.griggio@gmail.com
 
 #define MAX_NB_REFINEMENT 100
 
-class string_refinementt: public bv_refinementt
-{
+class string_refinementt : public bv_refinementt {
 public:
   // refinement_bound is a bound on the number of refinement allowed
-  string_refinementt(
-    const namespacet &_ns, propt &_prop, unsigned refinement_bound);
+  string_refinementt(const namespacet &_ns, propt &_prop,
+                     unsigned refinement_bound);
 
   void set_mode();
 
   // Should we use counter examples at each iteration?
   bool use_counter_example;
 
-  virtual std::string decision_procedure_text() const
-  {
-    return "string refinement loop with "+prop.solver_text();
+  virtual std::string decision_procedure_text() const {
+    return "string refinement loop with " + prop.solver_text();
   }
 
   static exprt is_positive(const exprt &x);
@@ -47,8 +45,8 @@ protected:
   typedef std::set<exprt> expr_sett;
 
   virtual bvt convert_symbol(const exprt &expr);
-  virtual bvt convert_function_application(
-    const function_application_exprt &expr);
+  virtual bvt
+  convert_function_application(const function_application_exprt &expr);
 
   decision_proceduret::resultt dec_solve();
 
@@ -79,7 +77,7 @@ private:
 
   void display_index_set();
 
-  void add_lemma(const exprt &lemma, bool add_to_index_set=true);
+  void add_lemma(const exprt &lemma, bool add_to_index_set = true);
 
   bool boolbv_set_equality_to_true(const equal_exprt &expr);
 
@@ -94,18 +92,17 @@ private:
   void initial_index_set(const string_constraintt &axiom);
   void initial_index_set(const std::vector<string_constraintt> &string_axioms);
 
-  exprt instantiate(
-    const string_constraintt &axiom, const exprt &str, const exprt &val);
+  exprt instantiate(const string_constraintt &axiom, const exprt &str,
+                    const exprt &val);
 
-  void instantiate_not_contains(
-    const string_not_contains_constraintt &axiom,
-    std::list<exprt> &new_lemmas);
+  void instantiate_not_contains(const string_not_contains_constraintt &axiom,
+                                std::list<exprt> &new_lemmas);
 
-  exprt compute_inverse_function(
-    const exprt &qvar, const exprt &val, const exprt &f);
+  exprt compute_inverse_function(const exprt &qvar, const exprt &val,
+                                 const exprt &f);
 
   std::map<exprt, int> map_representation_of_sum(const exprt &f) const;
-  exprt sum_over_map(std::map<exprt, int> &m, bool negated=false) const;
+  exprt sum_over_map(std::map<exprt, int> &m, bool negated = false) const;
 
   exprt simplify_sum(const exprt &f) const;
 

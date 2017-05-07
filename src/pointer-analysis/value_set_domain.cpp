@@ -22,13 +22,9 @@ Function: value_set_domaint::transform
 
 \*******************************************************************/
 
-void value_set_domaint::transform(
-  const namespacet &ns,
-  locationt from_l,
-  locationt to_l)
-{
-  switch(from_l->type)
-  {
+void value_set_domaint::transform(const namespacet &ns, locationt from_l,
+                                  locationt to_l) {
+  switch (from_l->type) {
   case GOTO:
     // ignore for now
     break;
@@ -48,18 +44,14 @@ void value_set_domaint::transform(
     value_set.guard(from_l->guard, ns);
     break;
 
-  case FUNCTION_CALL:
-    {
-      const code_function_callt &code=
-        to_code_function_call(from_l->code);
+  case FUNCTION_CALL: {
+    const code_function_callt &code = to_code_function_call(from_l->code);
 
-      value_set.do_function_call(to_l->function, code.arguments(), ns);
-    }
-    break;
+    value_set.do_function_call(to_l->function, code.arguments(), ns);
+  } break;
 
-  default:
-    {
-      // do nothing
-    }
+  default: {
+    // do nothing
+  }
   }
 }

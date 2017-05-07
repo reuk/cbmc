@@ -11,26 +11,20 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 #include <util/language.h>
 
-class languagest
-{
+class languagest {
 public:
   // conversion of expressions
 
-  bool from_expr(const exprt &expr, std::string &code)
-  {
+  bool from_expr(const exprt &expr, std::string &code) {
     return language->from_expr(expr, code, ns);
   }
 
-  bool from_type(const typet &type, std::string &code)
-  {
+  bool from_type(const typet &type, std::string &code) {
     return language->from_type(type, code, ns);
   }
 
-  bool to_expr(
-    const std::string &code,
-    const std::string &module,
-    exprt &expr)
-  {
+  bool to_expr(const std::string &code, const std::string &module,
+               exprt &expr) {
     return language->to_expr(code, module, expr, ns);
   }
 

@@ -11,8 +11,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "ansi_c_declaration.h"
 
-class ansi_c_parse_treet
-{
+class ansi_c_parse_treet {
 public:
   // the declarations
   typedef std::list<ansi_c_declarationt> itemst;

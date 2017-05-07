@@ -23,11 +23,10 @@ Function: cnf_clause_listt::lcnf
 
 \*******************************************************************/
 
-void cnf_clause_listt::lcnf(const bvt &bv)
-{
+void cnf_clause_listt::lcnf(const bvt &bv) {
   bvt new_bv;
 
-  if(process_clause(bv, new_bv))
+  if (process_clause(bv, new_bv))
     return;
 
   clauses.push_back(new_bv);
@@ -45,9 +44,8 @@ Function: cnf_clause_list_assignmentt::print_assignment
 
 \*******************************************************************/
 
-void cnf_clause_list_assignmentt::print_assignment(std::ostream &out) const
-{
-  for(unsigned v=1; v<assignment.size(); v++)
+void cnf_clause_list_assignmentt::print_assignment(std::ostream &out) const {
+  for (unsigned v = 1; v < assignment.size(); v++)
     out << "v" << v << "=" << assignment[v] << "\n";
 }
 
@@ -63,15 +61,13 @@ Function: cnf_clause_list_assignmentt::copy_assignment_from
 
 \*******************************************************************/
 
-void cnf_clause_list_assignmentt::copy_assignment_from(const propt &prop)
-{
+void cnf_clause_list_assignmentt::copy_assignment_from(const propt &prop) {
   assignment.resize(no_variables());
 
   // we don't use index 0, start with 1
-  for(unsigned v=1; v<assignment.size(); v++)
-  {
+  for (unsigned v = 1; v < assignment.size(); v++) {
     literalt l;
     l.set(v, false);
-    assignment[v]=prop.l_get(l);
+    assignment[v] = prop.l_get(l);
   }
 }

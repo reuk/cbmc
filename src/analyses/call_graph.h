@@ -14,8 +14,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <goto-programs/goto_functions.h>
 
-class call_grapht
-{
+class call_grapht {
 public:
   call_grapht();
   explicit call_grapht(const goto_functionst &);
@@ -30,8 +29,7 @@ public:
   void add(const irep_idt &caller, const irep_idt &callee);
 
 protected:
-  void add(const irep_idt &function,
-           const goto_programt &body);
+  void add(const irep_idt &function, const goto_programt &body);
 };
 
 #endif // CPROVER_ANALYSES_CALL_GRAPH_H

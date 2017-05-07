@@ -9,10 +9,10 @@ Author: Daniel Kroening, kroening@kroening.com
 #ifndef CPROVER_UTIL_IREP_H
 #define CPROVER_UTIL_IREP_H
 
-#include <vector>
-#include <string>
 #include <cassert>
 #include <iosfwd>
+#include <string>
+#include <vector>
 
 #include "irep_ids.h"
 
@@ -40,39 +40,36 @@ typedef std::string irep_namet;
 typedef string_hash irep_id_hash;
 #endif
 
-inline const std::string &id2string(const irep_idt &d)
-{
-  #ifdef USE_DSTRING
+inline const std::string &id2string(const irep_idt &d) {
+#ifdef USE_DSTRING
   return as_string(d);
-  #else
+#else
   return d;
-  #endif
+#endif
 }
 
-inline const std::string &name2string(const irep_namet &n)
-{
-  #ifdef USE_DSTRING
+inline const std::string &name2string(const irep_namet &n) {
+#ifdef USE_DSTRING
   return as_string(n);
-  #else
+#else
   return n;
-  #endif
+#endif
 }
 
-#define forall_irep(it, irep) \
-  for(irept::subt::const_iterator it=(irep).begin(); \
-      it!=(irep).end(); ++it)
+#define forall_irep(it, irep)                                                  \
+  for (irept::subt::const_iterator it = (irep).begin(); it != (irep).end();    \
+       ++it)
 
-#define Forall_irep(it, irep) \
-  for(irept::subt::iterator it=(irep).begin(); \
-      it!=(irep).end(); ++it)
+#define Forall_irep(it, irep)                                                  \
+  for (irept::subt::iterator it = (irep).begin(); it != (irep).end(); ++it)
 
-#define forall_named_irep(it, irep) \
-  for(irept::named_subt::const_iterator it=(irep).begin(); \
-      it!=(irep).end(); ++it)
+#define forall_named_irep(it, irep)                                            \
+  for (irept::named_subt::const_iterator it = (irep).begin();                  \
+       it != (irep).end(); ++it)
 
-#define Forall_named_irep(it, irep) \
-  for(irept::named_subt::iterator it=(irep).begin(); \
-      it!=(irep).end(); ++it)
+#define Forall_named_irep(it, irep)                                            \
+  for (irept::named_subt::iterator it = (irep).begin(); it != (irep).end();    \
+       ++it)
 
 #ifdef IREP_DEBUG
 #include <iostream>
@@ -83,120 +80,100 @@ const irept &get_nil_irep();
 
 /*! \brief Base class for tree-like data structures with sharing
 */
-class irept
-{
+class irept {
 public:
   // These are not stable.
   typedef std::vector<irept> subt;
 
-  // named_subt has to provide stable references; with C++11 we could
-  // use std::forward_list or std::vector< unique_ptr<T> > to save
-  // memory and increase efficiency.
+// named_subt has to provide stable references; with C++11 we could
+// use std::forward_list or std::vector< unique_ptr<T> > to save
+// memory and increase efficiency.
 
-  #ifdef SUB_IS_LIST
-  typedef std::list<std::pair<irep_namet, irept> > named_subt;
-  #else
+#ifdef SUB_IS_LIST
+  typedef std::list<std::pair<irep_namet, irept>> named_subt;
+#else
   typedef std::map<irep_namet, irept> named_subt;
-  #endif
+#endif
 
-  bool is_nil() const { return id()==ID_nil; }
-  bool is_not_nil() const { return id()!=ID_nil; }
+  bool is_nil() const { return id() == ID_nil; }
+  bool is_not_nil() const { return id() != ID_nil; }
 
-  explicit irept(const irep_idt &_id):data(&empty_d)
-  {
-    id(_id);
-  }
+  explicit irept(const irep_idt &_id) : data(&empty_d) { id(_id); }
 
-  #ifdef SHARING
+#ifdef SHARING
   // constructor for blank irep
-  irept():data(&empty_d)
-  {
-  }
+  irept() : data(&empty_d) {}
 
   // copy constructor
-  irept(const irept &irep):data(irep.data)
-  {
-    if(data!=&empty_d)
-    {
-      assert(data->ref_count!=0);
+  irept(const irept &irep) : data(irep.data) {
+    if (data != &empty_d) {
+      assert(data->ref_count != 0);
       data->ref_count++;
-      #ifdef IREP_DEBUG
+#ifdef IREP_DEBUG
       std::cout << "COPY " << data << " " << data->ref_count << std::endl;
-      #endif
+#endif
     }
   }
 
-  #ifdef USE_MOVE
+#ifdef USE_MOVE
   // Copy from rvalue reference.
   // Note that this does avoid a branch compared to the
   // standard copy constructor above.
-  irept(irept &&irep):data(irep.data)
-  {
-    #ifdef IREP_DEBUG
+  irept(irept &&irep) : data(irep.data) {
+#ifdef IREP_DEBUG
     std::cout << "COPY MOVE\n";
-    #endif
-    irep.data=&empty_d;
+#endif
+    irep.data = &empty_d;
   }
-  #endif
+#endif
 
-  irept &operator=(const irept &irep)
-  {
-    #ifdef IREP_DEBUG
+  irept &operator=(const irept &irep) {
+#ifdef IREP_DEBUG
     std::cout << "ASSIGN\n";
-    #endif
+#endif
 
     // Ordering is very important here!
     // Consider self-assignment, which may destroy 'irep'
-    dt *irep_data=irep.data;
-    if(irep_data!=&empty_d)
+    dt *irep_data = irep.data;
+    if (irep_data != &empty_d)
       irep_data->ref_count++;
 
     remove_ref(data); // this may kill 'irep'
-    data=irep_data;
+    data = irep_data;
 
     return *this;
   }
 
-  #ifdef USE_MOVE
+#ifdef USE_MOVE
   // Note that the move assignment operator does avoid
   // three branches compared to standard operator above.
-  irept &operator=(irept &&irep)
-  {
-    #ifdef IREP_DEBUG
+  irept &operator=(irept &&irep) {
+#ifdef IREP_DEBUG
     std::cout << "ASSIGN MOVE\n";
-    #endif
+#endif
     // we simply swap two pointers
     std::swap(data, irep.data);
     return *this;
   }
-  #endif
+#endif
 
-  ~irept()
-  {
-    remove_ref(data);
-  }
+  ~irept() { remove_ref(data); }
 
-  #else
-  irept()
-  {
-  }
-  #endif
+#else
+  irept() {}
+#endif
 
-  const irep_idt &id() const
-  { return read().data; }
+  const irep_idt &id() const { return read().data; }
 
-  const std::string &id_string() const
-  { return id2string(read().data); }
+  const std::string &id_string() const { return id2string(read().data); }
 
-  void id(const irep_idt &_data)
-  { write().data=_data; }
+  void id(const irep_idt &_data) { write().data = _data; }
 
   const irept &find(const irep_namet &name) const;
   irept &add(const irep_namet &name);
   irept &add(const irep_namet &name, const irept &irep);
 
-  const std::string &get_string(const irep_namet &name) const
-  {
+  const std::string &get_string(const irep_namet &name) const {
     return id2string(get(name));
   }
 
@@ -207,10 +184,10 @@ public:
   std::size_t get_size_t(const irep_namet &name) const;
   long long get_long_long(const irep_namet &name) const;
 
-  void set(const irep_namet &name, const irep_idt &value)
-  { add(name).id(value); }
-  void set(const irep_namet &name, const irept &irep)
-  { add(name, irep); }
+  void set(const irep_namet &name, const irep_idt &value) {
+    add(name).id(value);
+  }
+  void set(const irep_namet &name, const irept &irep) { add(name, irep); }
   void set(const irep_namet &name, const long long value);
 
   void remove(const irep_namet &name);
@@ -219,24 +196,18 @@ public:
 
   bool operator==(const irept &other) const;
 
-  bool operator!=(const irept &other) const
-  {
-    return !(*this==other);
-  }
+  bool operator!=(const irept &other) const { return !(*this == other); }
 
-  void swap(irept &irep)
-  {
-    std::swap(irep.data, data);
-  }
+  void swap(irept &irep) { std::swap(irep.data, data); }
 
   bool operator<(const irept &other) const;
   bool ordering(const irept &other) const;
 
   int compare(const irept &i) const;
 
-  void clear() { *this=irept(); }
+  void clear() { *this = irept(); }
 
-  void make_nil() { *this=get_nil_irep(); }
+  void make_nil() { *this = get_nil_irep(); }
 
   subt &get_sub() { return write().sub; } // DANGEROUS
   const subt &get_sub() const { return read().sub; }
@@ -250,21 +221,21 @@ public:
 
   bool full_eq(const irept &other) const;
 
-  std::string pretty(unsigned indent=0, unsigned max_indent=0) const;
+  std::string pretty(unsigned indent = 0, unsigned max_indent = 0) const;
 
 protected:
-  static bool is_comment(const irep_namet &name)
-  { return !name.empty() && name[0]=='#'; }
+  static bool is_comment(const irep_namet &name) {
+    return !name.empty() && name[0] == '#';
+  }
 
 public:
-  class dt
-  {
+  class dt {
   private:
     friend class irept;
 
-    #ifdef SHARING
+#ifdef SHARING
     unsigned ref_count;
-    #endif
+#endif
 
     irep_idt data;
 
@@ -272,51 +243,51 @@ public:
     named_subt comments;
     subt sub;
 
-    #ifdef HASH_CODE
+#ifdef HASH_CODE
     mutable std::size_t hash_code;
-    #endif
+#endif
 
-    void clear()
-    {
+    void clear() {
       data.clear();
       sub.clear();
       named_sub.clear();
       comments.clear();
-      #ifdef HASH_CODE
-      hash_code=0;
-      #endif
+#ifdef HASH_CODE
+      hash_code = 0;
+#endif
     }
 
-    void swap(dt &d)
-    {
+    void swap(dt &d) {
       d.data.swap(data);
       d.sub.swap(sub);
       d.named_sub.swap(named_sub);
       d.comments.swap(comments);
-      #ifdef HASH_CODE
+#ifdef HASH_CODE
       std::swap(d.hash_code, hash_code);
-      #endif
+#endif
     }
 
-    #ifdef SHARING
-    dt():ref_count(1)
-      #ifdef HASH_CODE
-         , hash_code(0)
-      #endif
-    {
-    }
-    #else
+#ifdef SHARING
     dt()
-      #ifdef HASH_CODE
-      :hash_code(0)
-      #endif
+        : ref_count(1)
+#ifdef HASH_CODE
+          ,
+          hash_code(0)
+#endif
     {
     }
-    #endif
+#else
+    dt()
+#ifdef HASH_CODE
+        : hash_code(0)
+#endif
+    {
+    }
+#endif
   };
 
 protected:
-  #ifdef SHARING
+#ifdef SHARING
   dt *data;
   static dt empty_d;
 
@@ -325,62 +296,44 @@ protected:
   void detach();
 
 public:
-  const dt &read() const
-  {
-    return *data;
-  }
+  const dt &read() const { return *data; }
 
-  dt &write()
-  {
+  dt &write() {
     detach();
-    #ifdef HASH_CODE
-    data->hash_code=0;
-    #endif
+#ifdef HASH_CODE
+    data->hash_code = 0;
+#endif
     return *data;
   }
 
-  #else
+#else
   dt data;
 
 public:
-  const dt &read() const
-  {
+  const dt &read() const { return data; }
+
+  dt &write() {
+#ifdef HASH_CODE
+    data.hash_code = 0;
+#endif
     return data;
   }
-
-  dt &write()
-  {
-    #ifdef HASH_CODE
-    data.hash_code=0;
-    #endif
-    return data;
-  }
-  #endif
+#endif
 };
 
 // NOLINTNEXTLINE(readability/identifiers)
-struct irep_hash
-{
-  std::size_t operator()(const irept &irep) const
-  {
-    return irep.hash();
-  }
+struct irep_hash {
+  std::size_t operator()(const irept &irep) const { return irep.hash(); }
 };
 
 // NOLINTNEXTLINE(readability/identifiers)
-struct irep_full_hash
-{
-  std::size_t operator()(const irept &irep) const
-  {
-    return irep.full_hash();
-  }
+struct irep_full_hash {
+  std::size_t operator()(const irept &irep) const { return irep.full_hash(); }
 };
 
 // NOLINTNEXTLINE(readability/identifiers)
-struct irep_full_eq
-{
-  bool operator()(const irept &i1, const irept &i2) const
-  {
+struct irep_full_eq {
+  bool operator()(const irept &i1, const irept &i2) const {
     return i1.full_eq(i2);
   }
 };

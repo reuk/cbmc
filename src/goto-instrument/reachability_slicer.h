@@ -13,8 +13,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 void reachability_slicer(goto_functionst &goto_functions);
 
-void reachability_slicer(
-  goto_functionst &goto_functions,
-  const std::list<std::string> &properties);
+void reachability_slicer(goto_functionst &goto_functions,
+                         const std::list<std::string> &properties);
 
 #endif // CPROVER_GOTO_INSTRUMENT_REACHABILITY_SLICER_H

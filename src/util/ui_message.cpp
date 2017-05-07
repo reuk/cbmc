@@ -9,12 +9,12 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <fstream>
 #include <iostream>
 
-#include "xml.h"
-#include "json.h"
-#include "xml_expr.h"
-#include "cout_message.h"
-#include "ui_message.h"
 #include "cmdline.h"
+#include "cout_message.h"
+#include "json.h"
+#include "ui_message.h"
+#include "xml.h"
+#include "xml_expr.h"
 
 /*******************************************************************\
 
@@ -28,35 +28,33 @@ Function: ui_message_handlert::ui_message_handlert
 
 \*******************************************************************/
 
-ui_message_handlert::ui_message_handlert(
-  uit __ui, const std::string &program):_ui(__ui)
-{
-  switch(__ui)
-  {
+ui_message_handlert::ui_message_handlert(uit __ui, const std::string &program)
+    : _ui(__ui) {
+  switch (__ui) {
   case PLAIN:
     break;
 
   case XML_UI:
-    std::cout << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << "\n";
-    std::cout << "<cprover>" << "\n";
+    std::cout << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+              << "\n";
+    std::cout << "<cprover>"
+              << "\n";
 
     {
       xmlt program_xml;
-      program_xml.name="program";
-      program_xml.data=program;
+      program_xml.name = "program";
+      program_xml.data = program;
 
       std::cout << program_xml;
     }
     break;
 
-  case JSON_UI:
-    {
-      std::cout << "[\n";
-      json_objectt json_program;
-      json_program["program"] = json_stringt(program);
-      std::cout << json_program;
-    }
-    break;
+  case JSON_UI: {
+    std::cout << "[\n";
+    json_objectt json_program;
+    json_program["program"] = json_stringt(program);
+    std::cout << json_program;
+  } break;
   }
 }
 
@@ -72,16 +70,12 @@ Function: ui_message_handlert::ui_message_handlert
 
 \*******************************************************************/
 
-ui_message_handlert::ui_message_handlert(
-  const class cmdlinet &cmdline,
-  const std::string &program):
-  ui_message_handlert(
-    cmdline.isset("xml-ui")?XML_UI:
-    cmdline.isset("json-ui")?JSON_UI:
-    PLAIN,
-    program)
-{
-}
+ui_message_handlert::ui_message_handlert(const class cmdlinet &cmdline,
+                                         const std::string &program)
+    : ui_message_handlert(cmdline.isset("xml-ui")
+                              ? XML_UI
+                              : cmdline.isset("json-ui") ? JSON_UI : PLAIN,
+                          program) {}
 
 /*******************************************************************\
 
@@ -95,12 +89,11 @@ Function: ui_message_handlert::~ui_message_handlert
 
 \*******************************************************************/
 
-ui_message_handlert::~ui_message_handlert()
-{
-  switch(get_ui())
-  {
+ui_message_handlert::~ui_message_handlert() {
+  switch (get_ui()) {
   case XML_UI:
-    std::cout << "</cprover>" << "\n";
+    std::cout << "</cprover>"
+              << "\n";
     break;
 
   case JSON_UI:
@@ -124,11 +117,10 @@ Function: ui_message_handlert::level_string
 
 \*******************************************************************/
 
-const char *ui_message_handlert::level_string(unsigned level)
-{
-  if(level==1)
+const char *ui_message_handlert::level_string(unsigned level) {
+  if (level == 1)
     return "ERROR";
-  else if(level==2)
+  else if (level == 2)
     return "WARNING";
   else
     return "STATUS-MESSAGE";
@@ -146,29 +138,20 @@ Function: ui_message_handlert::print
 
 \*******************************************************************/
 
-void ui_message_handlert::print(
-  unsigned level,
-  const std::string &message)
-{
-  if(verbosity>=level)
-  {
-    switch(get_ui())
-    {
-    case PLAIN:
-    {
+void ui_message_handlert::print(unsigned level, const std::string &message) {
+  if (verbosity >= level) {
+    switch (get_ui()) {
+    case PLAIN: {
       console_message_handlert console_message_handler;
       console_message_handler.print(level, message);
-    }
-    break;
+    } break;
 
     case XML_UI:
-    case JSON_UI:
-    {
+    case JSON_UI: {
       source_locationt location;
       location.make_nil();
       print(level, message, -1, location);
-    }
-    break;
+    } break;
     }
   }
 }
@@ -185,37 +168,29 @@ Function: ui_message_handlert::print
 
 \*******************************************************************/
 
-void ui_message_handlert::print(
-  unsigned level,
-  const std::string &message,
-  int sequence_number,
-  const source_locationt &location)
-{
-  if(verbosity>=level)
-  {
-    switch(get_ui())
-    {
+void ui_message_handlert::print(unsigned level, const std::string &message,
+                                int sequence_number,
+                                const source_locationt &location) {
+  if (verbosity >= level) {
+    switch (get_ui()) {
     case PLAIN:
-      message_handlert::print(
-        level, message, sequence_number, location);
+      message_handlert::print(level, message, sequence_number, location);
       break;
 
     case XML_UI:
-    case JSON_UI:
-    {
+    case JSON_UI: {
       std::string tmp_message(message);
 
-      if(!tmp_message.empty() && *tmp_message.rbegin()=='\n')
-        tmp_message.resize(tmp_message.size()-1);
+      if (!tmp_message.empty() && *tmp_message.rbegin() == '\n')
+        tmp_message.resize(tmp_message.size() - 1);
 
-      const char *type=level_string(level);
+      const char *type = level_string(level);
 
-      std::string sequence_number_str=
-        sequence_number>=0?std::to_string(sequence_number):"";
+      std::string sequence_number_str =
+          sequence_number >= 0 ? std::to_string(sequence_number) : "";
 
       ui_msg(type, tmp_message, sequence_number_str, location);
-    }
-    break;
+    } break;
     }
   }
 }
@@ -232,14 +207,11 @@ Function: ui_message_handlert::ui_msg
 
 \*******************************************************************/
 
-void ui_message_handlert::ui_msg(
-  const std::string &type,
-  const std::string &msg1,
-  const std::string &msg2,
-  const source_locationt &location)
-{
-  switch(get_ui())
-  {
+void ui_message_handlert::ui_msg(const std::string &type,
+                                 const std::string &msg1,
+                                 const std::string &msg2,
+                                 const source_locationt &location) {
+  switch (get_ui()) {
   case PLAIN:
     break;
 
@@ -265,20 +237,17 @@ Function: ui_message_handlert::xml_ui_msg
 
 \*******************************************************************/
 
-void ui_message_handlert::xml_ui_msg(
-  const std::string &type,
-  const std::string &msg1,
-  const std::string &msg2,
-  const source_locationt &location)
-{
+void ui_message_handlert::xml_ui_msg(const std::string &type,
+                                     const std::string &msg1,
+                                     const std::string &msg2,
+                                     const source_locationt &location) {
   xmlt result;
-  result.name="message";
+  result.name = "message";
 
-  if(location.is_not_nil() &&
-     !location.get_file().empty())
+  if (location.is_not_nil() && !location.get_file().empty())
     result.new_element(xml(location));
 
-  result.new_element("text").data=msg1;
+  result.new_element("text").data = msg1;
   result.set_attribute("type", type);
 
   std::cout << result;
@@ -297,19 +266,17 @@ Function: ui_message_handlert::json_ui_msg
 
 \*******************************************************************/
 
-void ui_message_handlert::json_ui_msg(
-  const std::string &type,
-  const std::string &msg1,
-  const std::string &msg2,
-  const source_locationt &location)
-{
+void ui_message_handlert::json_ui_msg(const std::string &type,
+                                      const std::string &msg1,
+                                      const std::string &msg2,
+                                      const source_locationt &location) {
   json_objectt result;
 
-  #if 0
+#if 0
   if(location.is_not_nil() &&
      !location.get_file().empty())
     result.new_element(xml(location));
-  #endif
+#endif
 
   result["messageType"] = json_stringt(type);
   result["messageText"] = json_stringt(msg1);

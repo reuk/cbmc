@@ -25,14 +25,12 @@ Author: Matt Lewis
  * i.e. the next value of the vars vector is calculated by applying the matrix
  * to the current vars vector.
  */
-struct linear_recurrencet
-{
+struct linear_recurrencet {
   Eigen::MatrixXd matrix;
   std::vector<exprt> vars;
 };
 
-bool linearize(
-  symex_target_equationt &equation,
-  linear_recurrencet &recurrence);
+bool linearize(symex_target_equationt &equation,
+               linear_recurrencet &recurrence);
 
 #endif // CPROVER_GOTO_INSTRUMENT_ACCELERATE_LINEARIZE_H

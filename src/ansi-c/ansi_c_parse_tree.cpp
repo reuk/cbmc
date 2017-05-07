@@ -22,8 +22,7 @@ Function: ansi_c_parse_treet::swap
 
 \*******************************************************************/
 
-void ansi_c_parse_treet::swap(ansi_c_parse_treet &ansi_c_parse_tree)
-{
+void ansi_c_parse_treet::swap(ansi_c_parse_treet &ansi_c_parse_tree) {
   ansi_c_parse_tree.items.swap(items);
 }
 
@@ -39,10 +38,7 @@ Function: ansi_c_parse_treet::clear
 
 \*******************************************************************/
 
-void ansi_c_parse_treet::clear()
-{
-  items.clear();
-}
+void ansi_c_parse_treet::clear() { items.clear(); }
 
 /*******************************************************************\
 
@@ -56,10 +52,8 @@ Function: ansi_c_parse_treet::output
 
 \*******************************************************************/
 
-void ansi_c_parse_treet::output(std::ostream &out) const
-{
-  for(const auto &item : items)
-  {
+void ansi_c_parse_treet::output(std::ostream &out) const {
+  for (const auto &item : items) {
     item.output(out);
     out << "\n";
   }

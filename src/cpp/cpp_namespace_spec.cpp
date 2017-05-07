@@ -8,8 +8,8 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 #include <ostream>
 
-#include "cpp_namespace_spec.h"
 #include "cpp_item.h"
+#include "cpp_namespace_spec.h"
 
 /*******************************************************************\
 
@@ -23,7 +23,6 @@ Function: cpp_namespace_spect::output
 
 \*******************************************************************/
 
-void cpp_namespace_spect::output(std::ostream &out) const
-{
+void cpp_namespace_spect::output(std::ostream &out) const {
   out << "  namespace: " << get_namespace() << "\n";
 }

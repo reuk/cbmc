@@ -6,26 +6,26 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <iostream>
-#include <fstream>
 #include <cstdlib>
+#include <fstream>
+#include <iostream>
 
-#include <util/string2int.h>
 #include <util/config.h>
 #include <util/language.h>
-#include <util/options.h>
 #include <util/memory_info.h>
+#include <util/options.h>
+#include <util/string2int.h>
 
 #include <ansi-c/ansi_c_language.h>
 #include <cpp/cpp_language.h>
 
 #include <goto-programs/goto_convert_functions.h>
-#include <goto-programs/show_properties.h>
-#include <goto-programs/set_properties.h>
-#include <goto-programs/read_goto_binary.h>
-#include <goto-programs/loop_ids.h>
-#include <goto-programs/link_to_library.h>
 #include <goto-programs/goto_inline.h>
+#include <goto-programs/link_to_library.h>
+#include <goto-programs/loop_ids.h>
+#include <goto-programs/read_goto_binary.h>
+#include <goto-programs/set_properties.h>
+#include <goto-programs/show_properties.h>
 #include <goto-programs/xml_goto_trace.h>
 
 #include <goto-instrument/dump_c.h>
@@ -49,12 +49,10 @@ Function: clobber_parse_optionst::clobber_parse_optionst
 
 \*******************************************************************/
 
-clobber_parse_optionst::clobber_parse_optionst(int argc, const char **argv):
-  parse_options_baset(CLOBBER_OPTIONS, argc, argv),
-  language_uit(cmdline, ui_message_handler),
-  ui_message_handler(cmdline, "CLOBBER " CBMC_VERSION)
-{
-}
+clobber_parse_optionst::clobber_parse_optionst(int argc, const char **argv)
+    : parse_options_baset(CLOBBER_OPTIONS, argc, argv),
+      language_uit(cmdline, ui_message_handler),
+      ui_message_handler(cmdline, "CLOBBER " CBMC_VERSION) {}
 
 /*******************************************************************\
 
@@ -68,18 +66,16 @@ Function: clobber_parse_optionst::eval_verbosity
 
 \*******************************************************************/
 
-void clobber_parse_optionst::eval_verbosity()
-{
+void clobber_parse_optionst::eval_verbosity() {
   // this is our default verbosity
-  int v=messaget::M_STATISTICS;
+  int v = messaget::M_STATISTICS;
 
-  if(cmdline.isset("verbosity"))
-  {
-    v=unsafe_string2int(cmdline.get_value("verbosity"));
-    if(v<0)
-      v=0;
-    else if(v>10)
-      v=10;
+  if (cmdline.isset("verbosity")) {
+    v = unsafe_string2int(cmdline.get_value("verbosity"));
+    if (v < 0)
+      v = 0;
+    else if (v > 10)
+      v = 10;
   }
 
   ui_message_handler.set_verbosity(v);
@@ -97,37 +93,35 @@ Function: clobber_parse_optionst::get_command_line_options
 
 \*******************************************************************/
 
-void clobber_parse_optionst::get_command_line_options(optionst &options)
-{
-  if(config.set(cmdline))
-  {
+void clobber_parse_optionst::get_command_line_options(optionst &options) {
+  if (config.set(cmdline)) {
     usage_error();
     exit(1);
   }
 
-  if(cmdline.isset("debug-level"))
+  if (cmdline.isset("debug-level"))
     options.set_option("debug-level", cmdline.get_value("debug-level"));
 
-  if(cmdline.isset("unwindset"))
+  if (cmdline.isset("unwindset"))
     options.set_option("unwindset", cmdline.get_value("unwindset"));
 
   // all checks supported by goto_check
   PARSE_OPTIONS_GOTO_CHECK(cmdline, options);
 
   // check assertions
-  if(cmdline.isset("no-assertions"))
+  if (cmdline.isset("no-assertions"))
     options.set_option("assertions", false);
   else
     options.set_option("assertions", true);
 
   // use assumptions
-  if(cmdline.isset("no-assumptions"))
+  if (cmdline.isset("no-assumptions"))
     options.set_option("assumptions", false);
   else
     options.set_option("assumptions", true);
 
   // magic error label
-  if(cmdline.isset("error-label"))
+  if (cmdline.isset("error-label"))
     options.set_option("error-label", cmdline.get_value("error-label"));
 }
 
@@ -143,10 +137,8 @@ Function: clobber_parse_optionst::doit
 
 \*******************************************************************/
 
-int clobber_parse_optionst::doit()
-{
-  if(cmdline.isset("version"))
-  {
+int clobber_parse_optionst::doit() {
+  if (cmdline.isset("version")) {
     std::cout << CBMC_VERSION << std::endl;
     return 0;
   }
@@ -165,15 +157,13 @@ int clobber_parse_optionst::doit()
 
   goto_functionst goto_functions;
 
-  try
-  {
-    if(get_goto_program(options, goto_functions))
+  try {
+    if (get_goto_program(options, goto_functions))
       return 6;
 
     label_properties(goto_functions);
 
-    if(cmdline.isset("show-properties"))
-    {
+    if (cmdline.isset("show-properties")) {
       const namespacet ns(symbol_table);
       show_properties(ns, get_ui(), goto_functions);
       return 0;
@@ -187,7 +177,7 @@ int clobber_parse_optionst::doit()
 
     std::ofstream out("simulator.c");
 
-    if(!out)
+    if (!out)
       throw std::string("failed to create file simulator.c");
 
     dump_c(goto_functions, true, ns, out);
@@ -198,30 +188,27 @@ int clobber_parse_optionst::doit()
     return 0;
   }
 
-  catch(const std::string error_msg)
-  {
+  catch (const std::string error_msg) {
     error() << error_msg << messaget::eom;
     return 8;
   }
 
-  catch(const char *error_msg)
-  {
+  catch (const char *error_msg) {
     error() << error_msg << messaget::eom;
     return 8;
   }
 
-  catch(std::bad_alloc)
-  {
+  catch (std::bad_alloc) {
     error() << "Out of memory" << messaget::eom;
     return 8;
   }
 
-  #if 0
+#if 0
   // let's log some more statistics
   debug() << "Memory consumption:" << messaget::endl;
   memory_info(debug());
   debug() << eom;
-  #endif
+#endif
 }
 
 /*******************************************************************\
@@ -236,9 +223,8 @@ Function: clobber_parse_optionst::set_properties
 
 \*******************************************************************/
 
-bool clobber_parse_optionst::set_properties(goto_functionst &goto_functions)
-{
-  if(cmdline.isset("property"))
+bool clobber_parse_optionst::set_properties(goto_functionst &goto_functions) {
+  if (cmdline.isset("property"))
     ::set_properties(goto_functions, cmdline.get_values("property"));
 
   return false;
@@ -256,70 +242,59 @@ Function: clobber_parse_optionst::get_goto_program
 
 \*******************************************************************/
 
-bool clobber_parse_optionst::get_goto_program(
-  const optionst &options,
-  goto_functionst &goto_functions)
-{
-  if(cmdline.args.size()==0)
-  {
+bool clobber_parse_optionst::get_goto_program(const optionst &options,
+                                              goto_functionst &goto_functions) {
+  if (cmdline.args.size() == 0) {
     error() << "Please provide a program to verify" << eom;
     return true;
   }
 
   {
-    if(cmdline.args.size()==1 &&
-       is_goto_binary(cmdline.args[0]))
-    {
+    if (cmdline.args.size() == 1 && is_goto_binary(cmdline.args[0])) {
       status() << "Reading GOTO program from file" << eom;
 
-      if(read_goto_binary(cmdline.args[0],
-           symbol_table, goto_functions, get_message_handler()))
+      if (read_goto_binary(cmdline.args[0], symbol_table, goto_functions,
+                           get_message_handler()))
         return true;
 
       config.set_from_symbol_table(symbol_table);
 
-      if(cmdline.isset("show-symbol-table"))
-      {
+      if (cmdline.isset("show-symbol-table")) {
         show_symbol_table();
         return true;
       }
 
-      irep_idt entry_point=goto_functions.entry_point();
+      irep_idt entry_point = goto_functions.entry_point();
 
-      if(symbol_table.symbols.find(entry_point)==symbol_table.symbols.end())
-      {
+      if (symbol_table.symbols.find(entry_point) ==
+          symbol_table.symbols.end()) {
         error() << "The goto binary has no entry point; please complete linking"
                 << eom;
         return true;
       }
-    }
-    else if(cmdline.isset("show-parse-tree"))
-    {
-      if(cmdline.args.size()!=1)
-      {
+    } else if (cmdline.isset("show-parse-tree")) {
+      if (cmdline.args.size() != 1) {
         error() << "Please give one source file only" << eom;
         return true;
       }
 
-      std::string filename=cmdline.args[0];
+      std::string filename = cmdline.args[0];
 
-      #ifdef _MSC_VER
+#ifdef _MSC_VER
       std::ifstream infile(widen(filename));
-      #else
+#else
       std::ifstream infile(filename);
-      #endif
+#endif
 
-      if(!infile)
-      {
+      if (!infile) {
         error() << "failed to open input file `" << filename << "'" << eom;
         return true;
       }
 
-      languaget *language=get_language_from_filename(filename);
+      languaget *language = get_language_from_filename(filename);
 
-      if(language==NULL)
-      {
-        error() << "failed to figure out type of file `" <<  filename << "'"
+      if (language == NULL) {
+        error() << "failed to figure out type of file `" << filename << "'"
                 << eom;
         return true;
       }
@@ -328,35 +303,29 @@ bool clobber_parse_optionst::get_goto_program(
 
       status("Parsing", filename);
 
-      if(language->parse(infile, filename))
-      {
+      if (language->parse(infile, filename)) {
         error() << "PARSING ERROR" << eom;
         return true;
       }
 
       language->show_parse(std::cout);
       return true;
-    }
-    else
-    {
-      if(parse() ||
-         typecheck() ||
-         final())
+    } else {
+      if (parse() || typecheck() || final())
         return true;
 
       // we no longer need any parse trees or language files
       clear_parse();
 
-      if(cmdline.isset("show-symbol-table"))
-      {
+      if (cmdline.isset("show-symbol-table")) {
         show_symbol_table();
         return true;
       }
 
-      irep_idt entry_point=goto_functions.entry_point();
+      irep_idt entry_point = goto_functions.entry_point();
 
-      if(symbol_table.symbols.find(entry_point)==symbol_table.symbols.end())
-      {
+      if (symbol_table.symbols.find(entry_point) ==
+          symbol_table.symbols.end()) {
         error() << "No entry point; please provide a main function" << eom;
         return true;
       }
@@ -366,12 +335,12 @@ bool clobber_parse_optionst::get_goto_program(
       goto_convert(symbol_table, goto_functions, ui_message_handler);
     }
 
-    // finally add the library
-    #if 0
+// finally add the library
+#if 0
     link_to_library(symbol_table, goto_functions, ui_message_handler);
-    #endif
+#endif
 
-    if(process_goto_program(options, goto_functions))
+    if (process_goto_program(options, goto_functions))
       return true;
   }
 
@@ -391,9 +360,7 @@ Function: clobber_parse_optionst::process_goto_program
 \*******************************************************************/
 
 bool clobber_parse_optionst::process_goto_program(
-  const optionst &options,
-  goto_functionst &goto_functions)
-{
+    const optionst &options, goto_functionst &goto_functions) {
   {
     namespacet ns(symbol_table);
 
@@ -414,19 +381,17 @@ bool clobber_parse_optionst::process_goto_program(
     // if we aim to cover, replace
     // all assertions by false to prevent simplification
 
-    if(cmdline.isset("cover-assertions"))
+    if (cmdline.isset("cover-assertions"))
       make_assertions_false(goto_functions);
 
     // show it?
-    if(cmdline.isset("show-loops"))
-    {
+    if (cmdline.isset("show-loops")) {
       show_loop_ids(get_ui(), goto_functions);
       return true;
     }
 
     // show it?
-    if(cmdline.isset("show-goto-functions"))
-    {
+    if (cmdline.isset("show-goto-functions")) {
       show_goto_functions(ns, get_ui(), goto_functions);
       return true;
     }
@@ -518,23 +483,19 @@ Function: clobber_parse_optionst::report_success
 
 \*******************************************************************/
 
-void clobber_parse_optionst::report_success()
-{
+void clobber_parse_optionst::report_success() {
   result() << "VERIFICATION SUCCESSFUL" << eom;
 
-  switch(get_ui())
-  {
+  switch (get_ui()) {
   case ui_message_handlert::PLAIN:
     break;
 
-  case ui_message_handlert::XML_UI:
-    {
-      xmlt xml("cprover-status");
-      xml.data="SUCCESS";
-      std::cout << xml;
-      std::cout << std::endl;
-    }
-    break;
+  case ui_message_handlert::XML_UI: {
+    xmlt xml("cprover-status");
+    xml.data = "SUCCESS";
+    std::cout << xml;
+    std::cout << std::endl;
+  } break;
 
   default:
     assert(false);
@@ -554,24 +515,20 @@ Function: clobber_parse_optionst::show_counterexample
 \*******************************************************************/
 
 void clobber_parse_optionst::show_counterexample(
-  const goto_tracet &error_trace)
-{
+    const goto_tracet &error_trace) {
   const namespacet ns(symbol_table);
 
-  switch(get_ui())
-  {
+  switch (get_ui()) {
   case ui_message_handlert::PLAIN:
     std::cout << std::endl << "Counterexample:" << std::endl;
     show_goto_trace(std::cout, ns, error_trace);
     break;
 
-  case ui_message_handlert::XML_UI:
-    {
-      xmlt xml;
-      convert(ns, error_trace, xml);
-      std::cout << xml << std::endl;
-    }
-    break;
+  case ui_message_handlert::XML_UI: {
+    xmlt xml;
+    convert(ns, error_trace, xml);
+    std::cout << xml << std::endl;
+  } break;
 
   default:
     assert(false);
@@ -590,23 +547,19 @@ Function: clobber_parse_optionst::report_failure
 
 \*******************************************************************/
 
-void clobber_parse_optionst::report_failure()
-{
+void clobber_parse_optionst::report_failure() {
   result() << "VERIFICATION FAILED" << eom;
 
-  switch(get_ui())
-  {
+  switch (get_ui()) {
   case ui_message_handlert::PLAIN:
     break;
 
-  case ui_message_handlert::XML_UI:
-    {
-      xmlt xml("cprover-status");
-      xml.data="FAILURE";
-      std::cout << xml;
-      std::cout << std::endl;
-    }
-    break;
+  case ui_message_handlert::XML_UI: {
+    xmlt xml("cprover-status");
+    xml.data = "FAILURE";
+    std::cout << xml;
+    std::cout << std::endl;
+  } break;
 
   default:
     assert(false);
@@ -625,72 +578,74 @@ Function: clobber_parse_optionst::help
 
 \*******************************************************************/
 
-void clobber_parse_optionst::help()
-{
-  std::cout <<
-    "\n"
-    "* *     CLOBBER " CBMC_VERSION " - Copyright (C) 2014 ";
+void clobber_parse_optionst::help() {
+  std::cout << "\n"
+               "* *     CLOBBER " CBMC_VERSION " - Copyright (C) 2014 ";
 
-  std::cout << "(" << (sizeof(void *)*8) << "-bit version)";
+  std::cout << "(" << (sizeof(void *) * 8) << "-bit version)";
 
   std::cout << "     * *\n";
 
-  std::cout <<
-    "* *                    Daniel Kroening                      * *\n"
-    "* *                 University of Oxford                    * *\n"
-    "* *                 kroening@kroening.com                   * *\n"
-    "\n"
-    "Usage:                       Purpose:\n"
-    "\n"
-    " symex [-?] [-h] [--help]     show help\n"
-    " symex file.c ...             source file names\n"
-    "\n"
-    "Frontend options:\n"
-    " -I path                      set include path (C/C++)\n"
-    " -D macro                     define preprocessor macro (C/C++)\n"
-    " --preprocess                 stop after preprocessing\n"
-    " --16, --32, --64             set width of int\n"
-    " --LP64, --ILP64, --LLP64,\n"
-    "   --ILP32, --LP32            set width of int, long and pointers\n"
-    " --little-endian              allow little-endian word-byte conversions\n"
-    " --big-endian                 allow big-endian word-byte conversions\n"
-    " --unsigned-char              make \"char\" unsigned by default\n"
-    " --show-parse-tree            show parse tree\n"
-    " --show-symbol-table          show symbol table\n"
-    HELP_SHOW_GOTO_FUNCTIONS
-    " --ppc-macos                  set MACOS/PPC architecture\n"
-    " --mm model                   set memory model (default: sc)\n"
-    " --arch                       set architecture (default: "
-                                   << configt::this_architecture() << ")\n"
-    " --os                         set operating system (default: "
-                                   << configt::this_operating_system() << ")\n"
-    #ifdef _WIN32
-    " --gcc                        use GCC as preprocessor\n"
-    #endif
-    " --no-arch                    don't set up an architecture\n"
-    " --no-library                 disable built-in abstract C library\n"
-    // NOLINTNEXTLINE(whitespace/line_length)
-    " --round-to-nearest           IEEE floating point rounding mode (default)\n"
-    " --round-to-plus-inf          IEEE floating point rounding mode\n"
-    " --round-to-minus-inf         IEEE floating point rounding mode\n"
-    " --round-to-zero              IEEE floating point rounding mode\n"
-    "\n"
-    "Program instrumentation options:\n"
-    HELP_GOTO_CHECK
-    " --show-properties            show the properties\n"
-    " --no-assertions              ignore user assertions\n"
-    " --no-assumptions             ignore user assumptions\n"
-    " --error-label label          check that label is unreachable\n"
-    "\n"
-    "Symex options:\n"
-    " --function name              set main function name\n"
-    " --property nr                only check one specific property\n"
-    " --depth nr                   limit search depth\n"
-    " --context-bound nr           limit number of context switches\n"
-    " --unwind nr                  unwind nr times\n"
-    "\n"
-    "Other options:\n"
-    " --version                    show version and exit\n"
-    " --xml-ui                     use XML-formatted output\n"
-    "\n";
+  std::cout
+      << "* *                    Daniel Kroening                      * *\n"
+         "* *                 University of Oxford                    * *\n"
+         "* *                 kroening@kroening.com                   * *\n"
+         "\n"
+         "Usage:                       Purpose:\n"
+         "\n"
+         " symex [-?] [-h] [--help]     show help\n"
+         " symex file.c ...             source file names\n"
+         "\n"
+         "Frontend options:\n"
+         " -I path                      set include path (C/C++)\n"
+         " -D macro                     define preprocessor macro (C/C++)\n"
+         " --preprocess                 stop after preprocessing\n"
+         " --16, --32, --64             set width of int\n"
+         " --LP64, --ILP64, --LLP64,\n"
+         "   --ILP32, --LP32            set width of int, long and pointers\n"
+         " --little-endian              allow little-endian word-byte "
+         "conversions\n"
+         " --big-endian                 allow big-endian word-byte "
+         "conversions\n"
+         " --unsigned-char              make \"char\" unsigned by default\n"
+         " --show-parse-tree            show parse tree\n"
+         " --show-symbol-table          show symbol "
+         "table\n" HELP_SHOW_GOTO_FUNCTIONS
+         " --ppc-macos                  set MACOS/PPC architecture\n"
+         " --mm model                   set memory model (default: sc)\n"
+         " --arch                       set architecture (default: "
+      << configt::this_architecture()
+      << ")\n"
+         " --os                         set operating system (default: "
+      << configt::this_operating_system()
+      << ")\n"
+#ifdef _WIN32
+         " --gcc                        use GCC as preprocessor\n"
+#endif
+         " --no-arch                    don't set up an architecture\n"
+         " --no-library                 disable built-in abstract C library\n"
+         // NOLINTNEXTLINE(whitespace/line_length)
+         " --round-to-nearest           IEEE floating point rounding mode "
+         "(default)\n"
+         " --round-to-plus-inf          IEEE floating point rounding mode\n"
+         " --round-to-minus-inf         IEEE floating point rounding mode\n"
+         " --round-to-zero              IEEE floating point rounding mode\n"
+         "\n"
+         "Program instrumentation options:\n" HELP_GOTO_CHECK
+         " --show-properties            show the properties\n"
+         " --no-assertions              ignore user assertions\n"
+         " --no-assumptions             ignore user assumptions\n"
+         " --error-label label          check that label is unreachable\n"
+         "\n"
+         "Symex options:\n"
+         " --function name              set main function name\n"
+         " --property nr                only check one specific property\n"
+         " --depth nr                   limit search depth\n"
+         " --context-bound nr           limit number of context switches\n"
+         " --unwind nr                  unwind nr times\n"
+         "\n"
+         "Other options:\n"
+         " --version                    show version and exit\n"
+         " --xml-ui                     use XML-formatted output\n"
+         "\n";
 }

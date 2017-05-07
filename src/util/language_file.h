@@ -10,8 +10,8 @@ Author: Daniel Kroening, kroening@kroening.com
 #define CPROVER_UTIL_LANGUAGE_FILE_H
 
 #include <iosfwd>
-#include <set>
 #include <map>
+#include <set>
 #include <string>
 
 #include "message.h"
@@ -20,19 +20,16 @@ class symbol_tablet;
 class language_filet;
 class languaget;
 
-class language_modulet
-{
+class language_modulet {
 public:
   std::string name;
   bool type_checked, in_progress;
   language_filet *file;
 
-  language_modulet()
-  { type_checked=in_progress=false; }
+  language_modulet() { type_checked = in_progress = false; }
 };
 
-class language_filet
-{
+class language_filet {
 public:
   typedef std::set<std::string> modulest;
   modulest modules;
@@ -42,21 +39,16 @@ public:
 
   void get_modules();
 
-  void convert_lazy_method(
-    const irep_idt &id,
-    symbol_tablet &symbol_table);
+  void convert_lazy_method(const irep_idt &id, symbol_tablet &symbol_table);
 
   language_filet(const language_filet &rhs);
 
-  language_filet():language(NULL)
-  {
-  }
+  language_filet() : language(NULL) {}
 
   ~language_filet();
 };
 
-class language_filest:public messaget
-{
+class language_filest : public messaget {
 public:
   typedef std::map<std::string, language_filet> file_mapt;
   file_mapt file_map;
@@ -70,10 +62,7 @@ public:
   typedef std::map<irep_idt, language_filet *> lazy_method_mapt;
   lazy_method_mapt lazy_method_map;
 
-  void clear_files()
-  {
-    file_map.clear();
-  }
+  void clear_files() { file_map.clear(); }
 
   bool parse();
 
@@ -85,36 +74,27 @@ public:
 
   bool interfaces(symbol_tablet &symbol_table);
 
-  bool has_lazy_method(const irep_idt &id)
-  {
-    return lazy_method_map.count(id)!=0;
+  bool has_lazy_method(const irep_idt &id) {
+    return lazy_method_map.count(id) != 0;
   }
 
   // The method must have been added to the symbol table and registered
   // in lazy_method_map (currently always in language_filest::typecheck)
   // for this to be legal.
-  void convert_lazy_method(
-    const irep_idt &id,
-    symbol_tablet &symbol_table)
-  {
+  void convert_lazy_method(const irep_idt &id, symbol_tablet &symbol_table) {
     return lazy_method_map.at(id)->convert_lazy_method(id, symbol_table);
   }
 
-  void clear()
-  {
+  void clear() {
     file_map.clear();
     module_map.clear();
     lazy_method_map.clear();
   }
 
 protected:
-  bool typecheck_module(
-    symbol_tablet &symbol_table,
-    language_modulet &module);
+  bool typecheck_module(symbol_tablet &symbol_table, language_modulet &module);
 
-  bool typecheck_module(
-    symbol_tablet &symbol_table,
-    const std::string &module);
+  bool typecheck_module(symbol_tablet &symbol_table, const std::string &module);
 };
 
 #endif // CPROVER_UTIL_LANGUAGE_FILE_H

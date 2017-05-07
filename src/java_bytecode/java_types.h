@@ -9,8 +9,8 @@ Author: Daniel Kroening, kroening@kroening.com
 #ifndef CPROVER_JAVA_BYTECODE_JAVA_TYPES_H
 #define CPROVER_JAVA_BYTECODE_JAVA_TYPES_H
 
-#include <util/type.h>
 #include <util/std_types.h>
+#include <util/type.h>
 
 typet java_int_type();
 typet java_long_type();

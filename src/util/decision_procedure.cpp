@@ -22,8 +22,7 @@ Function: decision_proceduret::in_core
 
 \*******************************************************************/
 
-bool decision_proceduret::in_core(const exprt &expr)
-{
+bool decision_proceduret::in_core(const exprt &expr) {
   assert(false);
   return true;
 }

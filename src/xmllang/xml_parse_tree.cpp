@@ -20,8 +20,7 @@ Function: xml_parse_treet::swap
 
 \*******************************************************************/
 
-void xml_parse_treet::swap(xml_parse_treet &xml_parse_tree)
-{
+void xml_parse_treet::swap(xml_parse_treet &xml_parse_tree) {
   xml_parse_tree.element.swap(element);
 }
 
@@ -37,8 +36,7 @@ Function: xml_parse_treet::clear
 
 \*******************************************************************/
 
-void xml_parse_treet::clear()
-{
+void xml_parse_treet::clear() {
   xml.clear();
   element.clear();
 }

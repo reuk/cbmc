@@ -14,14 +14,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #define ID_SEPARATOR "::"
 
-class identifiert
-{
+class identifiert {
 public:
-  explicit identifiert(const std::string &s)
-  { parse(s); }
+  explicit identifiert(const std::string &s) { parse(s); }
 
-  identifiert()
-  { }
+  identifiert() {}
 
   std::string as_string() const;
 

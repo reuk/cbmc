@@ -7,13 +7,13 @@ Author: Thomas Kiley, thomas.kiley@diffblue.com
 \*******************************************************************/
 
 #include <ansi-c/c_qualifiers.h>
-#include <util/simplify_expr.h>
 #include <util/arith_tools.h>
+#include <util/simplify_expr.h>
 
 #include "remove_const_function_pointers.h"
 
-#define LOG(message, irep) \
-  debug() << "Case " << __LINE__ << " : " << message << "\n" \
+#define LOG(message, irep)                                                     \
+  debug() << "Case " << __LINE__ << " : " << message << "\n"                   \
           << irep.pretty() << eom;
 
 /*******************************************************************\
@@ -34,15 +34,10 @@ Function: remove_const_function_pointerst::remove_const_function_pointerst
 \*******************************************************************/
 
 remove_const_function_pointerst::remove_const_function_pointerst(
-  message_handlert &message_handler,
-  const exprt &base_expression,
-  const namespacet &ns,
-  const symbol_tablet &symbol_table):
-    messaget(message_handler),
-    original_expression(base_expression),
-    ns(ns),
-    symbol_table(symbol_table)
-{}
+    message_handlert &message_handler, const exprt &base_expression,
+    const namespacet &ns, const symbol_tablet &symbol_table)
+    : messaget(message_handler), original_expression(base_expression), ns(ns),
+      symbol_table(symbol_table) {}
 
 /*******************************************************************\
 
@@ -66,11 +61,9 @@ Function: remove_const_function_pointerst::operator()
 
 \*******************************************************************/
 
-bool remove_const_function_pointerst::operator()(
-  functionst &out_functions)
-{
+bool remove_const_function_pointerst::operator()(functionst &out_functions) {
   // Replace all const symbols with their values
-  exprt non_symbol_expression=replace_const_symbols(original_expression);
+  exprt non_symbol_expression = replace_const_symbols(original_expression);
   return try_resolve_function_call(non_symbol_expression, out_functions);
 }
 
@@ -92,36 +85,25 @@ Function: remove_const_function_pointerst::replace_const_symbols
 \*******************************************************************/
 
 exprt remove_const_function_pointerst::replace_const_symbols(
-  const exprt &expression) const
-{
-  if(expression.id()==ID_symbol)
-  {
-    if(is_const_expression(expression))
-    {
-      const symbolt &symbol=
-        symbol_table.lookup(expression.get(ID_identifier));
-      if(symbol.type.id()!=ID_code)
-      {
-        const exprt &symbol_value=symbol.value;
+    const exprt &expression) const {
+  if (expression.id() == ID_symbol) {
+    if (is_const_expression(expression)) {
+      const symbolt &symbol =
+          symbol_table.lookup(expression.get(ID_identifier));
+      if (symbol.type.id() != ID_code) {
+        const exprt &symbol_value = symbol.value;
         return replace_const_symbols(symbol_value);
-      }
-      else
-      {
+      } else {
         return expression;
       }
-    }
-    else
-    {
+    } else {
       return expression;
     }
-  }
-  else
-  {
-    exprt const_symbol_cleared_expr=expression;
+  } else {
+    exprt const_symbol_cleared_expr = expression;
     const_symbol_cleared_expr.operands().clear();
-    for(const exprt &op : expression.operands())
-    {
-      exprt const_symbol_cleared_op=replace_const_symbols(op);
+    for (const exprt &op : expression.operands()) {
+      exprt const_symbol_cleared_op = replace_const_symbols(op);
       const_symbol_cleared_expr.operands().push_back(const_symbol_cleared_op);
     }
 
@@ -143,10 +125,8 @@ Function: remove_const_function_pointerst::resolve_symbol
 \*******************************************************************/
 
 exprt remove_const_function_pointerst::resolve_symbol(
-  const symbol_exprt &symbol_expr) const
-{
-  const symbolt &symbol=
-    symbol_table.lookup(symbol_expr.get_identifier());
+    const symbol_exprt &symbol_expr) const {
+  const symbolt &symbol = symbol_table.lookup(symbol_expr.get_identifier());
   return symbol.value;
 }
 
@@ -170,65 +150,47 @@ Function: remove_const_function_pointerst::try_resolve_function_call
 \*******************************************************************/
 
 bool remove_const_function_pointerst::try_resolve_function_call(
-  const exprt &expr, functionst &out_functions)
-{
+    const exprt &expr, functionst &out_functions) {
   assert(out_functions.empty());
-  const exprt &simplified_expr=simplify_expr(expr, ns);
-  bool resolved=false;
+  const exprt &simplified_expr = simplify_expr(expr, ns);
+  bool resolved = false;
   functionst resolved_functions;
-  if(simplified_expr.id()==ID_index)
-  {
-    const index_exprt &index_expr=to_index_expr(simplified_expr);
-    resolved=try_resolve_index_of_function_call(index_expr, resolved_functions);
-  }
-  else if(simplified_expr.id()==ID_member)
-  {
-    const member_exprt &member_expr=to_member_expr(simplified_expr);
-    resolved=try_resolve_member_function_call(member_expr, resolved_functions);
-  }
-  else if(simplified_expr.id()==ID_address_of)
-  {
-    address_of_exprt address_expr=to_address_of_expr(simplified_expr);
-    resolved=try_resolve_address_of_function_call(
-      address_expr, resolved_functions);
-  }
-  else if(simplified_expr.id()==ID_dereference)
-  {
-    const dereference_exprt &deref=to_dereference_expr(simplified_expr);
-    resolved=try_resolve_dereference_function_call(deref, resolved_functions);
-  }
-  else if(simplified_expr.id()==ID_typecast)
-  {
-    typecast_exprt typecast_expr=to_typecast_expr(simplified_expr);
-    resolved=
-      try_resolve_typecast_function_call(typecast_expr, resolved_functions);
-  }
-  else if(simplified_expr.id()==ID_symbol)
-  {
-    if(simplified_expr.type().id()==ID_code)
-    {
+  if (simplified_expr.id() == ID_index) {
+    const index_exprt &index_expr = to_index_expr(simplified_expr);
+    resolved =
+        try_resolve_index_of_function_call(index_expr, resolved_functions);
+  } else if (simplified_expr.id() == ID_member) {
+    const member_exprt &member_expr = to_member_expr(simplified_expr);
+    resolved =
+        try_resolve_member_function_call(member_expr, resolved_functions);
+  } else if (simplified_expr.id() == ID_address_of) {
+    address_of_exprt address_expr = to_address_of_expr(simplified_expr);
+    resolved =
+        try_resolve_address_of_function_call(address_expr, resolved_functions);
+  } else if (simplified_expr.id() == ID_dereference) {
+    const dereference_exprt &deref = to_dereference_expr(simplified_expr);
+    resolved = try_resolve_dereference_function_call(deref, resolved_functions);
+  } else if (simplified_expr.id() == ID_typecast) {
+    typecast_exprt typecast_expr = to_typecast_expr(simplified_expr);
+    resolved =
+        try_resolve_typecast_function_call(typecast_expr, resolved_functions);
+  } else if (simplified_expr.id() == ID_symbol) {
+    if (simplified_expr.type().id() == ID_code) {
       resolved_functions.insert(simplified_expr);
-      resolved=true;
-    }
-    else
-    {
+      resolved = true;
+    } else {
       LOG("Non const symbol wasn't squashed", simplified_expr);
-      resolved=false;
+      resolved = false;
     }
-  }
-  else
-  {
+  } else {
     LOG("Unrecognised expression", simplified_expr);
-    resolved=false;
+    resolved = false;
   }
 
-  if(resolved)
-  {
+  if (resolved) {
     out_functions.insert(resolved_functions.begin(), resolved_functions.end());
     return true;
-  }
-  else
-  {
+  } else {
     return false;
   }
 }
@@ -251,22 +213,16 @@ Function: remove_const_function_pointerst::try_resolve_function_calls
 \*******************************************************************/
 
 bool remove_const_function_pointerst::try_resolve_function_calls(
-  const expressionst &exprs, functionst &out_functions)
-{
-  for(const exprt &value : exprs)
-  {
+    const expressionst &exprs, functionst &out_functions) {
+  for (const exprt &value : exprs) {
     functionst potential_out_functions;
-    bool resolved_value=
-      try_resolve_function_call(value, potential_out_functions);
+    bool resolved_value =
+        try_resolve_function_call(value, potential_out_functions);
 
-    if(resolved_value)
-    {
-      out_functions.insert(
-        potential_out_functions.begin(),
-        potential_out_functions.end());
-    }
-    else
-    {
+    if (resolved_value) {
+      out_functions.insert(potential_out_functions.begin(),
+                           potential_out_functions.end());
+    } else {
       LOG("Could not resolve expression in array", value);
       return false;
     }
@@ -296,21 +252,18 @@ Function: remove_const_function_pointerst::try_resolve_index_of_function_call
 \*******************************************************************/
 
 bool remove_const_function_pointerst::try_resolve_index_of_function_call(
-  const index_exprt &index_expr, functionst &out_functions)
-{
+    const index_exprt &index_expr, functionst &out_functions) {
   expressionst potential_array_values;
   bool array_const;
-  bool resolved=
-    try_resolve_index_of(index_expr, potential_array_values, array_const);
+  bool resolved =
+      try_resolve_index_of(index_expr, potential_array_values, array_const);
 
-  if(!resolved)
-  {
+  if (!resolved) {
     LOG("Could not resolve array", index_expr);
     return false;
   }
 
-  if(!array_const)
-  {
+  if (!array_const) {
     LOG("Array not const", index_expr);
     return false;
   }
@@ -337,21 +290,18 @@ Function: remove_const_function_pointerst::try_resolve_member_function_call
 \*******************************************************************/
 
 bool remove_const_function_pointerst::try_resolve_member_function_call(
-  const member_exprt &member_expr, functionst &out_functions)
-{
+    const member_exprt &member_expr, functionst &out_functions) {
   expressionst potential_component_values;
   bool struct_const;
-  bool resolved=
-    try_resolve_member(member_expr, potential_component_values, struct_const);
+  bool resolved =
+      try_resolve_member(member_expr, potential_component_values, struct_const);
 
-  if(!resolved)
-  {
+  if (!resolved) {
     LOG("Could not resolve struct", member_expr);
     return false;
   }
 
-  if(!struct_const)
-  {
+  if (!struct_const) {
     LOG("Struct was not const so can't resolve values on it", member_expr);
     return false;
   }
@@ -378,12 +328,10 @@ Function: remove_const_function_pointerst::try_resolve_address_of_function_call
 \*******************************************************************/
 
 bool remove_const_function_pointerst::try_resolve_address_of_function_call(
-  const address_of_exprt &address_expr, functionst &out_functions)
-{
-  bool resolved=
-    try_resolve_function_call(address_expr.object(), out_functions);
-  if(!resolved)
-  {
+    const address_of_exprt &address_expr, functionst &out_functions) {
+  bool resolved =
+      try_resolve_function_call(address_expr.object(), out_functions);
+  if (!resolved) {
     LOG("Failed to resolve address of", address_expr);
   }
   return resolved;
@@ -408,21 +356,18 @@ Function: remove_const_function_pointerst::try_resolve_dereference_function_call
 \*******************************************************************/
 
 bool remove_const_function_pointerst::try_resolve_dereference_function_call(
-  const dereference_exprt &deref_expr, functionst &out_functions)
-{
+    const dereference_exprt &deref_expr, functionst &out_functions) {
   expressionst potential_deref_values;
   bool deref_const;
-  bool resolved=
-    try_resolve_dereference(deref_expr, potential_deref_values, deref_const);
+  bool resolved =
+      try_resolve_dereference(deref_expr, potential_deref_values, deref_const);
 
-  if(!resolved)
-  {
+  if (!resolved) {
     LOG("Failed to squash dereference", deref_expr);
     return false;
   }
 
-  if(!deref_const)
-  {
+  if (!deref_const) {
     LOG("Dereferenced value was not const so can't dereference", deref_expr);
     return false;
   }
@@ -449,23 +394,19 @@ Function: remove_const_function_pointerst::try_resolve_typecast_function_call
 \*******************************************************************/
 
 bool remove_const_function_pointerst::try_resolve_typecast_function_call(
-  const typecast_exprt &typecast_expr, functionst &out_functions)
-{
+    const typecast_exprt &typecast_expr, functionst &out_functions) {
   // We simply ignore typecasts and assume they are valid
   // I thought simplify_expr would deal with this, but for example
   // a cast from a 32 bit width int to a 64bit width int it doesn't seem
   // to allow
   functionst typecast_values;
-  bool resolved=
-    try_resolve_function_call(typecast_expr.op(), typecast_values);
+  bool resolved =
+      try_resolve_function_call(typecast_expr.op(), typecast_values);
 
-  if(resolved)
-  {
+  if (resolved) {
     out_functions.insert(typecast_values.begin(), typecast_values.end());
     return true;
-  }
-  else
-  {
+  } else {
     LOG("Failed to squash typecast", typecast_expr);
     return false;
   }
@@ -499,62 +440,44 @@ Function: remove_const_function_pointerst::try_resolve_expression
 \*******************************************************************/
 
 bool remove_const_function_pointerst::try_resolve_expression(
-  const exprt &expr, expressionst &out_resolved_expression, bool &out_is_const)
-{
-  exprt simplified_expr=simplify_expr(expr, ns);
+    const exprt &expr, expressionst &out_resolved_expression,
+    bool &out_is_const) {
+  exprt simplified_expr = simplify_expr(expr, ns);
   bool resolved;
   expressionst resolved_expressions;
   bool is_resolved_expression_const;
-  if(simplified_expr.id()==ID_index)
-  {
-    const index_exprt &index_expr=to_index_expr(simplified_expr);
-    resolved=
-      try_resolve_index_of(
-        index_expr, resolved_expressions, is_resolved_expression_const);
-  }
-  else if(simplified_expr.id()==ID_member)
-  {
-    const member_exprt &member_expr=to_member_expr(simplified_expr);
-    resolved=try_resolve_member(
-      member_expr, resolved_expressions, is_resolved_expression_const);
-  }
-  else if(simplified_expr.id()==ID_dereference)
-  {
-    const dereference_exprt &deref=to_dereference_expr(simplified_expr);
-    resolved=
-      try_resolve_dereference(
-        deref, resolved_expressions, is_resolved_expression_const);
-  }
-  else if(simplified_expr.id()==ID_typecast)
-  {
-    typecast_exprt typecast_expr=to_typecast_expr(simplified_expr);
-    resolved=
-      try_resolve_typecast(
-        typecast_expr, resolved_expressions, is_resolved_expression_const);
-  }
-  else if(simplified_expr.id()==ID_symbol)
-  {
+  if (simplified_expr.id() == ID_index) {
+    const index_exprt &index_expr = to_index_expr(simplified_expr);
+    resolved = try_resolve_index_of(index_expr, resolved_expressions,
+                                    is_resolved_expression_const);
+  } else if (simplified_expr.id() == ID_member) {
+    const member_exprt &member_expr = to_member_expr(simplified_expr);
+    resolved = try_resolve_member(member_expr, resolved_expressions,
+                                  is_resolved_expression_const);
+  } else if (simplified_expr.id() == ID_dereference) {
+    const dereference_exprt &deref = to_dereference_expr(simplified_expr);
+    resolved = try_resolve_dereference(deref, resolved_expressions,
+                                       is_resolved_expression_const);
+  } else if (simplified_expr.id() == ID_typecast) {
+    typecast_exprt typecast_expr = to_typecast_expr(simplified_expr);
+    resolved = try_resolve_typecast(typecast_expr, resolved_expressions,
+                                    is_resolved_expression_const);
+  } else if (simplified_expr.id() == ID_symbol) {
     LOG("Non const symbol will not be squashed", simplified_expr);
-    resolved=false;
-  }
-  else
-  {
+    resolved = false;
+  } else {
     resolved_expressions.push_back(simplified_expr);
-    is_resolved_expression_const=is_const_expression(simplified_expr);
-    resolved=true;
+    is_resolved_expression_const = is_const_expression(simplified_expr);
+    resolved = true;
   }
 
-  if(resolved)
-  {
-    out_resolved_expression.insert(
-      out_resolved_expression.end(),
-      resolved_expressions.begin(),
-      resolved_expressions.end());
-    out_is_const=is_resolved_expression_const;
+  if (resolved) {
+    out_resolved_expression.insert(out_resolved_expression.end(),
+                                   resolved_expressions.begin(),
+                                   resolved_expressions.end());
+    out_is_const = is_resolved_expression_const;
     return true;
-  }
-  else
-  {
+  } else {
     return false;
   }
 }
@@ -579,33 +502,26 @@ Function: remove_const_function_pointerst::try_resolve_index_value
 \*******************************************************************/
 
 bool remove_const_function_pointerst::try_resolve_index_value(
-  const exprt &expr, mp_integer &out_array_index)
-{
+    const exprt &expr, mp_integer &out_array_index) {
   expressionst index_value_expressions;
-  bool is_const=false;
-  bool resolved=try_resolve_expression(expr, index_value_expressions, is_const);
-  if(resolved)
-  {
-    if(index_value_expressions.size()==1 &&
-       index_value_expressions.front().id()==ID_constant)
-    {
-      const constant_exprt &constant_expr=
-        to_constant_expr(index_value_expressions.front());
+  bool is_const = false;
+  bool resolved =
+      try_resolve_expression(expr, index_value_expressions, is_const);
+  if (resolved) {
+    if (index_value_expressions.size() == 1 &&
+        index_value_expressions.front().id() == ID_constant) {
+      const constant_exprt &constant_expr =
+          to_constant_expr(index_value_expressions.front());
       mp_integer array_index;
-      bool errors=to_integer(constant_expr, array_index);
-      if(!errors)
-      {
-        out_array_index=array_index;
+      bool errors = to_integer(constant_expr, array_index);
+      if (!errors) {
+        out_array_index = array_index;
       }
       return !errors;
-    }
-    else
-    {
+    } else {
       return false;
     }
-  }
-  else
-  {
+  } else {
     return false;
   }
 }
@@ -633,96 +549,70 @@ Function: remove_const_function_pointerst::try_resolve_index_of
 \*******************************************************************/
 
 bool remove_const_function_pointerst::try_resolve_index_of(
-  const index_exprt &index_expr,
-  expressionst &out_expressions,
-  bool &out_is_const)
-{
+    const index_exprt &index_expr, expressionst &out_expressions,
+    bool &out_is_const) {
   // Get the array(s) it belongs to
   expressionst potential_array_exprs;
-  bool array_const=false;
-  bool resolved_array=
-    try_resolve_expression(
-      index_expr.array(),
-      potential_array_exprs,
-      array_const);
+  bool array_const = false;
+  bool resolved_array = try_resolve_expression(
+      index_expr.array(), potential_array_exprs, array_const);
 
-  if(resolved_array)
-  {
-    bool all_possible_const=true;
-    for(const exprt &potential_array_expr : potential_array_exprs)
-    {
-      all_possible_const=
-        all_possible_const &&
-        is_const_type(potential_array_expr.type().subtype());
+  if (resolved_array) {
+    bool all_possible_const = true;
+    for (const exprt &potential_array_expr : potential_array_exprs) {
+      all_possible_const = all_possible_const &&
+                           is_const_type(potential_array_expr.type().subtype());
 
-      if(potential_array_expr.id()==ID_array)
-      {
+      if (potential_array_expr.id() == ID_array) {
         // Get the index if we can
         mp_integer value;
-        if(try_resolve_index_value(index_expr.index(), value))
-        {
+        if (try_resolve_index_value(index_expr.index(), value)) {
           expressionst array_out_functions;
-          const exprt &func_expr=
-            potential_array_expr.operands()[integer2size_t(value)];
-          bool value_const=false;
-          bool resolved_value=
-            try_resolve_expression(func_expr, array_out_functions, value_const);
+          const exprt &func_expr =
+              potential_array_expr.operands()[integer2size_t(value)];
+          bool value_const = false;
+          bool resolved_value = try_resolve_expression(
+              func_expr, array_out_functions, value_const);
 
-          if(resolved_value)
-          {
-            out_expressions.insert(
-              out_expressions.end(),
-              array_out_functions.begin(),
-              array_out_functions.end());
-          }
-          else
-          {
+          if (resolved_value) {
+            out_expressions.insert(out_expressions.end(),
+                                   array_out_functions.begin(),
+                                   array_out_functions.end());
+          } else {
             LOG("Failed to resolve array value", func_expr);
             return false;
           }
-        }
-        else
-        {
+        } else {
           // We don't know what index it is,
           // but we know the value is from the array
-          for(const exprt &array_entry : potential_array_expr.operands())
-          {
+          for (const exprt &array_entry : potential_array_expr.operands()) {
             expressionst array_contents;
             bool is_entry_const;
-            bool resolved_value=
-              try_resolve_expression(
+            bool resolved_value = try_resolve_expression(
                 array_entry, array_contents, is_entry_const);
 
-            if(!resolved_value)
-            {
+            if (!resolved_value) {
               LOG("Failed to resolve array value", array_entry);
               return false;
             }
 
-            for(const exprt &resolved_array_entry : array_contents)
-            {
-              if(!resolved_array_entry.is_zero())
-              {
+            for (const exprt &resolved_array_entry : array_contents) {
+              if (!resolved_array_entry.is_zero()) {
                 out_expressions.push_back(resolved_array_entry);
               }
             }
           }
         }
-      }
-      else
-      {
-        LOG(
-          "Squashing index of did not result in an array",
-          potential_array_expr);
+      } else {
+        LOG("Squashing index of did not result in an array",
+            potential_array_expr);
         return false;
       }
     }
 
-    out_is_const=all_possible_const || array_const;
+    out_is_const = all_possible_const || array_const;
     return true;
-  }
-  else
-  {
+  } else {
     LOG("Failed to squash index of to array expression", index_expr);
     return false;
   }
@@ -749,57 +639,41 @@ Function: remove_const_function_pointerst::try_resolve_member
 \*******************************************************************/
 
 bool remove_const_function_pointerst::try_resolve_member(
-  const member_exprt &member_expr,
-  expressionst &out_expressions,
-  bool &out_is_const)
-{
+    const member_exprt &member_expr, expressionst &out_expressions,
+    bool &out_is_const) {
   expressionst potential_structs;
   bool is_struct_const;
 
   // Get the struct it belongs to
-  bool resolved_struct=
-    try_resolve_expression(
+  bool resolved_struct = try_resolve_expression(
       member_expr.compound(), potential_structs, is_struct_const);
-  if(resolved_struct)
-  {
-    for(const exprt &potential_struct : potential_structs)
-    {
-      if(potential_struct.id()==ID_struct)
-      {
-        struct_exprt struct_expr=to_struct_expr(potential_struct);
-        const exprt &component_value=
-          get_component_value(struct_expr, member_expr);
+  if (resolved_struct) {
+    for (const exprt &potential_struct : potential_structs) {
+      if (potential_struct.id() == ID_struct) {
+        struct_exprt struct_expr = to_struct_expr(potential_struct);
+        const exprt &component_value =
+            get_component_value(struct_expr, member_expr);
         expressionst resolved_expressions;
-        bool component_const=false;
-        bool resolved=
-          try_resolve_expression(
+        bool component_const = false;
+        bool resolved = try_resolve_expression(
             component_value, resolved_expressions, component_const);
-        if(resolved)
-        {
-          out_expressions.insert(
-            out_expressions.end(),
-            resolved_expressions.begin(),
-            resolved_expressions.end());
-        }
-        else
-        {
+        if (resolved) {
+          out_expressions.insert(out_expressions.end(),
+                                 resolved_expressions.begin(),
+                                 resolved_expressions.end());
+        } else {
           LOG("Could not resolve component value", component_value);
           return false;
         }
-      }
-      else
-      {
-        LOG(
-          "Squashing member access did not resolve in a struct",
-          potential_struct);
+      } else {
+        LOG("Squashing member access did not resolve in a struct",
+            potential_struct);
         return false;
       }
     }
-    out_is_const=is_struct_const;
+    out_is_const = is_struct_const;
     return true;
-  }
-  else
-  {
+  } else {
     LOG("Failed to squash struct access", member_expr);
     return false;
   }
@@ -827,63 +701,45 @@ Function: remove_const_function_pointerst::try_resolve_dereference
 \*******************************************************************/
 
 bool remove_const_function_pointerst::try_resolve_dereference(
-  const dereference_exprt &deref_expr,
-  expressionst &out_expressions,
-  bool &out_is_const)
-{
+    const dereference_exprt &deref_expr, expressionst &out_expressions,
+    bool &out_is_const) {
   // We had a pointer, we need to check both the pointer
   // type can't be changed, and what it what pointing to
   // can't be changed
   expressionst pointer_values;
   bool pointer_const;
-  bool resolved=
-    try_resolve_expression(deref_expr.pointer(), pointer_values, pointer_const);
-  if(resolved && pointer_const)
-  {
-    bool all_objects_const=true;
-    for(const exprt &pointer_val : pointer_values)
-    {
-      if(pointer_val.id()==ID_address_of)
-      {
-        address_of_exprt address_expr=to_address_of_expr(pointer_val);
-        bool object_const=false;
+  bool resolved = try_resolve_expression(deref_expr.pointer(), pointer_values,
+                                         pointer_const);
+  if (resolved && pointer_const) {
+    bool all_objects_const = true;
+    for (const exprt &pointer_val : pointer_values) {
+      if (pointer_val.id() == ID_address_of) {
+        address_of_exprt address_expr = to_address_of_expr(pointer_val);
+        bool object_const = false;
         expressionst out_object_values;
-        bool resolved=
-          try_resolve_expression(
-            address_expr.object(), out_object_values, object_const);
+        bool resolved = try_resolve_expression(address_expr.object(),
+                                               out_object_values, object_const);
 
-        if(resolved)
-        {
-          out_expressions.insert(
-            out_expressions.end(),
-            out_object_values.begin(),
-            out_object_values.end());
+        if (resolved) {
+          out_expressions.insert(out_expressions.end(),
+                                 out_object_values.begin(),
+                                 out_object_values.end());
 
-          all_objects_const&=object_const;
-        }
-        else
-        {
+          all_objects_const &= object_const;
+        } else {
           LOG("Failed to resolve value of a dereference", address_expr);
         }
-      }
-      else
-      {
-        LOG(
-          "Squashing dereference did not result in an address", pointer_val);
+      } else {
+        LOG("Squashing dereference did not result in an address", pointer_val);
         return false;
       }
     }
-    out_is_const=all_objects_const;
+    out_is_const = all_objects_const;
     return true;
-  }
-  else
-  {
-    if(!resolved)
-    {
+  } else {
+    if (!resolved) {
       LOG("Failed to resolve pointer of dereference", deref_expr);
-    }
-    else if(!pointer_const)
-    {
+    } else if (!pointer_const) {
       LOG("Pointer value not const so can't squash", deref_expr);
     }
     return false;
@@ -908,27 +764,19 @@ Function: remove_const_function_pointerst::try_resolve_dereference
 \*******************************************************************/
 
 bool remove_const_function_pointerst::try_resolve_typecast(
-  const typecast_exprt &typecast_expr,
-  expressionst &out_expressions,
-  bool &out_is_const)
-{
+    const typecast_exprt &typecast_expr, expressionst &out_expressions,
+    bool &out_is_const) {
   expressionst typecast_values;
   bool typecast_const;
-  bool resolved=
-    try_resolve_expression(
-      typecast_expr.op(), typecast_values, typecast_const);
+  bool resolved = try_resolve_expression(typecast_expr.op(), typecast_values,
+                                         typecast_const);
 
-  if(resolved)
-  {
-    out_expressions.insert(
-      out_expressions.end(),
-      typecast_values.begin(),
-      typecast_values.end());
-    out_is_const=typecast_const;
+  if (resolved) {
+    out_expressions.insert(out_expressions.end(), typecast_values.begin(),
+                           typecast_values.end());
+    out_is_const = typecast_const;
     return true;
-  }
-  else
-  {
+  } else {
     LOG("Could not resolve typecast value", typecast_expr);
     return false;
   }
@@ -948,8 +796,7 @@ Function: remove_const_function_pointerst::is_expression_const
 \*******************************************************************/
 
 bool remove_const_function_pointerst::is_const_expression(
-  const exprt &expression) const
-{
+    const exprt &expression) const {
   return is_const_type(expression.type());
 }
 
@@ -967,16 +814,12 @@ Function: remove_const_function_pointerst::is_type_const
 
 \*******************************************************************/
 
-bool remove_const_function_pointerst::is_const_type(const typet &type) const
-{
+bool remove_const_function_pointerst::is_const_type(const typet &type) const {
   c_qualifierst qualifers(type);
-  if(type.id()==ID_array)
-  {
+  if (type.id() == ID_array) {
     c_qualifierst array_type_qualifers(type.subtype());
     return qualifers.is_constant || array_type_qualifers.is_constant;
-  }
-  else
-  {
+  } else {
     return qualifers.is_constant;
   }
 }
@@ -997,11 +840,11 @@ Function: remove_const_function_pointerst::get_component_value
 \*******************************************************************/
 
 exprt remove_const_function_pointerst::get_component_value(
-  const struct_exprt &struct_expr, const member_exprt &member_expr)
-{
-  const struct_typet &struct_type=to_struct_type(ns.follow(struct_expr.type()));
-  size_t component_number=
-    struct_type.component_number(member_expr.get_component_name());
+    const struct_exprt &struct_expr, const member_exprt &member_expr) {
+  const struct_typet &struct_type =
+      to_struct_type(ns.follow(struct_expr.type()));
+  size_t component_number =
+      struct_type.component_number(member_expr.get_component_name());
 
   return struct_expr.operands()[component_number];
 }

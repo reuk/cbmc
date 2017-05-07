@@ -6,12 +6,12 @@
 
 \*******************************************************************/
 
+#include <ansi-c/c_qualifiers.h>
 #include <goto-programs/goto_program.h>
-#include <util/type.h>
+#include <util/base_type.h>
 #include <util/expr.h>
 #include <util/std_code.h>
-#include <util/base_type.h>
-#include <ansi-c/c_qualifiers.h>
+#include <util/type.h>
 
 #include "does_remove_const.h"
 
@@ -30,12 +30,9 @@ Function: does_remove_constt::does_remove_constt
 
 \*******************************************************************/
 
-does_remove_constt::does_remove_constt(
-  const goto_programt &goto_program,
-  const namespacet &ns):
-    goto_program(goto_program),
-    ns(ns)
-{}
+does_remove_constt::does_remove_constt(const goto_programt &goto_program,
+                                       const namespacet &ns)
+    : goto_program(goto_program), ns(ns) {}
 
 /*******************************************************************\
 
@@ -50,29 +47,24 @@ Function: does_remove_constt::operator()
 
 \*******************************************************************/
 
-bool does_remove_constt::operator()() const
-{
-  for(const goto_programt::instructiont &instruction :
-    goto_program.instructions)
-  {
-    if(!instruction.is_assign())
-    {
+bool does_remove_constt::operator()() const {
+  for (const goto_programt::instructiont &instruction :
+       goto_program.instructions) {
+    if (!instruction.is_assign()) {
       continue;
     }
 
-    const code_assignt &assign=to_code_assign(instruction.code);
-    const typet &rhs_type=assign.rhs().type();
-    const typet &lhs_type=assign.lhs().type();
+    const code_assignt &assign = to_code_assign(instruction.code);
+    const typet &rhs_type = assign.rhs().type();
+    const typet &lhs_type = assign.lhs().type();
 
     // Compare the types recursively for a point where the rhs is more
     // const that the lhs
-    if(!is_type_at_least_as_const_as(&lhs_type, &rhs_type))
-    {
+    if (!is_type_at_least_as_const_as(&lhs_type, &rhs_type)) {
       return true;
     }
 
-    if(does_expr_lose_const(assign.rhs()))
-    {
+    if (does_expr_lose_const(assign.rhs())) {
       return true;
     }
   }
@@ -96,26 +88,21 @@ Function: does_remove_constt::does_expr_lose_const()
 
 \*******************************************************************/
 
-bool does_remove_constt::does_expr_lose_const(const exprt &expr) const
-{
-  const typet &root_type=expr.type();
+bool does_remove_constt::does_expr_lose_const(const exprt &expr) const {
+  const typet &root_type = expr.type();
 
   // Look in each child that has the same base type as the root
-  for(const exprt &op : expr.operands())
-  {
-    const typet &op_type=op.type();
-    if(base_type_eq(op_type, root_type, ns))
-    {
+  for (const exprt &op : expr.operands()) {
+    const typet &op_type = op.type();
+    if (base_type_eq(op_type, root_type, ns)) {
       // Is this child more const-qualified than the root
-      if(!is_type_at_least_as_const_as(&root_type, &op_type))
-      {
+      if (!is_type_at_least_as_const_as(&root_type, &op_type)) {
         return true;
       }
     }
 
     // Recursively check the children of this child
-    if(does_expr_lose_const(op))
-    {
+    if (does_expr_lose_const(op)) {
       return true;
     }
   }
@@ -146,22 +133,19 @@ Function: does_remove_constt::is_type_at_least_as_const_as
 \*******************************************************************/
 
 bool does_remove_constt::is_type_at_least_as_const_as(
-  const typet *type_more_const, const typet *type_compare) const
-{
-  while(type_compare->id()!=ID_nil && type_more_const->id()!=ID_nil)
-  {
+    const typet *type_more_const, const typet *type_compare) const {
+  while (type_compare->id() != ID_nil && type_more_const->id() != ID_nil) {
     const c_qualifierst rhs_qualifiers(*type_compare);
     const c_qualifierst lhs_qualifiers(*type_more_const);
-    if(rhs_qualifiers.is_constant && !lhs_qualifiers.is_constant)
-    {
+    if (rhs_qualifiers.is_constant && !lhs_qualifiers.is_constant) {
       return false;
     }
 
-    type_compare=&type_compare->subtype();
-    type_more_const=&type_more_const->subtype();
+    type_compare = &type_compare->subtype();
+    type_more_const = &type_more_const->subtype();
   }
 
   // Both the types should have the same number of subtypes
-  assert(type_compare->id()==ID_nil && type_more_const->id()==ID_nil);
+  assert(type_compare->id() == ID_nil && type_more_const->id() == ID_nil);
   return true;
 }

@@ -15,16 +15,13 @@ Author:
 // we follow
 // https://developer.apple.com/library/mac/#documentation/DeveloperTools/Conceptual/MachORuntime/Reference/reference.html
 
-class osx_fat_readert
-{
+class osx_fat_readert {
 public:
   explicit osx_fat_readert(std::ifstream &in);
 
   bool has_gb() const { return has_gb_arch; }
 
-  bool extract_gb(
-    const std::string &source,
-    const std::string &dest) const;
+  bool extract_gb(const std::string &source, const std::string &dest) const;
 
 private:
   bool has_gb_arch;

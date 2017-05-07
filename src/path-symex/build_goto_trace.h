@@ -10,14 +10,13 @@ Author: Daniel Kroening, kroening@kroening.com
 #ifndef CPROVER_PATH_SYMEX_BUILD_GOTO_TRACE_H
 #define CPROVER_PATH_SYMEX_BUILD_GOTO_TRACE_H
 
-#include <util/decision_procedure.h>
 #include <goto-programs/goto_trace.h>
+#include <util/decision_procedure.h>
 
 #include "path_symex_state.h"
 
-void build_goto_trace(
-  const path_symex_statet &state,
-  const decision_proceduret &decision_procedure,
-  goto_tracet &goto_trace);
+void build_goto_trace(const path_symex_statet &state,
+                      const decision_proceduret &decision_procedure,
+                      goto_tracet &goto_trace);
 
 #endif // CPROVER_PATH_SYMEX_BUILD_GOTO_TRACE_H

@@ -8,8 +8,8 @@ Date: June 2006
 
 \*******************************************************************/
 
-#include "xml_irep.h"
 #include "xml_symbol.h"
+#include "xml_irep.h"
 
 /*******************************************************************\
 
@@ -23,8 +23,7 @@ Function: convert
 
 \*******************************************************************/
 
-void convert(const symbolt &sym, xmlt &root)
-{
+void convert(const symbolt &sym, xmlt &root) {
   xmlt &xmlsym = root.new_element("symbol");
   xmlsym.set_attribute("name", id2string(sym.name));
 
@@ -32,7 +31,7 @@ void convert(const symbolt &sym, xmlt &root)
   convert(sym.type, xmltype);
 
   xmlt &xmlval = xmlsym.new_element("value");
-  if(!sym.is_type && sym.type.id() == "code" && !sym.value.is_nil())
+  if (!sym.is_type && sym.type.id() == "code" && !sym.value.is_nil())
     xmlval.data = "compiled"; // only for implemented functions
   else
     convert(sym.value, xmlval);
@@ -57,11 +56,11 @@ void convert(const symbolt &sym, xmlt &root)
   xmlt &mode = flags.new_element("mode");
   mode.data = id2string(sym.mode);
 
-  flags.new_element("base_name").data=id2string(sym.base_name);
-  flags.new_element("module").data=id2string(sym.module);
+  flags.new_element("base_name").data = id2string(sym.base_name);
+  flags.new_element("module").data = id2string(sym.module);
 
-  if(sym.pretty_name.size()>0)
-    flags.new_element("pretty_name").data=id2string(sym.pretty_name);
+  if (sym.pretty_name.size() > 0)
+    flags.new_element("pretty_name").data = id2string(sym.pretty_name);
 
   xmlt &xmlloc = xmlsym.new_element("location");
   convert(sym.location, xmlloc);
@@ -80,32 +79,20 @@ Function: convert
 
 \*******************************************************************/
 
-void convert(const xmlt &xmlsym, symbolt &symbol)
-{
-  symbol.name=xmlsym.get_attribute("name");
+void convert(const xmlt &xmlsym, symbolt &symbol) {
+  symbol.name = xmlsym.get_attribute("name");
 
-  for(xmlt::elementst::const_iterator
-      it=xmlsym.elements.begin();
-      it!=xmlsym.elements.end();
-      it++)
-  {
-    if(it->name=="type")
-    {
+  for (xmlt::elementst::const_iterator it = xmlsym.elements.begin();
+       it != xmlsym.elements.end(); it++) {
+    if (it->name == "type") {
       convert(*it, symbol.type);
-    }
-    else if(it->name=="value")
-    {
-      if(it->data=="compiled")
-      {
+    } else if (it->name == "value") {
+      if (it->data == "compiled") {
         symbol.value.id("code");
-      }
-      else
-      {
+      } else {
         convert(*it, symbol.value);
       }
-    }
-    else if(it->name=="flags")
-    {
+    } else if (it->name == "flags") {
       symbol.is_lvalue = it->get_attribute_bool("lvalue");
       symbol.is_static_lifetime = it->get_attribute_bool("static_lifetime");
       symbol.is_file_local = it->get_attribute_bool("file_local");
@@ -121,21 +108,16 @@ void convert(const xmlt &xmlsym, symbolt &symbol)
       // symbol.free_var = it->get_attribute_bool("free_var");
       symbol.is_state_var = it->get_attribute_bool("statevar");
 
-      for(xmlt::elementst::const_iterator
-          fit=it->elements.begin();
-          fit!=it->elements.end();
-          fit++)
-      {
-        if(fit->name=="mode")
-          symbol.mode=fit->data;
-        else if(fit->name=="base_name")
-          symbol.base_name=fit->data;
-        else if(fit->name=="module")
-          symbol.module=fit->data;
+      for (xmlt::elementst::const_iterator fit = it->elements.begin();
+           fit != it->elements.end(); fit++) {
+        if (fit->name == "mode")
+          symbol.mode = fit->data;
+        else if (fit->name == "base_name")
+          symbol.base_name = fit->data;
+        else if (fit->name == "module")
+          symbol.module = fit->data;
       }
-    }
-    else if(it->name=="location")
-    {
+    } else if (it->name == "location") {
       convert(*it, symbol.location);
     }
   }

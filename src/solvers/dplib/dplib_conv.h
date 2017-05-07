@@ -9,23 +9,17 @@ Author: Daniel Kroening, kroening@kroening.com
 #ifndef CPROVER_SOLVERS_DPLIB_DPLIB_CONV_H
 #define CPROVER_SOLVERS_DPLIB_DPLIB_CONV_H
 
-
-#include <solvers/prop/prop_conv.h>
 #include <solvers/flattening/pointer_logic.h>
+#include <solvers/prop/prop_conv.h>
 
 #include "dplib_prop.h"
 
-class dplib_convt:public prop_convt
-{
+class dplib_convt : public prop_convt {
 public:
-  dplib_convt(
-    const namespacet &_ns,
-    std::ostream &_out):
-    prop_convt(_ns),
-    out(_out),
-    pointer_logic(_ns) { }
+  dplib_convt(const namespacet &_ns, std::ostream &_out)
+      : prop_convt(_ns), out(_out), pointer_logic(_ns) {}
 
-  virtual ~dplib_convt() { }
+  virtual ~dplib_convt() {}
 
 protected:
   std::ostream &out;
@@ -51,20 +45,18 @@ private:
   static std::string array_index(unsigned i);
   static std::string dplib_pointer_type();
 
-  struct identifiert
-  {
+  struct identifiert {
     typet type;
     exprt value;
 
-    identifiert()
-    {
+    identifiert() {
       type.make_nil();
       value.make_nil();
     }
   };
 
   typedef std::unordered_map<irep_idt, identifiert, irep_id_hash>
-    identifier_mapt;
+      identifier_mapt;
 
   identifier_mapt identifier_map;
 };

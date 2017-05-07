@@ -23,14 +23,12 @@ Function: symex_slicet::get_symbols
 
 \*******************************************************************/
 
-void symex_slicet::get_symbols(const exprt &expr)
-{
+void symex_slicet::get_symbols(const exprt &expr) {
   get_symbols(expr.type());
 
-  forall_operands(it, expr)
-    get_symbols(*it);
+  forall_operands(it, expr) get_symbols(*it);
 
-  if(expr.id()==ID_symbol)
+  if (expr.id() == ID_symbol)
     depends.insert(to_symbol_expr(expr).get_identifier());
 }
 
@@ -46,8 +44,7 @@ Function: symex_slicet::get_symbols
 
 \*******************************************************************/
 
-void symex_slicet::get_symbols(const typet &type)
-{
+void symex_slicet::get_symbols(const typet &type) {
   // TODO
 }
 
@@ -63,13 +60,10 @@ Function: symex_slicet::slice
 
 \*******************************************************************/
 
-void symex_slicet::slice(
-  symex_target_equationt &equation,
-  const expr_listt &exprs)
-{
+void symex_slicet::slice(symex_target_equationt &equation,
+                         const expr_listt &exprs) {
   // collect dependencies
-  forall_expr_list(expr_it, exprs)
-    get_symbols(*expr_it);
+  forall_expr_list(expr_it, exprs) get_symbols(*expr_it);
 
   slice(equation);
 }
@@ -86,12 +80,10 @@ Function: symex_slicet::slice
 
 \*******************************************************************/
 
-void symex_slicet::slice(symex_target_equationt &equation)
-{
-  for(symex_target_equationt::SSA_stepst::reverse_iterator
-      it=equation.SSA_steps.rbegin();
-      it!=equation.SSA_steps.rend();
-      it++)
+void symex_slicet::slice(symex_target_equationt &equation) {
+  for (symex_target_equationt::SSA_stepst::reverse_iterator it =
+           equation.SSA_steps.rbegin();
+       it != equation.SSA_steps.rend(); it++)
     slice(*it);
 }
 
@@ -107,12 +99,10 @@ Function: symex_slicet::slice
 
 \*******************************************************************/
 
-void symex_slicet::slice(symex_target_equationt::SSA_stept &SSA_step)
-{
+void symex_slicet::slice(symex_target_equationt::SSA_stept &SSA_step) {
   get_symbols(SSA_step.guard);
 
-  switch(SSA_step.type)
-  {
+  switch (SSA_step.type) {
   case goto_trace_stept::ASSERT:
     get_symbols(SSA_step.cond_expr);
     break;
@@ -178,17 +168,14 @@ Function: symex_slicet::slice_assignment
 \*******************************************************************/
 
 void symex_slicet::slice_assignment(
-  symex_target_equationt::SSA_stept &SSA_step)
-{
-  assert(SSA_step.ssa_lhs.id()==ID_symbol);
-  const irep_idt &id=SSA_step.ssa_lhs.get_identifier();
+    symex_target_equationt::SSA_stept &SSA_step) {
+  assert(SSA_step.ssa_lhs.id() == ID_symbol);
+  const irep_idt &id = SSA_step.ssa_lhs.get_identifier();
 
-  if(depends.find(id)==depends.end())
-  {
+  if (depends.find(id) == depends.end()) {
     // we don't really need it
-    SSA_step.ignore=true;
-  }
-  else
+    SSA_step.ignore = true;
+  } else
     get_symbols(SSA_step.ssa_rhs);
 }
 
@@ -204,16 +191,13 @@ Function: symex_slicet::slice_decl
 
 \*******************************************************************/
 
-void symex_slicet::slice_decl(
-  symex_target_equationt::SSA_stept &SSA_step)
-{
-  assert(SSA_step.ssa_lhs.id()==ID_symbol);
-  const irep_idt &id=SSA_step.ssa_lhs.get_identifier();
+void symex_slicet::slice_decl(symex_target_equationt::SSA_stept &SSA_step) {
+  assert(SSA_step.ssa_lhs.id() == ID_symbol);
+  const irep_idt &id = SSA_step.ssa_lhs.get_identifier();
 
-  if(depends.find(id)==depends.end())
-  {
+  if (depends.find(id) == depends.end()) {
     // we don't really need it
-    SSA_step.ignore=true;
+    SSA_step.ignore = true;
   }
 }
 
@@ -232,22 +216,17 @@ Function: symex_slice_classt::collect_open_variables
 \*******************************************************************/
 
 void symex_slicet::collect_open_variables(
-  const symex_target_equationt &equation,
-  symbol_sett &open_variables)
-{
+    const symex_target_equationt &equation, symbol_sett &open_variables) {
   symbol_sett lhs;
 
-  for(symex_target_equationt::SSA_stepst::const_iterator
-      it=equation.SSA_steps.begin();
-      it!=equation.SSA_steps.end();
-      it++)
-  {
-    const symex_target_equationt::SSA_stept &SSA_step=*it;
+  for (symex_target_equationt::SSA_stepst::const_iterator it =
+           equation.SSA_steps.begin();
+       it != equation.SSA_steps.end(); it++) {
+    const symex_target_equationt::SSA_stept &SSA_step = *it;
 
     get_symbols(SSA_step.guard);
 
-    switch(SSA_step.type)
-    {
+    switch (SSA_step.type) {
     case goto_trace_stept::ASSERT:
       get_symbols(SSA_step.cond_expr);
       break;
@@ -289,7 +268,7 @@ void symex_slicet::collect_open_variables(
     }
   }
 
-  open_variables=depends;
+  open_variables = depends;
 
   // remove the ones that are defined
   open_variables.erase(lhs.begin(), lhs.end());
@@ -307,8 +286,7 @@ Function: slice
 
 \*******************************************************************/
 
-void slice(symex_target_equationt &equation)
-{
+void slice(symex_target_equationt &equation) {
   symex_slicet symex_slice;
   symex_slice.slice(equation);
 }
@@ -327,10 +305,8 @@ Function: collect_open_variables
 
 \*******************************************************************/
 
-void collect_open_variables(
-  const symex_target_equationt &equation,
-  symbol_sett &open_variables)
-{
+void collect_open_variables(const symex_target_equationt &equation,
+                            symbol_sett &open_variables) {
   symex_slicet symex_slice;
   symex_slice.collect_open_variables(equation, open_variables);
 }
@@ -348,9 +324,7 @@ Function: slice
 
 \*******************************************************************/
 
-void slice(symex_target_equationt &equation,
-           const expr_listt &expressions)
-{
+void slice(symex_target_equationt &equation, const expr_listt &expressions) {
   symex_slicet symex_slice;
   symex_slice.slice(equation, expressions);
 }
@@ -367,29 +341,23 @@ Function: simple_slice
 
 \*******************************************************************/
 
-void simple_slice(symex_target_equationt &equation)
-{
+void simple_slice(symex_target_equationt &equation) {
   // just find the last assertion
-  symex_target_equationt::SSA_stepst::iterator
-    last_assertion=equation.SSA_steps.end();
+  symex_target_equationt::SSA_stepst::iterator last_assertion =
+      equation.SSA_steps.end();
 
-  for(symex_target_equationt::SSA_stepst::iterator
-      it=equation.SSA_steps.begin();
-      it!=equation.SSA_steps.end();
-      it++)
-    if(it->is_assert())
-      last_assertion=it;
+  for (symex_target_equationt::SSA_stepst::iterator it =
+           equation.SSA_steps.begin();
+       it != equation.SSA_steps.end(); it++)
+    if (it->is_assert())
+      last_assertion = it;
 
   // slice away anything after it
 
-  symex_target_equationt::SSA_stepst::iterator s_it=
-    last_assertion;
+  symex_target_equationt::SSA_stepst::iterator s_it = last_assertion;
 
-  if(s_it!=equation.SSA_steps.end())
-  {
-    for(s_it++;
-        s_it!=equation.SSA_steps.end();
-        s_it++)
-      s_it->ignore=true;
+  if (s_it != equation.SSA_steps.end()) {
+    for (s_it++; s_it != equation.SSA_steps.end(); s_it++)
+      s_it->ignore = true;
   }
 }

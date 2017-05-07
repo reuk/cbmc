@@ -15,12 +15,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <util/message.h>
 
+#include "jar_file.h"
 #include "java_bytecode_parse_tree.h"
 #include "java_class_loader_limit.h"
-#include "jar_file.h"
 
-class java_class_loadert:public messaget
-{
+class java_class_loadert : public messaget {
 public:
   java_bytecode_parse_treet &operator()(const irep_idt &);
 
@@ -33,20 +32,15 @@ public:
   static std::string file_to_class_name(const std::string &);
   static std::string class_name_to_file(const irep_idt &);
 
-  void add_jar_file(const std::string &f)
-  {
-    jar_files.push_back(f);
-  }
+  void add_jar_file(const std::string &f) { jar_files.push_back(f); }
 
   void load_entire_jar(java_class_loader_limitt &, const std::string &f);
 
   jar_poolt jar_pool;
 
-  class jar_map_entryt
-  {
+  class jar_map_entryt {
   public:
-    struct entryt
-    {
+    struct entryt {
       std::string class_file_name;
     };
 
@@ -62,8 +56,8 @@ public:
   void read_jar_file(java_class_loader_limitt &, const irep_idt &);
 
   // get a parse tree for given class
-  java_bytecode_parse_treet &get_parse_tree(
-    java_class_loader_limitt &, const irep_idt &);
+  java_bytecode_parse_treet &get_parse_tree(java_class_loader_limitt &,
+                                            const irep_idt &);
 
   std::list<std::string> jar_files;
   std::string java_cp_include_files;

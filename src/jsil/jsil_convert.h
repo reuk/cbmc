@@ -13,9 +13,8 @@ class jsil_parse_treet;
 class message_handlert;
 class symbol_tablet;
 
-bool jsil_convert(
-  const jsil_parse_treet &parse_tree,
-  symbol_tablet &symbol_table,
-  message_handlert &message_handler);
+bool jsil_convert(const jsil_parse_treet &parse_tree,
+                  symbol_tablet &symbol_table,
+                  message_handlert &message_handler);
 
 #endif // CPROVER_JSIL_JSIL_CONVERT_H

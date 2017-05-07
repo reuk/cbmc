@@ -16,13 +16,11 @@ Date: April 2016
 
 #include <util/namespace.h>
 
-class class_hierarchyt
-{
+class class_hierarchyt {
 public:
   typedef std::vector<irep_idt> idst;
 
-  class entryt
-  {
+  class entryt {
   public:
     idst parents, children;
   };
@@ -33,16 +31,14 @@ public:
   void operator()(const symbol_tablet &);
 
   // transitively gets all children
-  idst get_children_trans(const irep_idt &id) const
-  {
+  idst get_children_trans(const irep_idt &id) const {
     idst result;
     get_children_trans_rec(id, result);
     return result;
   }
 
   // transitively gets all parents
-  idst get_parents_trans(const irep_idt &id) const
-  {
+  idst get_parents_trans(const irep_idt &id) const {
     idst result;
     get_parents_trans_rec(id, result);
     return result;

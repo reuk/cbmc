@@ -17,31 +17,23 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "bv_cbmc.h"
 
-class counterexample_beautificationt
-{
+class counterexample_beautificationt {
 public:
-  virtual ~counterexample_beautificationt()
-  {
-  }
+  virtual ~counterexample_beautificationt() {}
 
-  void operator()(
-    bv_cbmct &bv_cbmc,
-    const symex_target_equationt &equation,
-    const namespacet &ns);
+  void operator()(bv_cbmct &bv_cbmc, const symex_target_equationt &equation,
+                  const namespacet &ns);
 
 protected:
-  void get_minimization_list(
-    prop_convt &prop_conv,
-    const symex_target_equationt &equation,
-    minimization_listt &minimization_list);
+  void get_minimization_list(prop_convt &prop_conv,
+                             const symex_target_equationt &equation,
+                             minimization_listt &minimization_list);
 
-  void minimize(
-    const exprt &expr,
-    class prop_minimizet &prop_minimize);
+  void minimize(const exprt &expr, class prop_minimizet &prop_minimize);
 
-  symex_target_equationt::SSA_stepst::const_iterator get_failed_property(
-    const prop_convt &prop_conv,
-    const symex_target_equationt &equation);
+  symex_target_equationt::SSA_stepst::const_iterator
+  get_failed_property(const prop_convt &prop_conv,
+                      const symex_target_equationt &equation);
 
   // the failed property
   symex_target_equationt::SSA_stepst::const_iterator failed;

@@ -11,8 +11,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <util/xml.h>
 
-class xml_parse_treet
-{
+class xml_parse_treet {
 public:
   xmlt xml;
   xmlt element;

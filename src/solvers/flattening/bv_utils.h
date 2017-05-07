@@ -21,11 +21,9 @@ Author: Daniel Kroening, kroening@kroening.com
 // but seems to give a run-time penalty.
 // #define COMPACT_EQUAL_CONST
 
-
-class bv_utilst
-{
+class bv_utilst {
 public:
-  explicit bv_utilst(propt &_prop):prop(_prop) { }
+  explicit bv_utilst(propt &_prop) : prop(_prop) {}
 
   typedef enum { SIGNED, UNSIGNED } representationt;
 
@@ -45,20 +43,14 @@ public:
   // bit-wise negation
   bvt inverted(const bvt &op);
 
-  literalt full_adder(
-    const literalt a,
-    const literalt b,
-    const literalt carry_in,
-    literalt &carry_out);
+  literalt full_adder(const literalt a, const literalt b,
+                      const literalt carry_in, literalt &carry_out);
   literalt carry(literalt a, literalt b, literalt c);
 
   bvt add_sub(const bvt &op0, const bvt &op1, bool subtract);
   bvt add_sub(const bvt &op0, const bvt &op1, literalt subtract);
-  bvt add_sub_no_overflow(
-    const bvt &op0,
-    const bvt &op1,
-    bool subtract,
-    representationt rep);
+  bvt add_sub_no_overflow(const bvt &op0, const bvt &op1, bool subtract,
+                          representationt rep);
 
   bvt add(const bvt &op0, const bvt &op1) { return add_sub(op0, op1, false); }
   bvt sub(const bvt &op0, const bvt &op1) { return add_sub(op0, op1, true); }
@@ -74,45 +66,29 @@ public:
   bvt unsigned_multiplier(const bvt &op0, const bvt &op1);
   bvt signed_multiplier(const bvt &op0, const bvt &op1);
   bvt multiplier(const bvt &op0, const bvt &op1, representationt rep);
-  bvt multiplier_no_overflow(
-    const bvt &op0,
-    const bvt &op1,
-    representationt rep);
+  bvt multiplier_no_overflow(const bvt &op0, const bvt &op1,
+                             representationt rep);
 
-  bvt divider(const bvt &op0, const bvt &op1, representationt rep)
-  {
+  bvt divider(const bvt &op0, const bvt &op1, representationt rep) {
     bvt res, rem;
     divider(op0, op1, res, rem, rep);
     return res;
   }
 
-  bvt remainder(const bvt &op0, const bvt &op1, representationt rep)
-  {
+  bvt remainder(const bvt &op0, const bvt &op1, representationt rep) {
     bvt res, rem;
     divider(op0, op1, res, rem, rep);
     return rem;
   }
 
-  void divider(
-    const bvt &op0,
-    const bvt &op1,
-    bvt &res,
-    bvt &rem,
-    representationt rep);
+  void divider(const bvt &op0, const bvt &op1, bvt &res, bvt &rem,
+               representationt rep);
 
-  void signed_divider(
-    const bvt &op0,
-    const bvt &op1,
-    bvt &res,
-    bvt &rem);
+  void signed_divider(const bvt &op0, const bvt &op1, bvt &res, bvt &rem);
 
-  void unsigned_divider(
-    const bvt &op0,
-    const bvt &op1,
-    bvt &res,
-    bvt &rem);
+  void unsigned_divider(const bvt &op0, const bvt &op1, bvt &res, bvt &rem);
 
-  #ifdef COMPACT_EQUAL_CONST
+#ifdef COMPACT_EQUAL_CONST
   typedef std::set<bvt> equal_const_registeredt;
   equal_const_registeredt equal_const_registered;
   void equal_const_register(const bvt &var);
@@ -123,46 +99,32 @@ public:
 
   literalt equal_const_rec(bvt &var, bvt &constant);
   literalt equal_const(const bvt &var, const bvt &constant);
-  #endif
-
+#endif
 
   literalt equal(const bvt &op0, const bvt &op1);
 
-  static inline literalt sign_bit(const bvt &op)
-  {
-    return op[op.size()-1];
-  }
+  static inline literalt sign_bit(const bvt &op) { return op[op.size() - 1]; }
 
-  literalt is_zero(const bvt &op)
-  { return !prop.lor(op); }
+  literalt is_zero(const bvt &op) { return !prop.lor(op); }
 
-  literalt is_not_zero(const bvt &op)
-  { return prop.lor(op); }
+  literalt is_not_zero(const bvt &op) { return prop.lor(op); }
 
-  literalt is_int_min(const bvt &op)
-  {
-    bvt tmp=op;
-    tmp[tmp.size()-1]=!tmp[tmp.size()-1];
+  literalt is_int_min(const bvt &op) {
+    bvt tmp = op;
+    tmp[tmp.size() - 1] = !tmp[tmp.size() - 1];
     return is_zero(tmp);
   }
 
   literalt is_one(const bvt &op);
 
-  literalt is_all_ones(const bvt &op)
-  { return prop.land(op); }
+  literalt is_all_ones(const bvt &op) { return prop.land(op); }
 
-  literalt lt_or_le(
-    bool or_equal,
-    const bvt &bv0,
-    const bvt &bv1,
-    representationt rep);
+  literalt lt_or_le(bool or_equal, const bvt &bv0, const bvt &bv1,
+                    representationt rep);
 
   // id is one of ID_lt, le, gt, ge, equal, notequal
-  literalt rel(
-    const bvt &bv0,
-    irep_idt id,
-    const bvt &bv1,
-    representationt rep);
+  literalt rel(const bvt &bv0, irep_idt id, const bvt &bv1,
+               representationt rep);
 
   literalt unsigned_less_than(const bvt &bv0, const bvt &bv1);
   literalt signed_less_than(const bvt &bv0, const bvt &bv1);
@@ -171,18 +133,15 @@ public:
 
   bvt extension(const bvt &bv, std::size_t new_size, representationt rep);
 
-  bvt sign_extension(const bvt &bv, std::size_t new_size)
-  {
+  bvt sign_extension(const bvt &bv, std::size_t new_size) {
     return extension(bv, new_size, SIGNED);
   }
 
-  bvt zero_extension(const bvt &bv, std::size_t new_size)
-  {
+  bvt zero_extension(const bvt &bv, std::size_t new_size) {
     return extension(bv, new_size, UNSIGNED);
   }
 
-  bvt zeros(std::size_t new_size) const
-  {
+  bvt zeros(std::size_t new_size) const {
     bvt result;
     result.resize(new_size, const_literal(false));
     return result;
@@ -215,25 +174,16 @@ public:
 protected:
   propt &prop;
 
-  void adder(
-    bvt &sum,
-    const bvt &op,
-    literalt carry_in,
-    literalt &carry_out);
+  void adder(bvt &sum, const bvt &op, literalt carry_in, literalt &carry_out);
 
-  void adder_no_overflow(
-    bvt &sum,
-    const bvt &op,
-    bool subtract,
-    representationt rep);
+  void adder_no_overflow(bvt &sum, const bvt &op, bool subtract,
+                         representationt rep);
 
   void adder_no_overflow(bvt &sum, const bvt &op);
 
-  bvt unsigned_multiplier_no_overflow(
-    const bvt &op0, const bvt &op1);
+  bvt unsigned_multiplier_no_overflow(const bvt &op0, const bvt &op1);
 
-  bvt signed_multiplier_no_overflow(
-    const bvt &op0, const bvt &op1);
+  bvt signed_multiplier_no_overflow(const bvt &op0, const bvt &op1);
 
   bvt cond_negate_no_overflow(const bvt &bv, const literalt cond);
 

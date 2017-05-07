@@ -14,8 +14,7 @@ Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
 // NOLINTNEXTLINE(readability/identifiers)
 struct LGL;
 
-class satcheck_lingelingt:public cnf_solvert
-{
+class satcheck_lingelingt : public cnf_solvert {
 public:
   satcheck_lingelingt();
   virtual ~satcheck_lingelingt();
@@ -35,7 +34,7 @@ public:
 
 protected:
   // NOLINTNEXTLINE(readability/identifiers)
-  struct LGL * solver;
+  struct LGL *solver;
   bvt assumptions;
 };
 

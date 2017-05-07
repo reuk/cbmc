@@ -13,8 +13,7 @@ Author: CM Wintersteiger
 
 #include "qdimacs_core.h"
 
-class qbf_squolem_coret:public qdimacs_coret
-{
+class qbf_squolem_coret : public qdimacs_coret {
 protected:
   Squolem2 *squolem;
   bool early_decision;
@@ -47,7 +46,7 @@ public:
 
 private:
   typedef std::unordered_map<unsigned, exprt> function_cachet;
-    function_cachet function_cache;
+  function_cachet function_cache;
 
   const exprt f_get_cnf(WitnessStack *wsp);
   const exprt f_get_dnf(WitnessStack *wsp);

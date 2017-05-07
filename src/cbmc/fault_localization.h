@@ -9,30 +9,22 @@ Author: Peter Schrammel
 #ifndef CPROVER_CBMC_FAULT_LOCALIZATION_H
 #define CPROVER_CBMC_FAULT_LOCALIZATION_H
 
+#include <langapi/language_ui.h>
 #include <util/namespace.h>
 #include <util/options.h>
 #include <util/threeval.h>
-#include <langapi/language_ui.h>
 
 #include <goto-symex/symex_target_equation.h>
 
-#include "bmc.h"
 #include "all_properties_class.h"
+#include "bmc.h"
 
-class fault_localizationt:
-  public bmc_all_propertiest
-{
+class fault_localizationt : public bmc_all_propertiest {
 public:
-  explicit fault_localizationt(
-    const goto_functionst &_goto_functions,
-    bmct &_bmc,
-    const optionst &_options)
-    :
-    bmc_all_propertiest(_goto_functions, _bmc.prop_conv, _bmc),
-    goto_functions(_goto_functions),
-    bmc(_bmc),
-    options(_options)
-  {
+  explicit fault_localizationt(const goto_functionst &_goto_functions,
+                               bmct &_bmc, const optionst &_options)
+      : bmc_all_propertiest(_goto_functions, _bmc.prop_conv, _bmc),
+        goto_functions(_goto_functions), bmc(_bmc), options(_options) {
     set_message_handler(bmc.get_message_handler());
   }
 
@@ -51,8 +43,7 @@ protected:
   symex_target_equationt::SSA_stepst::const_iterator failed;
 
   // the list of localization points up to the failed property
-  struct lpointt
-  {
+  struct lpointt {
     goto_programt::const_targett target;
     unsigned score;
   };
@@ -70,8 +61,7 @@ protected:
   // specify an lpoint combination to check
   typedef std::vector<tvt> lpoints_valuet;
   bool check(const lpointst &lpoints, const lpoints_valuet &value);
-  void update_scores(lpointst &lpoints,
-                     const lpoints_valuet &value);
+  void update_scores(lpointst &lpoints, const lpoints_valuet &value);
 
   // localization method: flip each point
   void localize_linear(lpointst &lpoints);
@@ -82,8 +72,7 @@ protected:
 
   symex_target_equationt::SSA_stepst::const_iterator get_failed_property();
 
-  decision_proceduret::resultt
-    run_decision_procedure(prop_convt &prop_conv);
+  decision_proceduret::resultt run_decision_procedure(prop_convt &prop_conv);
 
   void report(irep_idt goal_id);
 
@@ -91,10 +80,7 @@ protected:
   virtual void report(const cover_goalst &cover_goals);
 
   // override bmc_all_propertiest
-  virtual void do_before_solving()
-  {
-    freeze_guards();
-  }
+  virtual void do_before_solving() { freeze_guards(); }
 };
 
 #endif // CPROVER_CBMC_FAULT_LOCALIZATION_H

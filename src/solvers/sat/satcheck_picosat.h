@@ -14,8 +14,7 @@ Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
 // NOLINTNEXTLINE(readability/identifiers)
 struct PicoSAT;
 
-class satcheck_picosatt:public cnf_solvert
-{
+class satcheck_picosatt : public cnf_solvert {
 public:
   satcheck_picosatt();
   ~satcheck_picosatt();

@@ -13,8 +13,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 class goto_modelt;
 
-void show_symbol_table(
-  const goto_modelt &,
-  ui_message_handlert::uit ui);
+void show_symbol_table(const goto_modelt &, ui_message_handlert::uit ui);
 
 #endif // CPROVER_GOTO_PROGRAMS_SHOW_SYMBOL_TABLE_H

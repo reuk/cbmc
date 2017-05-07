@@ -23,10 +23,8 @@ Function: byte_extract_id
 
 \*******************************************************************/
 
-irep_idt byte_extract_id()
-{
-  switch(config.ansi_c.endianness)
-  {
+irep_idt byte_extract_id() {
+  switch (config.ansi_c.endianness) {
   case configt::ansi_ct::endiannesst::IS_LITTLE_ENDIAN:
     return ID_byte_extract_little_endian;
 
@@ -50,10 +48,8 @@ Function: byte_update_id
 
 \*******************************************************************/
 
-irep_idt byte_update_id()
-{
-  switch(config.ansi_c.endianness)
-  {
+irep_idt byte_update_id() {
+  switch (config.ansi_c.endianness) {
   case configt::ansi_ct::endiannesst::IS_LITTLE_ENDIAN:
     return ID_byte_update_little_endian;
 

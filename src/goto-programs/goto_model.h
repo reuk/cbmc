@@ -16,30 +16,24 @@ Author: Daniel Kroening, kroening@kroening.com
 // A model is a pair consisting of a symbol table
 // and the CFGs for the functions.
 
-class goto_modelt
-{
+class goto_modelt {
 public:
   symbol_tablet symbol_table;
   goto_functionst goto_functions;
 
-  void clear()
-  {
+  void clear() {
     symbol_table.clear();
     goto_functions.clear();
   }
 
-  void output(std::ostream &out)
-  {
+  void output(std::ostream &out) {
     namespacet ns(symbol_table);
     goto_functions.output(ns, out);
   }
 
-  goto_modelt()
-  {
-  }
+  goto_modelt() {}
 
-  goto_modelt(goto_modelt &&other)
-  {
+  goto_modelt(goto_modelt &&other) {
     symbol_table.swap(other.symbol_table);
     goto_functions.swap(other.goto_functions);
   }

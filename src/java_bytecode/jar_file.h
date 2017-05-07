@@ -12,18 +12,17 @@ Author: Daniel Kroening, kroening@kroening.com
 #define _LARGEFILE64_SOURCE 1
 #include "miniz/miniz.h"
 
-#include <string>
-#include <vector>
 #include <map>
 #include <regex>
+#include <string>
 #include <util/message.h>
+#include <vector>
 
 #include "java_class_loader_limit.h"
 
-class jar_filet:public messaget
-{
+class jar_filet : public messaget {
 public:
-  jar_filet():mz_ok(false) { }
+  jar_filet() : mz_ok(false) {}
 
   ~jar_filet();
 
@@ -46,22 +45,17 @@ protected:
   bool mz_ok;
 };
 
-class jar_poolt:public messaget
-{
+class jar_poolt : public messaget {
 public:
-  jar_filet &operator()(
-    java_class_loader_limitt &class_loader_limit,
-    const std::string &file_name)
-  {
-    file_mapt::iterator it=file_map.find(file_name);
-    if(it==file_map.end())
-    {
-      jar_filet &jar_file=file_map[file_name];
+  jar_filet &operator()(java_class_loader_limitt &class_loader_limit,
+                        const std::string &file_name) {
+    file_mapt::iterator it = file_map.find(file_name);
+    if (it == file_map.end()) {
+      jar_filet &jar_file = file_map[file_name];
       jar_file.set_message_handler(get_message_handler());
       jar_file.open(class_loader_limit, file_name);
       return jar_file;
-    }
-    else
+    } else
       return file_map[file_name];
   }
 

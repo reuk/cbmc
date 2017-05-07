@@ -15,46 +15,32 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "symex_coverage.h"
 
-class symex_bmct:
-  public goto_symext,
-  public messaget
-{
+class symex_bmct : public goto_symext, public messaget {
 public:
-  symex_bmct(
-    const namespacet &_ns,
-    symbol_tablet &_new_symbol_table,
-    symex_targett &_target);
+  symex_bmct(const namespacet &_ns, symbol_tablet &_new_symbol_table,
+             symex_targett &_target);
 
   // To show progress
   source_locationt last_source_location;
 
   // Control unwinding.
 
-  void set_unwind_limit(unsigned limit)
-  {
-    max_unwind=limit;
-    max_unwind_is_set=true;
+  void set_unwind_limit(unsigned limit) {
+    max_unwind = limit;
+    max_unwind_is_set = true;
   }
 
-  void set_unwind_thread_loop_limit(
-    unsigned thread_nr,
-    const irep_idt &id,
-    unsigned limit)
-  {
-    thread_loop_limits[thread_nr][id]=limit;
+  void set_unwind_thread_loop_limit(unsigned thread_nr, const irep_idt &id,
+                                    unsigned limit) {
+    thread_loop_limits[thread_nr][id] = limit;
   }
 
-  void set_unwind_loop_limit(
-    const irep_idt &id,
-    unsigned limit)
-  {
-    loop_limits[id]=limit;
+  void set_unwind_loop_limit(const irep_idt &id, unsigned limit) {
+    loop_limits[id] = limit;
   }
 
-  bool output_coverage_report(
-    const goto_functionst &goto_functions,
-    const std::string &path) const
-  {
+  bool output_coverage_report(const goto_functionst &goto_functions,
+                              const std::string &path) const {
     return symex_coverage.generate_report(goto_functions, path);
   }
 
@@ -79,23 +65,16 @@ protected:
   //
   // overloaded from goto_symext
   //
-  virtual void symex_step(
-    const goto_functionst &goto_functions,
-    statet &state);
+  virtual void symex_step(const goto_functionst &goto_functions, statet &state);
 
-  virtual void merge_goto(
-    const statet::goto_statet &goto_state,
-    statet &state);
+  virtual void merge_goto(const statet::goto_statet &goto_state, statet &state);
 
   // for loop unwinding
-  virtual bool get_unwind(
-    const symex_targett::sourcet &source,
-    unsigned unwind);
+  virtual bool get_unwind(const symex_targett::sourcet &source,
+                          unsigned unwind);
 
-  virtual bool get_unwind_recursion(
-    const irep_idt &identifier,
-    const unsigned thread_nr,
-    unsigned unwind);
+  virtual bool get_unwind_recursion(const irep_idt &identifier,
+                                    const unsigned thread_nr, unsigned unwind);
 
   virtual void no_body(const irep_idt &identifier);
 

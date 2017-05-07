@@ -26,8 +26,7 @@ Function: goto_instrument_parse_optionst::register_languages
 
 \*******************************************************************/
 
-void goto_instrument_parse_optionst::register_languages()
-{
+void goto_instrument_parse_optionst::register_languages() {
   register_language(new_ansi_c_language);
   register_language(new_cpp_language);
   register_language(new_java_bytecode_language);

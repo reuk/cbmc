@@ -13,8 +13,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "cvc_conv.h"
 
-class cvc_temp_filet
-{
+class cvc_temp_filet {
 public:
   cvc_temp_filet();
   ~cvc_temp_filet();
@@ -24,12 +23,9 @@ protected:
   std::string temp_out_filename, temp_result_filename;
 };
 
-class cvc_dect:protected cvc_temp_filet, public cvc_convt
-{
+class cvc_dect : protected cvc_temp_filet, public cvc_convt {
 public:
-  explicit cvc_dect(const namespacet &_ns):cvc_convt(_ns, temp_out)
-  {
-  }
+  explicit cvc_dect(const namespacet &_ns) : cvc_convt(_ns, temp_out) {}
 
   virtual resultt dec_solve();
 

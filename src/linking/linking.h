@@ -16,9 +16,7 @@ Author: Daniel Kroening, kroening@kroening.com
 // applying appropriate renamings to symbols in "new_symbol_table"
 // when necessary.
 
-bool linking(
-  symbol_tablet &dest_symbol_table,
-  symbol_tablet &new_symbol_table,
-  message_handlert &message_handler);
+bool linking(symbol_tablet &dest_symbol_table, symbol_tablet &new_symbol_table,
+             message_handlert &message_handler);
 
 #endif // CPROVER_LINKING_LINKING_H

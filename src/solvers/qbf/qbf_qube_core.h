@@ -11,8 +11,7 @@ Author: CM Wintersteiger
 
 #include "qdimacs_core.h"
 
-class qbf_qube_coret:public qdimacs_coret
-{
+class qbf_qube_coret : public qdimacs_coret {
 protected:
   std::string qbf_tmp_file;
 
@@ -28,28 +27,24 @@ public:
 
   virtual bool is_in_core(literalt l) const;
 
-  virtual tvt l_get(literalt a) const
-  {
-    unsigned v=a.var_no();
+  virtual tvt l_get(literalt a) const {
+    unsigned v = a.var_no();
 
-    assignmentt::const_iterator fit=assignment.find(v);
+    assignmentt::const_iterator fit = assignment.find(v);
 
-    if(fit!=assignment.end())
-      return a.sign()?tvt(!fit->second) : tvt(fit->second);
-    else
-    {
+    if (fit != assignment.end())
+      return a.sign() ? tvt(!fit->second) : tvt(fit->second);
+    else {
       // throw "Missing toplevel assignment from QuBE";
       // We assume this is a don't-care and return unknown
     }
-
 
     return tvt::unknown();
   }
 
   virtual modeltypet m_get(literalt a) const;
 
-  virtual const exprt f_get(literalt l)
-  {
+  virtual const exprt f_get(literalt l) {
     throw "qube does not support full certificates.";
   }
 };

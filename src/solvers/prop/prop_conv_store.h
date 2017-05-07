@@ -11,15 +11,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "prop_conv.h"
 
-class prop_conv_storet:public prop_convt
-{
+class prop_conv_storet : public prop_convt {
 public:
-  explicit prop_conv_storet(const namespacet &_ns):prop_convt(_ns)
-  {
-  }
+  explicit prop_conv_storet(const namespacet &_ns) : prop_convt(_ns) {}
 
-  struct constraintt
-  {
+  struct constraintt {
     typedef enum { NONE, CONVERT, SET_TO } typet;
     typet type;
 
@@ -35,14 +31,12 @@ public:
     void print(std::ostream &out) const;
   };
 
-  class constraintst
-  {
+  class constraintst {
   public:
     typedef std::list<constraintt> constraint_listt;
     constraint_listt constraint_list;
 
-    constraintt &add_constraint()
-    {
+    constraintt &add_constraint() {
       constraint_list.push_back(constraintt());
       return constraint_list.back();
     }
@@ -51,10 +45,7 @@ public:
     void print(std::ostream &out) const;
   };
 
-  const constraintst &get_constraints() const
-  {
-    return constraints;
-  }
+  const constraintst &get_constraints() const { return constraints; }
 
   // overloading
   virtual void set_to(const exprt &expr, bool value);

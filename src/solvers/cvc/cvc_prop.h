@@ -15,8 +15,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <solvers/prop/prop.h>
 
-class cvc_propt:virtual public propt
-{
+class cvc_propt : virtual public propt {
 public:
   explicit cvc_propt(std::ostream &_out);
   virtual ~cvc_propt();
@@ -46,16 +45,14 @@ public:
 
   virtual void lcnf(const bvt &bv);
 
-  virtual const std::string solver_text()
-  { return "CVC"; }
+  virtual const std::string solver_text() { return "CVC"; }
 
-  virtual tvt l_get(literalt literal) const
-  {
-    unsigned v=literal.var_no();
-    if(v>=assignment.size())
+  virtual tvt l_get(literalt literal) const {
+    unsigned v = literal.var_no();
+    if (v >= assignment.size())
       return tvt(tvt::tv_enumt::TV_UNKNOWN);
-    tvt r=assignment[v];
-    return literal.sign()?!r:r;
+    tvt r = assignment[v];
+    return literal.sign() ? !r : r;
   }
 
   virtual propt::resultt prop_solve();
@@ -63,13 +60,9 @@ public:
   friend class cvc_convt;
   friend class cvc_dect;
 
-  virtual void clear()
-  {
-    assignment.clear();
-  }
+  virtual void clear() { assignment.clear(); }
 
-  void reset_assignment()
-  {
+  void reset_assignment() {
     assignment.clear();
     assignment.resize(no_variables(), tvt(tvt::tv_enumt::TV_UNKNOWN));
   }

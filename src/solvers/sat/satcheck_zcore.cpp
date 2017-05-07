@@ -27,9 +27,7 @@ Function: satcheck_zcoret::satcheck_zcoret
 
 \*******************************************************************/
 
-satcheck_zcoret::satcheck_zcoret()
-{
-}
+satcheck_zcoret::satcheck_zcoret() {}
 
 /*******************************************************************\
 
@@ -43,9 +41,7 @@ Function: satcheck_zcoret::~satcheck_zcoret
 
 \*******************************************************************/
 
-satcheck_zcoret::~satcheck_zcoret()
-{
-}
+satcheck_zcoret::~satcheck_zcoret() {}
 
 /*******************************************************************\
 
@@ -59,8 +55,7 @@ Function: satcheck_zcoret::l_get
 
 \*******************************************************************/
 
-tvt satcheck_zcoret::l_get(literalt a) const
-{
+tvt satcheck_zcoret::l_get(literalt a) const {
   assert(false);
   return tvt(tvt::tv_enumt::TV_UNKNOWN);
 }
@@ -77,10 +72,7 @@ Function: satcheck_zcoret::solver_text
 
 \*******************************************************************/
 
-const std::string satcheck_zcoret::solver_text()
-{
-  return "ZCore";
-}
+const std::string satcheck_zcoret::solver_text() { return "ZCore"; }
 
 /*******************************************************************\
 
@@ -94,21 +86,19 @@ Function: satcheck_zcoret::prop_solve
 
 \*******************************************************************/
 
-propt::resultt satcheck_zcoret::prop_solve()
-{
+propt::resultt satcheck_zcoret::prop_solve() {
   // We start counting at 1, thus there is one variable fewer.
   {
-    std::string msg=
-      std::to_string(no_variables()-1)+" variables, "+
-      std::to_string(no_clauses())+" clauses";
+    std::string msg = std::to_string(no_variables() - 1) + " variables, " +
+                      std::to_string(no_clauses()) + " clauses";
     messaget::status() << msg << messaget::eom;
   }
 
   // get the core
-  std::string cnf_file="cnf.dimacs";
-  std::string core_file="unsat_core.cnf";
-  std::string trace_file="resolve_trace";
-  std::string output_file="cnf.out";
+  std::string cnf_file = "cnf.dimacs";
+  std::string core_file = "unsat_core.cnf";
+  std::string trace_file = "resolve_trace";
+  std::string output_file = "cnf.out";
 
   {
     std::ofstream out(cnf_file.c_str(), std::ios::out);
@@ -116,11 +106,13 @@ propt::resultt satcheck_zcoret::prop_solve()
   }
 
   // generate resolve_trace
-  system(std::string("zchaff_verify "+cnf_file+" > "+output_file).c_str());
+  system(
+      std::string("zchaff_verify " + cnf_file + " > " + output_file).c_str());
 
   // get core
   system(
-    std::string("zcore "+cnf_file+" "+trace_file+" >> "+output_file).c_str());
+      std::string("zcore " + cnf_file + " " + trace_file + " >> " + output_file)
+          .c_str());
 
   in_core.clear();
 
@@ -128,39 +120,37 @@ propt::resultt satcheck_zcoret::prop_solve()
   {
     std::ifstream in(core_file.c_str());
 
-    while(true)
-    {
+    while (true) {
       std::string line;
-      if(!std::getline(in, line))
+      if (!std::getline(in, line))
         break;
 
-      if(!(line.substr(0, 1)=="c" || line.substr(0, 1)=="p"))
-      {
-        const char *p=line.c_str();
+      if (!(line.substr(0, 1) == "c" || line.substr(0, 1) == "p")) {
+        const char *p = line.c_str();
 
-        while(true)
-        {
-          int l=unsafe_str2int(p);
-          if(l==0)
+        while (true) {
+          int l = unsafe_str2int(p);
+          if (l == 0)
             break;
 
-          if(l<0)
-            l=-l;
+          if (l < 0)
+            l = -l;
 
           in_core.insert(l);
 
           // next one
-          const char *q=strchr(p, ' ');
-          while(*q==' ') q++;
-          if(q==NULL)
+          const char *q = strchr(p, ' ');
+          while (*q == ' ')
+            q++;
+          if (q == NULL)
             break;
-          p=q;
+          p = q;
         }
       }
     }
   }
 
-  if(in_core.empty())
+  if (in_core.empty())
     return P_ERROR;
 
   remove(cnf_file.c_str());

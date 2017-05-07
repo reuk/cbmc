@@ -9,12 +9,11 @@ Author: Daniel Kroening, kroening@kroening.com
 #ifndef CPROVER_UTIL_CMDLINE_H
 #define CPROVER_UTIL_CMDLINE_H
 
-#include <vector>
 #include <list>
 #include <string>
+#include <vector>
 
-class cmdlinet
-{
+class cmdlinet {
 public:
   virtual bool parse(int argc, const char **argv, const char *optstring);
 
@@ -37,21 +36,16 @@ public:
   virtual ~cmdlinet();
 
 protected:
-  struct optiont
-  {
+  struct optiont {
     bool isset;
     bool hasval;
     bool islong;
     char optchar;
     std::string optstring;
     std::list<std::string> values;
+
   public:
-    optiont():
-      isset(false),
-      hasval(false),
-      islong(false),
-      optchar(0)
-      {}
+    optiont() : isset(false), hasval(false), islong(false), optchar(0) {}
   };
 
   std::vector<optiont> options;

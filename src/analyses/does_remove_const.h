@@ -12,8 +12,7 @@
 
 class goto_programt;
 
-class does_remove_constt
-{
+class does_remove_constt {
 public:
   does_remove_constt(const goto_programt &goto_program, const namespacet &ns);
   bool operator()() const;
@@ -21,8 +20,8 @@ public:
 private:
   bool does_expr_lose_const(const exprt &expr) const;
 
-  bool is_type_at_least_as_const_as(
-    const typet *type_more_const, const typet *type_compare) const;
+  bool is_type_at_least_as_const_as(const typet *type_more_const,
+                                    const typet *type_compare) const;
 
   const goto_programt &goto_program;
   const namespacet &ns;

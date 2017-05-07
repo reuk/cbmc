@@ -14,9 +14,7 @@ Date: November 2011
 class symbol_tablet;
 class goto_functionst;
 
-void stack_depth(
-  symbol_tablet &symbol_table,
-  goto_functionst &goto_functions,
-  const int depth);
+void stack_depth(symbol_tablet &symbol_table, goto_functionst &goto_functions,
+                 const int depth);
 
 #endif // CPROVER_GOTO_INSTRUMENT_STACK_DEPTH_H

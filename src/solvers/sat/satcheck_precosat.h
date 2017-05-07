@@ -16,8 +16,7 @@ namespace PrecoSat // NOLINT(readability/namespace)
 class Solver; // NOLINT(readability/identifiers)
 }
 
-class satcheck_precosatt:public cnf_solvert
-{
+class satcheck_precosatt : public cnf_solvert {
 public:
   satcheck_precosatt();
   virtual ~satcheck_precosatt();

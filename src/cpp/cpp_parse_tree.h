@@ -11,8 +11,7 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 #include "cpp_item.h"
 
-class cpp_parse_treet
-{
+class cpp_parse_treet {
 public:
   // the (top-level) declarations/definitions
 

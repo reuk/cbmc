@@ -11,23 +11,18 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <util/message.h>
 
-#include "c_types.h"
 #include "c_qualifiers.h"
 #include "c_storage_spec.h"
+#include "c_types.h"
 
-class ansi_c_convert_typet:public messaget
-{
+class ansi_c_convert_typet : public messaget {
 public:
-  unsigned unsigned_cnt, signed_cnt, char_cnt,
-           int_cnt, short_cnt, long_cnt,
-           double_cnt, float_cnt, c_bool_cnt,
-           proper_bool_cnt, complex_cnt;
+  unsigned unsigned_cnt, signed_cnt, char_cnt, int_cnt, short_cnt, long_cnt,
+      double_cnt, float_cnt, c_bool_cnt, proper_bool_cnt, complex_cnt;
 
   // extensions
-  unsigned int8_cnt, int16_cnt, int32_cnt, int64_cnt,
-           ptr32_cnt, ptr64_cnt,
-           gcc_float128_cnt, gcc_int128_cnt, bv_cnt,
-           floatbv_cnt, fixedbv_cnt;
+  unsigned int8_cnt, int16_cnt, int32_cnt, int64_cnt, ptr32_cnt, ptr64_cnt,
+      gcc_float128_cnt, gcc_int128_cnt, bv_cnt, floatbv_cnt, fixedbv_cnt;
 
   typet gcc_attribute_mode;
 
@@ -49,18 +44,15 @@ public:
 
   std::list<typet> other;
 
-  explicit ansi_c_convert_typet(message_handlert &_message_handler):
-    messaget(_message_handler)
-  {
-  }
+  explicit ansi_c_convert_typet(message_handlert &_message_handler)
+      : messaget(_message_handler) {}
 
-  void clear()
-  {
-    unsigned_cnt=signed_cnt=char_cnt=int_cnt=short_cnt=
-    long_cnt=double_cnt=float_cnt=c_bool_cnt=proper_bool_cnt=complex_cnt=
-    int8_cnt=int16_cnt=int32_cnt=int64_cnt=
-    ptr32_cnt=ptr64_cnt=
-    gcc_float128_cnt=gcc_int128_cnt=bv_cnt=floatbv_cnt=fixedbv_cnt=0;
+  void clear() {
+    unsigned_cnt = signed_cnt = char_cnt = int_cnt = short_cnt = long_cnt =
+        double_cnt = float_cnt = c_bool_cnt = proper_bool_cnt = complex_cnt =
+            int8_cnt = int16_cnt = int32_cnt = int64_cnt = ptr32_cnt =
+                ptr64_cnt = gcc_float128_cnt = gcc_int128_cnt = bv_cnt =
+                    floatbv_cnt = fixedbv_cnt = 0;
     vector_size.make_nil();
     alignment.make_nil();
     bv_width.make_nil();
@@ -68,7 +60,7 @@ public:
     msc_based.make_nil();
     gcc_attribute_mode.make_nil();
 
-    packed=aligned=constructor=destructor=false;
+    packed = aligned = constructor = destructor = false;
 
     other.clear();
     c_storage_spec.clear();

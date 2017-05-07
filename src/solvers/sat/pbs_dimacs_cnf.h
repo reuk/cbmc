@@ -9,27 +9,19 @@ Author: Alex Groce
 #ifndef CPROVER_SOLVERS_SAT_PBS_DIMACS_CNF_H
 #define CPROVER_SOLVERS_SAT_PBS_DIMACS_CNF_H
 
-#include <set>
-#include <map>
 #include <iosfwd>
+#include <map>
+#include <set>
 
 #include "dimacs_cnf.h"
 
-class pbs_dimacs_cnft:public dimacs_cnft
-{
+class pbs_dimacs_cnft : public dimacs_cnft {
 public:
-  pbs_dimacs_cnft():
-    optimize(false),
-    maximize(false),
-    binary_search(false),
-    goal(0),
-    opt_sum(0)
-  {
-  }
+  pbs_dimacs_cnft()
+      : optimize(false), maximize(false), binary_search(false), goal(0),
+        opt_sum(0) {}
 
-  virtual ~pbs_dimacs_cnft()
-  {
-  }
+  virtual ~pbs_dimacs_cnft() {}
 
   virtual void write_dimacs_pb(std::ostream &out);
 
@@ -52,8 +44,7 @@ public:
 
   // dummy functions
 
-  virtual const std::string solver_text()
-  {
+  virtual const std::string solver_text() {
     return "PBS - Pseudo Boolean/CNF Solver and Optimizer";
   }
 

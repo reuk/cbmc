@@ -22,10 +22,8 @@ Function: show_natural_loops
 
 \*******************************************************************/
 
-void show_natural_loops(const goto_functionst &goto_functions)
-{
-  forall_goto_functions(it, goto_functions)
-  {
+void show_natural_loops(const goto_functionst &goto_functions) {
+  forall_goto_functions(it, goto_functions) {
     std::cout << "*** " << it->first << std::endl;
 
     natural_loopst natural_loops;

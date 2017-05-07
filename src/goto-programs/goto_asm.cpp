@@ -20,10 +20,7 @@ Function: goto_convertt::convert_asm
 
 \*******************************************************************/
 
-void goto_convertt::convert_asm(
-  const code_asmt &code,
-  goto_programt &dest)
-{
+void goto_convertt::convert_asm(const code_asmt &code, goto_programt &dest) {
   // copy as OTHER
   copy(code, OTHER, dest);
 }

@@ -16,17 +16,14 @@ Date: July 2006
 
 #include "xml_irep_hashing.h"
 
-class xml_symbol_convertt
-{
+class xml_symbol_convertt {
 private:
   xml_irep_convertt irepconverter;
   std::list<irept> irepcache;
 
 public:
-  explicit xml_symbol_convertt(xml_irep_convertt::ireps_containert &ic):
-    irepconverter(ic)
-  {
-  }
+  explicit xml_symbol_convertt(xml_irep_convertt::ireps_containert &ic)
+      : irepconverter(ic) {}
 
   void convert(const symbolt &, xmlt &);
   void convert(const xmlt &, symbolt &);

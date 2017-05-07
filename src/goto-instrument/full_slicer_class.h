@@ -9,12 +9,12 @@ Author: Daniel Kroening, kroening@kroening.com
 #ifndef CPROVER_GOTO_INSTRUMENT_FULL_SLICER_CLASS_H
 #define CPROVER_GOTO_INSTRUMENT_FULL_SLICER_CLASS_H
 
+#include <list>
 #include <stack>
 #include <vector>
-#include <list>
 
-#include <goto-programs/goto_functions.h>
 #include <goto-programs/cfg.h>
+#include <goto-programs/goto_functions.h>
 
 #include <analyses/dependence_graph.h>
 
@@ -40,20 +40,14 @@ echo 'digraph g {' > c.dot ; cat c.goto | \
 
 \*******************************************************************/
 
-class full_slicert
-{
+class full_slicert {
 public:
-  void operator()(
-    goto_functionst &goto_functions,
-    const namespacet &ns,
-    slicing_criteriont &criterion);
+  void operator()(goto_functionst &goto_functions, const namespacet &ns,
+                  slicing_criteriont &criterion);
 
 protected:
-  struct cfg_nodet
-  {
-    cfg_nodet():node_required(false)
-    {
-    }
+  struct cfg_nodet {
+    cfg_nodet() : node_required(false) {}
 
     bool node_required;
 #ifdef DEBUG_FULL_SLICERT
@@ -69,39 +63,25 @@ protected:
   typedef std::list<cfgt::entryt> jumpst;
   typedef std::unordered_map<irep_idt, queuet, irep_id_hash> decl_deadt;
 
-  void fixedpoint(
-    goto_functionst &goto_functions,
-    queuet &queue,
-    jumpst &jumps,
-    decl_deadt &decl_dead,
-    const dependence_grapht &dep_graph);
+  void fixedpoint(goto_functionst &goto_functions, queuet &queue, jumpst &jumps,
+                  decl_deadt &decl_dead, const dependence_grapht &dep_graph);
 
-  void add_dependencies(
-    const cfgt::nodet &node,
-    queuet &queue,
-    const dependence_grapht &dep_graph,
-    const dep_node_to_cfgt &dep_node_to_cfg);
+  void add_dependencies(const cfgt::nodet &node, queuet &queue,
+                        const dependence_grapht &dep_graph,
+                        const dep_node_to_cfgt &dep_node_to_cfg);
 
-  void add_function_calls(
-    const cfgt::nodet &node,
-    queuet &queue,
-    const goto_functionst &goto_functions);
+  void add_function_calls(const cfgt::nodet &node, queuet &queue,
+                          const goto_functionst &goto_functions);
 
-  void add_decl_dead(
-    const cfgt::nodet &node,
-    queuet &queue,
-    decl_deadt &decl_dead);
+  void add_decl_dead(const cfgt::nodet &node, queuet &queue,
+                     decl_deadt &decl_dead);
 
-  void add_jumps(
-    queuet &queue,
-    jumpst &jumps,
-    const dependence_grapht::post_dominators_mapt &post_dominators);
+  void
+  add_jumps(queuet &queue, jumpst &jumps,
+            const dependence_grapht::post_dominators_mapt &post_dominators);
 
-  void add_to_queue(
-    queuet &queue,
-    const cfgt::entryt &entry,
-    goto_programt::const_targett reason)
-  {
+  void add_to_queue(queuet &queue, const cfgt::entryt &entry,
+                    goto_programt::const_targett reason) {
 #ifdef DEBUG_FULL_SLICERT
     cfg[entry].required_by.insert(reason->location_number);
 #endif
@@ -109,37 +89,28 @@ protected:
   }
 };
 
-class assert_criteriont:public slicing_criteriont
-{
+class assert_criteriont : public slicing_criteriont {
 public:
-  virtual bool operator()(goto_programt::const_targett target)
-  {
+  virtual bool operator()(goto_programt::const_targett target) {
     return target->is_assert();
   }
 };
 
-class properties_criteriont:public slicing_criteriont
-{
+class properties_criteriont : public slicing_criteriont {
 public:
-  explicit properties_criteriont(
-    const std::list<std::string> &properties):
-    property_ids(properties)
-  {
-  }
+  explicit properties_criteriont(const std::list<std::string> &properties)
+      : property_ids(properties) {}
 
-  virtual bool operator()(goto_programt::const_targett target)
-  {
-    if(!target->is_assert())
+  virtual bool operator()(goto_programt::const_targett target) {
+    if (!target->is_assert())
       return false;
 
-    const std::string &p_id=
-      id2string(target->source_location.get_property_id());
+    const std::string &p_id =
+        id2string(target->source_location.get_property_id());
 
-    for(std::list<std::string>::const_iterator
-        it=property_ids.begin();
-        it!=property_ids.end();
-        ++it)
-      if(p_id==*it)
+    for (std::list<std::string>::const_iterator it = property_ids.begin();
+         it != property_ids.end(); ++it)
+      if (p_id == *it)
         return true;
 
     return false;

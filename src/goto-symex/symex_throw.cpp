@@ -20,9 +20,8 @@ Function: goto_symext::symex_throw
 
 \*******************************************************************/
 
-void goto_symext::symex_throw(statet &state)
-{
-  #if 0
+void goto_symext::symex_throw(statet &state) {
+#if 0
   const goto_programt::instructiont &instruction=*state.source.pc;
 
   // get the list of exceptions thrown
@@ -55,7 +54,7 @@ void goto_symext::symex_throw(statet &state)
       }
     }
   }
-  #endif
+#endif
 
   // An un-caught exception. Behaves like assume(0);
   symex_assume(state, false_exprt());

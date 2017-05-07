@@ -24,7 +24,6 @@ Function: goto_instrument_parse_optionst::register_languages
 
 \*******************************************************************/
 
-void goto_fence_inserter_parse_optionst::register_languages()
-{
+void goto_fence_inserter_parse_optionst::register_languages() {
   register_language(new_ansi_c_language);
 }

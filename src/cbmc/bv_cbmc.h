@@ -11,13 +11,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <solvers/flattening/bv_pointers.h>
 
-class bv_cbmct:public bv_pointerst
-{
+class bv_cbmct : public bv_pointerst {
 public:
-  bv_cbmct(
-    const namespacet &_ns,
-    propt &_prop):bv_pointerst(_ns, _prop) { }
-  virtual ~bv_cbmct() { }
+  bv_cbmct(const namespacet &_ns, propt &_prop) : bv_pointerst(_ns, _prop) {}
+  virtual ~bv_cbmct() {}
 
 protected:
   // overloading

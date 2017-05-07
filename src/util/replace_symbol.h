@@ -16,42 +16,29 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "expr.h"
 
-class replace_symbolt
-{
+class replace_symbolt {
 public:
   typedef std::unordered_map<irep_idt, exprt, irep_id_hash> expr_mapt;
   typedef std::unordered_map<irep_idt, typet, irep_id_hash> type_mapt;
 
-  void insert(const irep_idt &identifier,
-                     const exprt &expr)
-  {
+  void insert(const irep_idt &identifier, const exprt &expr) {
     expr_map.insert(std::pair<irep_idt, exprt>(identifier, expr));
   }
 
-  void insert(const class symbol_exprt &old_expr,
-              const exprt &new_expr);
+  void insert(const class symbol_exprt &old_expr, const exprt &new_expr);
 
-  void insert(const irep_idt &identifier,
-                     const typet &type)
-  {
+  void insert(const irep_idt &identifier, const typet &type) {
     type_map.insert(std::pair<irep_idt, typet>(identifier, type));
   }
 
   virtual bool replace(exprt &dest) const;
   virtual bool replace(typet &dest) const;
 
-  void operator()(exprt &dest) const
-  {
-    replace(dest);
-  }
+  void operator()(exprt &dest) const { replace(dest); }
 
-  void operator()(typet &dest) const
-  {
-    replace(dest);
-  }
+  void operator()(typet &dest) const { replace(dest); }
 
-  void clear()
-  {
+  void clear() {
     expr_map.clear();
     type_map.clear();
   }

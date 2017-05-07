@@ -20,8 +20,7 @@ Function: cpp_parse_treet::swap
 
 \*******************************************************************/
 
-void cpp_parse_treet::swap(cpp_parse_treet &cpp_parse_tree)
-{
+void cpp_parse_treet::swap(cpp_parse_treet &cpp_parse_tree) {
   cpp_parse_tree.items.swap(items);
 }
 
@@ -37,7 +36,4 @@ Function: cpp_parse_treet::clear
 
 \*******************************************************************/
 
-void cpp_parse_treet::clear()
-{
-  items.clear();
-}
+void cpp_parse_treet::clear() { items.clear(); }

@@ -21,10 +21,7 @@ Function: languaget::final
 
 \*******************************************************************/
 
-bool languaget::final(symbol_tablet &symbol_table)
-{
-  return false;
-}
+bool languaget::final(symbol_tablet &symbol_table) { return false; }
 
 /*******************************************************************\
 
@@ -38,10 +35,7 @@ Function: languaget::interfaces
 
 \*******************************************************************/
 
-bool languaget::interfaces(symbol_tablet &symbol_table)
-{
-  return false;
-}
+bool languaget::interfaces(symbol_tablet &symbol_table) { return false; }
 
 /*******************************************************************\
 
@@ -55,11 +49,8 @@ Function: languaget::dependencies
 
 \*******************************************************************/
 
-void languaget::dependencies(
-  const std::string &module,
-  std::set<std::string> &modules)
-{
-}
+void languaget::dependencies(const std::string &module,
+                             std::set<std::string> &modules) {}
 
 /*******************************************************************\
 
@@ -73,12 +64,9 @@ Function: languaget::from_expr
 
 \*******************************************************************/
 
-bool languaget::from_expr(
-  const exprt &expr,
-  std::string &code,
-  const namespacet &ns)
-{
-  code=expr.pretty();
+bool languaget::from_expr(const exprt &expr, std::string &code,
+                          const namespacet &ns) {
+  code = expr.pretty();
   return false;
 }
 
@@ -94,12 +82,9 @@ Function: languaget::from_type
 
 \*******************************************************************/
 
-bool languaget::from_type(
-  const typet &type,
-  std::string &code,
-  const namespacet &ns)
-{
-  code=type.pretty();
+bool languaget::from_type(const typet &type, std::string &code,
+                          const namespacet &ns) {
+  code = type.pretty();
   return false;
 }
 
@@ -115,13 +100,10 @@ Function: languaget::type_to_name
 
 \*******************************************************************/
 
-bool languaget::type_to_name(
-  const typet &type,
-  std::string &name,
-  const namespacet &ns)
-{
+bool languaget::type_to_name(const typet &type, std::string &name,
+                             const namespacet &ns) {
   // probably ansi-c/type2name could be used as better fallback if moved to
   // util/
-  name=type.pretty();
+  name = type.pretty();
   return false;
 }

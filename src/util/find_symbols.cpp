@@ -6,8 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include "std_types.h"
 #include "std_expr.h"
+#include "std_types.h"
 
 #include "find_symbols.h"
 
@@ -25,10 +25,7 @@ Function: find_symbols
 
 \*******************************************************************/
 
-void find_symbols(
-  const exprt &src,
-  find_symbols_sett &dest)
-{
+void find_symbols(const exprt &src, find_symbols_sett &dest) {
   find_symbols(src, dest, true, true);
 }
 
@@ -44,19 +41,13 @@ Function: find_symbols
 
 \*******************************************************************/
 
-void find_symbols(
-  const exprt &src,
-  find_symbols_sett &dest,
-  bool current,
-  bool next)
-{
-  if((src.id()==ID_symbol && current) ||
-     (src.id()==ID_next_symbol && next))
+void find_symbols(const exprt &src, find_symbols_sett &dest, bool current,
+                  bool next) {
+  if ((src.id() == ID_symbol && current) ||
+      (src.id() == ID_next_symbol && next))
     dest.insert(src.get(ID_identifier));
-  else
-  {
-    forall_operands(it, src)
-      find_symbols(*it, dest, current, next);
+  else {
+    forall_operands(it, src) find_symbols(*it, dest, current, next);
   }
 }
 
@@ -72,20 +63,14 @@ Function: has_symbol
 
 \*******************************************************************/
 
-bool has_symbol(
-  const exprt &src,
-  const find_symbols_sett &symbols,
-  bool current,
-  bool next)
-{
-  if((src.id()==ID_symbol && current) ||
-     (src.id()==ID_next_symbol && next))
-    return symbols.count(src.get(ID_identifier))!=0;
-  else
-  {
-    forall_operands(it, src)
-      if(has_symbol(*it, symbols, current, next))
-        return true;
+bool has_symbol(const exprt &src, const find_symbols_sett &symbols,
+                bool current, bool next) {
+  if ((src.id() == ID_symbol && current) ||
+      (src.id() == ID_next_symbol && next))
+    return symbols.count(src.get(ID_identifier)) != 0;
+  else {
+    forall_operands(
+        it, src) if (has_symbol(*it, symbols, current, next)) return true;
   }
 
   return false;
@@ -103,10 +88,7 @@ Function: has_symbol
 
 \*******************************************************************/
 
-bool has_symbol(
-  const exprt &src,
-  const find_symbols_sett &symbols)
-{
+bool has_symbol(const exprt &src, const find_symbols_sett &symbols) {
   return has_symbol(src, symbols, true, true);
 }
 
@@ -122,16 +104,11 @@ Function: find_symbols
 
 \*******************************************************************/
 
-void find_symbols(
-  const exprt &src,
-  std::set<exprt> &dest)
-{
-  if(src.id()==ID_symbol || src.id()==ID_next_symbol)
+void find_symbols(const exprt &src, std::set<exprt> &dest) {
+  if (src.id() == ID_symbol || src.id() == ID_next_symbol)
     dest.insert(src);
-  else
-  {
-    forall_operands(it, src)
-      find_symbols(*it, dest);
+  else {
+    forall_operands(it, src) find_symbols(*it, dest);
   }
 }
 
@@ -147,16 +124,11 @@ Function: find_symbols
 
 \*******************************************************************/
 
-void find_symbols(
-  const exprt &src,
-  std::set<symbol_exprt> &dest)
-{
-  if(src.id()==ID_symbol)
+void find_symbols(const exprt &src, std::set<symbol_exprt> &dest) {
+  if (src.id() == ID_symbol)
     dest.insert(to_symbol_expr(src));
-  else
-  {
-    forall_operands(it, src)
-      find_symbols(*it, dest);
+  else {
+    forall_operands(it, src) find_symbols(*it, dest);
   }
 }
 
@@ -174,26 +146,23 @@ Function: find_symbols
 
 void find_symbols(kindt kind, const typet &src, find_symbols_sett &dest);
 
-void find_symbols(kindt kind, const exprt &src, find_symbols_sett &dest)
-{
-  forall_operands(it, src)
-    find_symbols(kind, *it, dest);
+void find_symbols(kindt kind, const exprt &src, find_symbols_sett &dest) {
+  forall_operands(it, src) find_symbols(kind, *it, dest);
 
   find_symbols(kind, src.type(), dest);
 
-  if(kind==F_BOTH || kind==F_EXPR)
-    if(src.id()==ID_symbol ||
-       src.id()==ID_next_symbol)
+  if (kind == F_BOTH || kind == F_EXPR)
+    if (src.id() == ID_symbol || src.id() == ID_next_symbol)
       dest.insert(src.get(ID_identifier));
 
-  const irept &c_sizeof_type=src.find(ID_C_c_sizeof_type);
+  const irept &c_sizeof_type = src.find(ID_C_c_sizeof_type);
 
-  if(c_sizeof_type.is_not_nil())
+  if (c_sizeof_type.is_not_nil())
     find_symbols(kind, static_cast<const typet &>(c_sizeof_type), dest);
 
-  const irept &va_arg_type=src.find(ID_C_va_arg_type);
+  const irept &va_arg_type = src.find(ID_C_va_arg_type);
 
-  if(va_arg_type.is_not_nil())
+  if (va_arg_type.is_not_nil())
     find_symbols(kind, static_cast<const typet &>(va_arg_type), dest);
 }
 
@@ -209,66 +178,46 @@ Function: find_symbols
 
 \*******************************************************************/
 
-void find_symbols(kindt kind, const typet &src, find_symbols_sett &dest)
-{
-  if(kind!=F_TYPE_NON_PTR ||
-     src.id()!=ID_pointer)
-  {
-    if(src.has_subtype())
+void find_symbols(kindt kind, const typet &src, find_symbols_sett &dest) {
+  if (kind != F_TYPE_NON_PTR || src.id() != ID_pointer) {
+    if (src.has_subtype())
       find_symbols(kind, src.subtype(), dest);
 
-    forall_subtypes(it, src)
-      find_symbols(kind, *it, dest);
+    forall_subtypes(it, src) find_symbols(kind, *it, dest);
   }
 
-  if(src.id()==ID_struct ||
-     src.id()==ID_union)
-  {
-    const struct_union_typet &struct_union_type=to_struct_union_type(src);
-    const struct_union_typet::componentst &components=
-      struct_union_type.components();
+  if (src.id() == ID_struct || src.id() == ID_union) {
+    const struct_union_typet &struct_union_type = to_struct_union_type(src);
+    const struct_union_typet::componentst &components =
+        struct_union_type.components();
 
-    for(struct_union_typet::componentst::const_iterator
-        it=components.begin();
-        it!=components.end();
-        it++)
+    for (struct_union_typet::componentst::const_iterator it =
+             components.begin();
+         it != components.end(); it++)
       find_symbols(kind, *it, dest);
-  }
-  else if(src.id()==ID_code)
-  {
-    const code_typet &code_type=to_code_type(src);
+  } else if (src.id() == ID_code) {
+    const code_typet &code_type = to_code_type(src);
     find_symbols(kind, code_type.return_type(), dest);
-    const code_typet::parameterst &parameters=code_type.parameters();
+    const code_typet::parameterst &parameters = code_type.parameters();
 
-    for(code_typet::parameterst::const_iterator
-        it=parameters.begin();
-        it!=parameters.end();
-        it++)
-    {
+    for (code_typet::parameterst::const_iterator it = parameters.begin();
+         it != parameters.end(); it++) {
       find_symbols(kind, *it, dest);
 
       // irep_idt identifier=it->get_identifier();
       // if(identifier!=irep_idt() && (kind==F_TYPE || kind==F_BOTH))
       //  dest.insert(identifier);
     }
-  }
-  else if(src.id()==ID_symbol)
+  } else if (src.id() == ID_symbol)
     dest.insert(src.get(ID_identifier));
-  else if(src.id()==ID_array)
-  {
+  else if (src.id() == ID_array) {
     // do the size -- the subtype is already done
     find_symbols(kind, to_array_type(src).size(), dest);
-  }
-  else if(src.id()==ID_c_enum_tag)
-  {
+  } else if (src.id() == ID_c_enum_tag) {
     dest.insert(to_c_enum_tag_type(src).get_identifier());
-  }
-  else if(src.id()==ID_struct_tag)
-  {
+  } else if (src.id() == ID_struct_tag) {
     dest.insert(to_struct_tag_type(src).get_identifier());
-  }
-  else if(src.id()==ID_union_tag)
-  {
+  } else if (src.id() == ID_union_tag) {
     dest.insert(to_union_tag_type(src).get_identifier());
   }
 }
@@ -285,8 +234,7 @@ Function: find_type_symbols
 
 \*******************************************************************/
 
-void find_type_symbols(const exprt &src, find_symbols_sett &dest)
-{
+void find_type_symbols(const exprt &src, find_symbols_sett &dest) {
   find_symbols(F_TYPE, src, dest);
 }
 
@@ -302,8 +250,7 @@ Function: find_type_symbols
 
 \*******************************************************************/
 
-void find_type_symbols(const typet &src, find_symbols_sett &dest)
-{
+void find_type_symbols(const typet &src, find_symbols_sett &dest) {
   find_symbols(F_TYPE, src, dest);
 }
 
@@ -319,10 +266,7 @@ Function: find_non_pointer_type_symbols
 
 \*******************************************************************/
 
-void find_non_pointer_type_symbols(
-  const exprt &src,
-  find_symbols_sett &dest)
-{
+void find_non_pointer_type_symbols(const exprt &src, find_symbols_sett &dest) {
   find_symbols(F_TYPE_NON_PTR, src, dest);
 }
 
@@ -338,10 +282,7 @@ Function: find_non_pointer_type_symbols
 
 \*******************************************************************/
 
-void find_non_pointer_type_symbols(
-  const typet &src,
-  find_symbols_sett &dest)
-{
+void find_non_pointer_type_symbols(const typet &src, find_symbols_sett &dest) {
   find_symbols(F_TYPE_NON_PTR, src, dest);
 }
 
@@ -357,8 +298,7 @@ Function: find_type_and_expr_symbols
 
 \*******************************************************************/
 
-void find_type_and_expr_symbols(const exprt &src, find_symbols_sett &dest)
-{
+void find_type_and_expr_symbols(const exprt &src, find_symbols_sett &dest) {
   find_symbols(F_BOTH, src, dest);
 }
 
@@ -374,7 +314,6 @@ Function: find_type_and_expr_symbols
 
 \*******************************************************************/
 
-void find_type_and_expr_symbols(const typet &src, find_symbols_sett &dest)
-{
+void find_type_and_expr_symbols(const typet &src, find_symbols_sett &dest) {
   find_symbols(F_BOTH, src, dest);
 }

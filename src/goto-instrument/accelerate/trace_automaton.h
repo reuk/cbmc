@@ -13,33 +13,26 @@ Author: Matt Lewis
 
 #include <goto-programs/goto_program.h>
 
-#include <map>
-#include <vector>
-#include <set>
 #include <iosfwd>
+#include <map>
+#include <set>
+#include <vector>
 
 typedef unsigned int statet;
 typedef std::set<statet> state_sett;
 
-class automatont
-{
- public:
-  automatont():num_states(0)
-  {
-  }
+class automatont {
+public:
+  automatont() : num_states(0) {}
 
   statet add_state();
   void add_trans(statet s, goto_programt::targett a, statet t);
 
-  bool is_accepting(statet s)
-  {
-    return accept_states.find(s)!=accept_states.end();
+  bool is_accepting(statet s) {
+    return accept_states.find(s) != accept_states.end();
   }
 
-  void set_accepting(statet s)
-  {
-    accept_states.insert(s);
-  }
+  void set_accepting(statet s) { accept_states.insert(s); }
 
   void move(statet s, goto_programt::targett a, state_sett &t);
   void move(state_sett &s, goto_programt::targett a, state_sett &t);
@@ -51,25 +44,23 @@ class automatont
 
   void output(std::ostream &str);
 
-  void clear()
-  {
+  void clear() {
     transitions.clear();
     accept_states.clear();
-    num_states=0;
+    num_states = 0;
   }
 
-  void swap(automatont &that)
-  {
+  void swap(automatont &that) {
     transitions.swap(that.transitions);
     accept_states.swap(that.accept_states);
-    num_states=that.num_states;
-    init_state=that.init_state;
+    num_states = that.num_states;
+    init_state = that.init_state;
   }
 
-// protected:
+  // protected:
   typedef std::multimap<goto_programt::targett, statet> transitionst;
   typedef std::pair<transitionst::iterator, transitionst::iterator>
-    transition_ranget;
+      transition_ranget;
   typedef std::vector<transitionst> transition_tablet;
 
   statet init_state;
@@ -79,16 +70,14 @@ class automatont
   state_sett accept_states;
 };
 
-class trace_automatont
-{
- public:
-  explicit trace_automatont(goto_programt &_goto_program):
-    goto_program(_goto_program)
-  {
+class trace_automatont {
+public:
+  explicit trace_automatont(goto_programt &_goto_program)
+      : goto_program(_goto_program) {
     build_alphabet(goto_program);
     init_nta();
 
-    epsilon=goto_program.instructions.end();
+    epsilon = goto_program.instructions.end();
     epsilon++;
   }
 
@@ -96,13 +85,9 @@ class trace_automatont
 
   void build();
 
-  int init_state()
-  {
-    return dta.init_state;
-  }
+  int init_state() { return dta.init_state; }
 
-  void accept_states(state_sett &states)
-  {
+  void accept_states(state_sett &states) {
     states.insert(dta.accept_states.begin(), dta.accept_states.end());
   }
 
@@ -112,21 +97,17 @@ class trace_automatont
 
   void get_transitions(sym_mapt &transitions);
 
-  int num_states()
-  {
-    return dta.num_states;
-  }
+  int num_states() { return dta.num_states; }
 
   typedef std::set<goto_programt::targett> alphabett;
   alphabett alphabet;
 
- protected:
+protected:
   void build_alphabet(goto_programt &program);
   void init_nta();
 
-  bool in_alphabet(goto_programt::targett t)
-  {
-    return alphabet.find(t)!=alphabet.end();
+  bool in_alphabet(goto_programt::targett t) {
+    return alphabet.find(t) != alphabet.end();
   }
 
   void pop_unmarked_dstate(state_sett &s);

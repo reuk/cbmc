@@ -6,23 +6,19 @@ Author: Chris Smowton, chris.smowton@diffblue.com
 
 \*******************************************************************/
 
+#include "remove_instanceof.h"
 #include "class_hierarchy.h"
 #include "class_identifier.h"
-#include "remove_instanceof.h"
 #include <util/fresh_symbol.h>
 
 #include <sstream>
 
-class remove_instanceoft
-{
+class remove_instanceoft {
 public:
-  remove_instanceoft(
-    symbol_tablet &_symbol_table,
-    goto_functionst &_goto_functions):
-    symbol_table(_symbol_table),
-    ns(_symbol_table),
-    goto_functions(_goto_functions)
-  {
+  remove_instanceoft(symbol_tablet &_symbol_table,
+                     goto_functionst &_goto_functions)
+      : symbol_table(_symbol_table), ns(_symbol_table),
+        goto_functions(_goto_functions) {
     class_hierarchy(_symbol_table);
   }
 
@@ -37,19 +33,14 @@ protected:
 
   bool lower_instanceof(goto_programt &);
 
-  typedef std::vector<
-    std::pair<goto_programt::targett, goto_programt::targett>> instanceof_instt;
+  typedef std::vector<std::pair<goto_programt::targett, goto_programt::targett>>
+      instanceof_instt;
 
-  void lower_instanceof(
-    goto_programt &,
-    goto_programt::targett,
-    instanceof_instt &);
+  void lower_instanceof(goto_programt &, goto_programt::targett,
+                        instanceof_instt &);
 
-  void lower_instanceof(
-    exprt &,
-    goto_programt &,
-    goto_programt::targett,
-    instanceof_instt &);
+  void lower_instanceof(exprt &, goto_programt &, goto_programt::targett,
+                        instanceof_instt &);
 
   bool contains_instanceof(const exprt &);
 };
@@ -67,14 +58,10 @@ Function: remove_instanceoft::contains_instanceof
 
 \*******************************************************************/
 
-bool remove_instanceoft::contains_instanceof(
-  const exprt &expr)
-{
-  if(expr.id()==ID_java_instanceof)
+bool remove_instanceoft::contains_instanceof(const exprt &expr) {
+  if (expr.id() == ID_java_instanceof)
     return true;
-  forall_operands(it, expr)
-    if(contains_instanceof(*it))
-      return true;
+  forall_operands(it, expr) if (contains_instanceof(*it)) return true;
   return false;
 }
 
@@ -96,26 +83,22 @@ Function: remove_instanceoft::lower_instanceof
 
 \*******************************************************************/
 
-void remove_instanceoft::lower_instanceof(
-  exprt &expr,
-  goto_programt &goto_program,
-  goto_programt::targett this_inst,
-  instanceof_instt &inst_switch)
-{
-  if(expr.id()==ID_java_instanceof)
-  {
-    const exprt &check_ptr=expr.op0();
-    assert(check_ptr.type().id()==ID_pointer);
-    const exprt &target_arg=expr.op1();
-    assert(target_arg.id()==ID_type);
-    const typet &target_type=target_arg.type();
+void remove_instanceoft::lower_instanceof(exprt &expr,
+                                          goto_programt &goto_program,
+                                          goto_programt::targett this_inst,
+                                          instanceof_instt &inst_switch) {
+  if (expr.id() == ID_java_instanceof) {
+    const exprt &check_ptr = expr.op0();
+    assert(check_ptr.type().id() == ID_pointer);
+    const exprt &target_arg = expr.op1();
+    assert(target_arg.id() == ID_type);
+    const typet &target_type = target_arg.type();
 
     // Find all types we know about that satisfy the given requirement:
-    assert(target_type.id()==ID_symbol);
-    const irep_idt &target_name=
-      to_symbol_type(target_type).get_identifier();
-    std::vector<irep_idt> children=
-      class_hierarchy.get_children_trans(target_name);
+    assert(target_type.id() == ID_symbol);
+    const irep_idt &target_name = to_symbol_type(target_type).get_identifier();
+    std::vector<irep_idt> children =
+        class_hierarchy.get_children_trans(target_name);
     children.push_back(target_name);
 
     assert(!children.empty() && "Unable to execute instanceof");
@@ -125,21 +108,16 @@ void remove_instanceoft::lower_instanceof(
     // not contain derefs.
 
     symbol_typet jlo("java::java.lang.Object");
-    exprt object_clsid=get_class_identifier_field(check_ptr, jlo, ns);
+    exprt object_clsid = get_class_identifier_field(check_ptr, jlo, ns);
 
-    symbolt &newsym=
-      get_fresh_aux_symbol(
-        object_clsid.type(),
-        "instanceof_tmp",
-        "instanceof_tmp",
-        source_locationt(),
-        ID_java,
-        symbol_table);
+    symbolt &newsym = get_fresh_aux_symbol(
+        object_clsid.type(), "instanceof_tmp", "instanceof_tmp",
+        source_locationt(), ID_java, symbol_table);
 
-    auto newinst=goto_program.insert_after(this_inst);
+    auto newinst = goto_program.insert_after(this_inst);
     newinst->make_assignment();
-    newinst->code=code_assignt(newsym.symbol_expr(), object_clsid);
-    newinst->source_location=this_inst->source_location;
+    newinst->code = code_assignt(newsym.symbol_expr(), object_clsid);
+    newinst->source_location = this_inst->source_location;
 
     // Insert the check instruction after the existing one.
     // This will briefly be ill-formed (use before def of
@@ -148,18 +126,15 @@ void remove_instanceoft::lower_instanceof(
     inst_switch.push_back(make_pair(this_inst, newinst));
     // Replace the instanceof construct with a big-or.
     exprt::operandst or_ops;
-    for(const auto &clsname : children)
-    {
+    for (const auto &clsname : children) {
       constant_exprt clsexpr(clsname, string_typet());
       equal_exprt test(newsym.symbol_expr(), clsexpr);
       or_ops.push_back(test);
     }
-    expr=disjunction(or_ops);
-  }
-  else
-  {
+    expr = disjunction(or_ops);
+  } else {
     Forall_operands(it, expr)
-      lower_instanceof(*it, goto_program, this_inst, inst_switch);
+        lower_instanceof(*it, goto_program, this_inst, inst_switch);
   }
 }
 
@@ -177,13 +152,11 @@ Function: remove_instanceoft::lower_instanceof
 
 \*******************************************************************/
 
-void remove_instanceoft::lower_instanceof(
-  goto_programt &goto_program,
-  goto_programt::targett target,
-  instanceof_instt &inst_switch)
-{
-  bool code_iof=contains_instanceof(target->code);
-  bool guard_iof=contains_instanceof(target->guard);
+void remove_instanceoft::lower_instanceof(goto_programt &goto_program,
+                                          goto_programt::targett target,
+                                          instanceof_instt &inst_switch) {
+  bool code_iof = contains_instanceof(target->code);
+  bool guard_iof = contains_instanceof(target->guard);
   // The instruction-switching step below will malfunction if a check
   // has been added for the code *and* for the guard. This should
   // be impossible, because guarded instructions currently have simple
@@ -191,9 +164,9 @@ void remove_instanceoft::lower_instanceof(
   // assumption is correct and remains true on future evolution of the
   // allowable goto instruction types.
   assert(!(code_iof && guard_iof));
-  if(code_iof)
+  if (code_iof)
     lower_instanceof(target->code, goto_program, target, inst_switch);
-  if(guard_iof)
+  if (guard_iof)
     lower_instanceof(target->guard, goto_program, target, inst_switch);
 }
 
@@ -209,23 +182,19 @@ Function: remove_instanceoft::lower_instanceof
  Purpose: See function above
 
 \*******************************************************************/
-bool remove_instanceoft::lower_instanceof(goto_programt &goto_program)
-{
+bool remove_instanceoft::lower_instanceof(goto_programt &goto_program) {
   instanceof_instt inst_switch;
   Forall_goto_program_instructions(target, goto_program)
-    lower_instanceof(goto_program, target, inst_switch);
-  if(!inst_switch.empty())
-  {
-    for(auto &p : inst_switch)
-    {
-      const goto_programt::targett &this_inst=p.first;
-      const goto_programt::targett &newinst=p.second;
+      lower_instanceof(goto_program, target, inst_switch);
+  if (!inst_switch.empty()) {
+    for (auto &p : inst_switch) {
+      const goto_programt::targett &this_inst = p.first;
+      const goto_programt::targett &newinst = p.second;
       this_inst->swap(*newinst);
     }
     goto_program.update();
     return true;
-  }
-  else
+  } else
     return false;
 }
 
@@ -242,12 +211,11 @@ Function: remove_instanceoft::lower_instanceof
 
 \*******************************************************************/
 
-void remove_instanceoft::lower_instanceof()
-{
-  bool changed=false;
-  for(auto &f : goto_functions.function_map)
-    changed=(lower_instanceof(f.second.body) || changed);
-  if(changed)
+void remove_instanceoft::lower_instanceof() {
+  bool changed = false;
+  for (auto &f : goto_functions.function_map)
+    changed = (lower_instanceof(f.second.body) || changed);
+  if (changed)
     goto_functions.compute_location_numbers();
 }
 
@@ -267,16 +235,12 @@ Function: remove_instanceof
 
 \*******************************************************************/
 
-void remove_instanceof(
-  symbol_tablet &symbol_table,
-  goto_functionst &goto_functions)
-{
+void remove_instanceof(symbol_tablet &symbol_table,
+                       goto_functionst &goto_functions) {
   remove_instanceoft rem(symbol_table, goto_functions);
   rem.lower_instanceof();
 }
 
-void remove_instanceof(goto_modelt &goto_model)
-{
-  remove_instanceof(
-    goto_model.symbol_table, goto_model.goto_functions);
+void remove_instanceof(goto_modelt &goto_model) {
+  remove_instanceof(goto_model.symbol_table, goto_model.goto_functions);
 }

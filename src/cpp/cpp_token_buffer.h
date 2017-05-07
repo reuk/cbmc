@@ -11,12 +11,9 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 #include "cpp_token.h"
 
-class cpp_token_buffert
-{
+class cpp_token_buffert {
 public:
-  cpp_token_buffert():current_pos(0)
-  {
-  }
+  cpp_token_buffert() : current_pos(0) {}
 
   typedef unsigned int post;
 
@@ -30,16 +27,14 @@ public:
   void Replace(const cpp_tokent &token);
   void Insert(const cpp_tokent &token);
 
-  void clear()
-  {
+  void clear() {
     tokens.clear();
     token_vector.clear();
-    current_pos=0;
+    current_pos = 0;
   }
 
   // the token that is currently being read from the file
-  cpp_tokent &current_token()
-  {
+  cpp_tokent &current_token() {
     assert(!tokens.empty());
     return tokens.back();
   }

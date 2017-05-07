@@ -6,8 +6,8 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 \*******************************************************************/
 
-#include <ostream>
 #include <cassert>
+#include <ostream>
 
 #include "cpp_declarator.h"
 
@@ -23,8 +23,7 @@ Function: cpp_declaratort::output
 
 \*******************************************************************/
 
-void cpp_declaratort::output(std::ostream &out) const
-{
+void cpp_declaratort::output(std::ostream &out) const {
   out << "  name: " << name().pretty() << "\n";
   out << "  type: " << type().pretty() << "\n";
   out << "  value: " << value().pretty() << "\n";
@@ -44,34 +43,27 @@ Function: cpp_declaratort::merge_type
 
 \*******************************************************************/
 
-typet cpp_declaratort::merge_type(const typet &declaration_type) const
-{
-  typet dest_type=type();
+typet cpp_declaratort::merge_type(const typet &declaration_type) const {
+  typet dest_type = type();
 
-  if(declaration_type.id()=="cpp-cast-operator")
+  if (declaration_type.id() == "cpp-cast-operator")
     return dest_type;
 
-  typet *p=&dest_type;
+  typet *p = &dest_type;
 
   // walk down subtype until we hit nil
-  while(true)
-  {
-    typet &t=*p;
-    if(t.is_nil())
-    {
-      t=declaration_type;
+  while (true) {
+    typet &t = *p;
+    if (t.is_nil()) {
+      t = declaration_type;
       break;
-    }
-    else if(t.id()==ID_merged_type)
-    {
+    } else if (t.id() == ID_merged_type) {
       // the chain continues with the last one
       assert(!t.subtypes().empty());
-      p=&t.subtypes().back();
-    }
-    else
-    {
-      assert(t.id()!=irep_idt());
-      p=&t.subtype();
+      p = &t.subtypes().back();
+    } else {
+      assert(t.id() != irep_idt());
+      p = &t.subtype();
     }
   }
 

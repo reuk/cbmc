@@ -14,25 +14,27 @@ Date: May 2016
 #include <goto-programs/goto_model.h>
 #include <util/cmdline.h>
 
-enum class coverage_criteriont
-{
-  LOCATION, BRANCH, DECISION, CONDITION,
-  PATH, MCDC, ASSERTION, COVER };
+enum class coverage_criteriont {
+  LOCATION,
+  BRANCH,
+  DECISION,
+  CONDITION,
+  PATH,
+  MCDC,
+  ASSERTION,
+  COVER
+};
 
-void instrument_cover_goals(
-  const symbol_tablet &symbol_table,
-  goto_programt &goto_program,
-  coverage_criteriont);
+void instrument_cover_goals(const symbol_tablet &symbol_table,
+                            goto_programt &goto_program, coverage_criteriont);
 
-void instrument_cover_goals(
-  const symbol_tablet &symbol_table,
-  goto_functionst &goto_functions,
-  coverage_criteriont);
+void instrument_cover_goals(const symbol_tablet &symbol_table,
+                            goto_functionst &goto_functions,
+                            coverage_criteriont);
 
-bool instrument_cover_goals(
-  const cmdlinet &cmdline,
-  const symbol_tablet &symbol_table,
-  goto_functionst &goto_functions,
-  message_handlert &msgh);
+bool instrument_cover_goals(const cmdlinet &cmdline,
+                            const symbol_tablet &symbol_table,
+                            goto_functionst &goto_functions,
+                            message_handlert &msgh);
 
 #endif // CPROVER_GOTO_INSTRUMENT_COVER_H

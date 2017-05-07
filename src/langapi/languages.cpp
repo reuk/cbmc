@@ -20,9 +20,8 @@ Function: languagest::languagest
 
 \*******************************************************************/
 
-languagest::languagest(const namespacet &_ns, languaget *_language):ns(_ns)
-{
-  language=_language;
+languagest::languagest(const namespacet &_ns, languaget *_language) : ns(_ns) {
+  language = _language;
 }
 
 /*******************************************************************\
@@ -37,7 +36,4 @@ Function: languagest::~languagest
 
 \*******************************************************************/
 
-languagest::~languagest()
-{
-  delete language;
-}
+languagest::~languagest() { delete language; }

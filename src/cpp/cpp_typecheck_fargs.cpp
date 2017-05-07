@@ -12,8 +12,8 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 #include <ansi-c/c_qualifiers.h>
 
-#include "cpp_typecheck_fargs.h"
 #include "cpp_typecheck.h"
+#include "cpp_typecheck_fargs.h"
 
 /*******************************************************************\
 
@@ -27,13 +27,10 @@ Function: cpp_typecheck_fargst::has_class_type
 
 \*******************************************************************/
 
-bool cpp_typecheck_fargst::has_class_type() const
-{
-  for(exprt::operandst::const_iterator it=operands.begin();
-      it!=operands.end();
-      it++)
-  {
-    if(it->type().id()==ID_struct)
+bool cpp_typecheck_fargst::has_class_type() const {
+  for (exprt::operandst::const_iterator it = operands.begin();
+       it != operands.end(); it++) {
+    if (it->type().id() == ID_struct)
       return true;
   }
 
@@ -53,14 +50,13 @@ Function: cpp_typecheck_fargst::build
 \*******************************************************************/
 
 void cpp_typecheck_fargst::build(
-  const side_effect_expr_function_callt &function_call)
-{
-  in_use=true;
+    const side_effect_expr_function_callt &function_call) {
+  in_use = true;
 
   operands.clear();
   operands.reserve(function_call.op1().operands().size());
 
-  for(std::size_t i=0; i<function_call.op1().operands().size(); i++)
+  for (std::size_t i = 0; i < function_call.op1().operands().size(); i++)
     operands.push_back(function_call.op1().operands()[i]);
 }
 
@@ -76,42 +72,34 @@ Function: cpp_typecheck_fargst::exact_match
 
 \*******************************************************************/
 
-bool cpp_typecheck_fargst::match(
-  const code_typet &code_type,
-  unsigned &distance,
-  cpp_typecheckt &cpp_typecheck) const
-{
-  distance=0;
+bool cpp_typecheck_fargst::match(const code_typet &code_type,
+                                 unsigned &distance,
+                                 cpp_typecheckt &cpp_typecheck) const {
+  distance = 0;
 
-  exprt::operandst ops=operands;
-  const code_typet::parameterst &parameters=code_type.parameters();
+  exprt::operandst ops = operands;
+  const code_typet::parameterst &parameters = code_type.parameters();
 
-  if(parameters.size()>ops.size())
-  {
+  if (parameters.size() > ops.size()) {
     // Check for default values.
     ops.reserve(parameters.size());
 
-    for(std::size_t i=ops.size(); i<parameters.size(); i++)
-    {
-      const exprt &default_value=
-        parameters[i].default_value();
+    for (std::size_t i = ops.size(); i < parameters.size(); i++) {
+      const exprt &default_value = parameters[i].default_value();
 
-      if(default_value.is_nil())
+      if (default_value.is_nil())
         return false;
 
       ops.push_back(default_value);
     }
-  }
-  else if(parameters.size()<ops.size())
-  {
+  } else if (parameters.size() < ops.size()) {
     // check for ellipsis
-    if(!code_type.has_ellipsis())
+    if (!code_type.has_ellipsis())
       return false;
   }
 
-  exprt::operandst::iterator it=ops.begin();
-  for(const auto &parameter : parameters)
-  {
+  exprt::operandst::iterator it = ops.begin();
+  for (const auto &parameter : parameters) {
     // read
     // http://publib.boulder.ibm.com/infocenter/comphelp/v8v101/topic/
     //   com.ibm.xlcpp8a.doc/language/ref/implicit_conversion_sequences.htm
@@ -122,50 +110,46 @@ bool cpp_typecheck_fargst::match(
     // * User-defined conversion sequences
     // * Ellipsis conversion sequences
 
-    assert(it!=ops.end());
-    const exprt &operand=*it;
-    typet type=parameter.type();
+    assert(it != ops.end());
+    const exprt &operand = *it;
+    typet type = parameter.type();
 
-    #if 0
+#if 0
     // unclear, todo
     if(is_reference(operand.type()))
       std::cout << "O: " << operand.pretty() << std::endl;
 
     assert(!is_reference(operand.type()));
-    #endif
+#endif
 
     // "this" is a special case -- we turn the pointer type
     // into a reference type to do the type matching
-    if(it==ops.begin() && parameter.get(ID_C_base_name)==ID_this)
-    {
+    if (it == ops.begin() && parameter.get(ID_C_base_name) == ID_this) {
       type.set(ID_C_reference, true);
       type.set("#this", true);
     }
 
-    unsigned rank=0;
+    unsigned rank = 0;
     exprt new_expr;
 
-    #if 0
+#if 0
     std::cout << "C: " << cpp_typecheck.to_string(operand.type())
               << " -> " << cpp_typecheck.to_string(parameter.type())
               << std::endl;
-    #endif
+#endif
 
     // can we do the standard conversion sequence?
-    if(cpp_typecheck.implicit_conversion_sequence(
-        operand, type, new_expr, rank))
-    {
+    if (cpp_typecheck.implicit_conversion_sequence(operand, type, new_expr,
+                                                   rank)) {
       // ok
-      distance+=rank;
-      #if 0
+      distance += rank;
+#if 0
       std::cout << "OK " << rank << std::endl;
-      #endif
-    }
-    else
-    {
-      #if 0
+#endif
+    } else {
+#if 0
       std::cout << "NOT OK" << std::endl;
-      #endif
+#endif
       return false; // no conversion possible
     }
 
@@ -173,9 +157,9 @@ bool cpp_typecheck_fargst::match(
   }
 
   // we may not have used all operands
-  for( ; it!=ops.end(); ++it)
+  for (; it != ops.end(); ++it)
     // Ellipsis is the 'worst' of the conversion sequences
-    distance+=1000;
+    distance += 1000;
 
   return true;
 }

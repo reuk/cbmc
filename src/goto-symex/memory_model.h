@@ -11,13 +11,12 @@ Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
 
 #include "partial_order_concurrency.h"
 
-class memory_model_baset:public partial_order_concurrencyt
-{
+class memory_model_baset : public partial_order_concurrencyt {
 public:
   explicit memory_model_baset(const namespacet &_ns);
   virtual ~memory_model_baset();
 
-  virtual void operator()(symex_target_equationt &)=0;
+  virtual void operator()(symex_target_equationt &) = 0;
 
 protected:
   // program order
@@ -29,8 +28,7 @@ protected:
 
   // This gives us the choice symbol for an R-W pair;
   // built by the method below.
-  typedef std::map<
-    std::pair<event_it, event_it>, symbol_exprt> choice_symbolst;
+  typedef std::map<std::pair<event_it, event_it>, symbol_exprt> choice_symbolst;
   choice_symbolst choice_symbols;
 
   void read_from(symex_target_equationt &equation);

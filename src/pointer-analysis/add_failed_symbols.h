@@ -20,8 +20,6 @@ void add_failed_symbols(symbol_tablet &symbol_table);
 
 irep_idt failed_symbol_id(const irep_idt &identifier);
 
-exprt get_failed_symbol(
-  const symbol_exprt &expr,
-  const namespacet &ns);
+exprt get_failed_symbol(const symbol_exprt &expr, const namespacet &ns);
 
 #endif // CPROVER_POINTER_ANALYSIS_ADD_FAILED_SYMBOLS_H

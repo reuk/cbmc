@@ -11,8 +11,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <util/expr.h>
 
-struct pointer_arithmetict
-{
+struct pointer_arithmetict {
   exprt pointer, offset;
 
   explicit pointer_arithmetict(const exprt &src);

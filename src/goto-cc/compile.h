@@ -11,14 +11,13 @@ Date: June 2006
 #ifndef CPROVER_GOTO_CC_COMPILE_H
 #define CPROVER_GOTO_CC_COMPILE_H
 
-#include <util/symbol.h>
 #include <util/rename_symbol.h>
+#include <util/symbol.h>
 
-#include <langapi/language_ui.h>
 #include <goto-programs/goto_functions.h>
+#include <langapi/language_ui.h>
 
-class compilet:public language_uit
-{
+class compilet : public language_uit {
 public:
   ui_message_handlert ui_message_handler;
   namespacet ns;
@@ -27,13 +26,14 @@ public:
   std::string working_directory;
   std::string override_language;
 
-  enum { PREPROCESS_ONLY, // gcc -E
-         COMPILE_ONLY, // gcc -c
-         ASSEMBLE_ONLY, // gcc -S
-         LINK_LIBRARY, // ld -r
-         COMPILE_LINK, // gcc -shared
-         COMPILE_LINK_EXECUTABLE // gcc
-       } mode;
+  enum {
+    PREPROCESS_ONLY,        // gcc -E
+    COMPILE_ONLY,           // gcc -c
+    ASSEMBLE_ONLY,          // gcc -S
+    LINK_LIBRARY,           // ld -r
+    COMPILE_LINK,           // gcc -shared
+    COMPILE_LINK_EXECUTABLE // gcc
+  } mode;
 
   std::list<std::string> library_paths;
   std::list<std::string> source_files;
@@ -61,14 +61,10 @@ public:
 
   bool parse_source(const std::string &);
 
-  bool write_object_file(
-    const std::string &,
-    const symbol_tablet &,
-    goto_functionst &);
-  bool write_bin_object_file(
-    const std::string &,
-    const symbol_tablet &,
-    goto_functionst &);
+  bool write_object_file(const std::string &, const symbol_tablet &,
+                         goto_functionst &);
+  bool write_bin_object_file(const std::string &, const symbol_tablet &,
+                             goto_functionst &);
 
 protected:
   cmdlinet &cmdline;

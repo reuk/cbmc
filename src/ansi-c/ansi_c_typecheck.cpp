@@ -20,14 +20,10 @@ Function: ansi_c_typecheckt::typecheck
 
 \*******************************************************************/
 
-void ansi_c_typecheckt::typecheck()
-{
+void ansi_c_typecheckt::typecheck() {
   start_typecheck_code();
-  for(ansi_c_parse_treet::itemst::iterator
-      it=parse_tree.items.begin();
-      it!=parse_tree.items.end();
-      it++)
-  {
+  for (ansi_c_parse_treet::itemst::iterator it = parse_tree.items.begin();
+       it != parse_tree.items.end(); it++) {
     typecheck_declaration(*it);
   }
 }
@@ -44,14 +40,11 @@ Function: ansi_c_typecheck
 
 \*******************************************************************/
 
-bool ansi_c_typecheck(
-  ansi_c_parse_treet &ansi_c_parse_tree,
-  symbol_tablet &symbol_table,
-  const std::string &module,
-  message_handlert &message_handler)
-{
-  ansi_c_typecheckt ansi_c_typecheck(
-    ansi_c_parse_tree, symbol_table, module, message_handler);
+bool ansi_c_typecheck(ansi_c_parse_treet &ansi_c_parse_tree,
+                      symbol_tablet &symbol_table, const std::string &module,
+                      message_handlert &message_handler) {
+  ansi_c_typecheckt ansi_c_typecheck(ansi_c_parse_tree, symbol_table, module,
+                                     message_handler);
   return ansi_c_typecheck.typecheck_main();
 }
 
@@ -67,35 +60,28 @@ Function: ansi_c_typecheck
 
 \*******************************************************************/
 
-bool ansi_c_typecheck(
-  exprt &expr,
-  message_handlert &message_handler,
-  const namespacet &ns)
-{
+bool ansi_c_typecheck(exprt &expr, message_handlert &message_handler,
+                      const namespacet &ns) {
   symbol_tablet symbol_table;
   ansi_c_parse_treet ansi_c_parse_tree;
 
-  ansi_c_typecheckt ansi_c_typecheck(
-    ansi_c_parse_tree, symbol_table,
-    ns.get_symbol_table(), "", message_handler);
+  ansi_c_typecheckt ansi_c_typecheck(ansi_c_parse_tree, symbol_table,
+                                     ns.get_symbol_table(), "",
+                                     message_handler);
 
-  try
-  {
+  try {
     ansi_c_typecheck.typecheck_expr(expr);
   }
 
-  catch(int)
-  {
+  catch (int) {
     ansi_c_typecheck.error();
   }
 
-  catch(const char *e)
-  {
+  catch (const char *e) {
     ansi_c_typecheck.error() << e << messaget::eom;
   }
 
-  catch(const std::string &e)
-  {
+  catch (const std::string &e) {
     ansi_c_typecheck.error() << e << messaget::eom;
   }
 

@@ -13,28 +13,23 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <util/message.h>
 
-#include "goto_trace.h"
 #include "goto_model.h"
+#include "goto_trace.h"
 
-class property_checkert:public messaget
-{
+class property_checkert : public messaget {
 public:
-  property_checkert()
-  {
-  }
+  property_checkert() {}
 
-  explicit property_checkert(
-    message_handlert &_message_handler);
+  explicit property_checkert(message_handlert &_message_handler);
 
   typedef enum { PASS, FAIL, ERROR, UNKNOWN } resultt;
 
   static std::string as_string(resultt);
 
   // Check whether all properties in goto_functions hold.
-  virtual resultt operator()(const goto_modelt &)=0;
+  virtual resultt operator()(const goto_modelt &) = 0;
 
-  struct property_statust
-  {
+  struct property_statust {
     // this is the counterexample
     goto_tracet error_trace;
     resultt result;

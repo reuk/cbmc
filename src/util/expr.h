@@ -13,99 +13,91 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "type.h"
 
-#define forall_operands(it, expr) \
-  if((expr).has_operands()) /* NOLINT(readability/braces) */ \
-    for(exprt::operandst::const_iterator it=(expr).operands().begin(), \
-        it##_end=(expr).operands().end(); \
-        it!=it##_end; ++it)
+#define forall_operands(it, expr)                                              \
+  if ((expr).has_operands()) /* NOLINT(readability/braces) */                  \
+    for (exprt::operandst::const_iterator it = (expr).operands().begin(),      \
+                                          it##_end = (expr).operands().end();  \
+         it != it##_end; ++it)
 
-#define Forall_operands(it, expr) \
-  if((expr).has_operands()) /* NOLINT(readability/braces) */ \
-    for(exprt::operandst::iterator it=(expr).operands().begin(); \
-        it!=(expr).operands().end(); ++it)
+#define Forall_operands(it, expr)                                              \
+  if ((expr).has_operands()) /* NOLINT(readability/braces) */                  \
+    for (exprt::operandst::iterator it = (expr).operands().begin();            \
+         it != (expr).operands().end(); ++it)
 
-#define forall_expr(it, expr) \
-  for(exprt::operandst::const_iterator it=(expr).begin(); \
-      it!=(expr).end(); ++it)
+#define forall_expr(it, expr)                                                  \
+  for (exprt::operandst::const_iterator it = (expr).begin();                   \
+       it != (expr).end(); ++it)
 
-#define Forall_expr(it, expr) \
-  for(exprt::operandst::iterator it=(expr).begin(); \
-      it!=(expr).end(); ++it)
+#define Forall_expr(it, expr)                                                  \
+  for (exprt::operandst::iterator it = (expr).begin(); it != (expr).end(); ++it)
 
-#define forall_expr_list(it, expr) \
-  for(expr_listt::const_iterator it=(expr).begin(); \
-      it!=(expr).end(); ++it)
+#define forall_expr_list(it, expr)                                             \
+  for (expr_listt::const_iterator it = (expr).begin(); it != (expr).end(); ++it)
 
-#define Forall_expr_list(it, expr) \
-  for(expr_listt::iterator it=(expr).begin(); \
-      it!=(expr).end(); ++it)
+#define Forall_expr_list(it, expr)                                             \
+  for (expr_listt::iterator it = (expr).begin(); it != (expr).end(); ++it)
 
 /*! \brief Base class for all expressions
 */
-class exprt:public irept
-{
+class exprt : public irept {
 public:
   typedef std::vector<exprt> operandst;
 
   // constructors
-  exprt() { }
-  explicit exprt(const irep_idt &_id):irept(_id) { }
-  exprt(const irep_idt &_id, const typet &_type):irept(_id)
-  {
+  exprt() {}
+  explicit exprt(const irep_idt &_id) : irept(_id) {}
+  exprt(const irep_idt &_id, const typet &_type) : irept(_id) {
     add(ID_type, _type);
   }
 
   // returns the type of the expression
   typet &type() { return static_cast<typet &>(add(ID_type)); }
-  const typet &type() const
-  {
+  const typet &type() const {
     return static_cast<const typet &>(find(ID_type));
   }
 
   // returns true if there is at least one operand
-  bool has_operands() const
-  { return !operands().empty(); }
+  bool has_operands() const { return !operands().empty(); }
 
   operandst &operands()
-  #ifdef OPERANDS_IN_GETSUB
-  { return (operandst &)get_sub(); }
-  #else
-  { return (operandst &)(add(ID_operands).get_sub()); }
-  #endif
+#ifdef OPERANDS_IN_GETSUB
+  {
+    return (operandst &)get_sub();
+  }
+#else
+  {
+    return (operandst &)(add(ID_operands).get_sub());
+  }
+#endif
 
   const operandst &operands() const
-  #ifdef OPERANDS_IN_GETSUB
-  { return (const operandst &)get_sub(); }
-  #else
-  { return (const operandst &)(find(ID_operands).get_sub()); }
-  #endif
+#ifdef OPERANDS_IN_GETSUB
+  {
+    return (const operandst &)get_sub();
+  }
+#else
+  {
+    return (const operandst &)(find(ID_operands).get_sub());
+  }
+#endif
 
-  exprt &op0()
-  { return operands().front(); }
+  exprt &op0() { return operands().front(); }
 
-  exprt &op1()
-  { return operands()[1]; }
+  exprt &op1() { return operands()[1]; }
 
-  exprt &op2()
-  { return operands()[2]; }
+  exprt &op2() { return operands()[2]; }
 
-  exprt &op3()
-  { return operands()[3]; }
+  exprt &op3() { return operands()[3]; }
 
-  const exprt &op0() const
-  { return operands().front(); }
+  const exprt &op0() const { return operands().front(); }
 
-  const exprt &op1() const
-  { return operands()[1]; }
+  const exprt &op1() const { return operands()[1]; }
 
-  const exprt &op2() const
-  { return operands()[2]; }
+  const exprt &op2() const { return operands()[2]; }
 
-  const exprt &op3() const
-  { return operands()[3]; }
+  const exprt &op3() const { return operands()[3]; }
 
-  void reserve_operands(operandst::size_type n)
-  { operands().reserve(n) ; }
+  void reserve_operands(operandst::size_type n) { operands().reserve(n); }
 
   // destroys expr, e1, e2, e3
   void move_to_operands(exprt &expr);
@@ -138,23 +130,19 @@ public:
 
   const source_locationt &find_source_location() const;
 
-  const source_locationt &source_location() const
-  {
+  const source_locationt &source_location() const {
     return static_cast<const source_locationt &>(find(ID_C_source_location));
   }
 
-  source_locationt &add_source_location()
-  {
+  source_locationt &add_source_location() {
     return static_cast<source_locationt &>(add(ID_C_source_location));
   }
 
-  exprt &add_expr(const irep_idt &name)
-  {
+  exprt &add_expr(const irep_idt &name) {
     return static_cast<exprt &>(add(name));
   }
 
-  const exprt &find_expr(const irep_idt &name) const
-  {
+  const exprt &find_expr(const irep_idt &name) const {
     return static_cast<const exprt &>(find(name));
   }
 
@@ -164,18 +152,16 @@ public:
 
 typedef std::list<exprt> expr_listt;
 
-class expr_visitort
-{
+class expr_visitort {
 public:
-  virtual ~expr_visitort() { }
-  virtual void operator()(exprt &expr) { }
+  virtual ~expr_visitort() {}
+  virtual void operator()(exprt &expr) {}
 };
 
-class const_expr_visitort
-{
+class const_expr_visitort {
 public:
-  virtual ~const_expr_visitort() { }
-  virtual void operator()(const exprt &expr) { }
+  virtual ~const_expr_visitort() {}
+  virtual void operator()(const exprt &expr) {}
 };
 
 #endif // CPROVER_UTIL_EXPR_H

@@ -13,8 +13,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "dimacs_cnf.h"
 
-class satcheck_zcoret:public dimacs_cnft
-{
+class satcheck_zcoret : public dimacs_cnft {
 public:
   satcheck_zcoret();
   virtual ~satcheck_zcoret();
@@ -23,9 +22,8 @@ public:
   virtual resultt prop_solve();
   virtual tvt l_get(literalt a) const;
 
-  bool is_in_core(literalt l) const
-  {
-    return in_core.find(l.var_no())!=in_core.end();
+  bool is_in_core(literalt l) const {
+    return in_core.find(l.var_no()) != in_core.end();
   }
 
 protected:

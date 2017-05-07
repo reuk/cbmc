@@ -9,15 +9,14 @@ Author: Daniel Kroening, kroening@kroening.com
 #ifndef CPROVER_SOLVERS_SAT_SATCHECK_SMVSAT_H
 #define CPROVER_SOLVERS_SAT_SATCHECK_SMVSAT_H
 
-#include <vector>
 #include <set>
+#include <vector>
 
 #include <util/expr.h>
 
 #include "cnf.h"
 
-class satcheck_smvsatt:public cnf_solvert
-{
+class satcheck_smvsatt : public cnf_solvert {
 public:
   satcheck_smvsatt();
   virtual ~satcheck_smvsatt();
@@ -32,16 +31,14 @@ protected:
   struct sat_instance *satsolver;
 };
 
-class satcheck_smvsat_coret:public satcheck_smvsatt
-{
+class satcheck_smvsat_coret : public satcheck_smvsatt {
 public:
   satcheck_smvsat_coret();
 
   virtual resultt prop_solve();
 
-  bool is_in_core(literalt l) const
-  {
-    assert(l.var_no()<in_core.size());
+  bool is_in_core(literalt l) const {
+    assert(l.var_no() < in_core.size());
     return in_core[l.var_no()];
   }
 
@@ -49,17 +46,11 @@ protected:
   std::vector<bool> in_core;
 };
 
-class satcheck_smvsat_interpolatort:public satcheck_smvsatt
-{
+class satcheck_smvsat_interpolatort : public satcheck_smvsatt {
 public:
-  satcheck_smvsat_interpolatort():partition_no(0)
-  {
-  }
+  satcheck_smvsat_interpolatort() : partition_no(0) {}
 
-  void set_partition_no(short p)
-  {
-    partition_no=p;
-  }
+  void set_partition_no(short p) { partition_no = p; }
 
   void interpolate(exprt &dest);
 
@@ -70,19 +61,14 @@ protected:
   std::vector<short> partition_numbers;
 
   void build_aig(
-    // NOLINTNEXTLINE(readability/identifiers)
-    struct interpolator &interpolator_satsolver,
-    int output,
-    exprt &dest);
+      // NOLINTNEXTLINE(readability/identifiers)
+      struct interpolator &interpolator_satsolver, int output, exprt &dest);
 
-  struct entryt
-  {
+  struct entryt {
     int g;
     exprt *e;
 
-    entryt(int _g, exprt *_e):g(_g), e(_e)
-    {
-    }
+    entryt(int _g, exprt *_e) : g(_g), e(_e) {}
   };
 };
 

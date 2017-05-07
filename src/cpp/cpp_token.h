@@ -13,8 +13,7 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 #include <util/expr.h>
 
-class cpp_tokent
-{
+class cpp_tokent {
 public:
   int kind;
   exprt data;
@@ -22,17 +21,15 @@ public:
   unsigned line_no;
   irep_idt filename;
 
-  void clear()
-  {
-    kind=0;
+  void clear() {
+    kind = 0;
     data.clear();
-    text="";
-    line_no=0;
-    filename="";
+    text = "";
+    line_no = 0;
+    filename = "";
   }
 
-  void swap(cpp_tokent &token)
-  {
+  void swap(cpp_tokent &token) {
     std::swap(kind, token.kind);
     data.swap(token.data);
     text.swap(token.text);

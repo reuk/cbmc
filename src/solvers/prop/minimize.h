@@ -24,56 +24,38 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-class prop_minimizet:public messaget
-{
+class prop_minimizet : public messaget {
 public:
-  explicit prop_minimizet(prop_convt &_prop_conv):
-    _number_objectives(0),
-    prop_conv(_prop_conv)
-  {
-  }
+  explicit prop_minimizet(prop_convt &_prop_conv)
+      : _number_objectives(0), prop_conv(_prop_conv) {}
 
   void operator()();
 
   // statistics
 
-  std::size_t number_satisfied() const
-  {
-    return _number_satisfied;
-  }
+  std::size_t number_satisfied() const { return _number_satisfied; }
 
-  unsigned iterations() const
-  {
-    return _iterations;
-  }
+  unsigned iterations() const { return _iterations; }
 
-  std::size_t size() const
-  {
-    return _number_objectives;
-  }
+  std::size_t size() const { return _number_objectives; }
 
   // managing the objectives
 
   typedef long long signed int weightt;
 
   // adds an objective with given weight
-  void objective(
-    const literalt condition,
-    const weightt weight=1);
+  void objective(const literalt condition, const weightt weight = 1);
 
-  struct objectivet
-  {
+  struct objectivet {
     literalt condition;
     bool fixed;
 
-    explicit objectivet(const literalt _condition):
-      condition(_condition), fixed(false)
-    {
-    }
+    explicit objectivet(const literalt _condition)
+        : condition(_condition), fixed(false) {}
   };
 
   // the map of objectives, sorted by weight
-  typedef std::map<weightt, std::vector<objectivet> > objectivest;
+  typedef std::map<weightt, std::vector<objectivet>> objectivest;
   objectivest objectives;
 
 protected:

@@ -11,9 +11,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <goto-programs/goto_functions.h>
 
-void dot(
-  const goto_functionst &src,
-  const namespacet &ns,
-  std::ostream &out);
+void dot(const goto_functionst &src, const namespacet &ns, std::ostream &out);
 
 #endif // CPROVER_GOTO_INSTRUMENT_DOT_H

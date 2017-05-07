@@ -13,48 +13,41 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 #include "cpp_name.h"
 
-class cpp_declaratort:public exprt
-{
+class cpp_declaratort : public exprt {
 public:
-  cpp_declaratort():exprt(ID_cpp_declarator)
-  {
+  cpp_declaratort() : exprt(ID_cpp_declarator) {
     value().make_nil();
     name().make_nil();
     add_source_location().make_nil();
   }
 
-  explicit cpp_declaratort(const typet &type):exprt(ID_cpp_declarator, type)
-  {
+  explicit cpp_declaratort(const typet &type) : exprt(ID_cpp_declarator, type) {
     value().make_nil();
     name().make_nil();
     add_source_location().make_nil();
   }
 
   cpp_namet &name() { return static_cast<cpp_namet &>(add(ID_name)); }
-  const cpp_namet &name() const
-  {
+  const cpp_namet &name() const {
     return static_cast<const cpp_namet &>(find(ID_name));
   }
 
   exprt &value() { return static_cast<exprt &>(add(ID_value)); }
-  const exprt &value() const
-  {
+  const exprt &value() const {
     return static_cast<const exprt &>(find(ID_value));
   }
 
   // initializers for function arguments
-  exprt &init_args() { return static_cast<exprt&>(add("init_args")); }
-  const exprt &init_args() const
-  {
-    return static_cast<const exprt&>(find("init_args"));
+  exprt &init_args() { return static_cast<exprt &>(add("init_args")); }
+  const exprt &init_args() const {
+    return static_cast<const exprt &>(find("init_args"));
   }
 
   irept &method_qualifier() { return add(ID_method_qualifier); }
   const irept &method_qualifier() const { return find(ID_method_qualifier); }
 
   irept &member_initializers() { return add(ID_member_initializers); }
-  const irept &member_initializers() const
-  {
+  const irept &member_initializers() const {
     return find(ID_member_initializers);
   }
 

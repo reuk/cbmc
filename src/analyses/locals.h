@@ -13,13 +13,11 @@ Date: March 2013
 
 #include <goto-programs/goto_functions.h>
 
-class localst
-{
+class localst {
 public:
   typedef goto_functionst::goto_functiont goto_functiont;
 
-  explicit localst(const goto_functiont &goto_function)
-  {
+  explicit localst(const goto_functiont &goto_function) {
     build(goto_function);
   }
 
@@ -28,9 +26,8 @@ public:
   // Returns true for all procedure-local variables,
   // not including those with static storage duration,
   // but including the function parameters.
-  bool is_local(const irep_idt &identifier) const
-  {
-    return locals_map.find(identifier)!=locals_map.end();
+  bool is_local(const irep_idt &identifier) const {
+    return locals_map.find(identifier) != locals_map.end();
   }
 
   typedef std::map<irep_idt, symbol_exprt> locals_mapt;
@@ -40,9 +37,7 @@ protected:
   void build(const goto_functiont &goto_function);
 };
 
-inline std::ostream &operator<<(
-  std::ostream &out, const localst &locals)
-{
+inline std::ostream &operator<<(std::ostream &out, const localst &locals) {
   locals.output(out);
   return out;
 }

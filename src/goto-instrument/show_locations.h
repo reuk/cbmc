@@ -13,8 +13,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <goto-programs/goto_functions.h>
 
-void show_locations(
-  ui_message_handlert::uit ui,
-  const goto_functionst &goto_functions);
+void show_locations(ui_message_handlert::uit ui,
+                    const goto_functionst &goto_functions);
 
 #endif // CPROVER_GOTO_INSTRUMENT_SHOW_LOCATIONS_H

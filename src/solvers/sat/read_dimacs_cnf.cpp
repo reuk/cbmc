@@ -6,8 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <istream>
 #include <cstdlib> // for abs()
+#include <istream>
 
 #include <util/string2int.h>
 
@@ -27,85 +27,76 @@ Function: cnft::read_dimacs_cnf
 
 \*******************************************************************/
 
-void read_dimacs_cnf(std::istream &in, cnft &dest)
-{
-  #define DELIMITERS "\t\n\v\f\r "
-  #define CHAR_DELIMITERS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+void read_dimacs_cnf(std::istream &in, cnft &dest) {
+#define DELIMITERS "\t\n\v\f\r "
+#define CHAR_DELIMITERS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
   bvt new_bv;
   std::string line;
 
-  while(getline(in, line))
-  {
+  while (getline(in, line)) {
     line += " ";
 
-    while(true)
-    {
-      if(line.empty())
+    while (true) {
+      if (line.empty())
         break;
 
-      #ifdef VERBOSE
+#ifdef VERBOSE
       std::cout << "begin line " << line << std::endl;
-      #endif
+#endif
       size_t pos = line.find_first_of(DELIMITERS, 0);
-      #ifdef VERBOSE
+#ifdef VERBOSE
       std::cout << "pos " << pos << std::endl;
-      #endif
+#endif
       size_t pos_char = line.find_first_of(CHAR_DELIMITERS, 0);
 
-      if(pos!=std::string::npos)
-      {
+      if (pos != std::string::npos) {
         std::string decision = line.substr(0, pos);
-        line.erase(0, pos+1);
-        #ifdef VERBOSE
+        line.erase(0, pos + 1);
+#ifdef VERBOSE
         std::cout << "i am here\n";
         std::cout << decision << std::endl;
         std::cout << "line" << line << std::endl;
-        #endif
-        if(!decision.compare(std::string("c")))
-        {
-          #ifdef VERBOSE
+#endif
+        if (!decision.compare(std::string("c"))) {
+#ifdef VERBOSE
           std::cout << "c " << std::endl;
-          #endif
+#endif
           break;
         }
 
-        if(!decision.compare(std::string("p")))
-        {
-          #ifdef VERBOSE
+        if (!decision.compare(std::string("p"))) {
+#ifdef VERBOSE
           std::cout << "p " << std::endl;
-          #endif
+#endif
           break;
         }
 
-        if(pos_char == std::string::npos) // no char present in the clause
+        if (pos_char == std::string::npos) // no char present in the clause
         {
           int parsed_lit = unsafe_string2int(decision);
-          #ifdef VERBOSE
+#ifdef VERBOSE
           std::cout << "parsed_lit " << parsed_lit << " " << std::endl;
-          #endif
-          if(parsed_lit == 0)
-          {
-            bvt no_dup=cnft::eliminate_duplicates(new_bv);
-            #ifdef VERBOSE
+#endif
+          if (parsed_lit == 0) {
+            bvt no_dup = cnft::eliminate_duplicates(new_bv);
+#ifdef VERBOSE
             std::cout << "calling lcnf " << new_bv.size() << std::endl;
-            #endif
+#endif
             dest.lcnf(no_dup);
             new_bv.clear();
             no_dup.clear();
-          }
-          else
-          {
+          } else {
             unsigned var = abs(parsed_lit); // because of the const variable
             literalt l;
             bool sign = (parsed_lit > 0) ? false : true;
             l.set(var, sign);
-            #ifdef VERBOSE
+#ifdef VERBOSE
             std::cout << "setting l to " << l.get() << std::endl;
-            #endif
+#endif
             new_bv.push_back(l);
-            if(dest.no_variables() <= var)
-              dest.set_no_variables(var+1);
+            if (dest.no_variables() <= var)
+              dest.set_no_variables(var + 1);
           }
         }
       }

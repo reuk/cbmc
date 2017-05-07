@@ -10,18 +10,15 @@ Author: Michael Tautschnig, tautschn@amazon.com
 
 #include "expr2jsil.h"
 
-class expr2jsilt:public expr2ct
-{
+class expr2jsilt : public expr2ct {
 public:
-  explicit expr2jsilt(const namespacet &_ns):expr2ct(_ns) { }
+  explicit expr2jsilt(const namespacet &_ns) : expr2ct(_ns) {}
 
-  virtual std::string convert(const exprt &src)
-  {
+  virtual std::string convert(const exprt &src) {
     return expr2ct::convert(src);
   }
 
-  virtual std::string convert(const typet &src)
-  {
+  virtual std::string convert(const typet &src) {
     return expr2ct::convert(src);
   }
 
@@ -40,8 +37,7 @@ Function: expr2jsil
 
 \*******************************************************************/
 
-std::string expr2jsil(const exprt &expr, const namespacet &ns)
-{
+std::string expr2jsil(const exprt &expr, const namespacet &ns) {
   expr2jsilt expr2jsil(ns);
   expr2jsil.get_shorthands(expr);
   return expr2jsil.convert(expr);
@@ -59,8 +55,7 @@ Function: type2jsil
 
 \*******************************************************************/
 
-std::string type2jsil(const typet &type, const namespacet &ns)
-{
+std::string type2jsil(const typet &type, const namespacet &ns) {
   expr2jsilt expr2jsil(ns);
   return expr2jsil.convert(type);
 }

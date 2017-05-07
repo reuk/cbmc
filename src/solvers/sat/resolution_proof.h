@@ -13,8 +13,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <solvers/prop/literal.h>
 
-class clauset
-{
+class clauset {
 public:
   bool is_root;
 
@@ -23,8 +22,7 @@ public:
 
   unsigned first_clause_id;
 
-  struct stept
-  {
+  struct stept {
     unsigned pivot_var_no;
     unsigned clause_id;
   };
@@ -33,9 +31,7 @@ public:
   stepst steps;
 };
 
-template<class T=clauset>
-class resolution_prooft
-{
+template <class T = clauset> class resolution_prooft {
 public:
   typedef std::vector<T> clausest;
   clausest clauses;

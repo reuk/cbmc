@@ -20,11 +20,9 @@ class namespacet;
 
 /*! \brief Globally accessible architectural configuration
 */
-class configt
-{
+class configt {
 public:
-  struct ansi_ct
-  {
+  struct ansi_ct {
     // for ANSI-C
     unsigned int_width;
     unsigned long_int_width;
@@ -46,9 +44,18 @@ public:
     enum class c_standardt { C89, C99, C11 } c_standard;
     static c_standardt default_c_standard();
 
-    void set_c89() { c_standard=c_standardt::C89; for_has_scope=false; }
-    void set_c99() { c_standard=c_standardt::C99; for_has_scope=true; }
-    void set_c11() { c_standard=c_standardt::C11; for_has_scope=true; }
+    void set_c89() {
+      c_standard = c_standardt::C89;
+      for_has_scope = false;
+    }
+    void set_c99() {
+      c_standard = c_standardt::C99;
+      for_has_scope = true;
+    }
+    void set_c11() {
+      c_standard = c_standardt::C11;
+      for_has_scope = true;
+    }
 
     ieee_floatt::rounding_modet rounding_mode;
 
@@ -99,12 +106,25 @@ public:
     void set_arch_spec_hppa();
     void set_arch_spec_sh4();
 
-    enum class flavourt { NONE, ANSI, GCC, ARM, APPLE,
-                          VISUAL_STUDIO, CODEWARRIOR };
+    enum class flavourt {
+      NONE,
+      ANSI,
+      GCC,
+      ARM,
+      APPLE,
+      VISUAL_STUDIO,
+      CODEWARRIOR
+    };
     flavourt mode; // the syntax of source files
 
-    enum class preprocessort { NONE, GCC, CLANG, VISUAL_STUDIO,
-                               CODEWARRIOR, ARM };
+    enum class preprocessort {
+      NONE,
+      GCC,
+      CLANG,
+      VISUAL_STUDIO,
+      CODEWARRIOR,
+      ARM
+    };
     preprocessort preprocessor; // the preprocessor to use
 
     std::list<std::string> defines;
@@ -119,24 +139,21 @@ public:
     bool string_abstraction;
   } ansi_c;
 
-  struct cppt
-  {
+  struct cppt {
     enum class cpp_standardt { CPP98, CPP03, CPP11, CPP14 } cpp_standard;
     static cpp_standardt default_cpp_standard();
 
-    void set_cpp98() { cpp_standard=cpp_standardt::CPP98; }
-    void set_cpp03() { cpp_standard=cpp_standardt::CPP03; }
-    void set_cpp11() { cpp_standard=cpp_standardt::CPP11; }
-    void set_cpp14() { cpp_standard=cpp_standardt::CPP14; }
+    void set_cpp98() { cpp_standard = cpp_standardt::CPP98; }
+    void set_cpp03() { cpp_standard = cpp_standardt::CPP03; }
+    void set_cpp11() { cpp_standard = cpp_standardt::CPP11; }
+    void set_cpp14() { cpp_standard = cpp_standardt::CPP14; }
   } cpp;
 
-  struct verilogt
-  {
+  struct verilogt {
     std::list<std::string> include_paths;
   } verilog;
 
-  struct javat
-  {
+  struct javat {
     typedef std::list<std::string> classpatht;
     classpatht classpath;
     irep_idt main_class;

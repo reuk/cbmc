@@ -14,19 +14,14 @@ Author: Daniel Kroening, kroening@kroening.com
 
 int yymmparse();
 
-class mm_parsert:public parsert
-{
+class mm_parsert : public parsert {
 public:
   irep_idt model_name;
   irept instruction;
 
-  virtual bool parse()
-  {
-    return yymmparse()!=0;
-  }
+  virtual bool parse() { return yymmparse() != 0; }
 
-  virtual void clear()
-  {
+  virtual void clear() {
     model_name.clear();
     instruction.clear();
   }

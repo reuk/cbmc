@@ -9,23 +9,19 @@ Author: Daniel Kroening, kroening@kroening.com
 #ifndef CPROVER_ANSI_C_DESIGNATOR_H
 #define CPROVER_ANSI_C_DESIGNATOR_H
 
-#include <vector>
 #include <iosfwd>
+#include <vector>
 
 #include <util/type.h>
 
-class designatort
-{
+class designatort {
 public:
-  struct entryt
-  {
+  struct entryt {
     size_t index;
     size_t size;
     typet type, subtype;
 
-    entryt():index(0), size(0)
-    {
-    }
+    entryt() : index(0), size(0) {}
   };
 
   bool empty() const { return index_list.empty(); }
@@ -35,17 +31,11 @@ public:
   const entryt &back() const { return index_list.back(); }
   const entryt &front() const { return index_list.front(); }
 
-  designatort() { }
+  designatort() {}
 
-  void push_entry(const entryt &entry)
-  {
-    index_list.push_back(entry);
-  }
+  void push_entry(const entryt &entry) { index_list.push_back(entry); }
 
-  void pop_entry()
-  {
-    index_list.pop_back();
-  }
+  void pop_entry() { index_list.pop_back(); }
 
   void print(std::ostream &out) const;
 
@@ -55,8 +45,7 @@ protected:
   index_listt index_list;
 };
 
-inline std::ostream &operator << (std::ostream &os, const designatort &d)
-{
+inline std::ostream &operator<<(std::ostream &os, const designatort &d) {
   d.print(os);
   return os;
 }

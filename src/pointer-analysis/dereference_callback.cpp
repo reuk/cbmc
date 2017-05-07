@@ -20,6 +20,4 @@ Function: dereference_callbackt::~dereference_callbackt
 
 \*******************************************************************/
 
-dereference_callbackt::~dereference_callbackt()
-{
-}
+dereference_callbackt::~dereference_callbackt() {}

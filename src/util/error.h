@@ -14,69 +14,41 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "location.h"
 
-class error_baset:public std::exception
-{
+class error_baset : public std::exception {
 public:
-  virtual const char* what() const throw()
-  {
-    return "";
-  }
+  virtual const char *what() const throw() { return ""; }
 
-  virtual ~error_baset() throw()
-  {
-  }
+  virtual ~error_baset() throw() {}
 
-  error_baset()
-  {
-  }
+  error_baset() {}
 
-  explicit error_baset(const locationt &_location):location(_location)
-  {
-  }
+  explicit error_baset(const locationt &_location) : location(_location) {}
 
   locationt location;
 };
 
-class error_streamt:public error_baset, public std::ostringstream
-{
+class error_streamt : public error_baset, public std::ostringstream {
 public:
-  virtual const char* what() const throw()
-  {
-    return str().c_str();
-  }
+  virtual const char *what() const throw() { return str().c_str(); }
 
-  virtual ~error_streamt() throw()
-  {
-  }
+  virtual ~error_streamt() throw() {}
 
-  error_streamt()
-  {
-  }
+  error_streamt() {}
 
-  explicit error_streamt(const locationt &_location):
-    error_baset(_location), std::ostringstream()
-  {
-  }
+  explicit error_streamt(const locationt &_location)
+      : error_baset(_location), std::ostringstream() {}
 
-  explicit error_streamt(const char *string)
-  {
-    str(string);
-  }
+  explicit error_streamt(const char *string) { str(string); }
 
-  explicit error_streamt(const std::string &string)
-  {
-    str(string);
-  }
+  explicit error_streamt(const std::string &string) { str(string); }
 
-  error_streamt(const error_streamt &other):std::ostringstream()
-  {
+  error_streamt(const error_streamt &other) : std::ostringstream() {
     str(other.str());
-    location=other.location;
+    location = other.location;
   }
 
-  error_streamt(const locationt &_location, const std::string &string):
-    error_baset(_location)
-  {
+  error_streamt(const locationt &_location, const std::string &string)
+      : error_baset(_location) {
     str(string);
   }
 };

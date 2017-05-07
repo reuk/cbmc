@@ -13,54 +13,34 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 class cpp_typecheckt;
 
-class cpp_typecastt:public c_typecastt
-{
+class cpp_typecastt : public c_typecastt {
 public:
   explicit cpp_typecastt(cpp_typecheckt &cpp_typecheck);
 
-  virtual void implicit_typecast(
-    exprt &expr,
-    const typet &type);
+  virtual void implicit_typecast(exprt &expr, const typet &type);
 
-  virtual void implicit_typecast_arithmetic(
-    exprt &expr);
+  virtual void implicit_typecast_arithmetic(exprt &expr);
 
-  virtual void implicit_typecast_arithmetic(
-    exprt &expr1,
-    exprt &expr2);
+  virtual void implicit_typecast_arithmetic(exprt &expr1, exprt &expr2);
 
 protected:
-  virtual void implicit_typecast_followed(
-    exprt &expr,
-    const typet &src_type,
-    const typet &dest_type);
+  virtual void implicit_typecast_followed(exprt &expr, const typet &src_type,
+                                          const typet &dest_type);
 
-  void get_bases(
-    const irep_idt &identifier,
-    std::map<irep_idt, unsigned> &base_count);
+  void get_bases(const irep_idt &identifier,
+                 std::map<irep_idt, unsigned> &base_count);
 
 public:
-  void check_qualifiers(
-    const typet &from,
-    const typet &to);
+  void check_qualifiers(const typet &from, const typet &to);
 
-  bool subtype_typecast(
-    const typet &from,
-    const typet &to,
-    std::string &err);
+  bool subtype_typecast(const typet &from, const typet &to, std::string &err);
 
-  bool integral_conversion(
-    const typet &src_type,
-    const typet &dest_type);
+  bool integral_conversion(const typet &src_type, const typet &dest_type);
 
-  exprt subtype_offset(
-    const struct_typet &from,
-    const struct_typet &to);
+  exprt subtype_offset(const struct_typet &from, const struct_typet &to);
 
-  void make_ptr_typecast(
-    exprt &expr,
-    const typet &src_type,
-    const typet &dest_type);
+  void make_ptr_typecast(exprt &expr, const typet &src_type,
+                         const typet &dest_type);
 
   cpp_typecheckt &cpp_typecheck;
 };

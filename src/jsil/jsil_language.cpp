@@ -6,8 +6,8 @@ Author: Michael Tautschnig, tautschn@amazon.com
 
 \*******************************************************************/
 
-#include <util/symbol_table.h>
 #include <util/get_base_name.h>
+#include <util/symbol_table.h>
 
 #include "expr2jsil.h"
 #include "jsil_convert.h"
@@ -30,10 +30,7 @@ Function: jsil_languaget::extensions
 
 \*******************************************************************/
 
-std::set<std::string> jsil_languaget::extensions() const
-{
-  return { "jsil" };
-}
+std::set<std::string> jsil_languaget::extensions() const { return {"jsil"}; }
 
 /*******************************************************************\
 
@@ -47,8 +44,7 @@ Function: jsil_languaget::modules_provided
 
 \*******************************************************************/
 
-void jsil_languaget::modules_provided(std::set<std::string> &modules)
-{
+void jsil_languaget::modules_provided(std::set<std::string> &modules) {
   modules.insert(get_base_name(parse_path, true));
 }
 
@@ -64,9 +60,8 @@ Function: jsil_languaget::interfaces
 
 \*******************************************************************/
 
-bool jsil_languaget::interfaces(symbol_tablet &symbol_table)
-{
-  if(jsil_convert(parse_tree, symbol_table, get_message_handler()))
+bool jsil_languaget::interfaces(symbol_tablet &symbol_table) {
+  if (jsil_convert(parse_tree, symbol_table, get_message_handler()))
     return true;
 
   jsil_internal_additions(symbol_table);
@@ -85,11 +80,8 @@ Function: jsil_languaget::preprocess
 
 \*******************************************************************/
 
-bool jsil_languaget::preprocess(
-  std::istream &instream,
-  const std::string &path,
-  std::ostream &outstream)
-{
+bool jsil_languaget::preprocess(std::istream &instream, const std::string &path,
+                                std::ostream &outstream) {
   // there is no preprocessing!
   return true;
 }
@@ -106,21 +98,18 @@ Function: jsil_languaget::parse
 
 \*******************************************************************/
 
-bool jsil_languaget::parse(
-  std::istream &instream,
-  const std::string &path)
-{
+bool jsil_languaget::parse(std::istream &instream, const std::string &path) {
   // store the path
-  parse_path=path;
+  parse_path = path;
 
   // parsing
   jsil_parser.clear();
   jsil_parser.set_file(path);
-  jsil_parser.in=&instream;
+  jsil_parser.in = &instream;
   jsil_parser.set_message_handler(get_message_handler());
 
   jsil_scanner_init();
-  bool result=jsil_parser.parse();
+  bool result = jsil_parser.parse();
 
   // save result
   parse_tree.swap(jsil_parser.parse_tree);
@@ -143,11 +132,9 @@ Function: jsil_languaget::typecheck
 
 \*******************************************************************/
 
-bool jsil_languaget::typecheck(
-  symbol_tablet &symbol_table,
-  const std::string &module)
-{
-  if(jsil_typecheck(symbol_table, get_message_handler()))
+bool jsil_languaget::typecheck(symbol_tablet &symbol_table,
+                               const std::string &module) {
+  if (jsil_typecheck(symbol_table, get_message_handler()))
     return true;
 
   return false;
@@ -165,11 +152,8 @@ Function: jsil_languaget::final
 
 \*******************************************************************/
 
-bool jsil_languaget::final(symbol_tablet &symbol_table)
-{
-  if(jsil_entry_point(
-      symbol_table,
-      get_message_handler()))
+bool jsil_languaget::final(symbol_tablet &symbol_table) {
+  if (jsil_entry_point(symbol_table, get_message_handler()))
     return true;
 
   return false;
@@ -187,10 +171,7 @@ Function: jsil_languaget::show_parse
 
 \*******************************************************************/
 
-void jsil_languaget::show_parse(std::ostream &out)
-{
-  parse_tree.output(out);
-}
+void jsil_languaget::show_parse(std::ostream &out) { parse_tree.output(out); }
 
 /*******************************************************************\
 
@@ -204,10 +185,7 @@ Function: new_jsil_language
 
 \*******************************************************************/
 
-languaget *new_jsil_language()
-{
-  return new jsil_languaget;
-}
+languaget *new_jsil_language() { return new jsil_languaget; }
 
 /*******************************************************************\
 
@@ -221,12 +199,9 @@ Function: jsil_languaget::from_expr
 
 \*******************************************************************/
 
-bool jsil_languaget::from_expr(
-  const exprt &expr,
-  std::string &code,
-  const namespacet &ns)
-{
-  code=expr2jsil(expr, ns);
+bool jsil_languaget::from_expr(const exprt &expr, std::string &code,
+                               const namespacet &ns) {
+  code = expr2jsil(expr, ns);
   return false;
 }
 
@@ -242,12 +217,9 @@ Function: jsil_languaget::from_type
 
 \*******************************************************************/
 
-bool jsil_languaget::from_type(
-  const typet &type,
-  std::string &code,
-  const namespacet &ns)
-{
-  code=type2jsil(type, ns);
+bool jsil_languaget::from_type(const typet &type, std::string &code,
+                               const namespacet &ns) {
+  code = type2jsil(type, ns);
   return false;
 }
 
@@ -263,12 +235,8 @@ Function: jsil_languaget::to_expr
 
 \*******************************************************************/
 
-bool jsil_languaget::to_expr(
-  const std::string &code,
-  const std::string &module,
-  exprt &expr,
-  const namespacet &ns)
-{
+bool jsil_languaget::to_expr(const std::string &code, const std::string &module,
+                             exprt &expr, const namespacet &ns) {
   expr.make_nil();
   std::istringstream instream(code);
 
@@ -276,29 +244,27 @@ bool jsil_languaget::to_expr(
 
   jsil_parser.clear();
   jsil_parser.set_file("");
-  jsil_parser.in=&instream;
+  jsil_parser.in = &instream;
   jsil_parser.set_message_handler(get_message_handler());
   jsil_scanner_init();
 
-  bool result=jsil_parser.parse();
+  bool result = jsil_parser.parse();
 
-  if(jsil_parser.parse_tree.items.size()!=1)
-    result=true;
-  else
-  {
+  if (jsil_parser.parse_tree.items.size() != 1)
+    result = true;
+  else {
     symbol_tablet symbol_table;
-    result=
-      jsil_convert(parse_tree, symbol_table, get_message_handler());
+    result = jsil_convert(parse_tree, symbol_table, get_message_handler());
 
-    if(symbol_table.symbols.size()!=1)
-      result=true;
+    if (symbol_table.symbols.size() != 1)
+      result = true;
 
-    if(!result)
-      expr=symbol_table.symbols.begin()->second.value;
+    if (!result)
+      expr = symbol_table.symbols.begin()->second.value;
 
     // typecheck it
-    if(!result)
-      result=jsil_typecheck(expr, get_message_handler(), ns);
+    if (!result)
+      result = jsil_typecheck(expr, get_message_handler(), ns);
   }
 
   // save some memory
@@ -319,6 +285,4 @@ Function: jsil_languaget::~jsil_languaget
 
 \*******************************************************************/
 
-jsil_languaget::~jsil_languaget()
-{
-}
+jsil_languaget::~jsil_languaget() {}

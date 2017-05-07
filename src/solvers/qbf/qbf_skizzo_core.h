@@ -12,8 +12,7 @@ Author: CM Wintersteiger
 #include "qbf_bdd_core.h"
 
 // a qdimacs_coret with f_get from BDDs
-class qbf_skizzo_coret:public qbf_bdd_certificatet
-{
+class qbf_skizzo_coret : public qbf_bdd_certificatet {
 public:
   qbf_skizzo_coret();
   virtual ~qbf_skizzo_coret();

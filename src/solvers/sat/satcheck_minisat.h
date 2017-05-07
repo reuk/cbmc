@@ -14,12 +14,9 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "cnf.h"
 #include "resolution_proof.h"
 
-class satcheck_minisat1_baset:public cnf_solvert
-{
+class satcheck_minisat1_baset : public cnf_solvert {
 public:
-  satcheck_minisat1_baset():solver(NULL)
-  {
-  }
+  satcheck_minisat1_baset() : solver(NULL) {}
 
   virtual ~satcheck_minisat1_baset();
 
@@ -48,14 +45,12 @@ protected:
   bool empty_clause_added;
 };
 
-class satcheck_minisat1t:public satcheck_minisat1_baset
-{
+class satcheck_minisat1t : public satcheck_minisat1_baset {
 public:
   satcheck_minisat1t();
 };
 
-class satcheck_minisat1_prooft:public satcheck_minisat1t
-{
+class satcheck_minisat1_prooft : public satcheck_minisat1t {
 public:
   satcheck_minisat1_prooft();
   ~satcheck_minisat1_prooft();
@@ -70,8 +65,7 @@ protected:
   class minisat_prooft *minisat_proof;
 };
 
-class satcheck_minisat1_coret:public satcheck_minisat1_prooft
-{
+class satcheck_minisat1_coret : public satcheck_minisat1_prooft {
 public:
   satcheck_minisat1_coret();
   ~satcheck_minisat1_coret();
@@ -81,9 +75,8 @@ public:
 
   virtual bool has_in_core() const { return true; }
 
-  virtual bool is_in_core(literalt l) const
-  {
-    assert(l.var_no()<in_core.size());
+  virtual bool is_in_core(literalt l) const {
+    assert(l.var_no() < in_core.size());
     return in_core[l.var_no()];
   }
 

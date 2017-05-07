@@ -9,21 +9,17 @@ Author: Chris Smowton, chris.smowton@diffblue.com
 #ifndef CPROVER_JAVA_BYTECODE_CI_LAZY_METHODS_H
 #define CPROVER_JAVA_BYTECODE_CI_LAZY_METHODS_H
 
-#include <vector>
 #include <set>
 #include <util/symbol_table.h>
+#include <vector>
 
-class ci_lazy_methodst
-{
+class ci_lazy_methodst {
 public:
-  ci_lazy_methodst(
-    std::vector<irep_idt> &_needed_methods,
-    std::set<irep_idt> &_needed_classes,
-    symbol_tablet &_symbol_table):
-  needed_methods(_needed_methods),
-  needed_classes(_needed_classes),
-  symbol_table(_symbol_table)
-  {}
+  ci_lazy_methodst(std::vector<irep_idt> &_needed_methods,
+                   std::set<irep_idt> &_needed_classes,
+                   symbol_tablet &_symbol_table)
+      : needed_methods(_needed_methods), needed_classes(_needed_classes),
+        symbol_table(_symbol_table) {}
 
   void add_needed_method(const irep_idt &);
   // Returns true if new

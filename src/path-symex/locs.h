@@ -15,16 +15,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "loc_ref.h"
 
-struct loct
-{
+struct loct {
 public:
-  loct(
-    goto_programt::const_targett _target,
-    const irep_idt &_function):
-    target(_target),
-    function(_function)
-  {
-  }
+  loct(goto_programt::const_targett _target, const irep_idt &_function)
+      : target(_target), function(_function) {}
 
   goto_programt::const_targett target;
   irep_idt function;
@@ -33,15 +27,13 @@ public:
   loc_reft branch_target;
 };
 
-class locst
-{
+class locst {
 public:
   typedef std::vector<loct> loc_vectort;
   loc_vectort loc_vector;
   loc_reft entry_loc;
 
-  class function_entryt
-  {
+  class function_entryt {
   public:
     loc_reft first_loc;
     code_typet type;
@@ -54,54 +46,44 @@ public:
   void build(const goto_functionst &goto_functions);
   void output(std::ostream &out) const;
 
-  loct &operator[] (loc_reft l)
-  {
-    assert(l.loc_number>=0 && l.loc_number<loc_vector.size());
+  loct &operator[](loc_reft l) {
+    assert(l.loc_number >= 0 && l.loc_number < loc_vector.size());
     return loc_vector[l.loc_number];
   }
 
-  const loct &operator[] (loc_reft l) const
-  {
-    assert(l.loc_number>=0 && l.loc_number<loc_vector.size());
+  const loct &operator[](loc_reft l) const {
+    assert(l.loc_number >= 0 && l.loc_number < loc_vector.size());
     return loc_vector[l.loc_number];
   }
 
-  static inline loc_reft begin()
-  {
+  static inline loc_reft begin() {
     loc_reft tmp;
-    tmp.loc_number=0;
+    tmp.loc_number = 0;
     return tmp;
   }
 
-  loc_reft end() const
-  {
+  loc_reft end() const {
     loc_reft tmp;
-    tmp.loc_number=loc_vector.size();
+    tmp.loc_number = loc_vector.size();
     return tmp;
   }
 
-  std::size_t size() const
-  {
-    return loc_vector.size();
-  }
+  std::size_t size() const { return loc_vector.size(); }
 
 protected:
   const namespacet &ns;
 };
 
-class target_to_loc_mapt
-{
+class target_to_loc_mapt {
 public:
-  explicit target_to_loc_mapt(const locst &locs)
-  {
-    for(loc_reft it=locs.begin(); it!=locs.end(); ++it)
-      map[locs[it].target]=it;
+  explicit target_to_loc_mapt(const locst &locs) {
+    for (loc_reft it = locs.begin(); it != locs.end(); ++it)
+      map[locs[it].target] = it;
   }
 
-  loc_reft operator[](const goto_programt::const_targett t) const
-  {
-    mapt::const_iterator it=map.find(t);
-    assert(it!=map.end());
+  loc_reft operator[](const goto_programt::const_targett t) const {
+    mapt::const_iterator it = map.find(t);
+    assert(it != map.end());
     return it->second;
   }
 

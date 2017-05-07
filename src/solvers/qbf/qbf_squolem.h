@@ -13,8 +13,7 @@ Author: CM Wintersteiger
 
 #include "qdimacs_cnf.h"
 
-class qbf_squolemt:public qdimacs_cnft
-{
+class qbf_squolemt : public qdimacs_cnft {
 protected:
   Squolem2 squolem;
   bool early_decision;

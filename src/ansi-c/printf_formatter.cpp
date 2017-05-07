@@ -27,12 +27,10 @@ Function: printf_formattert::make_type
 
 \*******************************************************************/
 
-const exprt printf_formattert::make_type(
-  const exprt &src, const typet &dest)
-{
-  if(src.type()==dest)
+const exprt printf_formattert::make_type(const exprt &src, const typet &dest) {
+  if (src.type() == dest)
     return src;
-  exprt tmp=src;
+  exprt tmp = src;
   tmp.make_typecast(dest);
   simplify(tmp, ns);
   return tmp;
@@ -50,12 +48,10 @@ Function: printf_formattert::operator()
 
 \*******************************************************************/
 
-void printf_formattert::operator()(
-  const std::string &_format,
-  const std::list<exprt> &_operands)
-{
-  format=_format;
-  operands=_operands;
+void printf_formattert::operator()(const std::string &_format,
+                                   const std::list<exprt> &_operands) {
+  format = _format;
+  operands = _operands;
 }
 
 /*******************************************************************\
@@ -70,18 +66,16 @@ Function: printf_formattert::print()
 
 \*******************************************************************/
 
-void printf_formattert::print(std::ostream &out)
-{
-  format_pos=0;
-  next_operand=operands.begin();
+void printf_formattert::print(std::ostream &out) {
+  format_pos = 0;
+  next_operand = operands.begin();
 
-  try
-  {
-    while(!eol()) process_char(out);
+  try {
+    while (!eol())
+      process_char(out);
   }
 
-  catch(eol_exceptiont)
-  {
+  catch (eol_exceptiont) {
   }
 }
 
@@ -97,8 +91,7 @@ Function: printf_formattert::as_string()
 
 \*******************************************************************/
 
-std::string printf_formattert::as_string()
-{
+std::string printf_formattert::as_string() {
   std::ostringstream stream;
   print(stream);
   return stream.str();
@@ -116,108 +109,97 @@ Function: printf_formattert::process_format
 
 \*******************************************************************/
 
-void printf_formattert::process_format(std::ostream &out)
-{
+void printf_formattert::process_format(std::ostream &out) {
   exprt tmp;
   format_constantt format_constant;
 
-  format_constant.precision=6;
-  format_constant.min_width=0;
-  format_constant.zero_padding=false;
+  format_constant.precision = 6;
+  format_constant.min_width = 0;
+  format_constant.zero_padding = false;
 
-  char ch=next();
+  char ch = next();
 
-  if(ch=='0') // leading zeros
+  if (ch == '0') // leading zeros
   {
-    format_constant.zero_padding=true;
-    ch=next();
+    format_constant.zero_padding = true;
+    ch = next();
   }
 
-  while(isdigit(ch)) // width
+  while (isdigit(ch)) // width
   {
-    format_constant.min_width*=10;
-    format_constant.min_width+=ch-'0';
-    ch=next();
+    format_constant.min_width *= 10;
+    format_constant.min_width += ch - '0';
+    ch = next();
   }
 
-  if(ch=='.') // precision
+  if (ch == '.') // precision
   {
-    format_constant.precision=0;
-    ch=next();
+    format_constant.precision = 0;
+    ch = next();
 
-    while(isdigit(ch))
-    {
-      format_constant.precision*=10;
-      format_constant.precision+=ch-'0';
-      ch=next();
+    while (isdigit(ch)) {
+      format_constant.precision *= 10;
+      format_constant.precision += ch - '0';
+      ch = next();
     }
   }
 
-  switch(ch)
-  {
+  switch (ch) {
   case '%':
     out << ch;
     break;
 
   case 'f':
   case 'F':
-    if(next_operand==operands.end())
+    if (next_operand == operands.end())
       break;
-    out << format_constant(
-      make_type(*(next_operand++), double_type()));
+    out << format_constant(make_type(*(next_operand++), double_type()));
     break;
 
   case 'g':
   case 'G':
-    if(format_constant.precision==0)
-      format_constant.precision=1;
-    if(next_operand==operands.end())
+    if (format_constant.precision == 0)
+      format_constant.precision = 1;
+    if (next_operand == operands.end())
       break;
-    out << format_constant(
-      make_type(*(next_operand++), double_type()));
+    out << format_constant(make_type(*(next_operand++), double_type()));
     break;
 
-  case 's':
-    {
-      if(next_operand==operands.end())
-        break;
-      // this is the address of a string
-      const exprt &op=*(next_operand++);
-      if(op.id()==ID_address_of &&
-         op.operands().size()==1 &&
-         op.op0().id()==ID_index &&
-         op.op0().operands().size()==2 &&
-         op.op0().op0().id()==ID_string_constant)
-        out << format_constant(op.op0().op0());
-    }
-    break;
+  case 's': {
+    if (next_operand == operands.end())
+      break;
+    // this is the address of a string
+    const exprt &op = *(next_operand++);
+    if (op.id() == ID_address_of && op.operands().size() == 1 &&
+        op.op0().id() == ID_index && op.op0().operands().size() == 2 &&
+        op.op0().op0().id() == ID_string_constant)
+      out << format_constant(op.op0().op0());
+  } break;
 
   case 'd':
-    if(next_operand==operands.end())
+    if (next_operand == operands.end())
       break;
-    out << format_constant(
-      make_type(*(next_operand++), signed_int_type()));
+    out << format_constant(make_type(*(next_operand++), signed_int_type()));
     break;
 
   case 'D':
-    if(next_operand==operands.end())
+    if (next_operand == operands.end())
       break;
     out << format_constant(
-      make_type(*(next_operand++), signed_long_int_type()));
+        make_type(*(next_operand++), signed_long_int_type()));
     break;
 
   case 'u':
-    if(next_operand==operands.end())
+    if (next_operand == operands.end())
       break;
-    out << format_constant(
-      make_type(*(next_operand++), unsigned_int_type()));
+    out << format_constant(make_type(*(next_operand++), unsigned_int_type()));
     break;
 
   case 'U':
-    if(next_operand==operands.end())
+    if (next_operand == operands.end())
       break;
     out << format_constant(
-      make_type(*(next_operand++), unsigned_long_int_type()));
+        make_type(*(next_operand++), unsigned_long_int_type()));
     break;
 
   default:
@@ -237,11 +219,10 @@ Function: printf_formattert::process_char
 
 \*******************************************************************/
 
-void printf_formattert::process_char(std::ostream &out)
-{
-  char ch=next();
+void printf_formattert::process_char(std::ostream &out) {
+  char ch = next();
 
-  if(ch=='%')
+  if (ch == '%')
     process_format(out);
   else
     out << ch;

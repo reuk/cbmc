@@ -22,14 +22,10 @@ Function: ansi_c_scopet::print
 
 \*******************************************************************/
 
-void ansi_c_scopet::print(std::ostream &out) const
-{
+void ansi_c_scopet::print(std::ostream &out) const {
   out << "Prefix: " << prefix << "\n";
 
-  for(const auto &name : name_map)
-  {
-    out << "  ID: " << name.first
-        << " CLASS: " << name.second.id_class
-        << "\n";
+  for (const auto &name : name_map) {
+    out << "  ID: " << name.first << " CLASS: " << name.second.id_class << "\n";
   }
 }

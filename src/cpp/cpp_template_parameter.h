@@ -15,14 +15,11 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 // <typename T, int x, ...>
 // Not to be confused with template arguments!
 
-struct template_parametert:public exprt
-{
+struct template_parametert : public exprt {
 public:
-  template_parametert():exprt(ID_template_parameter)
-  {
-  }
+  template_parametert() : exprt(ID_template_parameter) {}
 
-  #if 0
+#if 0
   bool get_is_type() const
   {
     return get_bool(ID_is_type);
@@ -53,20 +50,17 @@ public:
   {
     return static_cast<const typet &>(find(ID_type));
   }
-  #endif
+#endif
 
-  exprt &default_argument()
-  {
+  exprt &default_argument() {
     return static_cast<exprt &>(add(ID_C_default_value));
   }
 
-  const exprt &default_argument() const
-  {
+  const exprt &default_argument() const {
     return static_cast<const exprt &>(find(ID_C_default_value));
   }
 
-  bool has_default_argument() const
-  {
+  bool has_default_argument() const {
     return find(ID_C_default_value).is_not_nil();
   }
 };

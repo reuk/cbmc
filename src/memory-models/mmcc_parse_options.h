@@ -13,11 +13,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <langapi/language_ui.h>
 
-#define MMCC_OPTIONS \
-  ""
+#define MMCC_OPTIONS ""
 
-class mmcc_parse_optionst:public parse_options_baset
-{
+class mmcc_parse_optionst : public parse_options_baset {
 public:
   virtual int doit();
   virtual void help();

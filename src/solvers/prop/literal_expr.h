@@ -13,26 +13,19 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "literal.h"
 
-class literal_exprt:public predicate_exprt
-{
+class literal_exprt : public predicate_exprt {
 public:
-  explicit literal_exprt(literalt a):
-    predicate_exprt(ID_literal)
-  {
+  explicit literal_exprt(literalt a) : predicate_exprt(ID_literal) {
     set_literal(a);
   }
 
-  literalt get_literal() const
-  {
+  literalt get_literal() const {
     literalt result;
     result.set(literalt::var_not(get_long_long(ID_literal)));
     return result;
   }
 
-  void set_literal(literalt a)
-  {
-    set(ID_literal, a.get());
-  }
+  void set_literal(literalt a) { set(ID_literal, a.get()); }
 };
 
 /*! \brief Cast a generic exprt to a \ref literal_exprt
@@ -45,18 +38,16 @@ public:
  *
  * \ingroup gr_std_expr
 */
-inline const literal_exprt &to_literal_expr(const exprt &expr)
-{
-  assert(expr.id()==ID_literal && !expr.has_operands());
+inline const literal_exprt &to_literal_expr(const exprt &expr) {
+  assert(expr.id() == ID_literal && !expr.has_operands());
   return static_cast<const literal_exprt &>(expr);
 }
 
 /*! \copydoc to_literal_expr(const exprt &)
  * \ingroup gr_std_expr
 */
-inline literal_exprt &to_literal_expr(exprt &expr)
-{
-  assert(expr.id()==ID_literal && !expr.has_operands());
+inline literal_exprt &to_literal_expr(exprt &expr) {
+  assert(expr.id() == ID_literal && !expr.has_operands());
   return static_cast<literal_exprt &>(expr);
 }
 

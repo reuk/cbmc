@@ -11,15 +11,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "path_symex_state.h"
 
-class path_replayt
-{
+class path_replayt {
 public:
-  path_replayt()
-  {
-  }
+  path_replayt() {}
 
-  explicit path_replayt(const path_symex_statet &src)
-  {
+  explicit path_replayt(const path_symex_statet &src) {
     get_branches(src.history);
   }
 

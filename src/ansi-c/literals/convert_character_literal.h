@@ -16,8 +16,7 @@ Author: Daniel Kroening, kroening@kroening.com
 // Ugh. Characters have type 'int' in C, but type
 // 'char' in C++.
 
-exprt convert_character_literal(
-  const std::string &src,
-  bool force_integer_type);
+exprt convert_character_literal(const std::string &src,
+                                bool force_integer_type);
 
 #endif // CPROVER_ANSI_C_LITERALS_CONVERT_CHARACTER_LITERAL_H

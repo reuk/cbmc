@@ -16,16 +16,13 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "bytecode_info.h"
 
-class java_bytecode_parse_treet
-{
+class java_bytecode_parse_treet {
 public:
-  class annotationt
-  {
+  class annotationt {
   public:
     typet type;
 
-    class element_value_pairt
-    {
+    class element_value_pairt {
     public:
       irep_idt element_name;
       exprt value;
@@ -40,8 +37,7 @@ public:
 
   typedef std::vector<annotationt> annotationst;
 
-  class instructiont
-  {
+  class instructiont {
   public:
     source_locationt source_location;
     unsigned address;
@@ -50,8 +46,7 @@ public:
     argst args;
   };
 
-  class membert
-  {
+  class membert {
   public:
     std::string signature;
     irep_idt name;
@@ -60,15 +55,12 @@ public:
 
     virtual void output(std::ostream &out) const = 0;
 
-    membert():
-      is_public(false), is_protected(false), is_private(false),
-      is_static(false), is_final(false)
-    {
-    }
+    membert()
+        : is_public(false), is_protected(false), is_private(false),
+          is_static(false), is_final(false) {}
   };
 
-  class methodt:public membert
-  {
+  class methodt : public membert {
   public:
     irep_idt base_name;
     bool is_native, is_abstract, is_synchronized;
@@ -77,14 +69,12 @@ public:
     typedef std::vector<instructiont> instructionst;
     instructionst instructions;
 
-    instructiont &add_instruction()
-    {
+    instructiont &add_instruction() {
       instructions.push_back(instructiont());
       return instructions.back();
     }
 
-    struct exceptiont
-    {
+    struct exceptiont {
     public:
       std::size_t start_pc;
       std::size_t end_pc;
@@ -95,8 +85,7 @@ public:
     typedef std::vector<exceptiont> exception_tablet;
     exception_tablet exception_table;
 
-    class local_variablet
-    {
+    class local_variablet {
     public:
       irep_idt name;
       std::string signature;
@@ -108,25 +97,35 @@ public:
     typedef std::vector<local_variablet> local_variable_tablet;
     local_variable_tablet local_variable_table;
 
-    class verification_type_infot
-    {
+    class verification_type_infot {
     public:
-      enum verification_type_info_type { TOP, INTEGER, FLOAT, LONG, DOUBLE,
-                                         ITEM_NULL, UNINITIALIZED_THIS,
-                                         OBJECT, UNINITIALIZED};
+      enum verification_type_info_type {
+        TOP,
+        INTEGER,
+        FLOAT,
+        LONG,
+        DOUBLE,
+        ITEM_NULL,
+        UNINITIALIZED_THIS,
+        OBJECT,
+        UNINITIALIZED
+      };
       verification_type_info_type type;
       u1 tag;
       u2 cpool_index;
       u2 offset;
     };
 
-    class stack_map_table_entryt
-    {
+    class stack_map_table_entryt {
     public:
-      enum stack_frame_type
-      {
-        SAME, SAME_LOCALS_ONE_STACK, SAME_LOCALS_ONE_STACK_EXTENDED,
-        CHOP, SAME_EXTENDED, APPEND, FULL
+      enum stack_frame_type {
+        SAME,
+        SAME_LOCALS_ONE_STACK,
+        SAME_LOCALS_ONE_STACK_EXTENDED,
+        CHOP,
+        SAME_EXTENDED,
+        APPEND,
+        FULL
       };
       stack_frame_type type;
       size_t offset_delta;
@@ -134,9 +133,9 @@ public:
       size_t appends;
 
       typedef std::vector<verification_type_infot>
-        local_verification_type_infot;
+          local_verification_type_infot;
       typedef std::vector<verification_type_infot>
-        stack_verification_type_infot;
+          stack_verification_type_infot;
 
       local_verification_type_infot locals;
       stack_verification_type_infot stack;
@@ -147,28 +146,21 @@ public:
 
     virtual void output(std::ostream &out) const;
 
-    methodt():
-      is_native(false),
-      is_abstract(false),
-      is_synchronized(false)
-    {
-    }
+    methodt() : is_native(false), is_abstract(false), is_synchronized(false) {}
   };
 
-  class fieldt:public membert
-  {
+  class fieldt : public membert {
   public:
     virtual void output(std::ostream &out) const;
     bool is_enum;
   };
 
-  class classt
-  {
+  class classt {
   public:
     irep_idt name, extends;
-    bool is_abstract=false;
-    bool is_enum=false;
-    size_t enum_elements=0;
+    bool is_abstract = false;
+    bool is_enum = false;
+    size_t enum_elements = 0;
 
     typedef std::list<irep_idt> implementst;
     implementst implements;
@@ -179,14 +171,12 @@ public:
     methodst methods;
     annotationst annotations;
 
-    fieldt &add_field()
-    {
+    fieldt &add_field() {
       fields.push_back(fieldt());
       return fields.back();
     }
 
-    methodt &add_method()
-    {
+    methodt &add_method() {
       methods.push_back(methodt());
       return methods.back();
     }
@@ -198,8 +188,7 @@ public:
 
   classt parsed_class;
 
-  void swap(java_bytecode_parse_treet &other)
-  {
+  void swap(java_bytecode_parse_treet &other) {
     other.parsed_class.swap(parsed_class);
     other.class_refs.swap(class_refs);
     std::swap(loading_successful, other.loading_successful);
@@ -212,9 +201,7 @@ public:
 
   bool loading_successful;
 
-  java_bytecode_parse_treet():loading_successful(false)
-  {
-  }
+  java_bytecode_parse_treet() : loading_successful(false) {}
 };
 
 #endif // CPROVER_JAVA_BYTECODE_JAVA_BYTECODE_PARSE_TREE_H

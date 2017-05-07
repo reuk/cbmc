@@ -11,36 +11,26 @@ Author: Michael Tautschnig, tautschn@amazon.com
 
 #include <unordered_set>
 
-#include <util/typecheck.h>
 #include <util/namespace.h>
 #include <util/std_code.h>
-
+#include <util/typecheck.h>
 
 class codet;
 
-bool jsil_typecheck(
-  symbol_tablet &symbol_table,
-  message_handlert &message_handler);
+bool jsil_typecheck(symbol_tablet &symbol_table,
+                    message_handlert &message_handler);
 
-bool jsil_typecheck(
-  exprt &expr,
-  message_handlert &message_handler,
-  const namespacet &ns);
+bool jsil_typecheck(exprt &expr, message_handlert &message_handler,
+                    const namespacet &ns);
 
-class jsil_typecheckt:public typecheckt
-{
+class jsil_typecheckt : public typecheckt {
 public:
-  jsil_typecheckt(
-    symbol_tablet &_symbol_table,
-    message_handlert &_message_handler):
-    typecheckt(_message_handler),
-    symbol_table(_symbol_table),
-    ns(symbol_table),
-    proc_name()
-  {
-  }
+  jsil_typecheckt(symbol_tablet &_symbol_table,
+                  message_handlert &_message_handler)
+      : typecheckt(_message_handler), symbol_table(_symbol_table),
+        ns(symbol_table), proc_name() {}
 
-  virtual ~jsil_typecheckt() { }
+  virtual ~jsil_typecheckt() {}
 
   virtual void typecheck();
   virtual void typecheck_expr(exprt &expr);

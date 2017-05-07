@@ -14,8 +14,6 @@ Date:   December 2016
 class goto_functionst;
 class namespacet;
 
-void slice_global_inits(
-  const namespacet &ns,
-  goto_functionst &goto_functions);
+void slice_global_inits(const namespacet &ns, goto_functionst &goto_functions);
 
 #endif

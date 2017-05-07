@@ -16,9 +16,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <set>
 
-#include "type.h"
 #include "mp_arith.h"
 #include "replace_expr.h"
+#include "type.h"
 
 class byte_extract_exprt;
 class byte_update_exprt;
@@ -29,29 +29,26 @@ class member_exprt;
 class namespacet;
 class tvt;
 
-#define forall_value_list(it, value_list) \
-  for(simplify_exprt::value_listt::const_iterator it=(value_list).begin(); \
-      it!=(value_list).end(); ++it)
+#define forall_value_list(it, value_list)                                      \
+  for (simplify_exprt::value_listt::const_iterator it = (value_list).begin();  \
+       it != (value_list).end(); ++it)
 
-class simplify_exprt
-{
+class simplify_exprt {
 public:
-  explicit simplify_exprt(const namespacet &_ns):
-    do_simplify_if(true),
-    ns(_ns)
+  explicit simplify_exprt(const namespacet &_ns)
+      : do_simplify_if(true), ns(_ns)
 #ifdef DEBUG_ON_DEMAND
-    , debug_on(false)
+        ,
+        debug_on(false)
 #endif
   {
 #ifdef DEBUG_ON_DEMAND
     struct stat f;
-    debug_on=stat("SIMP_DEBUG", &f)==0;
+    debug_on = stat("SIMP_DEBUG", &f) == 0;
 #endif
   }
 
-  virtual ~simplify_exprt()
-  {
-  }
+  virtual ~simplify_exprt() {}
 
   bool do_simplify_if;
 
@@ -108,8 +105,8 @@ public:
   bool simplify_popcount(exprt &expr);
 
   // auxiliary
-  bool simplify_if_implies(
-    exprt &expr, const exprt &cond, bool truth, bool &new_truth);
+  bool simplify_if_implies(exprt &expr, const exprt &cond, bool truth,
+                           bool &new_truth);
   bool simplify_if_recursive(exprt &expr, const exprt &cond, bool truth);
   bool simplify_if_conj(exprt &expr, const exprt &cond);
   bool simplify_if_disj(exprt &expr, const exprt &cond);
@@ -134,16 +131,14 @@ public:
   typedef std::set<mp_integer> value_listt;
   bool get_values(const exprt &expr, value_listt &value_list);
 
-  static bool is_bitvector_type(const typet &type)
-  {
-    return type.id()==ID_unsignedbv ||
-           type.id()==ID_signedbv ||
-           type.id()==ID_bv;
+  static bool is_bitvector_type(const typet &type) {
+    return type.id() == ID_unsignedbv || type.id() == ID_signedbv ||
+           type.id() == ID_bv;
   }
 
   // bit-level conversions
-  exprt bits2expr(
-    const std::string &bits, const typet &type, bool little_endian);
+  exprt bits2expr(const std::string &bits, const typet &type,
+                  bool little_endian);
   std::string expr2bits(const exprt &expr, bool little_endian);
 
 protected:

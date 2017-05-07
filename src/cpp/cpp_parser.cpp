@@ -26,15 +26,14 @@ Function: cpp_parsert::parse
 
 bool cpp_parse();
 
-bool cpp_parsert::parse()
-{
+bool cpp_parsert::parse() {
   // We use the ANSI-C scanner
-  ansi_c_parser.cpp98=true;
-  ansi_c_parser.cpp11=
-    config.cpp.cpp_standard==configt::cppt::cpp_standardt::CPP11 ||
-    config.cpp.cpp_standard==configt::cppt::cpp_standardt::CPP14;
-  ansi_c_parser.in=in;
-  ansi_c_parser.mode=mode;
+  ansi_c_parser.cpp98 = true;
+  ansi_c_parser.cpp11 =
+      config.cpp.cpp_standard == configt::cppt::cpp_standardt::CPP11 ||
+      config.cpp.cpp_standard == configt::cppt::cpp_standardt::CPP14;
+  ansi_c_parser.in = in;
+  ansi_c_parser.mode = mode;
   ansi_c_parser.set_file(get_file());
   ansi_c_parser.set_message_handler(get_message_handler());
 

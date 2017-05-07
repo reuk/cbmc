@@ -6,12 +6,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
-#include <langapi/mode.h>
-#include <langapi/languages.h>
 #include <langapi/language_util.h>
+#include <langapi/languages.h>
+#include <langapi/mode.h>
 
 #include <ansi-c/ansi_c_language.h>
 
@@ -32,55 +32,54 @@ Function: bmct::show_vcc_plain
 
 \*******************************************************************/
 
-void bmct::show_vcc_plain(std::ostream &out)
-{
-  out << "\n" << "VERIFICATION CONDITIONS:" << "\n" << "\n";
+void bmct::show_vcc_plain(std::ostream &out) {
+  out << "\n"
+      << "VERIFICATION CONDITIONS:"
+      << "\n"
+      << "\n";
 
   languagest languages(ns, new_ansi_c_language());
 
-  bool has_threads=equation.has_threads();
+  bool has_threads = equation.has_threads();
 
-  for(symex_target_equationt::SSA_stepst::iterator
-      s_it=equation.SSA_steps.begin();
-      s_it!=equation.SSA_steps.end();
-      s_it++)
-  {
-    if(!s_it->is_assert())
+  for (symex_target_equationt::SSA_stepst::iterator s_it =
+           equation.SSA_steps.begin();
+       s_it != equation.SSA_steps.end(); s_it++) {
+    if (!s_it->is_assert())
       continue;
 
-    if(s_it->source.pc->source_location.is_not_nil())
+    if (s_it->source.pc->source_location.is_not_nil())
       out << s_it->source.pc->source_location << "\n";
 
-    if(s_it->comment!="")
+    if (s_it->comment != "")
       out << s_it->comment << "\n";
 
-    symex_target_equationt::SSA_stepst::const_iterator
-      p_it=equation.SSA_steps.begin();
+    symex_target_equationt::SSA_stepst::const_iterator p_it =
+        equation.SSA_steps.begin();
 
     // we show everything in case there are threads
-    symex_target_equationt::SSA_stepst::const_iterator
-      last_it=has_threads?equation.SSA_steps.end():s_it;
+    symex_target_equationt::SSA_stepst::const_iterator last_it =
+        has_threads ? equation.SSA_steps.end() : s_it;
 
-    for(unsigned count=1; p_it!=last_it; p_it++)
-      if(p_it->is_assume() || p_it->is_assignment() || p_it->is_constraint())
-      {
-        if(!p_it->ignore)
-        {
+    for (unsigned count = 1; p_it != last_it; p_it++)
+      if (p_it->is_assume() || p_it->is_assignment() || p_it->is_constraint()) {
+        if (!p_it->ignore) {
           std::string string_value;
           languages.from_expr(p_it->cond_expr, string_value);
           out << "{-" << count << "} " << string_value << "\n";
 
-          #if 0
+#if 0
           languages.from_expr(p_it->guard_expr, string_value);
           out << "GUARD: " << string_value << "\n";
           out << "\n";
-          #endif
+#endif
 
           count++;
         }
       }
 
-    out << "|--------------------------" << "\n";
+    out << "|--------------------------"
+        << "\n";
 
     std::string string_value;
     languages.from_expr(s_it->cond_expr, string_value);
@@ -102,50 +101,44 @@ Function: bmct::show_vcc_json
 
 \*******************************************************************/
 
-void bmct::show_vcc_json(std::ostream &out)
-{
+void bmct::show_vcc_json(std::ostream &out) {
   json_objectt json_result;
 
-  json_arrayt &json_vccs=json_result["vccs"].make_array();
+  json_arrayt &json_vccs = json_result["vccs"].make_array();
 
   languagest languages(ns, new_ansi_c_language());
 
-  bool has_threads=equation.has_threads();
+  bool has_threads = equation.has_threads();
 
-  for(symex_target_equationt::SSA_stepst::iterator
-      s_it=equation.SSA_steps.begin();
-      s_it!=equation.SSA_steps.end();
-      s_it++)
-  {
-    if(!s_it->is_assert())
+  for (symex_target_equationt::SSA_stepst::iterator s_it =
+           equation.SSA_steps.begin();
+       s_it != equation.SSA_steps.end(); s_it++) {
+    if (!s_it->is_assert())
       continue;
 
     // vcc object
-    json_objectt &object=json_vccs.push_back(jsont()).make_object();
+    json_objectt &object = json_vccs.push_back(jsont()).make_object();
 
-    const source_locationt &source_location=s_it->source.pc->source_location;
-    if(source_location.is_not_nil())
-      object["sourceLocation"]=json(source_location);
+    const source_locationt &source_location = s_it->source.pc->source_location;
+    if (source_location.is_not_nil())
+      object["sourceLocation"] = json(source_location);
 
-    const std::string &s=s_it->comment;
-    if(!s.empty())
-      object["comment"]=json_stringt(s);
+    const std::string &s = s_it->comment;
+    if (!s.empty())
+      object["comment"] = json_stringt(s);
 
     // we show everything in case there are threads
-    symex_target_equationt::SSA_stepst::const_iterator
-      last_it=has_threads?equation.SSA_steps.end():s_it;
+    symex_target_equationt::SSA_stepst::const_iterator last_it =
+        has_threads ? equation.SSA_steps.end() : s_it;
 
-    json_arrayt &json_constraints=object["constraints"].make_array();
+    json_arrayt &json_constraints = object["constraints"].make_array();
 
-    for(symex_target_equationt::SSA_stepst::const_iterator p_it
-          =equation.SSA_steps.begin();
-        p_it!=last_it; p_it++)
-    {
-      if((p_it->is_assume() ||
-         p_it->is_assignment() ||
-         p_it->is_constraint()) &&
-         !p_it->ignore)
-      {
+    for (symex_target_equationt::SSA_stepst::const_iterator p_it =
+             equation.SSA_steps.begin();
+         p_it != last_it; p_it++) {
+      if ((p_it->is_assume() || p_it->is_assignment() ||
+           p_it->is_constraint()) &&
+          !p_it->ignore) {
         std::string string_value;
         languages.from_expr(p_it->cond_expr, string_value);
         json_constraints.push_back(json_stringt(string_value));
@@ -154,7 +147,7 @@ void bmct::show_vcc_json(std::ostream &out)
 
     std::string string_value;
     languages.from_expr(s_it->cond_expr, string_value);
-    object["expression"]=json_stringt(string_value);
+    object["expression"] = json_stringt(string_value);
   }
 
   out << ",\n" << json_result;
@@ -172,24 +165,21 @@ Function: bmct::show_vcc
 
 \*******************************************************************/
 
-void bmct::show_vcc()
-{
-  const std::string &filename=options.get_option("outfile");
-  bool have_file=!filename.empty() && filename!="-";
+void bmct::show_vcc() {
+  const std::string &filename = options.get_option("outfile");
+  bool have_file = !filename.empty() && filename != "-";
 
   std::ofstream of;
 
-  if(have_file)
-  {
+  if (have_file) {
     of.open(filename);
-    if(!of)
-      throw "failed to open file "+filename;
+    if (!of)
+      throw "failed to open file " + filename;
   }
 
-  std::ostream &out=have_file?of:std::cout;
+  std::ostream &out = have_file ? of : std::cout;
 
-  switch(ui)
-  {
+  switch (ui) {
   case ui_message_handlert::XML_UI:
     error() << "XML UI not supported" << eom;
     return;
@@ -203,6 +193,6 @@ void bmct::show_vcc()
     break;
   }
 
-  if(have_file)
+  if (have_file)
     of.close();
 }

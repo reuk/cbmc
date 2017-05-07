@@ -11,18 +11,14 @@ Author: Alex Groce (agroce@gmail.com)
 
 #include "symex_target_equation.h"
 
-class symex_slice_by_tracet
-{
+class symex_slice_by_tracet {
 public:
-  explicit symex_slice_by_tracet(const namespacet &_ns):ns(_ns)
-  {
-  }
+  explicit symex_slice_by_tracet(const namespacet &_ns) : ns(_ns) {}
 
-  void slice_by_trace(
-    std::string trace_files,
-    symex_target_equationt &equation);
+  void slice_by_trace(std::string trace_files,
+                      symex_target_equationt &equation);
 
- protected:
+protected:
   const namespacet &ns;
   typedef std::set<irep_idt> alphabett;
   alphabett alphabet;
@@ -34,7 +30,7 @@ public:
 
   event_tracet sigma;
 
-  typedef std::vector<std::vector<irep_idt> > value_tracet;
+  typedef std::vector<std::vector<irep_idt>> value_tracet;
 
   value_tracet sigma_vals;
 
@@ -46,7 +42,7 @@ public:
 
   std::vector<exprt> merge_map_back;
 
-  std::vector<std::pair<bool, std::set<exprt> > > merge_impl_cache_back;
+  std::vector<std::pair<bool, std::set<exprt>>> merge_impl_cache_back;
 
   irep_idt merge_identifier;
 
@@ -62,9 +58,8 @@ public:
 
   void compute_ts_back(symex_target_equationt &equation);
 
-  void slice_SSA_steps(
-    symex_target_equationt &equation,
-    std::set<exprt> implications);
+  void slice_SSA_steps(symex_target_equationt &equation,
+                       std::set<exprt> implications);
 
   bool matches(event_sett s, irep_idt event);
 

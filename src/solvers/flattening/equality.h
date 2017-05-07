@@ -15,17 +15,14 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <solvers/prop/prop_conv.h>
 
-class equalityt:public prop_conv_solvert
-{
+class equalityt : public prop_conv_solvert {
 public:
-  equalityt(
-    const namespacet &_ns,
-    propt &_prop):prop_conv_solvert(_ns, _prop) { }
+  equalityt(const namespacet &_ns, propt &_prop)
+      : prop_conv_solvert(_ns, _prop) {}
 
   virtual literalt equality(const exprt &e1, const exprt &e2);
 
-  void post_process() override
-  {
+  void post_process() override {
     add_equality_constraints();
     prop_conv_solvert::post_process();
     typemap.clear(); // if called incrementally, don't do it twice
@@ -36,8 +33,7 @@ protected:
   typedef std::map<std::pair<unsigned, unsigned>, literalt> equalitiest;
   typedef std::map<unsigned, exprt> elements_revt;
 
-  struct typestructt
-  {
+  struct typestructt {
     elementst elements;
     elements_revt elements_rev;
     equalitiest equalities;

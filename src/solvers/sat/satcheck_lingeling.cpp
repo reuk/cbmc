@@ -12,8 +12,7 @@ Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
 
 #include "satcheck_lingeling.h"
 
-extern "C"
-{
+extern "C" {
 #include <lglib.h>
 }
 
@@ -33,21 +32,20 @@ Function: satcheck_lingelingt::l_get
 
 \*******************************************************************/
 
-tvt satcheck_lingelingt::l_get(literalt a) const
-{
-  if(a.is_constant())
+tvt satcheck_lingelingt::l_get(literalt a) const {
+  if (a.is_constant())
     return tvt(a.sign());
 
   tvt result;
 
-  if(a.var_no()>lglmaxvar(solver))
+  if (a.var_no() > lglmaxvar(solver))
     return tvt(tvt::tv_enumt::TV_UNKNOWN);
 
-  const int val=lglderef(solver, a.dimacs());
-  if(val>0)
-    result=tvt(true);
-  else if(val<0)
-    result=tvt(false);
+  const int val = lglderef(solver, a.dimacs());
+  if (val > 0)
+    result = tvt(true);
+  else if (val < 0)
+    result = tvt(false);
   else
     return tvt(tvt::tv_enumt::TV_UNKNOWN);
 
@@ -66,10 +64,7 @@ Function: satcheck_lingelingt::solver_text
 
 \*******************************************************************/
 
-const std::string satcheck_lingelingt::solver_text()
-{
-  return "Lingeling";
-}
+const std::string satcheck_lingelingt::solver_text() { return "Lingeling"; }
 
 /*******************************************************************\
 
@@ -83,15 +78,13 @@ Function: satcheck_lingelingt::lcnf
 
 \*******************************************************************/
 
-void satcheck_lingelingt::lcnf(const bvt &bv)
-{
+void satcheck_lingelingt::lcnf(const bvt &bv) {
   bvt new_bv;
 
-  if(process_clause(bv, new_bv))
+  if (process_clause(bv, new_bv))
     return;
 
-  forall_literals(it, new_bv)
-    lgladd(solver, it->dimacs());
+  forall_literals(it, new_bv) lgladd(solver, it->dimacs());
 
   lgladd(solver, 0);
 
@@ -110,39 +103,33 @@ Function: satcheck_lingelingt::prop_solve
 
 \*******************************************************************/
 
-propt::resultt satcheck_lingelingt::prop_solve()
-{
-  assert(status!=ERROR);
+propt::resultt satcheck_lingelingt::prop_solve() {
+  assert(status != ERROR);
 
   // We start counting at 1, thus there is one variable fewer.
   {
-    std::string msg=
-      std::to_string(no_variables()-1)+" variables, "+
-      std::to_string(clause_counter)+" clauses";
+    std::string msg = std::to_string(no_variables() - 1) + " variables, " +
+                      std::to_string(clause_counter) + " clauses";
     messaget::status() << msg << messaget::eom;
   }
 
   std::string msg;
 
-  forall_literals(it, assumptions)
-    lglassume(solver, it->dimacs());
+  forall_literals(it, assumptions) lglassume(solver, it->dimacs());
 
-  const int res=lglsat(solver);
-  if(res==10)
-  {
-    msg="SAT checker: instance is SATISFIABLE";
+  const int res = lglsat(solver);
+  if (res == 10) {
+    msg = "SAT checker: instance is SATISFIABLE";
     messaget::status() << msg << messaget::eom;
-    status=SAT;
+    status = SAT;
     return P_SATISFIABLE;
-  }
-  else
-  {
-    assert(res==20);
-    msg="SAT checker: instance is UNSATISFIABLE";
+  } else {
+    assert(res == 20);
+    msg = "SAT checker: instance is UNSATISFIABLE";
     messaget::status() << msg << messaget::eom;
   }
 
-  status=UNSAT;
+  status = UNSAT;
   return P_UNSATISFIABLE;
 }
 
@@ -158,8 +145,7 @@ Function: satcheck_lingelingt::set_assignment
 
 \*******************************************************************/
 
-void satcheck_lingelingt::set_assignment(literalt a, bool value)
-{
+void satcheck_lingelingt::set_assignment(literalt a, bool value) {
   assert(false);
 }
 
@@ -175,10 +161,7 @@ Function: satcheck_lingelingt::satcheck_lingelingt
 
 \*******************************************************************/
 
-satcheck_lingelingt::satcheck_lingelingt() :
-  solver(lglinit())
-{
-}
+satcheck_lingelingt::satcheck_lingelingt() : solver(lglinit()) {}
 
 /*******************************************************************\
 
@@ -192,10 +175,9 @@ Function: satcheck_lingelingt::satcheck_lingelingt
 
 \*******************************************************************/
 
-satcheck_lingelingt::~satcheck_lingelingt()
-{
+satcheck_lingelingt::~satcheck_lingelingt() {
   lglrelease(solver);
-  solver=0;
+  solver = 0;
 }
 
 /*******************************************************************\
@@ -210,12 +192,10 @@ Function: satcheck_lingelingt::set_assumptions
 
 \*******************************************************************/
 
-void satcheck_lingelingt::set_assumptions(const bvt &bv)
-{
-  assumptions=bv;
+void satcheck_lingelingt::set_assumptions(const bvt &bv) {
+  assumptions = bv;
 
-  forall_literals(it, assumptions)
-    assert(!it->is_constant());
+  forall_literals(it, assumptions) assert(!it->is_constant());
 }
 
 /*******************************************************************\
@@ -230,9 +210,8 @@ Function: satcheck_lingelingt::set_frozen
 
 \*******************************************************************/
 
-void satcheck_lingelingt::set_frozen(literalt a)
-{
-  if(!a.is_constant())
+void satcheck_lingelingt::set_frozen(literalt a) {
+  if (!a.is_constant())
     lglfreeze(solver, a.dimacs());
 }
 
@@ -252,8 +231,7 @@ Function: satcheck_lingelingt::is_in_conflict
 
 \*******************************************************************/
 
-bool satcheck_lingelingt::is_in_conflict(literalt a) const
-{
+bool satcheck_lingelingt::is_in_conflict(literalt a) const {
   assert(!a.is_constant());
-  return lglfailed(solver, a.dimacs())!=0;
+  return lglfailed(solver, a.dimacs()) != 0;
 }

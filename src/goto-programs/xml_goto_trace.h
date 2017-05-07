@@ -15,9 +15,6 @@ Date: November 2005
 
 #include "goto_trace.h"
 
-void convert(
-  const namespacet &ns,
-  const goto_tracet &goto_trace,
-  xmlt &xml);
+void convert(const namespacet &ns, const goto_tracet &goto_trace, xmlt &xml);
 
 #endif // CPROVER_GOTO_PROGRAMS_XML_GOTO_TRACE_H

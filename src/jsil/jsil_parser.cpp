@@ -24,8 +24,7 @@ Function: yyjsilerror
 
 extern char *yyjsiltext;
 
-int yyjsilerror(const std::string &error)
-{
+int yyjsilerror(const std::string &error) {
   jsil_parser.parse_error(error, yyjsiltext);
   return 0;
 }

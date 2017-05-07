@@ -15,10 +15,8 @@ Date: July 2016
 
 class goto_functionst;
 
-void list_undefined_functions(
-  const goto_functionst &goto_functions,
-  const namespacet &ns,
-  std::ostream &os);
+void list_undefined_functions(const goto_functionst &goto_functions,
+                              const namespacet &ns, std::ostream &os);
 
 void undefined_function_abort_path(goto_functionst &goto_functions);
 

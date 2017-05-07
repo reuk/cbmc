@@ -15,16 +15,13 @@ Date: July 2016
 
 #include "goto_cc_mode.h"
 
-class as_modet:public goto_cc_modet
-{
+class as_modet : public goto_cc_modet {
 public:
   virtual int doit();
   virtual void help_mode();
 
-  as_modet(
-    goto_cc_cmdlinet &_cmdline,
-    const std::string &_base_name,
-    bool _produce_hybrid_binary);
+  as_modet(goto_cc_cmdlinet &_cmdline, const std::string &_base_name,
+           bool _produce_hybrid_binary);
 
 protected:
   gcc_message_handlert message_handler;

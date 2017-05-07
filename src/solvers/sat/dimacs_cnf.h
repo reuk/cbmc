@@ -13,20 +13,16 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "cnf_clause_list.h"
 
-class dimacs_cnft:public cnf_clause_listt
-{
+class dimacs_cnft : public cnf_clause_listt {
 public:
   dimacs_cnft();
-  virtual ~dimacs_cnft() { }
+  virtual ~dimacs_cnft() {}
 
   virtual void write_dimacs_cnf(std::ostream &out);
 
   // dummy functions
 
-  virtual const std::string solver_text()
-  {
-    return "DIMACS CNF";
-  }
+  virtual const std::string solver_text() { return "DIMACS CNF"; }
 
 protected:
   void write_problem_line(std::ostream &out);
@@ -35,33 +31,20 @@ protected:
   bool break_lines;
 };
 
-class dimacs_cnf_dumpt:public cnft
-{
+class dimacs_cnf_dumpt : public cnft {
 public:
   explicit dimacs_cnf_dumpt(std::ostream &_out);
-  virtual ~dimacs_cnf_dumpt() { }
+  virtual ~dimacs_cnf_dumpt() {}
 
-  virtual const std::string solver_text()
-  {
-    return "DIMACS CNF Dumper";
-  }
+  virtual const std::string solver_text() { return "DIMACS CNF Dumper"; }
 
   virtual void lcnf(const bvt &bv);
 
-  virtual resultt prop_solve()
-  {
-    return P_ERROR;
-  }
+  virtual resultt prop_solve() { return P_ERROR; }
 
-  virtual tvt l_get(literalt) const
-  {
-    return tvt::unknown();
-  }
+  virtual tvt l_get(literalt) const { return tvt::unknown(); }
 
-  virtual size_t no_clauses() const
-  {
-    return 0;
-  }
+  virtual size_t no_clauses() const { return 0; }
 
 protected:
   std::ostream &out;

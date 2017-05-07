@@ -12,12 +12,9 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <iosfwd>
 #include <string>
 
-class smt2_parsert
-{
+class smt2_parsert {
 public:
-  explicit smt2_parsert(std::istream &_in):in(_in)
-  {
-  }
+  explicit smt2_parsert(std::istream &_in) : in(_in) {}
 
   void operator()();
 
@@ -31,7 +28,7 @@ protected:
   virtual void numeral() = 0;
   virtual void symbol() = 0;
   virtual void keyword() = 0;
-  virtual void open_expression() = 0; // '('
+  virtual void open_expression() = 0;  // '('
   virtual void close_expression() = 0; // ')'
 
   // parse errors

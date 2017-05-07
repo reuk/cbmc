@@ -12,8 +12,8 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <solvers/flattening/bv_pointers.h>
 #include <solvers/sat/satcheck.h>
 
-#include <path-symex/path_symex.h>
 #include <path-symex/build_goto_trace.h>
+#include <path-symex/path_symex.h>
 
 #include "path_search.h"
 
@@ -29,9 +29,8 @@ Function: path_searcht::operator()
 
 \*******************************************************************/
 
-path_searcht::resultt path_searcht::operator()(
-  const goto_functionst &goto_functions)
-{
+path_searcht::resultt path_searcht::
+operator()(const goto_functionst &goto_functions) {
   locst locs(ns);
   var_mapt var_map(ns);
 
@@ -43,23 +42,22 @@ path_searcht::resultt path_searcht::operator()(
   queue.push_back(initial_state(var_map, locs, history));
 
   // set up the statistics
-  number_of_dropped_states=0;
-  number_of_paths=0;
-  number_of_VCCs=0;
-  number_of_steps=0;
-  number_of_feasible_paths=0;
-  number_of_infeasible_paths=0;
-  number_of_VCCs_after_simplification=0;
-  number_of_failed_properties=0;
-  number_of_locs=locs.size();
+  number_of_dropped_states = 0;
+  number_of_paths = 0;
+  number_of_VCCs = 0;
+  number_of_steps = 0;
+  number_of_feasible_paths = 0;
+  number_of_infeasible_paths = 0;
+  number_of_VCCs_after_simplification = 0;
+  number_of_failed_properties = 0;
+  number_of_locs = locs.size();
 
   // stop the time
-  start_time=current_time();
+  start_time = current_time();
 
   initialize_property_map(goto_functions);
 
-  while(!queue.empty())
-  {
+  while (!queue.empty()) {
     number_of_steps++;
 
     // Pick a state from the queue,
@@ -69,65 +67,55 @@ path_searcht::resultt path_searcht::operator()(
 
     // move into temporary queue
     queuet tmp_queue;
-    tmp_queue.splice(
-      tmp_queue.begin(), queue, queue.begin(), ++queue.begin());
+    tmp_queue.splice(tmp_queue.begin(), queue, queue.begin(), ++queue.begin());
 
-    try
-    {
-      statet &state=tmp_queue.front();
+    try {
+      statet &state = tmp_queue.front();
 
       // record we have seen it
-      loc_data[state.get_pc().loc_number].visited=true;
+      loc_data[state.get_pc().loc_number].visited = true;
 
       debug() << "Loc: #" << state.get_pc().loc_number
               << ", queue: " << queue.size()
               << ", depth: " << state.get_depth();
-      for(const auto &s : queue)
+      for (const auto &s : queue)
         debug() << ' ' << s.get_depth();
 
       debug() << eom;
 
-      if(drop_state(state))
-      {
+      if (drop_state(state)) {
         number_of_dropped_states++;
         number_of_paths++;
         continue;
       }
 
-      if(!state.is_executable())
-      {
+      if (!state.is_executable()) {
         number_of_paths++;
         continue;
       }
 
-      if(eager_infeasibility &&
-         state.last_was_branch() &&
-         !is_feasible(state))
-      {
+      if (eager_infeasibility && state.last_was_branch() &&
+          !is_feasible(state)) {
         number_of_infeasible_paths++;
         number_of_paths++;
         continue;
       }
 
-      if(number_of_steps%1000==0)
-      {
-        status() << "Queue " << queue.size()
-                 << " thread " << state.get_current_thread()
-                 << '/' << state.threads.size()
+      if (number_of_steps % 1000 == 0) {
+        status() << "Queue " << queue.size() << " thread "
+                 << state.get_current_thread() << '/' << state.threads.size()
                  << " PC " << state.pc() << messaget::eom;
       }
 
       // an error, possibly?
-      if(state.get_instruction()->is_assert())
-      {
-        if(show_vcc)
+      if (state.get_instruction()->is_assert()) {
+        if (show_vcc)
           do_show_vcc(state);
-        else
-        {
+        else {
           check_assertion(state);
 
           // all assertions failed?
-          if(number_of_failed_properties==property_map.size())
+          if (number_of_failed_properties == property_map.size())
             break;
         }
       }
@@ -137,26 +125,20 @@ path_searcht::resultt path_searcht::operator()(
 
       // put at head of main queue
       queue.splice(queue.begin(), tmp_queue);
-    }
-    catch(const std::string &e)
-    {
+    } catch (const std::string &e) {
       error() << e << eom;
       number_of_dropped_states++;
-    }
-    catch(const char *e)
-    {
+    } catch (const char *e) {
       error() << e << eom;
       number_of_dropped_states++;
-    }
-    catch(int)
-    {
+    } catch (int) {
       number_of_dropped_states++;
     }
   }
 
   report_statistics();
 
-  return number_of_failed_properties==0?SAFE:UNSAFE;
+  return number_of_failed_properties == 0 ? SAFE : UNSAFE;
 }
 
 /*******************************************************************\
@@ -171,41 +153,37 @@ Function: path_searcht::report_statistics
 
 \*******************************************************************/
 
-void path_searcht::report_statistics()
-{
-  std::size_t number_of_visited_locations=0;
-  for(const auto &l : loc_data)
-    if(l.visited)
+void path_searcht::report_statistics() {
+  std::size_t number_of_visited_locations = 0;
+  for (const auto &l : loc_data)
+    if (l.visited)
       number_of_visited_locations++;
 
-  #if 0
+#if 0
   for(unsigned l=0; l<loc_data.size(); l++)
     if(!loc_data[l].visited)
       status() << "NV: " << l << eom;
-  #endif
+#endif
 
   // report a bit
-  status() << "Number of visited locations: "
-           << number_of_visited_locations << " (out of "
-           << number_of_locs << ')' << messaget::eom;
+  status() << "Number of visited locations: " << number_of_visited_locations
+           << " (out of " << number_of_locs << ')' << messaget::eom;
 
-  status() << "Number of dropped states: "
-           << number_of_dropped_states << messaget::eom;
+  status() << "Number of dropped states: " << number_of_dropped_states
+           << messaget::eom;
 
-  status() << "Number of paths: "
-           << number_of_paths << messaget::eom;
+  status() << "Number of paths: " << number_of_paths << messaget::eom;
 
-  status() << "Number of infeasible paths: "
-           << number_of_infeasible_paths << messaget::eom;
+  status() << "Number of infeasible paths: " << number_of_infeasible_paths
+           << messaget::eom;
 
   status() << "Generated " << number_of_VCCs << " VCC(s), "
            << number_of_VCCs_after_simplification
-           << " remaining after simplification"
-           << messaget::eom;
+           << " remaining after simplification" << messaget::eom;
 
-  time_periodt total_time=current_time()-start_time;
-  status() << "Runtime: " << total_time << "s total, "
-           << sat_time << "s SAT" << messaget::eom;
+  time_periodt total_time = current_time() - start_time;
+  status() << "Runtime: " << total_time << "s total, " << sat_time << "s SAT"
+           << messaget::eom;
 }
 
 /*******************************************************************\
@@ -220,17 +198,15 @@ Function: path_searcht::pick_state
 
 \*******************************************************************/
 
-void path_searcht::pick_state()
-{
-  switch(search_heuristic)
-  {
+void path_searcht::pick_state() {
+  switch (search_heuristic) {
   case search_heuristict::DFS:
     // Picking the first one (most recently added) is a DFS.
     return;
 
   case search_heuristict::BFS:
     // Picking the last one is a BFS.
-    if(queue.size()>=2)
+    if (queue.size() >= 2)
       // move last to first position
       queue.splice(queue.begin(), queue, --queue.end(), queue.end());
     return;
@@ -252,40 +228,35 @@ Function: path_searcht::do_show_vcc
 
 \*******************************************************************/
 
-void path_searcht::do_show_vcc(statet &state)
-{
+void path_searcht::do_show_vcc(statet &state) {
   // keep statistics
   number_of_VCCs++;
 
-  const goto_programt::instructiont &instruction=
-    *state.get_instruction();
+  const goto_programt::instructiont &instruction = *state.get_instruction();
 
-  mstreamt &out=result();
+  mstreamt &out = result();
 
-  if(instruction.source_location.is_not_nil())
+  if (instruction.source_location.is_not_nil())
     out << instruction.source_location << '\n';
 
-  if(instruction.source_location.get_comment()!="")
+  if (instruction.source_location.get_comment() != "")
     out << instruction.source_location.get_comment() << '\n';
 
-  unsigned count=1;
+  unsigned count = 1;
 
   std::vector<path_symex_step_reft> steps;
   state.history.build_history(steps);
 
-  for(const auto &step_ref : steps)
-  {
-    if(step_ref->guard.is_not_nil())
-    {
-      std::string string_value=from_expr(ns, "", step_ref->guard);
+  for (const auto &step_ref : steps) {
+    if (step_ref->guard.is_not_nil()) {
+      std::string string_value = from_expr(ns, "", step_ref->guard);
       out << "{-" << count << "} " << string_value << '\n';
       count++;
     }
 
-    if(step_ref->ssa_rhs.is_not_nil())
-    {
+    if (step_ref->ssa_rhs.is_not_nil()) {
       equal_exprt equality(step_ref->ssa_lhs, step_ref->ssa_rhs);
-      std::string string_value=from_expr(ns, "", equality);
+      std::string string_value = from_expr(ns, "", equality);
       out << "{-" << count << "} " << string_value << '\n';
       count++;
     }
@@ -293,12 +264,11 @@ void path_searcht::do_show_vcc(statet &state)
 
   out << "|--------------------------" << '\n';
 
-  exprt assertion=state.read(instruction.guard);
+  exprt assertion = state.read(instruction.guard);
 
-  out << "{" << 1 << "} "
-      << from_expr(ns, "", assertion) << '\n';
+  out << "{" << 1 << "} " << from_expr(ns, "", assertion) << '\n';
 
-  if(!assertion.is_true())
+  if (!assertion.is_true())
     number_of_VCCs_after_simplification++;
 
   out << eom;
@@ -316,47 +286,41 @@ Function: path_searcht::drop_state
 
 \*******************************************************************/
 
-bool path_searcht::drop_state(const statet &state)
-{
-  goto_programt::const_targett pc=state.get_instruction();
+bool path_searcht::drop_state(const statet &state) {
+  goto_programt::const_targett pc = state.get_instruction();
 
   // depth limit
-  if(depth_limit_set && state.get_depth()>depth_limit)
+  if (depth_limit_set && state.get_depth() > depth_limit)
     return true;
 
   // context bound
-  if(context_bound_set && state.get_no_thread_interleavings()>context_bound)
+  if (context_bound_set && state.get_no_thread_interleavings() > context_bound)
     return true;
 
   // branch bound
-  if(branch_bound_set && state.get_no_branches()>branch_bound)
+  if (branch_bound_set && state.get_no_branches() > branch_bound)
     return true;
 
   // unwinding limit -- loops
-  if(unwind_limit_set && state.get_instruction()->is_backwards_goto())
-  {
-    for(const auto &loop_info : state.unwinding_map)
-      if(loop_info.second>unwind_limit)
+  if (unwind_limit_set && state.get_instruction()->is_backwards_goto()) {
+    for (const auto &loop_info : state.unwinding_map)
+      if (loop_info.second > unwind_limit)
         return true;
   }
 
   // unwinding limit -- recursion
-  if(unwind_limit_set && state.get_instruction()->is_function_call())
-  {
-    for(const auto &rec_info : state.recursion_map)
-      if(rec_info.second>unwind_limit)
+  if (unwind_limit_set && state.get_instruction()->is_function_call()) {
+    for (const auto &rec_info : state.recursion_map)
+      if (rec_info.second > unwind_limit)
         return true;
   }
 
-  if(pc->is_assume() &&
-     simplify_expr(pc->guard, ns).is_false())
-  {
-    debug() << "aborting path on assume(false) at "
-            << pc->source_location
+  if (pc->is_assume() && simplify_expr(pc->guard, ns).is_false()) {
+    debug() << "aborting path on assume(false) at " << pc->source_location
             << " thread " << state.get_current_thread();
 
-    const irep_idt &c=pc->source_location.get_comment();
-    if(!c.empty())
+    const irep_idt &c = pc->source_location.get_comment();
+    if (!c.empty())
       debug() << ": " << c;
 
     debug() << eom;
@@ -379,27 +343,24 @@ Function: path_searcht::check_assertion
 
 \*******************************************************************/
 
-void path_searcht::check_assertion(statet &state)
-{
+void path_searcht::check_assertion(statet &state) {
   // keep statistics
   number_of_VCCs++;
 
-  const goto_programt::instructiont &instruction=
-    *state.get_instruction();
+  const goto_programt::instructiont &instruction = *state.get_instruction();
 
-  irep_idt property_name=instruction.source_location.get_property_id();
-  property_entryt &property_entry=property_map[property_name];
+  irep_idt property_name = instruction.source_location.get_property_id();
+  property_entryt &property_entry = property_map[property_name];
 
-  if(property_entry.status==FAILURE)
+  if (property_entry.status == FAILURE)
     return; // already failed
-  else if(property_entry.status==NOT_REACHED)
-    property_entry.status=SUCCESS; // well, for now!
+  else if (property_entry.status == NOT_REACHED)
+    property_entry.status = SUCCESS; // well, for now!
 
   // the assertion in SSA
-  exprt assertion=
-    state.read(instruction.guard);
+  exprt assertion = state.read(instruction.guard);
 
-  if(assertion.is_true())
+  if (assertion.is_true())
     return; // no error, trivially
 
   // keep statistics
@@ -408,7 +369,7 @@ void path_searcht::check_assertion(statet &state)
   status() << "Checking property " << property_name << eom;
 
   // take the time
-  absolute_timet sat_start_time=current_time();
+  absolute_timet sat_start_time = current_time();
 
   satcheckt satcheck;
   bv_pointerst bv_pointers(ns, satcheck);
@@ -416,14 +377,13 @@ void path_searcht::check_assertion(statet &state)
   satcheck.set_message_handler(get_message_handler());
   bv_pointers.set_message_handler(get_message_handler());
 
-  if(!state.check_assertion(bv_pointers))
-  {
+  if (!state.check_assertion(bv_pointers)) {
     build_goto_trace(state, bv_pointers, property_entry.error_trace);
-    property_entry.status=FAILURE;
+    property_entry.status = FAILURE;
     number_of_failed_properties++;
   }
 
-  sat_time+=current_time()-sat_start_time;
+  sat_time += current_time() - sat_start_time;
 }
 
 /*******************************************************************\
@@ -438,12 +398,11 @@ Function: path_searcht::is_feasible
 
 \*******************************************************************/
 
-bool path_searcht::is_feasible(statet &state)
-{
+bool path_searcht::is_feasible(statet &state) {
   status() << "Feasibility check" << eom;
 
   // take the time
-  absolute_timet sat_start_time=current_time();
+  absolute_timet sat_start_time = current_time();
 
   satcheckt satcheck;
   bv_pointerst bv_pointers(ns, satcheck);
@@ -451,9 +410,9 @@ bool path_searcht::is_feasible(statet &state)
   satcheck.set_message_handler(get_message_handler());
   bv_pointers.set_message_handler(get_message_handler());
 
-  bool result=state.is_feasible(bv_pointers);
+  bool result = state.is_feasible(bv_pointers);
 
-  sat_time+=current_time()-sat_start_time;
+  sat_time += current_time() - sat_start_time;
 
   return result;
 }
@@ -471,26 +430,22 @@ Function: path_searcht::initialize_property_map
 \*******************************************************************/
 
 void path_searcht::initialize_property_map(
-  const goto_functionst &goto_functions)
-{
-  forall_goto_functions(it, goto_functions)
-    if(!it->second.is_inlined())
-    {
-      const goto_programt &goto_program=it->second.body;
+    const goto_functionst &goto_functions) {
+  forall_goto_functions(it, goto_functions) if (!it->second.is_inlined()) {
+    const goto_programt &goto_program = it->second.body;
 
-      forall_goto_program_instructions(i_it, goto_program)
-      {
-        if(!i_it->is_assert())
-          continue;
+    forall_goto_program_instructions(i_it, goto_program) {
+      if (!i_it->is_assert())
+        continue;
 
-        const source_locationt &source_location=i_it->source_location;
+      const source_locationt &source_location = i_it->source_location;
 
-        irep_idt property_name=source_location.get_property_id();
+      irep_idt property_name = source_location.get_property_id();
 
-        property_entryt &property_entry=property_map[property_name];
-        property_entry.status=NOT_REACHED;
-        property_entry.description=source_location.get_comment();
-        property_entry.source_location=source_location;
-      }
+      property_entryt &property_entry = property_map[property_name];
+      property_entry.status = NOT_REACHED;
+      property_entry.description = source_location.get_comment();
+      property_entry.source_location = source_location;
     }
+  }
 }

@@ -17,8 +17,7 @@ Author: Daniel Kroening, kroening@kroening.com
 // NOLINTNEXTLINE(readability/identifiers)
 class CSolver;
 
-class satcheck_zchaff_baset:public cnf_clause_listt
-{
+class satcheck_zchaff_baset : public cnf_clause_listt {
 public:
   explicit satcheck_zchaff_baset(CSolver *_solver);
   virtual ~satcheck_zchaff_baset();
@@ -29,10 +28,7 @@ public:
   virtual void set_assignment(literalt a, bool value);
   virtual void copy_cnf();
 
-  CSolver *zchaff_solver()
-  {
-    return solver;
-  }
+  CSolver *zchaff_solver() { return solver; }
 
 protected:
   CSolver *solver;
@@ -41,9 +37,8 @@ protected:
   statust status;
 };
 
-class satcheck_zchafft:public satcheck_zchaff_baset
-{
- public:
+class satcheck_zchafft : public satcheck_zchaff_baset {
+public:
   satcheck_zchafft();
   virtual ~satcheck_zchafft();
 };

@@ -15,12 +15,9 @@ Author: Matt Lewis
 
 #include "path.h"
 
-class path_enumeratort
-{
- public:
-  virtual ~path_enumeratort()
-  {
-  }
+class path_enumeratort {
+public:
+  virtual ~path_enumeratort() {}
 
   virtual bool next(patht &path) = 0;
 };

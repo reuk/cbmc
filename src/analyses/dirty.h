@@ -13,42 +13,31 @@ Date: March 2013
 
 #include <unordered_set>
 
-#include <util/std_expr.h>
 #include <goto-programs/goto_functions.h>
+#include <util/std_expr.h>
 
-class dirtyt
-{
+class dirtyt {
 public:
   typedef std::unordered_set<irep_idt, irep_id_hash> id_sett;
   typedef goto_functionst::goto_functiont goto_functiont;
 
-  explicit dirtyt(const goto_functiont &goto_function)
-  {
-    build(goto_function);
-  }
+  explicit dirtyt(const goto_functiont &goto_function) { build(goto_function); }
 
-  explicit dirtyt(const goto_functionst &goto_functions)
-  {
-    forall_goto_functions(it, goto_functions)
-      build(it->second);
+  explicit dirtyt(const goto_functionst &goto_functions) {
+    forall_goto_functions(it, goto_functions) build(it->second);
   }
 
   void output(std::ostream &out) const;
 
-  bool operator()(const irep_idt &id) const
-  {
-    return dirty.find(id)!=dirty.end();
+  bool operator()(const irep_idt &id) const {
+    return dirty.find(id) != dirty.end();
   }
 
-  bool operator()(const symbol_exprt &expr) const
-  {
+  bool operator()(const symbol_exprt &expr) const {
     return operator()(expr.get_identifier());
   }
 
-  const id_sett &get_dirty_ids() const
-  {
-    return dirty;
-  }
+  const id_sett &get_dirty_ids() const { return dirty; }
 
 protected:
   void build(const goto_functiont &goto_function);
@@ -60,10 +49,7 @@ protected:
   void find_dirty_address_of(const exprt &expr);
 };
 
-inline std::ostream &operator<<(
-  std::ostream &out,
-  const dirtyt &dirty)
-{
+inline std::ostream &operator<<(std::ostream &out, const dirtyt &dirty) {
   dirty.output(out);
   return out;
 }

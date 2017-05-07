@@ -15,24 +15,17 @@ Author: Daniel Kroening, kroening@kroening.com
 
 // an abstract base class
 
-class value_setst
-{
+class value_setst {
 public:
-  value_setst()
-  {
-  }
+  value_setst() {}
 
   typedef std::list<exprt> valuest;
 
   // this is not const to allow a lazy evaluation
-  virtual void get_values(
-    goto_programt::const_targett l,
-    const exprt &expr,
-    valuest &dest)=0;
+  virtual void get_values(goto_programt::const_targett l, const exprt &expr,
+                          valuest &dest) = 0;
 
-  virtual ~value_setst()
-  {
-  }
+  virtual ~value_setst() {}
 };
 
 #endif // CPROVER_POINTER_ANALYSIS_VALUE_SETS_H

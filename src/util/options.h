@@ -9,12 +9,11 @@ Author: Daniel Kroening, kroening@kroening.com
 #ifndef CPROVER_UTIL_OPTIONS_H
 #define CPROVER_UTIL_OPTIONS_H
 
-#include <string>
-#include <map>
 #include <list>
+#include <map>
+#include <string>
 
-class optionst
-{
+class optionst {
 public:
   typedef std::list<std::string> value_listt;
   typedef std::map<std::string, value_listt> option_mapt;
@@ -30,22 +29,19 @@ public:
   void set_option(const std::string &option, const unsigned value);
   void set_option(const std::string &option, const std::string &value);
 
-  void set_option(const std::string &option, const char *value)
-  {
+  void set_option(const std::string &option, const char *value) {
     set_option(option, std::string(value));
   }
 
-  void set_option(const std::string &option, const value_listt &values)
-  {
-    option_map[option]=values;
+  void set_option(const std::string &option, const value_listt &values) {
+    option_map[option] = values;
   }
 
-  optionst() { }
-  ~optionst() { }
+  optionst() {}
+  ~optionst() {}
 
-  optionst &operator=(const optionst &other)
-  {
-    option_map=other.option_map;
+  optionst &operator=(const optionst &other) {
+    option_map = other.option_map;
     return *this;
   }
 

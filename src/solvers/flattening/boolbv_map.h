@@ -11,40 +11,31 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <vector>
 
-#include <util/type.h>
 #include <util/namespace.h>
+#include <util/type.h>
 
 #include <solvers/prop/prop.h>
 
 #include "boolbv_type.h"
 #include "boolbv_width.h"
 
-class boolbv_mapt
-{
+class boolbv_mapt {
 public:
-  boolbv_mapt(
-    propt &_prop,
-    const namespacet &_ns,
-    const boolbv_widtht &_boolbv_width):
-    prop(_prop), ns(_ns), boolbv_width(_boolbv_width)
-  {
-  }
+  boolbv_mapt(propt &_prop, const namespacet &_ns,
+              const boolbv_widtht &_boolbv_width)
+      : prop(_prop), ns(_ns), boolbv_width(_boolbv_width) {}
 
-  struct map_bitt
-  {
-    map_bitt():is_set(false) { }
+  struct map_bitt {
+    map_bitt() : is_set(false) {}
     bool is_set;
     literalt l;
   };
 
   typedef std::vector<map_bitt> literal_mapt;
 
-  class map_entryt
-  {
+  class map_entryt {
   public:
-    map_entryt():width(0), bvtype(IS_UNKNOWN)
-    {
-    }
+    map_entryt() : width(0), bvtype(IS_UNKNOWN) {}
 
     std::size_t width;
     bvtypet bvtype;
@@ -59,20 +50,13 @@ public:
 
   void show() const;
 
-  map_entryt &get_map_entry(
-    const irep_idt &identifier,
-    const typet &type);
+  map_entryt &get_map_entry(const irep_idt &identifier, const typet &type);
 
-  void get_literals(
-    const irep_idt &identifier,
-    const typet &type,
-    const std::size_t width,
-    bvt &literals);
+  void get_literals(const irep_idt &identifier, const typet &type,
+                    const std::size_t width, bvt &literals);
 
-  void set_literals(
-    const irep_idt &identifier,
-    const typet &type,
-    const bvt &literals);
+  void set_literals(const irep_idt &identifier, const typet &type,
+                    const bvt &literals);
 
 protected:
   propt &prop;

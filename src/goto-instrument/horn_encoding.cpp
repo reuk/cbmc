@@ -24,9 +24,5 @@ Function: horn_encoding
 
 \*******************************************************************/
 
-void horn_encoding(
-  const goto_functionst &,
-  const namespacet &,
-  std::ostream &out)
-{
-}
+void horn_encoding(const goto_functionst &, const namespacet &,
+                   std::ostream &out) {}

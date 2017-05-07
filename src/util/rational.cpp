@@ -23,11 +23,10 @@ Function: rationalt::operator+=
 
 \*******************************************************************/
 
-rationalt &rationalt::operator+=(const rationalt &n)
-{
+rationalt &rationalt::operator+=(const rationalt &n) {
   rationalt tmp(n);
   same_denominator(tmp);
-  numerator+=tmp.numerator;
+  numerator += tmp.numerator;
   normalize();
   return *this;
 }
@@ -44,11 +43,10 @@ Function: rationalt::operator-=
 
 \*******************************************************************/
 
-rationalt &rationalt::operator-=(const rationalt &n)
-{
+rationalt &rationalt::operator-=(const rationalt &n) {
   rationalt tmp(n);
   same_denominator(tmp);
-  numerator-=tmp.numerator;
+  numerator -= tmp.numerator;
   normalize();
   return *this;
 }
@@ -65,8 +63,7 @@ Function: rationalt::operator-=
 
 \*******************************************************************/
 
-rationalt &rationalt::operator-()
-{
+rationalt &rationalt::operator-() {
   numerator.negate();
   return *this;
 }
@@ -83,10 +80,9 @@ Function: rationalt::operator*=
 
 \*******************************************************************/
 
-rationalt &rationalt::operator*=(const rationalt &n)
-{
-  numerator*=n.numerator;
-  denominator*=n.denominator;
+rationalt &rationalt::operator*=(const rationalt &n) {
+  numerator *= n.numerator;
+  denominator *= n.denominator;
   normalize();
   return *this;
 }
@@ -103,11 +99,10 @@ Function: rationalt::operator/=
 
 \*******************************************************************/
 
-rationalt &rationalt::operator/=(const rationalt &n)
-{
+rationalt &rationalt::operator/=(const rationalt &n) {
   assert(!n.numerator.is_zero());
-  numerator*=n.denominator;
-  denominator*=n.numerator;
+  numerator *= n.denominator;
+  denominator *= n.numerator;
   normalize();
   return *this;
 }
@@ -124,23 +119,20 @@ Function: rationalt::normalize
 
 \*******************************************************************/
 
-void rationalt::normalize()
-{
+void rationalt::normalize() {
   // first do sign
 
-  if(denominator.is_negative())
-  {
+  if (denominator.is_negative()) {
     denominator.negate();
     numerator.negate();
   }
 
   // divide by gcd
 
-  mp_integer _gcd=gcd(denominator, numerator);
-  if(_gcd!=1 && !_gcd.is_zero())
-  {
-    denominator/=_gcd;
-    numerator/=_gcd;
+  mp_integer _gcd = gcd(denominator, numerator);
+  if (_gcd != 1 && !_gcd.is_zero()) {
+    denominator /= _gcd;
+    numerator /= _gcd;
   }
 }
 
@@ -156,17 +148,16 @@ Function: rationalt::same_denominator
 
 \*******************************************************************/
 
-void rationalt::same_denominator(rationalt &n)
-{
-  if(denominator==n.denominator)
+void rationalt::same_denominator(rationalt &n) {
+  if (denominator == n.denominator)
     return;
 
-  numerator*=n.denominator;
-  n.numerator*=denominator;
+  numerator *= n.denominator;
+  n.numerator *= denominator;
 
-  mp_integer t=denominator*n.denominator;
-  denominator=t;
-  n.denominator=t;
+  mp_integer t = denominator * n.denominator;
+  denominator = t;
+  n.denominator = t;
 }
 
 /*******************************************************************\
@@ -181,9 +172,8 @@ Function: rationalt::invert
 
 \*******************************************************************/
 
-void rationalt::invert()
-{
-  assert(numerator!=0);
+void rationalt::invert() {
+  assert(numerator != 0);
   std::swap(numerator, denominator);
 }
 
@@ -199,8 +189,7 @@ Function: inverse
 
 \*******************************************************************/
 
-rationalt inverse(const rationalt &n)
-{
+rationalt inverse(const rationalt &n) {
   rationalt tmp(n);
   tmp.invert();
   return tmp;
@@ -218,10 +207,9 @@ Function: operator<<
 
 \*******************************************************************/
 
-std::ostream &operator<<(std::ostream &out, const rationalt &a)
-{
-  std::string d=integer2string(a.get_numerator());
-  if(a.get_denominator()!=1)
-    d+="/"+integer2string(a.get_denominator());
+std::ostream &operator<<(std::ostream &out, const rationalt &a) {
+  std::string d = integer2string(a.get_numerator());
+  if (a.get_denominator() != 1)
+    d += "/" + integer2string(a.get_denominator());
   return out << d;
 }

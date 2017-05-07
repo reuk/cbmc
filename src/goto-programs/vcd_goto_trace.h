@@ -17,9 +17,7 @@ Date: June 2011
 
 #include "goto_trace.h"
 
-void output_vcd(
-  const namespacet &ns,
-  const goto_tracet &goto_trace,
-  std::ostream &out);
+void output_vcd(const namespacet &ns, const goto_tracet &goto_trace,
+                std::ostream &out);
 
 #endif // CPROVER_GOTO_PROGRAMS_VCD_GOTO_TRACE_H

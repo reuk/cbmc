@@ -25,21 +25,17 @@ Function: parse_json
 \*******************************************************************/
 
 // 'do it all' function
-bool parse_json(
-  std::istream &in,
-  const std::string &filename,
-  message_handlert &message_handler,
-  jsont &dest)
-{
+bool parse_json(std::istream &in, const std::string &filename,
+                message_handlert &message_handler, jsont &dest) {
   json_parser.clear();
   json_parser.set_file(filename);
-  json_parser.in=&in;
+  json_parser.in = &in;
   json_parser.set_message_handler(message_handler);
 
-  bool result=json_parser.parse();
+  bool result = json_parser.parse();
 
   // save result
-  if(json_parser.stack.size()==1)
+  if (json_parser.stack.size() == 1)
     dest.swap(json_parser.stack.top());
 
   // save some memory
@@ -61,14 +57,11 @@ Function: parse_json
 \*******************************************************************/
 
 // 'do it all' function
-bool parse_json(
-  const std::string &filename,
-  message_handlert &message_handler,
-  jsont &dest)
-{
+bool parse_json(const std::string &filename, message_handlert &message_handler,
+                jsont &dest) {
   std::ifstream in(filename);
 
-  if(!in)
+  if (!in)
     return true;
 
   return parse_json(in, filename, message_handler, dest);

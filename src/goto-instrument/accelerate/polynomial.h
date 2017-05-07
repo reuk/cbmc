@@ -9,18 +9,16 @@ Author: Matt Lewis
 #ifndef CPROVER_GOTO_INSTRUMENT_ACCELERATE_POLYNOMIAL_H
 #define CPROVER_GOTO_INSTRUMENT_ACCELERATE_POLYNOMIAL_H
 
-#include <vector>
 #include <map>
+#include <vector>
 
 #include <util/expr.h>
 
-class monomialt
-{
+class monomialt {
 public:
-  struct termt
-  {
+  struct termt {
     exprt var;
-    unsigned int exp;   // This means exponent, not expression.
+    unsigned int exp; // This means exponent, not expression.
   };
 
   // Invariant: this vector is sorted lexicographically w.r.t. the variable.
@@ -35,8 +33,7 @@ public:
 
 typedef std::map<exprt, exprt> substitutiont;
 
-class polynomialt
-{
+class polynomialt {
 public:
   // Invariant: this vector is sorted according to the monomial ordering induced
   // by monomialt::compare()

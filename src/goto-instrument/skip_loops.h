@@ -16,9 +16,7 @@ Date: January 2016
 class goto_functionst;
 class message_handlert;
 
-bool skip_loops(
-  goto_functionst &goto_functions,
-  const std::string &loop_ids,
-  message_handlert &message_handler);
+bool skip_loops(goto_functionst &goto_functions, const std::string &loop_ids,
+                message_handlert &message_handler);
 
 #endif // CPROVER_GOTO_INSTRUMENT_SKIP_LOOPS_H

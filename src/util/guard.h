@@ -13,34 +13,23 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "expr.h"
 
-class guardt:public exprt
-{
+class guardt : public exprt {
 public:
-  guardt()
-  {
-    make_true();
-  }
+  guardt() { make_true(); }
 
-  guardt &operator=(const exprt &e)
-  {
-    *this=static_cast<const guardt&>(e);
+  guardt &operator=(const exprt &e) {
+    *this = static_cast<const guardt &>(e);
 
     return *this;
   }
 
   void add(const exprt &expr);
 
-  void append(const guardt &guard)
-  {
-    add(guard);
-  }
+  void append(const guardt &guard) { add(guard); }
 
   // exprt as_expr(guard_listt::const_iterator it) const;
 
-  exprt as_expr() const
-  {
-    return *this;
-  }
+  exprt as_expr() const { return *this; }
 
   void guard_expr(exprt &dest) const;
 
@@ -57,8 +46,8 @@ public:
   void make_false();
 #endif
 
-  friend guardt &operator -= (guardt &g1, const guardt &g2);
-  friend guardt &operator |= (guardt &g1, const guardt &g2);
+  friend guardt &operator-=(guardt &g1, const guardt &g2);
+  friend guardt &operator|=(guardt &g1, const guardt &g2);
 
 #if 0
   void swap(guardt &g)

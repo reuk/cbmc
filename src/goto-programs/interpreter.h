@@ -11,8 +11,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "goto_functions.h"
 
-void interpreter(
-  const symbol_tablet &symbol_table,
-  const goto_functionst &goto_functions);
+void interpreter(const symbol_tablet &symbol_table,
+                 const goto_functionst &goto_functions);
 
 #endif // CPROVER_GOTO_PROGRAMS_INTERPRETER_H

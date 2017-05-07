@@ -8,27 +8,20 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <fstream>
 
-#include <util/threeval.h>
 #include <util/json.h>
+#include <util/threeval.h>
 #include <util/xml.h>
 
 #include <analyses/interval_domain.h>
 
 #include "static_analyzer.h"
 
-class static_analyzert:public messaget
-{
+class static_analyzert : public messaget {
 public:
-  static_analyzert(
-    const goto_modelt &_goto_model,
-    const optionst &_options,
-    message_handlert &_message_handler):
-    messaget(_message_handler),
-    goto_functions(_goto_model.goto_functions),
-    ns(_goto_model.symbol_table),
-    options(_options)
-  {
-  }
+  static_analyzert(const goto_modelt &_goto_model, const optionst &_options,
+                   message_handlert &_message_handler)
+      : messaget(_message_handler), goto_functions(_goto_model.goto_functions),
+        ns(_goto_model.symbol_table), options(_options) {}
 
   bool operator()();
 
@@ -59,14 +52,13 @@ Function: static_analyzert::operator()
 
 \*******************************************************************/
 
-bool static_analyzert::operator()()
-{
+bool static_analyzert::operator()() {
   status() << "performing interval analysis" << eom;
   interval_analysis(goto_functions, ns);
 
-  if(!options.get_option("json").empty())
+  if (!options.get_option("json").empty())
     json_report(options.get_option("json"));
-  else if(!options.get_option("xml").empty())
+  else if (!options.get_option("xml").empty())
     xml_report(options.get_option("xml"));
   else
     plain_text_report();
@@ -86,12 +78,11 @@ Function: static_analyzert::eval
 
 \*******************************************************************/
 
-tvt static_analyzert::eval(goto_programt::const_targett t)
-{
-  exprt guard=t->guard;
-  interval_domaint d=interval_analysis[t];
+tvt static_analyzert::eval(goto_programt::const_targett t) {
+  exprt guard = t->guard;
+  interval_domaint d = interval_analysis[t];
   d.assume(not_exprt(guard), ns);
-  if(d.is_bottom())
+  if (d.is_bottom())
     return tvt(true);
   return tvt::unknown();
 }
@@ -108,45 +99,41 @@ Function: static_analyzert::plain_text_report
 
 \*******************************************************************/
 
-void static_analyzert::plain_text_report()
-{
-  unsigned pass=0, fail=0, unknown=0;
+void static_analyzert::plain_text_report() {
+  unsigned pass = 0, fail = 0, unknown = 0;
 
-  forall_goto_functions(f_it, goto_functions)
-  {
-    if(!f_it->second.body.has_assertion())
+  forall_goto_functions(f_it, goto_functions) {
+    if (!f_it->second.body.has_assertion())
       continue;
 
-    if(f_it->first=="__actual_thread_spawn")
+    if (f_it->first == "__actual_thread_spawn")
       continue;
 
     status() << "******** Function " << f_it->first << eom;
 
-    forall_goto_program_instructions(i_it, f_it->second.body)
-    {
-      if(!i_it->is_assert())
+    forall_goto_program_instructions(i_it, f_it->second.body) {
+      if (!i_it->is_assert())
         continue;
 
-      tvt r=eval(i_it);
+      tvt r = eval(i_it);
 
-      result() << '[' << i_it->source_location.get_property_id()
-               << ']' << ' ';
+      result() << '[' << i_it->source_location.get_property_id() << ']' << ' ';
 
       result() << i_it->source_location;
-      if(!i_it->source_location.get_comment().empty())
+      if (!i_it->source_location.get_comment().empty())
         result() << ", " << i_it->source_location.get_comment();
       result() << ": ";
-      if(r.is_true())
+      if (r.is_true())
         result() << "SUCCESS";
-      else if(r.is_false())
+      else if (r.is_false())
         result() << "FAILURE";
       else
         result() << "UNKNOWN";
       result() << eom;
 
-      if(r.is_true())
+      if (r.is_true())
         pass++;
-      else if(r.is_false())
+      else if (r.is_false())
         fail++;
       else
         unknown++;
@@ -155,8 +142,8 @@ void static_analyzert::plain_text_report()
     status() << '\n';
   }
 
-  status() << "SUMMARY: " << pass << " pass, " << fail << " fail, "
-           << unknown << " unknown\n";
+  status() << "SUMMARY: " << pass << " pass, " << fail << " fail, " << unknown
+           << " unknown\n";
 }
 
 /*******************************************************************\
@@ -171,46 +158,41 @@ Function: static_analyzert::json_report
 
 \*******************************************************************/
 
-void static_analyzert::json_report(const std::string &file_name)
-{
+void static_analyzert::json_report(const std::string &file_name) {
   json_arrayt json_result;
 
-  forall_goto_functions(f_it, goto_functions)
-  {
-    if(!f_it->second.body.has_assertion())
+  forall_goto_functions(f_it, goto_functions) {
+    if (!f_it->second.body.has_assertion())
       continue;
 
-    if(f_it->first=="__actual_thread_spawn")
+    if (f_it->first == "__actual_thread_spawn")
       continue;
 
-    forall_goto_program_instructions(i_it, f_it->second.body)
-    {
-      if(!i_it->is_assert())
+    forall_goto_program_instructions(i_it, f_it->second.body) {
+      if (!i_it->is_assert())
         continue;
 
-      tvt r=eval(i_it);
+      tvt r = eval(i_it);
 
-      json_objectt &j=json_result.push_back().make_object();
+      json_objectt &j = json_result.push_back().make_object();
 
-      if(r.is_true())
-        j["status"]=json_stringt("SUCCESS");
-      else if(r.is_false())
-        j["status"]=json_stringt("FAILURE");
+      if (r.is_true())
+        j["status"] = json_stringt("SUCCESS");
+      else if (r.is_false())
+        j["status"] = json_stringt("FAILURE");
       else
-        j["status"]=json_stringt("UNKNOWN");
+        j["status"] = json_stringt("UNKNOWN");
 
-      j["file"]=json_stringt(id2string(i_it->source_location.get_file()));
-      j["line"]=json_numbert(id2string(i_it->source_location.get_line()));
-      j["description"]=json_stringt(id2string(
-        i_it->source_location.get_comment()));
+      j["file"] = json_stringt(id2string(i_it->source_location.get_file()));
+      j["line"] = json_numbert(id2string(i_it->source_location.get_line()));
+      j["description"] =
+          json_stringt(id2string(i_it->source_location.get_comment()));
     }
   }
 
   std::ofstream out(file_name);
-  if(!out)
-  {
-    error() << "failed to open JSON output file `"
-            << file_name << "'" << eom;
+  if (!out) {
+    error() << "failed to open JSON output file `" << file_name << "'" << eom;
     return;
   }
 
@@ -230,46 +212,41 @@ Function: static_analyzert::xml_report
 
 \*******************************************************************/
 
-void static_analyzert::xml_report(const std::string &file_name)
-{
+void static_analyzert::xml_report(const std::string &file_name) {
   xmlt xml_result;
 
-  forall_goto_functions(f_it, goto_functions)
-  {
-    if(!f_it->second.body.has_assertion())
+  forall_goto_functions(f_it, goto_functions) {
+    if (!f_it->second.body.has_assertion())
       continue;
 
-    if(f_it->first=="__actual_thread_spawn")
+    if (f_it->first == "__actual_thread_spawn")
       continue;
 
-    forall_goto_program_instructions(i_it, f_it->second.body)
-    {
-      if(!i_it->is_assert())
+    forall_goto_program_instructions(i_it, f_it->second.body) {
+      if (!i_it->is_assert())
         continue;
 
-      tvt r=eval(i_it);
+      tvt r = eval(i_it);
 
-      xmlt &x=xml_result.new_element("result");
+      xmlt &x = xml_result.new_element("result");
 
-      if(r.is_true())
+      if (r.is_true())
         x.set_attribute("status", "SUCCESS");
-      else if(r.is_false())
+      else if (r.is_false())
         x.set_attribute("status", "FAILURE");
       else
         x.set_attribute("status", "UNKNOWN");
 
       x.set_attribute("file", id2string(i_it->source_location.get_file()));
       x.set_attribute("line", id2string(i_it->source_location.get_line()));
-      x.set_attribute(
-        "description", id2string(i_it->source_location.get_comment()));
+      x.set_attribute("description",
+                      id2string(i_it->source_location.get_comment()));
     }
   }
 
   std::ofstream out(file_name);
-  if(!out)
-  {
-    error() << "failed to open XML output file `"
-            << file_name << "'" << eom;
+  if (!out) {
+    error() << "failed to open XML output file `" << file_name << "'" << eom;
     return;
   }
 
@@ -289,13 +266,9 @@ Function: static_analyzer
 
 \*******************************************************************/
 
-bool static_analyzer(
-  const goto_modelt &goto_model,
-  const optionst &options,
-  message_handlert &message_handler)
-{
-  return static_analyzert(
-    goto_model, options, message_handler)();
+bool static_analyzer(const goto_modelt &goto_model, const optionst &options,
+                     message_handlert &message_handler) {
+  return static_analyzert(goto_model, options, message_handler)();
 }
 
 /*******************************************************************\
@@ -310,10 +283,7 @@ Function: show_intervals
 
 \*******************************************************************/
 
-void show_intervals(
-  const goto_modelt &goto_model,
-  std::ostream &out)
-{
+void show_intervals(const goto_modelt &goto_model, std::ostream &out) {
   ait<interval_domaint> interval_analysis;
   interval_analysis(goto_model);
   interval_analysis.output(goto_model, out);
