@@ -6,11 +6,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "java_bytecode_convert_class.h"
+
 #ifdef DEBUG
 #include <iostream>
 #endif
 
-#include "java_bytecode_convert_class.h"
 #include "java_root_class.h"
 #include "java_types.h"
 #include "java_bytecode_convert_method.h"

@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "java_bytecode_typecheck.h"
+
 #include <iomanip>
 
 #include <util/std_expr.h>
@@ -15,7 +17,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <linking/zero_initializer.h>
 
-#include "java_bytecode_typecheck.h"
 #include "java_pointer_casts.h"
 #include "java_types.h"
 

@@ -6,9 +6,9 @@ Author: Chris Smowton, chris.smowton@diffblue.com
 
 \*******************************************************************/
 
-#include <string>
-
 #include "ci_lazy_methods.h"
+
+#include <string>
 
 /*******************************************************************\
 

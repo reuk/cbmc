@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 \*******************************************************************/
 
+#include "expr2java.h"
+
 #include <cassert>
 
 #include <util/namespace.h>
@@ -19,7 +21,6 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 #include <ansi-c/expr2c_class.h>
 
 #include "java_types.h"
-#include "expr2java.h"
 
 /*******************************************************************\
 

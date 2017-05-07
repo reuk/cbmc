@@ -7,6 +7,7 @@ Author: Chris Smowton, chris.smowton@diffblue.com
 \*******************************************************************/
 
 #include "java_bytecode_convert_method_class.h"
+
 #include "java_types.h"
 
 #include <util/string2int.h>

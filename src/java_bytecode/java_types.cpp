@@ -6,14 +6,14 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "java_types.h"
+
 #include <cassert>
 #include <cctype>
 
 #include <util/std_types.h>
 #include <util/std_expr.h>
 #include <util/ieee_float.h>
-
-#include "java_types.h"
 
 /*******************************************************************\
 

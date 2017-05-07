@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <json/json_parser.h>
-
 #include "java_class_loader_limit.h"
+
+#include <json/json_parser.h>
 
 /*******************************************************************\
 

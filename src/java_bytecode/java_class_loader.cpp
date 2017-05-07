@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "java_class_loader.h"
+
 #include <stack>
 #include <map>
 #include <fstream>
@@ -15,7 +17,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/config.h>
 
 #include "java_bytecode_parser.h"
-#include "java_class_loader.h"
 #include "jar_file.h"
 
 /*******************************************************************\

@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "java_bytecode_convert_method.h"
+
 #ifdef DEBUG
 #include <iostream>
 #endif
@@ -22,7 +24,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <goto-programs/cfg.h>
 #include <analyses/cfg_dominators.h>
 
-#include "java_bytecode_convert_method.h"
 #include "java_bytecode_convert_method_class.h"
 #include "bytecode_info.h"
 #include "java_types.h"

@@ -6,14 +6,14 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "jar_file.h"
+
 #include <cstring>
 #include <cassert>
 #include <unordered_set>
 
 #include <json/json_parser.h>
 #include <util/suffix.h>
-
-#include "jar_file.h"
 
 /*******************************************************************\
 

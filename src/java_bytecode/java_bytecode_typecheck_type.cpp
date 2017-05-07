@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <util/std_types.h>
-
 #include "java_bytecode_typecheck.h"
+
+#include <util/std_types.h>
 
 /*******************************************************************\
 
