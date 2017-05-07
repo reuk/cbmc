@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "mmcc_parse_options.h"
+
 #include <iostream>
 #include <fstream>
 
@@ -15,7 +17,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "mm_parser.h"
 #include "mm2cpp.h"
-#include "mmcc_parse_options.h"
 
 /*******************************************************************\
 

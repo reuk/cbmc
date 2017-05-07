@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <util/unicode.h>
-
 #include "mmcc_parse_options.h"
+
+#include <util/unicode.h>
 
 /*******************************************************************\
 
