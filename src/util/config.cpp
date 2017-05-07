@@ -967,8 +967,8 @@ void configt::set_arch(const irep_idt &arch)
   }
   else if(arch == "alpha")
     ansi_c.set_arch_spec_alpha();
-  else if(arch == "arm64" || arch == "armel" || arch == "armhf" || arch == "ar"
-                                                                           "m")
+  else if(
+    arch == "arm64" || arch == "armel" || arch == "armhf" || arch == "arm")
     ansi_c.set_arch_spec_arm(arch);
   else if(
     arch == "mips64el" || arch == "mipsn32el" || arch == "mipsel" ||
