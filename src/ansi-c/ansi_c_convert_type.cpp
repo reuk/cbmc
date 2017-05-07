@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "ansi_c_convert_type.h"
+
 #include <cassert>
 
 #include <util/namespace.h>
@@ -13,8 +15,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/config.h>
 #include <util/arith_tools.h>
 #include <util/std_types.h>
-
-#include "ansi_c_convert_type.h"
 
 /*******************************************************************\
 

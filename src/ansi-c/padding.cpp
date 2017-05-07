@@ -6,14 +6,14 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "padding.h"
+
 #include <algorithm>
 
 #include <util/config.h>
 #include <util/pointer_offset_size.h>
 #include <util/simplify_expr.h>
 #include <util/arith_tools.h>
-
-#include "padding.h"
 
 /*******************************************************************\
 

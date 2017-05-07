@@ -6,10 +6,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "string_constant.h"
+
 #include <util/arith_tools.h>
 #include <util/std_expr.h>
 
-#include "string_constant.h"
 #include "c_types.h"
 
 /*******************************************************************\

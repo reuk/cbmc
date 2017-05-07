@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "c_misc.h"
+
 #include <cstdio>
 
 #ifdef _WIN32
@@ -13,8 +15,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #define snprintf sprintf_s
 #endif
 #endif
-
-#include "c_misc.h"
 
 /*******************************************************************\
 

@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "printf_formatter.h"
+
 #include <cassert>
 #include <sstream>
 
@@ -13,7 +15,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/simplify_expr.h>
 
 #include "c_types.h"
-#include "printf_formatter.h"
 
 /*******************************************************************\
 

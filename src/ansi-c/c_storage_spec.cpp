@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <util/expr.h>
-
 #include "c_storage_spec.h"
+
+#include <util/expr.h>
 
 /*******************************************************************\
 

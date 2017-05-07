@@ -6,11 +6,11 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "unescape_string.h"
+
 #include <cassert>
 #include <cctype>
 #include <cstdio>
-
-#include "unescape_string.h"
 
 /*******************************************************************\
 

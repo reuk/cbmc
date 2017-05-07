@@ -6,6 +6,8 @@ Author: DiffBlue Limited. All rights reserved.
 
 \*******************************************************************/
 
+#include "c_nondet_symbol_factory.h"
+
 #include <set>
 #include <sstream>
 
@@ -24,8 +26,6 @@ Author: DiffBlue Limited. All rights reserved.
 #include <ansi-c/string_constant.h>
 
 #include <goto-programs/goto_functions.h>
-
-#include "c_nondet_symbol_factory.h"
 
 /*******************************************************************\
 

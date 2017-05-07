@@ -6,10 +6,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "anonymous_member.h"
+
 #include <util/std_types.h>
 #include <util/std_expr.h>
-
-#include "anonymous_member.h"
 
 /*******************************************************************\
 

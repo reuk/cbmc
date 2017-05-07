@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <ostream>
-
 #include "c_qualifiers.h"
+
+#include <ostream>
 
 /*******************************************************************\
 

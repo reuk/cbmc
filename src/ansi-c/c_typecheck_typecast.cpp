@@ -6,8 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include "c_typecast.h"
 #include "c_typecheck_base.h"
+
+#include "c_typecast.h"
 #include "c_types.h"
 
 /*******************************************************************\

@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <cctype>
-
 #include "parse_float.h"
+
+#include <cctype>
 
 /*******************************************************************\
 

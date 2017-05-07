@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "convert_character_literal.h"
+
 #include <cassert>
 
 #include <util/arith_tools.h>
@@ -14,7 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "../c_types.h"
 
 #include "unescape_string.h"
-#include "convert_character_literal.h"
 
 /*******************************************************************\
 

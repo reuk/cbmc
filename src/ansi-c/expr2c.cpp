@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "expr2c.h"
+
 #include <cassert>
 #include <cctype>
 #include <cstdio>
@@ -36,7 +38,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "c_misc.h"
 #include "c_qualifiers.h"
-#include "expr2c.h"
 #include "c_types.h"
 #include "expr2c_class.h"
 

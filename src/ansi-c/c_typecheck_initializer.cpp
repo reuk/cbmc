@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "c_typecheck_base.h"
+
 #include <util/arith_tools.h>
 #include <util/config.h>
 #include <util/type_eq.h>
@@ -17,7 +19,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <linking/zero_initializer.h>
 
 #include "c_types.h"
-#include "c_typecheck_base.h"
 #include "string_constant.h"
 #include "anonymous_member.h"
 

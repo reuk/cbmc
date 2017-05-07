@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "c_typecheck_base.h"
+
 #include <cassert>
 
 #include <util/arith_tools.h>
@@ -21,7 +23,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "c_types.h"
 #include "c_typecast.h"
-#include "c_typecheck_base.h"
 #include "c_sizeof.h"
 #include "c_qualifiers.h"
 #include "string_constant.h"

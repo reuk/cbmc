@@ -6,11 +6,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "c_typecheck_base.h"
+
 #include <util/std_types.h>
 #include <util/prefix.h>
 #include <util/config.h>
 
-#include "c_typecheck_base.h"
 #include "expr2c.h"
 #include "type2name.h"
 #include "c_storage_spec.h"
