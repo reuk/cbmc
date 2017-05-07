@@ -6,6 +6,8 @@ Author: Matt Lewis
 
 \*******************************************************************/
 
+#include "overflow_instrumenter.h"
+
 #include <iostream>
 
 #include <util/std_expr.h>
@@ -15,7 +17,6 @@ Author: Matt Lewis
 
 #include <goto-programs/goto_program.h>
 
-#include "overflow_instrumenter.h"
 #include "util.h"
 
 /*

@@ -6,11 +6,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "branch.h"
+
 #include <util/cprover_prefix.h>
 #include <util/prefix.h>
 
 #include "function.h"
-#include "branch.h"
 
 /*******************************************************************\
 

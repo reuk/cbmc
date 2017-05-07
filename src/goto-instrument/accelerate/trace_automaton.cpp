@@ -6,10 +6,11 @@ Author: Matt Lewis
 
 \*******************************************************************/
 
+#include "trace_automaton.h"
+
 #include <utility>
 #include <iostream>
 
-#include "trace_automaton.h"
 #include "path.h"
 
 void trace_automatont::build()

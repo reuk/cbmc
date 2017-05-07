@@ -7,6 +7,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "unwind.h"
+
 #ifdef DEBUG
 #include <iostream>
 #endif
@@ -15,7 +17,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/string_utils.h>
 #include <goto-programs/goto_functions.h>
 
-#include "unwind.h"
 #include "loop_utils.h"
 
 /*******************************************************************\

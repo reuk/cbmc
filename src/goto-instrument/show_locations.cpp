@@ -6,14 +6,14 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "show_locations.h"
+
 #include <iostream>
 
 #include <util/xml.h>
 #include <util/xml_irep.h>
 
 #include <langapi/language_util.h>
-
-#include "show_locations.h"
 
 /*******************************************************************\
 

@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "function.h"
+
 #include <util/arith_tools.h>
 #include <util/cprover_prefix.h>
 #include <util/prefix.h>
@@ -13,8 +15,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <ansi-c/c_types.h>
 #include <ansi-c/string_constant.h>
-
-#include "function.h"
 
 /*******************************************************************\
 

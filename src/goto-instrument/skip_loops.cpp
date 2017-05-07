@@ -8,12 +8,12 @@ Date: January 2016
 
 \*******************************************************************/
 
+#include "skip_loops.h"
+
 #include <util/message.h>
 #include <util/string2int.h>
 
 #include <goto-programs/goto_functions.h>
-
-#include "skip_loops.h"
 
 typedef std::set<unsigned> loop_idst;
 typedef std::map<irep_idt, loop_idst> loop_mapt;

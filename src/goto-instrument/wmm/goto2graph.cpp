@@ -8,6 +8,8 @@ Date: 2012
 
 \*******************************************************************/
 
+#include "goto2graph.h"
+
 #include <vector>
 #include <string>
 #include <fstream>
@@ -25,7 +27,6 @@ Date: 2012
 
 #include "../rw_set.h"
 #include "fence.h"
-#include "goto2graph.h"
 
 // #define PRINT_UNSAFES
 

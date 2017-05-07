@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <ansi-c/string_constant.h>
-
 #include "thread_instrumentation.h"
+
+#include <ansi-c/string_constant.h>
 
 /*******************************************************************\
 

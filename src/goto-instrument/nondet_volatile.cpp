@@ -8,10 +8,10 @@ Date: September 2011
 
 \*******************************************************************/
 
+#include "nondet_volatile.h"
+
 #include <util/std_expr.h>
 #include <util/symbol_table.h>
-
-#include "nondet_volatile.h"
 
 /*******************************************************************\
 

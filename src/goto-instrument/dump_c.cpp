@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "dump_c.h"
+
 #include <sstream>
 #include <cctype>
 
@@ -21,8 +23,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "goto_program2code.h"
 #include "dump_c_class.h"
-
-#include "dump_c.h"
 
 /*******************************************************************\
 

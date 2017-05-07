@@ -6,11 +6,11 @@ Author:
 
 \*******************************************************************/
 
+#include "alignment_checks.h"
+
 #include <util/pointer_offset_size.h>
 #include <util/config.h>
 #include <util/symbol_table.h>
-
-#include "alignment_checks.h"
 
 /*******************************************************************\
 

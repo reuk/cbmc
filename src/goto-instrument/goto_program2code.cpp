@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_program2code.h"
+
 #include <sstream>
 
 #include <util/config.h>
@@ -14,8 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/find_symbols.h>
 #include <util/arith_tools.h>
 #include <util/type_eq.h>
-
-#include "goto_program2code.h"
 
 /*******************************************************************\
 

@@ -8,14 +8,14 @@ Date: April 2013
 
 \*******************************************************************/
 
+#include "call_sequences.h"
+
 #include <stack>
 #include <iostream>
 #include <unordered_set>
 
 #include <util/std_expr.h>
 #include <util/simplify_expr.h>
-
-#include "call_sequences.h"
 
 /*******************************************************************\
 

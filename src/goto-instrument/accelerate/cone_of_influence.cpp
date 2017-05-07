@@ -6,11 +6,11 @@ Author: Matt Lewis
 
 \*******************************************************************/
 
+#include "cone_of_influence.h"
+
 #include <iostream>
 
 #include <ansi-c/expr2c.h>
-
-#include "cone_of_influence.h"
 
 void cone_of_influencet::cone_of_influence(
   const expr_sett &targets,

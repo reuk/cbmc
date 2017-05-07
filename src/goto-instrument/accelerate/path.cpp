@@ -6,11 +6,11 @@ Author: Matt Lewis
 
 \*******************************************************************/
 
+#include "path.h"
+
 #include <iostream>
 
 #include <goto-programs/goto_program.h>
-
-#include "path.h"
 
 void output_path(
   const patht &path,

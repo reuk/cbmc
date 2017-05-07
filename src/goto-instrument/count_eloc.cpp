@@ -8,6 +8,8 @@ Date: December 2012
 
 \*******************************************************************/
 
+#include "count_eloc.h"
+
 #include <iostream>
 #include <unordered_set>
 
@@ -15,8 +17,6 @@ Date: December 2012
 #include <util/file_util.h>
 
 #include <goto-programs/cfg.h>
-
-#include "count_eloc.h"
 
 typedef std::unordered_set<irep_idt, irep_id_hash> linest;
 typedef std::unordered_map<irep_idt, linest, irep_id_hash> filest;

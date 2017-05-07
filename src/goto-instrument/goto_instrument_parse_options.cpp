@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_instrument_parse_options.h"
+
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -57,7 +59,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <cbmc/version.h>
 
-#include "goto_instrument_parse_options.h"
 #include "document_properties.h"
 #include "uninitialized.h"
 #include "full_slicer.h"

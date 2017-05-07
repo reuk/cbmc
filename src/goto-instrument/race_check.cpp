@@ -8,6 +8,8 @@ Date: February 2006
 
 \*******************************************************************/
 
+#include "race_check.h"
+
 #include <util/std_expr.h>
 #include <util/guard.h>
 #include <util/symbol_table.h>
@@ -20,7 +22,6 @@ Date: February 2006
 #include <pointer-analysis/value_sets.h>
 #include <goto-programs/remove_skip.h>
 
-#include "race_check.h"
 #include "rw_set.h"
 
 #ifdef LOCAL_MAY

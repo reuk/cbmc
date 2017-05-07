@@ -8,11 +8,10 @@ Date: 2012
 
 \*******************************************************************/
 
+#include "goto2graph.h"
+
 #include <string>
 #include <fstream>
-
-
-#include "goto2graph.h"
 
 #ifdef HAVE_GLPK
 #include <glpk.h>

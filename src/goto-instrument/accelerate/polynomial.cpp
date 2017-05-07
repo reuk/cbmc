@@ -6,6 +6,8 @@ Author: Matt Lewis
 
 \*******************************************************************/
 
+#include "polynomial.h"
+
 #include <vector>
 #include <algorithm>
 
@@ -13,7 +15,6 @@ Author: Matt Lewis
 #include <util/replace_expr.h>
 #include <util/arith_tools.h>
 
-#include "polynomial.h"
 #include "util.h"
 
 exprt polynomialt::to_expr()

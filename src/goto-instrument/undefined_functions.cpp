@@ -8,11 +8,11 @@ Date: July 2016
 
 \*******************************************************************/
 
+#include "undefined_functions.h"
+
 #include <ostream>
 
 #include <goto-programs/goto_functions.h>
-
-#include "undefined_functions.h"
 
 /*******************************************************************\
 

@@ -6,6 +6,8 @@ Author: Matt Lewis
 
 \*******************************************************************/
 
+#include "sat_path_enumerator.h"
+
 #include <iostream>
 #include <map>
 #include <set>
@@ -36,7 +38,6 @@ Author: Matt Lewis
 #include <util/replace_expr.h>
 #include <util/arith_tools.h>
 
-#include "sat_path_enumerator.h"
 #include "polynomial_accelerator.h"
 #include "accelerator.h"
 #include "util.h"

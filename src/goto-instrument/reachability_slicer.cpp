@@ -6,15 +6,15 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <stack>
+#include "reachability_slicer.h"
 
+#include <stack>
 
 #include <goto-programs/remove_skip.h>
 #include <goto-programs/remove_unreachable.h>
 #include <goto-programs/cfg.h>
 
 #include "full_slicer_class.h"
-#include "reachability_slicer.h"
 #include "reachability_slicer_class.h"
 
 /*******************************************************************\

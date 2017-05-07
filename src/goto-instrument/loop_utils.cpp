@@ -6,12 +6,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "loop_utils.h"
+
 #include <util/std_expr.h>
 
 #include <analyses/natural_loops.h>
 #include <analyses/local_may_alias.h>
-
-#include "loop_utils.h"
 
 /*******************************************************************\
 

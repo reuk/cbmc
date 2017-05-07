@@ -7,6 +7,7 @@ Author: Daniel Kroening, kroening@kroening.com
 \*******************************************************************/
 
 #include "shared_buffers.h"
+
 #include "fence.h"
 
 #include "../rw_set.h"

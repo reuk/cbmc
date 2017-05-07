@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "k_induction.h"
+
 #include <util/std_expr.h>
 
 #include <analyses/natural_loops.h>
@@ -15,7 +17,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "unwind.h"
 #include "loop_utils.h"
-#include "k_induction.h"
 
 class k_inductiont
 {

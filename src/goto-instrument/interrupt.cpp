@@ -8,6 +8,8 @@ Date: September 2011
 
 \*******************************************************************/
 
+#include "interrupt.h"
+
 #include <util/cprover_prefix.h>
 #include <util/std_expr.h>
 #include <util/std_code.h>
@@ -16,7 +18,6 @@ Date: September 2011
 
 #include <goto-programs/goto_functions.h>
 
-#include "interrupt.h"
 #include "rw_set.h"
 
 #ifdef LOCAL_MAY

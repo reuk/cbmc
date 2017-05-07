@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "havoc_loops.h"
+
 #include <util/std_expr.h>
 
 #include <analyses/natural_loops.h>
@@ -14,7 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <goto-programs/remove_skip.h>
 
 #include "function_modifies.h"
-#include "havoc_loops.h"
 
 class havoc_loopst
 {

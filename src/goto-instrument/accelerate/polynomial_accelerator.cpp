@@ -6,6 +6,8 @@ Author: Matt Lewis
 
 \*******************************************************************/
 
+#include "polynomial_accelerator.h"
+
 #include <iostream>
 #include <map>
 #include <set>
@@ -33,7 +35,6 @@ Author: Matt Lewis
 #include <util/arith_tools.h>
 #include <util/config.h>
 
-#include "polynomial_accelerator.h"
 #include "accelerator.h"
 #include "util.h"
 #include "cone_of_influence.h"
