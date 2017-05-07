@@ -6,6 +6,8 @@ Author: Vincent Nimal
 
 \*******************************************************************/
 
+#include "fence_inserter.h"
+
 #include <util/graph.h>
 
 #include <sstream>
@@ -16,7 +18,6 @@ Author: Vincent Nimal
 #include <cstdlib>
 #endif
 
-#include "fence_inserter.h"
 #include "ilp.h"
 
 class abstract_eventt;

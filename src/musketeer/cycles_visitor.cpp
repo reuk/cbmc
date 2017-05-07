@@ -6,10 +6,11 @@ Author: Vincent Nimal
 
 \*******************************************************************/
 
+#include "cycles_visitor.h"
+
 #include <list>
 #include <map>
 
-#include "cycles_visitor.h"
 #include "fence_inserter.h"
 
 class instrumentert;

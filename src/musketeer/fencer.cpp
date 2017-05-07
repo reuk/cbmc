@@ -6,6 +6,8 @@ Author: Vincent Nimal
 
 \*******************************************************************/
 
+#include "fencer.h"
+
 #include <util/cprover_prefix.h>
 #include <util/message.h>
 
@@ -16,7 +18,6 @@ Author: Vincent Nimal
 #include "fence_inserter.h"
 #include "fence_user_def.h"
 #include "fence_assert.h"
-#include "fencer.h"
 
 /*******************************************************************\
 

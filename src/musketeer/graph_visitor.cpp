@@ -6,8 +6,9 @@ Author: Vincent Nimal
 
 \*******************************************************************/
 
-#include "fence_inserter.h"
 #include "graph_visitor.h"
+
+#include "fence_inserter.h"
 
 /* implemented: BTWN1, BTWN4 */
 #define BTWN1

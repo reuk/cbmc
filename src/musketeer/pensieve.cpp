@@ -6,6 +6,8 @@ Author: Vincent Nimal
 
 \*******************************************************************/
 
+#include "pensieve.h"
+
 #include <util/cprover_prefix.h>
 #include <util/namespace.h>
 #include <util/message.h>
@@ -13,8 +15,6 @@ Author: Vincent Nimal
 #include <goto-programs/remove_skip.h>
 #include <goto-instrument/rw_set.h>
 #include <goto-instrument/wmm/instrumenter_pensieve.h>
-
-#include "pensieve.h"
 
 /*******************************************************************\
 

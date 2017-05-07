@@ -6,6 +6,8 @@ Author:
 
 \*******************************************************************/
 
+#include "musketeer_parse_options.h"
+
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -39,7 +41,6 @@ Author:
 
 #include "propagate_const_function_pointers.h"
 #include "version.h"
-#include "musketeer_parse_options.h"
 #include "fencer.h"
 #include "fence_shared.h"
 #include "pensieve.h"

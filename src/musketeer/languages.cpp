@@ -6,11 +6,11 @@ Author:
 
 \*******************************************************************/
 
+#include "musketeer_parse_options.h"
+
 #include <langapi/mode.h>
 
 #include <ansi-c/ansi_c_language.h>
-
-#include "musketeer_parse_options.h"
 
 /*******************************************************************\
 
