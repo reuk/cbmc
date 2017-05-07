@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_check.h"
+
 #include <algorithm>
 
 #include <util/simplify_expr.h>
@@ -24,7 +26,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/options.h>
 
 #include "local_bitvector_analysis.h"
-#include "goto_check.h"
 
 class goto_checkt
 {

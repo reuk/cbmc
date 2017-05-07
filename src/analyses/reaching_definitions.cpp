@@ -9,6 +9,8 @@ Date: February 2013
 
 \*******************************************************************/
 
+#include "reaching_definitions.h"
+
 #include <util/pointer_offset_size.h>
 #include <util/prefix.h>
 
@@ -16,8 +18,6 @@ Date: February 2013
 
 #include "is_threaded.h"
 #include "dirty.h"
-
-#include "reaching_definitions.h"
 
 /*******************************************************************\
 

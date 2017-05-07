@@ -6,12 +6,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "invariant_propagation.h"
+
 #include <util/simplify_expr.h>
 #include <util/base_type.h>
 #include <util/symbol_table.h>
 #include <util/std_expr.h>
-
-#include "invariant_propagation.h"
 
 /*******************************************************************\
 

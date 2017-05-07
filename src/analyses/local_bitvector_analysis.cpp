@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "local_bitvector_analysis.h"
+
 #include <iterator>
 #include <algorithm>
 
@@ -15,8 +17,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <ansi-c/c_types.h>
 #include <langapi/language_util.h>
-
-#include "local_bitvector_analysis.h"
 
 /*******************************************************************\
 

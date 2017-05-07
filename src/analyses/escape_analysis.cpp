@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <util/simplify_expr.h>
-
 #include "escape_analysis.h"
+
+#include <util/simplify_expr.h>
 
 /*******************************************************************\
 

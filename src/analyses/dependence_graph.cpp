@@ -9,11 +9,11 @@ Date: August 2013
 
 \*******************************************************************/
 
+#include "dependence_graph.h"
+
 #include <cassert>
 
 #include "goto_rw.h"
-
-#include "dependence_graph.h"
 
 /*******************************************************************\
 

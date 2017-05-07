@@ -8,6 +8,8 @@ Date: April 2010
 
 \*******************************************************************/
 
+#include "goto_rw.h"
+
 #include <limits>
 #include <algorithm>
 
@@ -22,8 +24,6 @@ Date: April 2010
 #include <goto-programs/goto_functions.h>
 
 #include <pointer-analysis/goto_program_dereference.h>
-
-#include "goto_rw.h"
 
 /*******************************************************************\
 

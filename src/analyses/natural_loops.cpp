@@ -6,9 +6,9 @@ Author: Georg Weissenbacher, georg@weissenbacher.name
 
 \*******************************************************************/
 
-#include <iostream>
-
 #include "natural_loops.h"
+
+#include <iostream>
 
 /*******************************************************************\
 

@@ -6,10 +6,10 @@ Author: Peter Schrammel
 
 \*******************************************************************/
 
+#include "replace_symbol_ext.h"
+
 #include <util/std_types.h>
 #include <util/std_expr.h>
-
-#include "replace_symbol_ext.h"
 
 /*******************************************************************\
 

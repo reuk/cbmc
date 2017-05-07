@@ -6,10 +6,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "call_graph.h"
+
 #include <util/std_expr.h>
 #include <util/xml.h>
-
-#include "call_graph.h"
 
 /*******************************************************************\
 

@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <util/simplify_expr.h>
-
 #include "invariant_set_domain.h"
+
+#include <util/simplify_expr.h>
 
 /*******************************************************************\
 

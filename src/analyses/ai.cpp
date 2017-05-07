@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "ai.h"
+
 #include <cassert>
 #include <memory>
 
@@ -13,8 +15,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/std_code.h>
 
 #include "is_threaded.h"
-
-#include "ai.h"
 
 /*******************************************************************\
 

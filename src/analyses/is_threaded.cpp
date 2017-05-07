@@ -8,8 +8,9 @@ Date: October 2012
 
 \*******************************************************************/
 
-#include "ai.h"
 #include "is_threaded.h"
+
+#include "ai.h"
 
 class is_threaded_domaint:public ai_domain_baset
 {

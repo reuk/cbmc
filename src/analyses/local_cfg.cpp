@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "local_cfg.h"
+
 #if 0
 #include <iterator>
 #include <algorithm>
@@ -18,8 +20,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <langapi/language_util.h>
 
 #endif
-
-#include "local_cfg.h"
 
 /*******************************************************************\
 

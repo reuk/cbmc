@@ -11,6 +11,8 @@
 #include <util/type.h>
 
 class goto_programt;
+class namespacet;
+class exprt;
 
 class does_remove_constt
 {
