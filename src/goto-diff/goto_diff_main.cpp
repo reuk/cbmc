@@ -6,13 +6,13 @@ Author: Peter Schrammel
 
 \*******************************************************************/
 
+#include "goto_diff_parse_options.h"
+
 #include <util/unicode.h>
 
 #ifdef IREP_HASH_STATS
 #include <iostream>
 #endif
-
-#include "goto_diff_parse_options.h"
 
 /*******************************************************************\
 

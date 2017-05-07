@@ -6,6 +6,8 @@ Author: Peter Schrammel
 
 \*******************************************************************/
 
+#include "goto_diff_parse_options.h"
+
 #include <fstream>
 #include <cstdlib> // exit()
 #include <iostream>
@@ -38,7 +40,6 @@ Author: Peter Schrammel
 
 #include <cbmc/version.h>
 
-#include "goto_diff_parse_options.h"
 #include "goto_diff.h"
 #include "syntactic_diff.h"
 #include "unified_diff.h"

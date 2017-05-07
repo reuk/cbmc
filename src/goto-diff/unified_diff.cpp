@@ -8,11 +8,11 @@ Date: April 2016
 
 \*******************************************************************/
 
+#include "unified_diff.h"
+
 #include <algorithm>
 
 #include <goto-programs/goto_model.h>
-
-#include "unified_diff.h"
 
 /*******************************************************************\
 

@@ -6,9 +6,9 @@ Author: Peter Schrammel
 
 \*******************************************************************/
 
-#include <util/json_expr.h>
-
 #include "goto_diff.h"
+
+#include <util/json_expr.h>
 
 /*******************************************************************\
 
