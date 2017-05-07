@@ -6,13 +6,14 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "endianness_map.h"
+
 #include <ostream>
 #include <cassert>
 
 #include "std_types.h"
 #include "pointer_offset_size.h"
 #include "arith_tools.h"
-#include "endianness_map.h"
 #include "namespace.h"
 
 /*******************************************************************\

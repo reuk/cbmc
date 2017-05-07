@@ -6,9 +6,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "type_eq.h"
+
 #include <cassert>
 
-#include "type_eq.h"
 #include "type.h"
 #include "symbol.h"
 #include "namespace.h"

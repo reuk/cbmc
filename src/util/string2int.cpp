@@ -6,12 +6,12 @@ Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
 
 \*******************************************************************/
 
+#include "string2int.h"
+
 #include <cerrno>
 #include <cstdlib>
 #include <limits>
 #include <cassert>
-
-#include "string2int.h"
 
 /*******************************************************************\
 

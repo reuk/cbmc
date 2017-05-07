@@ -6,11 +6,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "guard.h"
+
 #include <ostream>
 
 #include "std_expr.h"
 #include "simplify_utils.h"
-#include "guard.h"
 
 /*******************************************************************\
 

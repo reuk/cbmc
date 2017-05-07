@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "parse_options.h"
+
 #include <iostream>
 
 #if defined (_WIN32)
@@ -16,7 +18,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #endif
 
 #include "cmdline.h"
-#include "parse_options.h"
 #include "signal_catcher.h"
 
 /*******************************************************************\

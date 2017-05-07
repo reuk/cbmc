@@ -8,6 +8,8 @@ Date: February 2004
 
 \*******************************************************************/
 
+#include "time_stopping.h"
+
 #include <sstream>
 
 #if defined(_WIN32) && !defined(__MINGW32__)
@@ -16,8 +18,6 @@ Date: February 2004
 #else
 #include <sys/time.h>
 #endif
-
-#include "time_stopping.h"
 
 #if defined(_WIN32) && !defined(__MINGW32__)
 // NOLINTNEXTLINE(readability/identifiers)

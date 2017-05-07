@@ -7,6 +7,7 @@ Author: Daniel Kroening, kroening@kroening.com
 \*******************************************************************/
 
 #include "irep_hash_container.h"
+
 #include "irep.h"
 #include "irep_hash.h"
 

@@ -8,6 +8,8 @@ Date: August 2012
 
 \*******************************************************************/
 
+#include "run.h"
+
 #include <cassert>
 
 #ifdef _WIN32
@@ -30,8 +32,6 @@ Date: August 2012
 
 #include <util/unicode.h>
 #include <util/signal_catcher.h>
-
-#include "run.h"
 
 /*******************************************************************\
 

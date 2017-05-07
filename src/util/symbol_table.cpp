@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <ostream>
-
 #include "symbol_table.h"
+
+#include <ostream>
 
 /*******************************************************************\
 

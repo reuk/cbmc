@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "ui_message.h"
+
 #include <fstream>
 #include <iostream>
 
@@ -13,7 +15,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "json.h"
 #include "xml_expr.h"
 #include "cout_message.h"
-#include "ui_message.h"
 #include "cmdline.h"
 
 /*******************************************************************\

@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "ieee_float.h"
+
 // <cstdint> is yet to come
 #include <stdint.h>
 
@@ -17,7 +19,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "arith_tools.h"
 #include "std_types.h"
 #include "std_expr.h"
-#include "ieee_float.h"
 
 /*******************************************************************\
 

@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "namespace.h"
+
 #include <algorithm>
 
 #include <cassert>
@@ -14,7 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "symbol_table.h"
 #include "prefix.h"
 #include "std_types.h"
-#include "namespace.h"
 
 /*******************************************************************\
 

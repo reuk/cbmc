@@ -6,14 +6,14 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "arith_tools.h"
+
 #include <cassert>
 
 #include "fixedbv.h"
 #include "ieee_float.h"
 #include "std_types.h"
 #include "std_expr.h"
-
-#include "arith_tools.h"
 
 /*******************************************************************\
 

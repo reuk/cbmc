@@ -6,6 +6,8 @@ Author: CM Wintersteiger
 
 \*******************************************************************/
 
+#include "tempdir.h"
+
 #ifdef _WIN32
 #include <windows.h>
 #include <io.h>
@@ -25,7 +27,6 @@ Author: CM Wintersteiger
 #include <unistd.h>
 #endif
 
-#include "tempdir.h"
 #include "file_util.h"
 
 /*******************************************************************\

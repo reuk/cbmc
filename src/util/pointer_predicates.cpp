@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "pointer_predicates.h"
+
 #include "cprover_prefix.h"
 #include "namespace.h"
 #include "std_expr.h"
@@ -14,8 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "pointer_offset_size.h"
 #include "config.h"
 #include "symbol.h"
-
-#include "pointer_predicates.h"
 
 /*******************************************************************\
 

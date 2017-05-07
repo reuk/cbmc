@@ -6,6 +6,8 @@ Author: Peter Schrammel
 
 \*******************************************************************/
 
+#include "json_expr.h"
+
 #include "namespace.h"
 #include "expr.h"
 #include "json.h"
@@ -14,8 +16,6 @@ Author: Peter Schrammel
 #include "fixedbv.h"
 #include "std_expr.h"
 #include "config.h"
-
-#include "json_expr.h"
 
 /*******************************************************************\
 

@@ -8,6 +8,8 @@ Author: Daniel Kroening
 
 \*******************************************************************/
 
+#include "xml_expr.h"
+
 #include "namespace.h"
 #include "expr.h"
 #include "xml.h"
@@ -16,8 +18,6 @@ Author: Daniel Kroening
 #include "fixedbv.h"
 #include "std_expr.h"
 #include "config.h"
-
-#include "xml_expr.h"
 
 /*******************************************************************\
 

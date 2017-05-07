@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "expr.h"
+
 #include <cassert>
 
 #include <stack>
@@ -14,7 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "mp_arith.h"
 #include "fixedbv.h"
 #include "ieee_float.h"
-#include "expr.h"
 #include "rational.h"
 #include "rational_tools.h"
 #include "arith_tools.h"

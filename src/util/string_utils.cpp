@@ -6,11 +6,11 @@ Author: Daniel Poetzl
 
 \*******************************************************************/
 
+#include "string_utils.h"
+
 #include <cassert>
 #include <cctype>
 #include <algorithm>
-
-#include "string_utils.h"
 
 /*******************************************************************\
 

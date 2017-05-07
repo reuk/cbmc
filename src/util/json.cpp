@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <ostream>
-
 #include "json.h"
+
+#include <ostream>
 
 const jsont jsont::null_json_object(jsont::kindt::J_NULL);
 

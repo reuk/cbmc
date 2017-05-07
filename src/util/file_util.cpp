@@ -8,6 +8,8 @@ Date: January 2012
 
 \*******************************************************************/
 
+#include "file_util.h"
+
 #include <cerrno>
 
 #if defined(__linux__) || \
@@ -34,8 +36,6 @@ Date: January 2012
 #else
 #include <cstring>
 #endif
-
-#include "file_util.h"
 
 /*******************************************************************\
 

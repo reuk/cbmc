@@ -6,8 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include "string2int.h"
 #include "options.h"
+
+#include "string2int.h"
 
 /*******************************************************************\
 

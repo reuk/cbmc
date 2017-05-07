@@ -6,8 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include "irep_hash.h"
 #include "merge_irep.h"
+
+#include "irep_hash.h"
 
 /*******************************************************************\
 

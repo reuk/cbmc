@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "bv_arithmetic.h"
+
 #include <cassert>
 #include <ostream>
 
@@ -13,7 +15,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "arith_tools.h"
 #include "std_types.h"
 #include "std_expr.h"
-#include "bv_arithmetic.h"
 
 /*******************************************************************\
 

@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <cstring>
-
 #include "identifier.h"
+
+#include <cstring>
 
 /*******************************************************************\
 

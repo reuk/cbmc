@@ -6,12 +6,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "ssa_expr.h"
+
 #include <sstream>
 #include <cassert>
 
 #include <util/arith_tools.h>
-
-#include "ssa_expr.h"
 
 /*******************************************************************\
 

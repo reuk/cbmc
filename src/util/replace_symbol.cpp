@@ -6,9 +6,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "replace_symbol.h"
+
 #include "std_types.h"
 #include "std_expr.h"
-#include "replace_symbol.h"
 
 /*******************************************************************\
 

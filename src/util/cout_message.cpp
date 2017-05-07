@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "cout_message.h"
+
 #include <iostream>
 
 #ifdef _WIN32
@@ -16,7 +18,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #endif
 
 #include "unicode.h"
-#include "cout_message.h"
 
 /*******************************************************************\
 

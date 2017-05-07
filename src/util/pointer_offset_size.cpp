@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "pointer_offset_size.h"
+
 #include <cassert>
 
 #include "expr.h"
@@ -18,8 +20,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include "namespace.h"
 #include "symbol.h"
 #include "ssa_expr.h"
-
-#include "pointer_offset_size.h"
 
 member_offset_iterator::member_offset_iterator(
   const struct_typet &_type,

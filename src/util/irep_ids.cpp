@@ -6,9 +6,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "irep_ids.h"
+
 #include <cassert>
 
-#include "irep_ids.h"
 #include "string_container.h"
 
 const char *irep_ids_table[]=

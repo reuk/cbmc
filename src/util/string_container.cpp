@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <cstring>
-
 #include "string_container.h"
+
+#include <cstring>
 
 string_containert string_container;
 

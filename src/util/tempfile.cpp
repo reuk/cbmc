@@ -6,6 +6,8 @@ Author: Daniel Kroening
 
 \*******************************************************************/
 
+#include "tempfile.h"
+
 #ifdef _WIN32
 #include <process.h>
 #include <sys/stat.h>
@@ -31,8 +33,6 @@ Author: Daniel Kroening
 #include <unistd.h>
 #include <sys/time.h>
 #endif
-
-#include "tempfile.h"
 
 /*******************************************************************\
 

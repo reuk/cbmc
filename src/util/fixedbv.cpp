@@ -6,9 +6,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "fixedbv.h"
+
 #include "std_types.h"
 #include "std_expr.h"
-#include "fixedbv.h"
 #include "arith_tools.h"
 
 /*******************************************************************\

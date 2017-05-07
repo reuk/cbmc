@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "mp_arith.h"
+
 #include <cstdlib>
 #include <cctype>
 #include <cassert>
@@ -14,7 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <ostream>
 #include <limits>
 
-#include "mp_arith.h"
 #include "arith_tools.h"
 
 /*******************************************************************\

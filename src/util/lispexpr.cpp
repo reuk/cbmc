@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <iostream>
-
 #include "lispexpr.h"
+
+#include <iostream>
 
 /*******************************************************************\
 

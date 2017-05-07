@@ -6,11 +6,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "irep.h"
+
 #include <cassert>
 #include <ostream>
 
 #include "string2int.h"
-#include "irep.h"
 #include "string_hash.h"
 #include "irep_hash.h"
 

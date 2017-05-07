@@ -6,9 +6,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "source_location.h"
+
 #include <ostream>
 
-#include "source_location.h"
 #include "file_util.h"
 
 /*******************************************************************\

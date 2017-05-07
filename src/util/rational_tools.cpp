@@ -6,10 +6,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "rational_tools.h"
+
 #include "rational.h"
 #include "std_types.h"
-
-#include "rational_tools.h"
 
 /*******************************************************************\
 
