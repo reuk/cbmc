@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <iostream>
-
 #include "assembler_parser.h"
+
+#include <iostream>
 
 assembler_parsert assembler_parser;
 
