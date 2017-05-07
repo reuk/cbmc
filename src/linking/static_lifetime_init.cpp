@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "static_lifetime_init.h"
+
 #include <cassert>
 #include <cstdlib>
 
@@ -20,7 +22,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <goto-programs/goto_functions.h>
 
-#include "static_lifetime_init.h"
 #include "zero_initializer.h"
 
 /*******************************************************************\

@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "zero_initializer.h"
+
 #include <sstream>
 
 #include <util/namespace.h>
@@ -17,8 +19,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <ansi-c/c_types.h>
 #include <ansi-c/expr2c.h>
-
-#include "zero_initializer.h"
 
 class zero_initializert:public messaget
 {

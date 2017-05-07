@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "linking.h"
+
 #include <cassert>
 #include <stack>
 
@@ -19,7 +21,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <langapi/language_util.h>
 
-#include "linking.h"
 #include "linking_class.h"
 
 /*******************************************************************\
