@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "path_search.h"
+
 #include <util/simplify_expr.h>
 #include <util/time_stopping.h>
 
@@ -14,8 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <path-symex/path_symex.h>
 #include <path-symex/build_goto_trace.h>
-
-#include "path_search.h"
 
 /*******************************************************************\
 

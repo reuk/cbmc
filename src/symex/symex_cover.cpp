@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "symex_parse_options.h"
+
 #include <iostream>
 
 #include <util/json_expr.h>
@@ -13,8 +15,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <goto-programs/xml_goto_trace.h>
 #include <goto-programs/json_goto_trace.h>
-
-#include "symex_parse_options.h"
 
 /*******************************************************************\
 

@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "symex_parse_options.h"
+
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
@@ -49,7 +51,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <path-symex/locs.h>
 
 #include "path_search.h"
-#include "symex_parse_options.h"
 
 /*******************************************************************\
 
