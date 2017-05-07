@@ -6,13 +6,13 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "var_map.h"
+
 #include <ostream>
 
 #include <util/symbol.h>
 #include <util/std_expr.h>
 #include <util/prefix.h>
-
-#include "var_map.h"
 
 /*******************************************************************\
 

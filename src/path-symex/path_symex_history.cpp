@@ -6,13 +6,13 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "path_symex_history.h"
+
 #include <algorithm>
 
 #include <util/decision_procedure.h>
 
 #include <langapi/language_util.h>
-
-#include "path_symex_history.h"
 
 /*******************************************************************\
 

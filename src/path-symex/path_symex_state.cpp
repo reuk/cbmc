@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "path_symex_state.h"
+
 #include <util/simplify_expr.h>
 #include <util/arith_tools.h>
 #include <util/decision_procedure.h>
@@ -15,8 +17,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <pointer-analysis/dereference.h>
 
 #include <goto-symex/adjust_float_expressions.h>
-
-#include "path_symex_state.h"
 
 #ifdef DEBUG
 #include <iostream>
