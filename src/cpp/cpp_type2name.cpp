@@ -6,12 +6,12 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 \*******************************************************************/
 
+#include "cpp_type2name.h"
+
 #include <string>
 
 #include <util/type.h>
 #include <util/std_types.h>
-
-#include "cpp_type2name.h"
 
 /*******************************************************************\
 

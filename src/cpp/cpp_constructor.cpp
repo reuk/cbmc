@@ -6,12 +6,13 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 \*******************************************************************/
 
+#include "cpp_typecheck.h"
+
 #include <util/arith_tools.h>
 #include <util/std_types.h>
 
 #include <ansi-c/c_types.h>
 
-#include "cpp_typecheck.h"
 #include "cpp_util.h"
 
 /*******************************************************************\

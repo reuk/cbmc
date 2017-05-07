@@ -6,10 +6,10 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 \*******************************************************************/
 
+#include "cpp_name.h"
+
 #include <cassert>
 #include <sstream>
-
-#include "cpp_name.h"
 
 /*******************************************************************\
 

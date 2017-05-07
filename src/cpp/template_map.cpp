@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 \*******************************************************************/
 
-#include <ostream>
-
 #include "template_map.h"
+
+#include <ostream>
 
 /*******************************************************************\
 

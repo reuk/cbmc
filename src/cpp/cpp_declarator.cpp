@@ -6,10 +6,10 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 \*******************************************************************/
 
+#include "cpp_declarator.h"
+
 #include <ostream>
 #include <cassert>
-
-#include "cpp_declarator.h"
 
 /*******************************************************************\
 

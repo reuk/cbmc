@@ -6,6 +6,8 @@ Author:
 
 \*******************************************************************/
 
+#include "cpp_typecheck.h"
+
 #include <cstdlib>
 
 #include <util/config.h>
@@ -16,8 +18,6 @@ Author:
 
 #include <ansi-c/c_qualifiers.h>
 #include <ansi-c/c_types.h>
-
-#include "cpp_typecheck.h"
 
 /*******************************************************************\
 

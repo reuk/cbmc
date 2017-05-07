@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 \*******************************************************************/
 
-#include <util/config.h>
-
 #include "cpp_parser.h"
+
+#include <util/config.h>
 
 cpp_parsert cpp_parser;
 

@@ -6,13 +6,14 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 \*******************************************************************/
 
+#include "cpp_typecheck_fargs.h"
+
 #include <cassert>
 
 #include <util/std_types.h>
 
 #include <ansi-c/c_qualifiers.h>
 
-#include "cpp_typecheck_fargs.h"
 #include "cpp_typecheck.h"
 
 /*******************************************************************\

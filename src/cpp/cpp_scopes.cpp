@@ -6,10 +6,9 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 \*******************************************************************/
 
-#include <ostream>
-
-
 #include "cpp_scopes.h"
+
+#include <ostream>
 
 /*******************************************************************\
 

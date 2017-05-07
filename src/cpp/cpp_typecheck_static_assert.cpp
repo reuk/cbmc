@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 \*******************************************************************/
 
-#include <util/std_types.h>
-
 #include "cpp_typecheck.h"
+
+#include <util/std_types.h>
 
 /*******************************************************************\
 

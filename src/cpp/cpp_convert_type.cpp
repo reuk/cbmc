@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 \*******************************************************************/
 
+#include "cpp_convert_type.h"
+
 #include <cassert>
 
 #include <util/config.h>
@@ -14,7 +16,6 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 #include <ansi-c/c_types.h>
 
-#include "cpp_convert_type.h"
 #include "cpp_declaration.h"
 #include "cpp_name.h"
 

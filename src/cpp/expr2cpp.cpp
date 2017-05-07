@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 \*******************************************************************/
 
+#include "expr2cpp.h"
+
 #include <cassert>
 
 #include <util/std_types.h>
@@ -18,8 +20,6 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 #include <ansi-c/c_misc.h>
 #include <ansi-c/c_qualifiers.h>
 #include <ansi-c/expr2c_class.h>
-
-#include "expr2cpp.h"
 
 class expr2cppt:public expr2ct
 {

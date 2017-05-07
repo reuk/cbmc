@@ -6,9 +6,10 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 \*******************************************************************/
 
+#include "cpp_id.h"
+
 #include <ostream>
 
-#include "cpp_id.h"
 #include "cpp_scope.h"
 
 /*******************************************************************\

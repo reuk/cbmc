@@ -6,10 +6,10 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 \*******************************************************************/
 
+#include "cpp_typecheck.h"
+
 #include <util/std_types.h>
 #include <util/std_expr.h>
-
-#include "cpp_typecheck.h"
 
 /*******************************************************************\
 

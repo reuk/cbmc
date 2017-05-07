@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 
 \*******************************************************************/
 
+#include "cpp_parser.h"
+
 #include <cassert>
 #include <map>
 
@@ -17,7 +19,6 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 #include <ansi-c/ansi_c_y.tab.h>
 
 #include "cpp_token_buffer.h"
-#include "cpp_parser.h"
 #include "cpp_member_spec.h"
 #include "cpp_enum_type.h"
 
