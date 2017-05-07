@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_symex.h"
+
 #include <util/pointer_offset_size.h>
 #include <util/arith_tools.h>
 #include <util/base_type.h>
@@ -17,7 +19,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <ansi-c/c_types.h>
 
-#include "goto_symex.h"
 #include "symex_dereference_state.h"
 
 /*******************************************************************\

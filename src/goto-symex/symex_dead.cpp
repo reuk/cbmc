@@ -6,14 +6,14 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_symex.h"
+
 #include <cassert>
 
 #include <util/rename.h>
 #include <util/std_expr.h>
 
 #include <pointer-analysis/add_failed_symbols.h>
-
-#include "goto_symex.h"
 
 /*******************************************************************\
 

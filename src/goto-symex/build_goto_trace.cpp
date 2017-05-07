@@ -8,6 +8,8 @@ Author: Daniel Kroening
 
 \*******************************************************************/
 
+#include "build_goto_trace.h"
+
 #include <cassert>
 
 #include <util/threeval.h>
@@ -18,8 +20,6 @@ Author: Daniel Kroening
 #include <solvers/prop/prop.h>
 
 #include "partial_order_concurrency.h"
-
-#include "build_goto_trace.h"
 
 /*******************************************************************\
 

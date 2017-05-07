@@ -6,11 +6,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "postcondition.h"
+
 #include <util/find_symbols.h>
 #include <util/std_expr.h>
 
 #include "goto_symex_state.h"
-#include "postcondition.h"
 
 /*******************************************************************\
 

@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "rewrite_union.h"
+
 #include <util/arith_tools.h>
 #include <util/std_expr.h>
 #include <util/std_code.h>
@@ -14,8 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <goto-programs/goto_model.h>
 
 #include <ansi-c/c_types.h>
-
-#include "rewrite_union.h"
 
 /*******************************************************************\
 

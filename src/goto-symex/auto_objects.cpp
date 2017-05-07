@@ -6,12 +6,12 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_symex.h"
+
 #include <util/prefix.h>
 #include <util/cprover_prefix.h>
 #include <util/symbol_table.h>
 #include <util/std_expr.h>
-
-#include "goto_symex.h"
 
 /*******************************************************************\
 

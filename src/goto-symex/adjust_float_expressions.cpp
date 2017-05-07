@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "adjust_float_expressions.h"
+
 #include <util/cprover_prefix.h>
 #include <util/expr_util.h>
 #include <util/std_expr.h>
@@ -14,8 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/arith_tools.h>
 
 #include <goto-programs/goto_model.h>
-
-#include "adjust_float_expressions.h"
 
 /*******************************************************************\
 

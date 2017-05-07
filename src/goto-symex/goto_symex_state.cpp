@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_symex_state.h"
+
 #include <cstdlib>
 #include <cassert>
 #include <iostream>
@@ -14,8 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/prefix.h>
 
 #include <analyses/dirty.h>
-
-#include "goto_symex_state.h"
 
 /*******************************************************************\
 

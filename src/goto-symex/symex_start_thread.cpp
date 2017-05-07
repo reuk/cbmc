@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <linking/zero_initializer.h>
-
 #include "goto_symex.h"
+
+#include <linking/zero_initializer.h>
 
 /*******************************************************************\
 

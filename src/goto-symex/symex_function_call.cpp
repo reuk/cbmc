@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_symex.h"
+
 #include <iostream>
 #include <sstream>
 #include <cassert>
@@ -20,8 +22,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <ansi-c/c_types.h>
 
 #include <analyses/dirty.h>
-
-#include "goto_symex.h"
 
 /*******************************************************************\
 

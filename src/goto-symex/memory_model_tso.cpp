@@ -6,10 +6,10 @@ Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
 
 \*******************************************************************/
 
+#include "memory_model_tso.h"
+
 #include <util/std_expr.h>
 #include <util/simplify_expr.h>
-
-#include "memory_model_tso.h"
 
 /*******************************************************************\
 

@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_symex.h"
+
 #include <cassert>
 
 #include <util/arith_tools.h>
@@ -23,7 +25,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <linking/zero_initializer.h>
 
-#include "goto_symex.h"
 #include "goto_symex_state.h"
 
 /*******************************************************************\

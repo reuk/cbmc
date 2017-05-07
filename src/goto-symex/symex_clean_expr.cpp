@@ -6,14 +6,14 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_symex.h"
+
 #include <util/arith_tools.h>
 #include <util/std_expr.h>
 #include <util/cprover_prefix.h>
 #include <util/base_type.h>
 
 #include <ansi-c/c_types.h>
-
-#include "goto_symex.h"
 
 /*******************************************************************\
 

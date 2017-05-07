@@ -6,9 +6,10 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "slice.h"
+
 #include <util/std_expr.h>
 
-#include "slice.h"
 #include "symex_slice_class.h"
 
 /*******************************************************************\

@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "slice_by_trace.h"
+
 #include <cstring>
 #include <set>
 #include <fstream>
@@ -18,8 +20,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/guard.h>
 
 #include <langapi/language_util.h>
-
-#include "slice_by_trace.h"
 
 /*******************************************************************\
 

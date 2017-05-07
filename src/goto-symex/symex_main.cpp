@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "goto_symex.h"
+
 #include <cassert>
 
 #include <util/std_expr.h>
@@ -14,8 +16,6 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/replace_symbol.h>
 
 #include <analyses/dirty.h>
-
-#include "goto_symex.h"
 
 /*******************************************************************\
 

@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <util/symbol_table.h>
-
 #include "symex_dereference_state.h"
+
+#include <util/symbol_table.h>
 
 /*******************************************************************\
 

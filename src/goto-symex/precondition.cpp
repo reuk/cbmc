@@ -6,12 +6,13 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "precondition.h"
+
 #include <util/find_symbols.h>
 
 #include <pointer-analysis/goto_program_dereference.h>
 
 #include "goto_symex_state.h"
-#include "precondition.h"
 
 /*******************************************************************\
 

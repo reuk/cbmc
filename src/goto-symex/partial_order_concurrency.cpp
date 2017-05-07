@@ -6,12 +6,12 @@ Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
 
 \*******************************************************************/
 
+#include "partial_order_concurrency.h"
+
 #include <limits>
 
 #include <util/arith_tools.h>
 #include <util/simplify_expr.h>
-
-#include "partial_order_concurrency.h"
 
 /*******************************************************************\
 

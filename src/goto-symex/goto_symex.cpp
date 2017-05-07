@@ -6,9 +6,9 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
-#include <util/simplify_expr.h>
-
 #include "goto_symex.h"
+
+#include <util/simplify_expr.h>
 
 unsigned goto_symext::nondet_count=0;
 unsigned goto_symext::dynamic_counter=0;

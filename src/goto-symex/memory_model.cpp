@@ -6,9 +6,9 @@ Author: Michael Tautschnig, michael.tautschnig@cs.ox.ac.uk
 
 \*******************************************************************/
 
-#include <util/std_expr.h>
-
 #include "memory_model.h"
+
+#include <util/std_expr.h>
 
 /*******************************************************************\
 
