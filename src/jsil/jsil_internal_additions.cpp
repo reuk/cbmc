@@ -6,6 +6,8 @@ Author: Michael Tautschnig, tautschn@amazon.com
 
 \*******************************************************************/
 
+#include "jsil_internal_additions.h"
+
 #include <util/std_types.h>
 #include <util/cprover_prefix.h>
 #include <util/symbol_table.h>
@@ -13,8 +15,6 @@ Author: Michael Tautschnig, tautschn@amazon.com
 #include <ansi-c/c_types.h>
 
 #include "jsil_types.h"
-
-#include "jsil_internal_additions.h"
 
 /*******************************************************************\
 

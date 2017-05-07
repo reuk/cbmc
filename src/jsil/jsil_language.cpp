@@ -6,6 +6,8 @@ Author: Michael Tautschnig, tautschn@amazon.com
 
 \*******************************************************************/
 
+#include "jsil_language.h"
+
 #include <util/symbol_table.h>
 #include <util/get_base_name.h>
 
@@ -15,8 +17,6 @@ Author: Michael Tautschnig, tautschn@amazon.com
 #include "jsil_internal_additions.h"
 #include "jsil_parser.h"
 #include "jsil_typecheck.h"
-
-#include "jsil_language.h"
 
 /*******************************************************************\
 

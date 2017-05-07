@@ -6,11 +6,11 @@ Author: Michael Tautschnig, tautschn@amazon.com
 
 \*******************************************************************/
 
+#include "jsil_parse_tree.h"
+
 #include <util/symbol.h>
 
 #include "jsil_types.h"
-
-#include "jsil_parse_tree.h"
 
 /*******************************************************************\
 

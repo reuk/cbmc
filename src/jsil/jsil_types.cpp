@@ -6,9 +6,9 @@ Author: Daiva Naudziuniene, daivan@amazon.com
 
 \*******************************************************************/
 
-#include <algorithm>
-
 #include "jsil_types.h"
+
+#include <algorithm>
 
 /*******************************************************************\
 

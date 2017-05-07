@@ -6,9 +6,9 @@ Author: Michael Tautschnig, tautschn@amazon.com
 
 \*******************************************************************/
 
-#include <ansi-c/expr2c_class.h>
-
 #include "expr2jsil.h"
+
+#include <ansi-c/expr2c_class.h>
 
 class expr2jsilt:public expr2ct
 {

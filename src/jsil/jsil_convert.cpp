@@ -6,11 +6,12 @@ Author: Michael Tautschnig, tautschn@amazon.com
 
 \*******************************************************************/
 
+#include "jsil_convert.h"
+
 #include <util/message.h>
 #include <util/symbol_table.h>
 
 #include "jsil_parse_tree.h"
-#include "jsil_convert.h"
 
 class jsil_convertt:public messaget
 {
