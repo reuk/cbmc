@@ -58,6 +58,16 @@ list(REMOVE_ITEM sources
     ${lingeling_source}
     ${booleforce_source}
     ${minibdd_source}
+
+    # Some files just don't build
+    ${CMAKE_CURRENT_SOURCE_DIR}/cvc/cvc_prop.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/dplib/dplib_prop.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/dplib/dplib_conv.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/dplib/dplib_dec.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/floatbv/float_approximation.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/sat/satcheck_limmat.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/smt1/smt1_prop.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/smt2/smt2_prop.cpp
 )
 
 add_library(solvers ${sources})

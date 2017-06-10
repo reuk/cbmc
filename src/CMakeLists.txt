@@ -6,8 +6,6 @@ cmake_minimum_required(VERSION 3.2)
 #   -[ ] Automatically generate .class files from .java in java regression tests.
 #   -[ ] Install profiles.
 #   -[ ] Specify one of many different solver libraries.
-#   -[x] Code signing.
-#   -[x] Cprover jar build.
 
 project(CBMC)
 
@@ -15,8 +13,6 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
-
-set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -Wno-deprecated-register)
 
 find_package(BISON)
 find_package(FLEX)

@@ -8,6 +8,12 @@ add_library(minisat2-condensed
     minisat/core/Solver.cc
 )
 
+target_include_directories(minisat2-condensed
+    PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>
+)
+
 install(TARGETS minisat2-condensed EXPORT minisat-condensed-targets
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
