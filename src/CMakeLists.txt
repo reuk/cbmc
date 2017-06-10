@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.2)
 
 #   TODO
-#   -[ ] Documentation target.
 #   -[ ] Testing target.
 #   -[ ] Automatically generate .class files from .java in java regression tests.
 #   -[ ] Install profiles.
@@ -14,12 +13,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED true)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 
+set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=-*,modernize-use-nullptr;-fix")
+
 find_package(BISON)
 find_package(FLEX)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+include(CPack)
 
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
