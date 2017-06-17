@@ -45,6 +45,7 @@ set(minibdd_source
 )
 
 file(GLOB_RECURSE sources "*.cpp")
+file(GLOB_RECURSE headers "*.h")
 list(REMOVE_ITEM sources
     ${chaff_source}
     ${minisat_source}
@@ -70,7 +71,7 @@ list(REMOVE_ITEM sources
     ${CMAKE_CURRENT_SOURCE_DIR}/smt2/smt2_prop.cpp
 )
 
-add_library(solvers ${sources})
+add_library(solvers ${sources} ${headers})
 
 if(TARGET minisat2-extern)
     target_sources(solvers PRIVATE ${minisat2_source})

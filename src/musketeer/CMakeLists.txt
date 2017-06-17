@@ -1,9 +1,10 @@
 # Library
 file(GLOB_RECURSE sources "*.cpp")
+file(GLOB_RECURSE headers "*.h")
 list(REMOVE_ITEM sources
     ${CMAKE_CURRENT_SOURCE_DIR}/musketeer_main.cpp
 )
-add_library(musketeer-lib ${sources})
+add_library(musketeer-lib ${sources} ${headers})
 
 generic_includes(musketeer-lib)
 

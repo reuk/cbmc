@@ -1,9 +1,10 @@
 # Library
 file(GLOB_RECURSE sources "*.cpp")
+file(GLOB_RECURSE headers "*.h")
 list(REMOVE_ITEM sources
     ${CMAKE_CURRENT_SOURCE_DIR}/goto_diff_main.cpp
 )
-add_library(goto-diff-lib ${sources})
+add_library(goto-diff-lib ${sources} ${headers})
 
 generic_includes(goto-diff-lib)
 

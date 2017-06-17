@@ -1,8 +1,9 @@
 file(GLOB_RECURSE sources "*.cpp")
+file(GLOB_RECURSE headers "*.h")
 list(REMOVE_ITEM sources
     ${CMAKE_CURRENT_SOURCE_DIR}/symex_main.cpp
 )
-add_library(symex-lib ${sources})
+add_library(symex-lib ${sources} ${headers})
 
 target_link_libraries(symex-lib
     ansi-c

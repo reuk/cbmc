@@ -1,5 +1,6 @@
 file(GLOB_RECURSE sources "*.cpp")
-add_library(pointer-analysis ${sources})
+file(GLOB_RECURSE headers "*.h")
+add_library(pointer-analysis ${sources} ${headers})
 
 generic_includes(pointer-analysis)
 

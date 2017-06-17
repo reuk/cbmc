@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED true)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 
-set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=-*,modernize-use-nullptr;-fix")
+set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=-*,modernize-use-nullptr")
 
 find_package(BISON)
 find_package(FLEX)

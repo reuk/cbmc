@@ -1,5 +1,6 @@
 file(GLOB_RECURSE sources "*.cpp")
-add_library(langapi ${sources})
+file(GLOB_RECURSE headers "*.h")
+add_library(langapi ${sources} ${headers})
 
 generic_includes(langapi)
 
