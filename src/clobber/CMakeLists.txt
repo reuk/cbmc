@@ -1,9 +1,10 @@
 # Library
 file(GLOB_RECURSE sources "*.cpp")
+file(GLOB_RECURSE headers "*.h")
 list(REMOVE_ITEM sources
     ${CMAKE_CURRENT_SOURCE_DIR}/clobber_main.cpp
 )
-add_library(clobber-lib ${sources})
+add_library(clobber-lib ${sources} ${headers})
 
 generic_includes(clobber-lib)
 

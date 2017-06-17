@@ -1,5 +1,6 @@
 # Library
 file(GLOB_RECURSE sources "*.cpp")
+file(GLOB_RECURSE headers "*.h")
 list(REMOVE_ITEM sources
     ${CMAKE_CURRENT_SOURCE_DIR}/goto_cc_main.cpp
 
@@ -12,7 +13,7 @@ list(REMOVE_ITEM sources
     ${CMAKE_CURRENT_SOURCE_DIR}/xml_binaries/xml_irep_hashing.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/xml_binaries/xml_symbol_hashing.cpp
 )
-add_library(goto-cc-lib ${sources})
+add_library(goto-cc-lib ${sources} ${headers})
 
 generic_includes(goto-cc-lib)
 

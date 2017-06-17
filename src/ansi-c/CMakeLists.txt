@@ -39,8 +39,10 @@ make_inc(gcc_builtin_headers_tm)
 make_inc(gcc_builtin_headers_ubsan)
 
 file(GLOB_RECURSE sources "*.cpp")
+file(GLOB_RECURSE headers "*.h")
 add_library(ansi-c
     ${sources}
+    ${headers}
     ${BISON_parser_OUTPUTS}
     ${FLEX_scanner_OUTPUTS}
     ${CMAKE_CURRENT_BINARY_DIR}/arm_builtin_headers.inc
