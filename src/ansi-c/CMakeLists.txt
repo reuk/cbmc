@@ -67,4 +67,4 @@ add_library(ansi-c
 
 generic_includes(ansi-c)
 
-target_link_libraries(ansi-c util linking)
+target_link_libraries(ansi-c util linking goto-programs)
