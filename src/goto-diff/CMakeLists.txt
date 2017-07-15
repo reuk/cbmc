@@ -13,9 +13,9 @@ target_link_libraries(goto-diff-lib
     cpp
     linking
     big-int
+    pointer-analysis
     goto-programs
     assembler
-    pointer-analysis
     analyses
     langapi
     xml
@@ -30,4 +30,3 @@ add_if_library(goto-diff-lib php)
 # Executable
 add_executable(goto-diff goto_diff_main.cpp)
 target_link_libraries(goto-diff goto-diff-lib)
-
