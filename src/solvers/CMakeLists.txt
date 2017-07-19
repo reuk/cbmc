@@ -69,6 +69,7 @@ list(REMOVE_ITEM sources
     ${CMAKE_CURRENT_SOURCE_DIR}/sat/satcheck_limmat.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/smt1/smt1_prop.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/smt2/smt2_prop.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/refinement/string_refinement.cpp
 )
 
 add_library(solvers ${sources} ${headers})
