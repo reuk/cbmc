@@ -2,6 +2,7 @@ generic_bison(ansi_c)
 generic_flex(ansi_c)
 
 add_executable(converter library/converter.cpp)
+cotire(converter)
 
 add_custom_command(OUTPUT converter_input.txt
     COMMAND cat ${CMAKE_CURRENT_SOURCE_DIR}/library/*.c > converter_input.txt
@@ -13,6 +14,7 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/cprover_library.inc
 )
 
 add_executable(file_converter file_converter.cpp)
+cotire(file_converter)
 
 function(make_inc name)
     add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${name}.inc

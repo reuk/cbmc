@@ -17,6 +17,7 @@ target_include_directories(unit
   ${CMAKE_CURRENT_SOURCE_DIR}
   )
 target_link_libraries(unit ansi-c)
+cotire(unit)
 add_test(unit unit)
 
 add_executable(miniBDD miniBDD.cpp)
@@ -27,6 +28,7 @@ target_include_directories(miniBDD
   ${CMAKE_CURRENT_SOURCE_DIR}
   )
 target_link_libraries(miniBDD solvers ansi-c)
+cotire(miniBDD)
 add_test(miniBDD miniBDD)
 
 add_executable(string_utils string_utils.cpp)
@@ -37,9 +39,11 @@ target_include_directories(string_utils
   ${CMAKE_CURRENT_SOURCE_DIR}
   )
 target_link_libraries(string_utils solvers ansi-c)
+cotire(string_utils)
 add_test(string_utils string_utils)
 
 add_executable(sharing_node sharing_node.cpp)
+cotire(sharing_node)
 target_include_directories(sharing_node
   PUBLIC
   ${CBMC_BINARY_DIR}

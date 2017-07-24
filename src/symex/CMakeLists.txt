@@ -31,5 +31,5 @@ add_if_library(symex-lib specc)
 add_if_library(symex-lib php)
 
 add_executable(symex symex_main.cpp)
-
 target_link_libraries(symex symex-lib)
+cotire(symex)

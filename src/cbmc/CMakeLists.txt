@@ -35,5 +35,6 @@ add_if_library(cbmc-lib php)
 # Executable
 add_executable(cbmc cbmc_main.cpp)
 target_link_libraries(cbmc cbmc-lib)
+cotire(cbmc)
 
 install(TARGETS cbmc DESTINATION bin)

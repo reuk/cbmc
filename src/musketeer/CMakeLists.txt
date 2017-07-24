@@ -28,3 +28,4 @@ add_if_library(musketeer-lib glpk)
 # Executable
 add_executable(musketeer musketeer_main.cpp)
 target_link_libraries(musketeer musketeer-lib)
+cotire(musketeer)

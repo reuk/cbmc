@@ -33,3 +33,4 @@ add_if_library(goto-analyzer-lib php)
 # Executable
 add_executable(goto-analyzer goto_analyzer_main.cpp)
 target_link_libraries(goto-analyzer goto-analyzer-lib)
+cotire(goto-analyzer)
