@@ -5,6 +5,7 @@ list(REMOVE_ITEM sources
     ${CMAKE_CURRENT_SOURCE_DIR}/cbmc_main.cpp
 )
 add_library(cbmc-lib ${sources} ${headers})
+cotire(cbmc-lib)
 
 generic_includes(cbmc-lib)
 
@@ -34,7 +35,7 @@ add_if_library(cbmc-lib php)
 
 # Executable
 add_executable(cbmc cbmc_main.cpp)
-target_link_libraries(cbmc cbmc-lib)
 cotire(cbmc)
+target_link_libraries(cbmc cbmc-lib)
 
 install(TARGETS cbmc DESTINATION bin)

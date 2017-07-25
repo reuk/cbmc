@@ -14,6 +14,7 @@ list(REMOVE_ITEM sources
     ${CMAKE_CURRENT_SOURCE_DIR}/xml_binaries/xml_symbol_hashing.cpp
 )
 add_library(goto-cc-lib ${sources} ${headers})
+cotire(goto-cc-lib)
 
 generic_includes(goto-cc-lib)
 
@@ -34,5 +35,5 @@ add_if_library(goto-cc-lib jsil)
 
 # Executable
 add_executable(goto-cc goto_cc_main.cpp)
-target_link_libraries(goto-cc goto-cc-lib)
 cotire(goto-cc)
+target_link_libraries(goto-cc goto-cc-lib)

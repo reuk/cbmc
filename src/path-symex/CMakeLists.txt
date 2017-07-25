@@ -1,6 +1,7 @@
 file(GLOB_RECURSE sources "*.cpp")
 file(GLOB_RECURSE headers "*.h")
 add_library(path-symex ${sources} ${headers})
+cotire(path-symex)
 
 generic_includes(path-symex)
 

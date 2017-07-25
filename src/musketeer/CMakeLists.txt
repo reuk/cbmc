@@ -5,6 +5,7 @@ list(REMOVE_ITEM sources
     ${CMAKE_CURRENT_SOURCE_DIR}/musketeer_main.cpp
 )
 add_library(musketeer-lib ${sources} ${headers})
+cotire(musketeer-lib)
 
 generic_includes(musketeer-lib)
 
@@ -27,5 +28,5 @@ add_if_library(musketeer-lib glpk)
 
 # Executable
 add_executable(musketeer musketeer_main.cpp)
-target_link_libraries(musketeer musketeer-lib)
 cotire(musketeer)
+target_link_libraries(musketeer musketeer-lib)

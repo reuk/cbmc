@@ -1,6 +1,7 @@
 file(GLOB_RECURSE sources "*.cpp")
 file(GLOB_RECURSE headers "*.h")
 add_library(analyses ${sources} ${headers})
+cotire(analyses)
 
 generic_includes(analyses)
 

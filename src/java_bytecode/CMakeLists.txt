@@ -4,6 +4,7 @@ list(REMOVE_ITEM sources
     ${CMAKE_CURRENT_SOURCE_DIR}/java_bytecode_vtable.cpp
 )
 add_library(java_bytecode ${sources} ${headers})
+cotire(java_bytecode)
 
 generic_includes(java_bytecode)
 

@@ -5,6 +5,7 @@ list(REMOVE_ITEM sources
     ${CMAKE_CURRENT_SOURCE_DIR}/clobber_main.cpp
 )
 add_library(clobber-lib ${sources} ${headers})
+cotire(clobber-lib)
 
 generic_includes(clobber-lib)
 
@@ -32,5 +33,5 @@ add_if_library(clobber-lib php)
 
 # Executable
 add_executable(clobber clobber_main.cpp)
-target_link_libraries(clobber clobber-lib)
 cotire(clobber)
+target_link_libraries(clobber clobber-lib)

@@ -7,6 +7,7 @@ add_library(assembler
     ${headers}
     ${FLEX_scanner_OUTPUTS}
 )
+cotire(assembler)
 
 generic_includes(assembler)
 

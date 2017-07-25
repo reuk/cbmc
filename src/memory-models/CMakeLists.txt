@@ -9,6 +9,7 @@ add_library(mmcc
     ${BISON_parser_OUTPUTS}
     ${FLEX_scanner_OUTPUTS}
 )
+cotire(mmcc)
 
 generic_includes(mmcc)
 

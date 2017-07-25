@@ -8,6 +8,7 @@ list(REMOVE_ITEM sources
     ${CMAKE_CURRENT_SOURCE_DIR}/xml_binaries/xml_goto_function.cpp
 )
 add_library(goto-analyzer-lib ${sources} ${headers})
+cotire(goto-analyzer-lib)
 
 generic_includes(goto-analyzer-lib)
 
@@ -32,5 +33,5 @@ add_if_library(goto-analyzer-lib php)
 
 # Executable
 add_executable(goto-analyzer goto_analyzer_main.cpp)
-target_link_libraries(goto-analyzer goto-analyzer-lib)
 cotire(goto-analyzer)
+target_link_libraries(goto-analyzer goto-analyzer-lib)

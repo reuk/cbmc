@@ -8,6 +8,7 @@ list(REMOVE_ITEM sources
     ${CMAKE_CURRENT_SOURCE_DIR}/accelerate/linearize.cpp
 )
 add_library(goto-instrument-lib ${sources} ${headers})
+cotire(goto-instrument-lib)
 
 generic_includes(goto-instrument-lib)
 
@@ -33,5 +34,5 @@ add_if_library(goto-instrument-lib glpk)
 
 # Executable
 add_executable(goto-instrument goto_instrument_main.cpp)
-target_link_libraries(goto-instrument goto-instrument-lib)
 cotire(goto-instrument)
+target_link_libraries(goto-instrument goto-instrument-lib)

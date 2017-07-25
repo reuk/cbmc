@@ -3,12 +3,13 @@ generic_flex(xml)
 
 file(GLOB_RECURSE sources "*.cpp")
 file(GLOB_RECURSE headers "*.h")
-add_library(xml 
+add_library(xml
     ${sources}
     ${headers}
     ${BISON_parser_OUTPUTS}
     ${FLEX_scanner_OUTPUTS}
 )
+cotire(xml)
 
 generic_includes(xml)
 

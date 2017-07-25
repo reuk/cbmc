@@ -73,6 +73,7 @@ list(REMOVE_ITEM sources
 )
 
 add_library(solvers ${sources} ${headers})
+cotire(solvers)
 
 if(TARGET minisat2-extern)
     target_sources(solvers PRIVATE ${minisat2_source})

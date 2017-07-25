@@ -9,6 +9,7 @@ add_library(jsil
     ${BISON_parser_OUTPUTS}
     ${FLEX_scanner_OUTPUTS}
 )
+cotire(jsil)
 
 generic_includes(jsil)
 
