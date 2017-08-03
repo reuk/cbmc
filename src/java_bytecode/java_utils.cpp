@@ -6,6 +6,8 @@ Author: Daniel Kroening, kroening@kroening.com
 
 \*******************************************************************/
 
+#include "java_utils.h"
+
 #include <util/invariant.h>
 #include <util/message.h>
 #include <util/prefix.h>
