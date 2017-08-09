@@ -20,11 +20,13 @@ Author: Romain Brenguier, romain.brenguier@diffblue.com
 
 #include "refined_string_type.h"
 
+#include "java_bytecode/java_types.h"
+
 refined_string_typet::refined_string_typet(
   const typet &index_type, const typet &char_type)
 {
-  infinity_exprt infinite_index(index_type);
-  array_typet char_array(char_type, infinite_index);
+  auto const size=from_integer(50, java_int_type());
+  array_typet char_array(char_type, size);
   components().emplace_back("length", index_type);
   components().emplace_back("content", char_array);
   set_tag(CPROVER_PREFIX"refined_string_type");
