@@ -414,6 +414,7 @@ bool java_bytecode_languaget::typecheck(
          symbol_table,
          get_message_handler(),
          max_user_array_length,
+         50,
          lazy_methods,
          lazy_methods_mode,
          string_preprocess))

@@ -183,7 +183,9 @@ typet string_length_type()
 /// \param class_name: a name for the class such as "java.lang.String"
 /// \param symbol_table: symbol table to which the class will be added
 void java_string_library_preprocesst::add_string_type(
-  const irep_idt &class_name, symbol_tablet &symbol_table)
+  const irep_idt &class_name,
+  symbol_tablet &symbol_table,
+  size_t string_max_length)
 {
   class_typet string_type;
   string_type.set_tag(class_name);
@@ -200,7 +202,8 @@ void java_string_library_preprocesst::add_string_type(
   // Saves some casting in the string refinement algorithm but may
   // be unnecessary.
   string_type.components()[2].type()=java_reference_type(
-    array_typet(java_char_type(), infinity_exprt(string_length_type())));
+    array_typet(
+      java_char_type(), from_integer(string_max_length, string_length_type())));
   string_type.add_base(symbol_typet("java::java.lang.Object"));
   if(class_name!="java.lang.CharSequence")
   {

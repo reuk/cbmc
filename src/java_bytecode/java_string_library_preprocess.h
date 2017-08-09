@@ -49,7 +49,10 @@ public:
   {
     return character_preprocess.replace_character_call(call);
   }
-  void add_string_type(const irep_idt &class_name, symbol_tablet &symbol_table);
+  void add_string_type(
+    const irep_idt &class_name,
+    symbol_tablet &symbol_table,
+    size_t string_max_length);
   bool is_known_string_type(irep_idt class_name);
 
 private:
