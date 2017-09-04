@@ -5,6 +5,8 @@
 #ifndef BIGINT_HH
 #define BIGINT_HH
 
+#include <utility>
+
 // This one is pretty simple but has a fair divide implementation.
 // Though I'm not ambitious enough to do that FFT-like stuff.
 //
@@ -166,12 +168,11 @@ public:
   BigInt (llong_t) _fast;
   BigInt (ullong_t) _fast;
   BigInt (BigInt const &) _fast;
+  BigInt (BigInt &&) _fast;
   BigInt (char const *, onedig_t = 10) _fast;
 
-  BigInt &operator= (llong_t) _fast;
-  BigInt &operator= (ullong_t) _fast;
   BigInt &operator= (BigInt const &) _fast;
-  BigInt &operator= (char const *) _fast;
+  BigInt &operator= (BigInt &&) _fast;
 
   // Input conversion from text.
 
@@ -236,25 +237,6 @@ public:
   BigInt &negate()			{ if(!is_zero()) positive = !positive; return *this; }
   BigInt operator-() const		{ return BigInt (*this).negate(); }
 
-  BigInt &operator+= (llong_t) _fast;
-  BigInt &operator-= (llong_t) _fast;
-  BigInt &operator*= (llong_t) _fast;
-  BigInt &operator/= (llong_t) _fast;
-  BigInt &operator%= (llong_t) _fast;
-
-  BigInt &operator= (unsigned long x) { return (*this)=(ullong_t)x; }
-  BigInt &operator+= (unsigned long x) { return (*this)+=(ullong_t)x; }
-  BigInt &operator-= (unsigned long x) { return (*this)-=(ullong_t)x; }
-  BigInt &operator*= (unsigned long x) { return (*this)*=(ullong_t)x; }
-  BigInt &operator/= (unsigned long x) { return (*this)/=(ullong_t)x; }
-  BigInt &operator%= (unsigned long x) { return (*this)%=(ullong_t)x; }
-
-  BigInt &operator+= (ullong_t) _fast;
-  BigInt &operator-= (ullong_t) _fast;
-  BigInt &operator*= (ullong_t) _fast;
-  BigInt &operator/= (ullong_t) _fast;
-  BigInt &operator%= (ullong_t) _fast;
-
   BigInt &operator+= (BigInt const &) _fast;
   BigInt &operator-= (BigInt const &) _fast;
   BigInt &operator*= (BigInt const &) _fast;
@@ -267,71 +249,6 @@ public:
   static void div (BigInt const &, BigInt const &,
 		   BigInt &quot, BigInt &rem) _fasta;
 
-  // Avoid the need for explicit casts to [u]llong_t.
-
-  // disabled by DK
-  //operator int() const		{ return int (operator llong_t()); }
-  //operator unsigned() const	{ return unsigned (operator ullong_t()); }
-
-  BigInt &operator = (int n)		{ return operator = (llong_t (n)); }
-  BigInt &operator+= (int n)		{ return operator+= (llong_t (n)); }
-  BigInt &operator-= (int n)		{ return operator-= (llong_t (n)); }
-  BigInt &operator*= (int n)		{ return operator*= (llong_t (n)); }
-  BigInt &operator/= (int n)		{ return operator/= (llong_t (n)); }
-  BigInt &operator%= (int n)		{ return operator%= (llong_t (n)); }
-
-  BigInt &operator = (unsigned n)	{ return operator = (ullong_t (n)); }
-  BigInt &operator+= (unsigned n)	{ return operator+= (ullong_t (n)); }
-  BigInt &operator-= (unsigned n)	{ return operator-= (ullong_t (n)); }
-  BigInt &operator*= (unsigned n)	{ return operator*= (ullong_t (n)); }
-  BigInt &operator/= (unsigned n)	{ return operator/= (ullong_t (n)); }
-  BigInt &operator%= (unsigned n)	{ return operator%= (ullong_t (n)); }
-
-  // Binary arithmetic operators. These are entirely syntactic sugar.
-  // Though there's joy in repetition -- let the preprocessor enjoy.
-
-#define decl_binary(T)							\
-  BigInt operator+ (T b) const		{ return BigInt (*this) += b; }	\
-  BigInt operator- (T b) const		{ return BigInt (*this) -= b; }	\
-  BigInt operator* (T b) const		{ return BigInt (*this) *= b; }	\
-  BigInt operator/ (T b) const		{ return BigInt (*this) /= b; }	\
-  BigInt operator% (T b) const		{ return BigInt (*this) %= b; }
-  decl_binary (int);
-  decl_binary (unsigned);
-  decl_binary (llong_t);
-  decl_binary (ullong_t);
-  decl_binary (BigInt const &);
-#undef decl_binary
-
-  BigInt operator+ (unsigned long b) const	{ return BigInt (*this) += (ullong_t)b; }	\
-  BigInt operator- (unsigned long b) const	{ return BigInt (*this) -= (ullong_t)b; }	\
-  BigInt operator* (unsigned long b) const	{ return BigInt (*this) *= (ullong_t)b; }	\
-  BigInt operator/ (unsigned long b) const	{ return BigInt (*this) /= (ullong_t)b; }	\
-  BigInt operator% (unsigned long b) const	{ return BigInt (*this) %= (ullong_t)b; }
-
-  // Binary comparision operators.
-
-#define decl_binary(T)							\
-  bool operator<  (T b) const		{ return compare (b) < 0; }	\
-  bool operator>  (T b) const		{ return compare (b) > 0; }	\
-  bool operator<= (T b) const		{ return compare (b) <= 0; }	\
-  bool operator>= (T b) const		{ return compare (b) >= 0; }	\
-  bool operator== (T b) const		{ return compare (b) == 0; }	\
-  bool operator!= (T b) const		{ return compare (b) != 0; }
-  decl_binary (int);
-  decl_binary (unsigned);
-  decl_binary (llong_t);
-  decl_binary (ullong_t);
-  decl_binary (BigInt const &);
-#undef decl_binary
-
-  bool operator<  (unsigned long b) const	{ return compare ((ullong_t)b) < 0; }	\
-  bool operator>  (unsigned long b) const	{ return compare ((ullong_t)b) > 0; }	\
-  bool operator<= (unsigned long b) const	{ return compare ((ullong_t)b) <= 0; }	\
-  bool operator>= (unsigned long b) const	{ return compare ((ullong_t)b) >= 0; }	\
-  bool operator== (unsigned long b) const	{ return compare ((ullong_t)b) == 0; }	\
-  bool operator!= (unsigned long b) const	{ return compare ((ullong_t)b) != 0; }
-
   // Returns the largest x such that 2^x <= abs() or 0 if input is 0
   // Not part of original BigInt.
   unsigned floorPow2 () const _fast;
@@ -339,6 +256,14 @@ public:
   // Sets the number to the power of two given by the exponent
   // Not part of original BigInt.
   void setPower2 (unsigned exponent) _fast;
+
+  void swap (BigInt &other)
+  {
+    std::swap(other.size, size);
+    std::swap(other.length, length);
+    std::swap(other.digit, digit);
+    std::swap(other.positive, positive);
+  }
 };
 
 
@@ -350,5 +275,21 @@ BigInt sqrt (BigInt const &) _fast;
 BigInt gcd (const BigInt &, const BigInt &) _fast;
 BigInt modinv (const BigInt &, const BigInt &) _fast;
 
+// Binary arithmetic operators
+
+inline BigInt operator+ (const BigInt &lhs, const BigInt &rhs) { return BigInt(lhs) += rhs; }
+inline BigInt operator- (const BigInt &lhs, const BigInt &rhs) { return BigInt(lhs) -= rhs; }
+inline BigInt operator* (const BigInt &lhs, const BigInt &rhs) { return BigInt(lhs) *= rhs; }
+inline BigInt operator/ (const BigInt &lhs, const BigInt &rhs) { return BigInt(lhs) /= rhs; }
+inline BigInt operator% (const BigInt &lhs, const BigInt &rhs) { return BigInt(lhs) %= rhs; }
+
+// Binary comparison operators
+
+inline bool operator<  (const BigInt &lhs, const BigInt &rhs) { return lhs.compare(rhs) < 0; }
+inline bool operator>  (const BigInt &lhs, const BigInt &rhs) { return lhs.compare(rhs) > 0; }
+inline bool operator<= (const BigInt &lhs, const BigInt &rhs) { return lhs.compare(rhs) <= 0; }
+inline bool operator>= (const BigInt &lhs, const BigInt &rhs) { return lhs.compare(rhs) >= 0; }
+inline bool operator== (const BigInt &lhs, const BigInt &rhs) { return lhs.compare(rhs) == 0; }
+inline bool operator!= (const BigInt &lhs, const BigInt &rhs) { return lhs.compare(rhs) != 0; }
 
 #endif//ndef BIGINT_HH
