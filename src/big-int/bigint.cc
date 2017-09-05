@@ -901,6 +901,114 @@ BigInt::mul (onedig_t const *dig, unsigned len, bool pos)
 
 
 BigInt &
+BigInt::operator+= (llong_t y)
+{
+  bool pos = y > 0;
+  ullong_t uy = pos ? y : -y;
+  onedig_t yb[small];
+  unsigned yl;
+  digit_set (uy, yb, yl);
+  add (yb, yl, pos);
+  return *this;
+}
+
+BigInt &
+BigInt::operator-= (llong_t y)
+{
+  bool pos = y > 0;
+  ullong_t uy = pos ? y : -y;
+  onedig_t yb[small];
+  unsigned yl;
+  digit_set (uy, yb, yl);
+  add (yb, yl, !pos);
+  return *this;
+}
+
+BigInt &
+BigInt::operator*= (llong_t y)
+{
+  bool pos = y > 0;
+  ullong_t uy = pos ? y : -y;
+  onedig_t yb[small];
+  unsigned yl;
+  digit_set (uy, yb, yl);
+  mul (yb, yl, pos);
+  return *this;
+}
+
+BigInt &
+BigInt::operator/= (llong_t y)
+{
+  bool pos = y > 0;
+  ullong_t uy = pos ? y : -y;
+  onedig_t yb[small];
+  unsigned yl;
+  digit_set (uy, yb, yl);
+  return *this /= BigInt (yb, yl, pos);
+}
+
+BigInt &
+BigInt::operator%= (llong_t y)
+{
+  bool pos = y > 0;
+  ullong_t uy = pos ? y : -y;
+  onedig_t yb[small];
+  unsigned yl;
+  digit_set (uy, yb, yl);
+  return *this %= BigInt (yb, yl, pos);
+}
+
+
+BigInt &
+BigInt::operator+= (ullong_t uy)
+{
+  onedig_t yb[small];
+  unsigned yl;
+  digit_set (uy, yb, yl);
+  add (yb, yl, true);
+  return *this;
+}
+
+BigInt &
+BigInt::operator-= (ullong_t uy)
+{
+  onedig_t yb[small];
+  unsigned yl;
+  digit_set (uy, yb, yl);
+  add (yb, yl, false);
+  return *this;
+}
+
+BigInt &
+BigInt::operator*= (ullong_t uy)
+{
+  onedig_t yb[small];
+  unsigned yl;
+  digit_set (uy, yb, yl);
+  mul (yb, yl, true);
+  return *this;
+}
+
+BigInt &
+BigInt::operator/= (ullong_t uy)
+{
+  onedig_t yb[small];
+  unsigned yl;
+  digit_set (uy, yb, yl);
+  return *this /= BigInt (yb, yl, true);
+}
+
+BigInt &
+BigInt::operator%= (ullong_t uy)
+{
+  onedig_t yb[small];
+  unsigned yl;
+  digit_set (uy, yb, yl);
+  return *this %= BigInt (yb, yl, true);
+}
+
+
+BigInt &
 BigInt::operator+= (BigInt const &y)
 {
   add (y.digit, y.length, y.positive);

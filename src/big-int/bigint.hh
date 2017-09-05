@@ -237,11 +237,29 @@ public:
   BigInt &negate()			{ if(!is_zero()) positive = !positive; return *this; }
   BigInt operator-() const		{ return BigInt (*this).negate(); }
 
-  BigInt &operator+= (BigInt const &) _fast;
-  BigInt &operator-= (BigInt const &) _fast;
-  BigInt &operator*= (BigInt const &) _fast;
-  BigInt &operator/= (BigInt const &) _fasta;
-  BigInt &operator%= (BigInt const &) _fasta;
+#define IN_PLACE_OPERATOR(TYPE) \
+  BigInt &operator+= (TYPE) _fast; \
+  BigInt &operator-= (TYPE) _fast; \
+  BigInt &operator*= (TYPE) _fast; \
+  BigInt &operator/= (TYPE) _fast; \
+  BigInt &operator%= (TYPE) _fast;
+
+  IN_PLACE_OPERATOR(const BigInt &)
+  IN_PLACE_OPERATOR(llong_t)
+  IN_PLACE_OPERATOR(ullong_t)
+#undef IN_PLACE_OPERATOR
+
+#define OVERLOAD_IN_PLACE_OPERATOR(FROM, TO) \
+  BigInt &operator+=(FROM x) { return operator+=(static_cast<TO>(x)); } \
+  BigInt &operator-=(FROM x) { return operator-=(static_cast<TO>(x)); } \
+  BigInt &operator*=(FROM x) { return operator*=(static_cast<TO>(x)); } \
+  BigInt &operator/=(FROM x) { return operator/=(static_cast<TO>(x)); } \
+  BigInt &operator%=(FROM x) { return operator%=(static_cast<TO>(x)); }
+
+  OVERLOAD_IN_PLACE_OPERATOR(unsigned long, ullong_t)
+  OVERLOAD_IN_PLACE_OPERATOR(int, llong_t)
+  OVERLOAD_IN_PLACE_OPERATOR(unsigned, ullong_t)
+#undef OVERLOAD_IN_PLACE_OPERATOR
 
   BigInt &operator++ ()	{ return operator+=(1); } // preincrement
   BigInt &operator-- ()	{ return operator-=(1); } // predecrement
@@ -282,6 +300,26 @@ inline BigInt operator- (const BigInt &lhs, const BigInt &rhs) { return BigInt(l
 inline BigInt operator* (const BigInt &lhs, const BigInt &rhs) { return BigInt(lhs) *= rhs; }
 inline BigInt operator/ (const BigInt &lhs, const BigInt &rhs) { return BigInt(lhs) /= rhs; }
 inline BigInt operator% (const BigInt &lhs, const BigInt &rhs) { return BigInt(lhs) %= rhs; }
+
+// Because the operators `+` and `*` are associative, we can do fast math, no
+// matter which side the BigInt is on.  For the rest of the operators, which
+// are non-associative, we can only get speedups if the primitive type is on
+// the RHS.
+#define BINARY_ARITHMETIC_OPERATORS(OTHER) \
+  inline BigInt operator+ (const BigInt &lhs, OTHER rhs) { return  BigInt(lhs) += rhs; } \
+  inline BigInt operator+ (OTHER lhs, const BigInt &rhs) { return  BigInt(rhs) += lhs; } \
+  inline BigInt operator* (const BigInt &lhs, OTHER rhs) { return  BigInt(lhs) *= rhs; } \
+  inline BigInt operator* (OTHER lhs, const BigInt &rhs) { return  BigInt(rhs) *= lhs; } \
+  inline BigInt operator- (const BigInt &lhs, OTHER rhs) { return  BigInt(lhs) -= rhs; } \
+  inline BigInt operator/ (const BigInt &lhs, OTHER rhs) { return  BigInt(lhs) /= rhs; } \
+  inline BigInt operator% (const BigInt &lhs, OTHER rhs) { return  BigInt(lhs) %= rhs; }
+
+BINARY_ARITHMETIC_OPERATORS(BigInt::llong_t)
+BINARY_ARITHMETIC_OPERATORS(BigInt::ullong_t)
+BINARY_ARITHMETIC_OPERATORS(unsigned long)
+BINARY_ARITHMETIC_OPERATORS(int)
+BINARY_ARITHMETIC_OPERATORS(unsigned)
+#undef BINARY_ARITHMETIC_OPERATORS
 
 // Binary comparison operators
 
