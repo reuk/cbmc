@@ -221,8 +221,9 @@ public:
 
   // Eliminate need for explicit casts when comparing.
 
-  int compare (int n) const		{ return compare (llong_t (n)); }
-  int compare (unsigned n) const	{ return compare (ullong_t (n)); }
+  int compare (unsigned long n) const { return compare (static_cast<ullong_t>(n)); }
+  int compare (int n) const           { return compare (static_cast<llong_t> (n)); }
+  int compare (unsigned n) const      { return compare (static_cast<ullong_t>(n)); }
 
   // Tests. These are faster than comparing with 0 or of course %2.
 
@@ -329,5 +330,29 @@ inline bool operator<= (const BigInt &lhs, const BigInt &rhs) { return lhs.compa
 inline bool operator>= (const BigInt &lhs, const BigInt &rhs) { return lhs.compare(rhs) >= 0; }
 inline bool operator== (const BigInt &lhs, const BigInt &rhs) { return lhs.compare(rhs) == 0; }
 inline bool operator!= (const BigInt &lhs, const BigInt &rhs) { return lhs.compare(rhs) != 0; }
+
+
+// These operators are all associative, so we can define them all for
+// primitives on the LHS and RHS.
+#define COMPARISON_OPERATORS(OTHER) \
+  inline bool operator<  (const BigInt &lhs, OTHER rhs) { return  lhs.compare(rhs) <  0; } \
+  inline bool operator>  (const BigInt &lhs, OTHER rhs) { return  lhs.compare(rhs) >  0; } \
+  inline bool operator<= (const BigInt &lhs, OTHER rhs) { return  lhs.compare(rhs) <= 0; } \
+  inline bool operator>= (const BigInt &lhs, OTHER rhs) { return  lhs.compare(rhs) >= 0; } \
+  inline bool operator== (const BigInt &lhs, OTHER rhs) { return  lhs.compare(rhs) == 0; } \
+  inline bool operator!= (const BigInt &lhs, OTHER rhs) { return  lhs.compare(rhs) != 0; } \
+  inline bool operator<  (OTHER lhs, const BigInt &rhs) { return -rhs.compare(lhs) <  0; } \
+  inline bool operator>  (OTHER lhs, const BigInt &rhs) { return -rhs.compare(lhs) >  0; } \
+  inline bool operator<= (OTHER lhs, const BigInt &rhs) { return -rhs.compare(lhs) <= 0; } \
+  inline bool operator>= (OTHER lhs, const BigInt &rhs) { return -rhs.compare(lhs) >= 0; } \
+  inline bool operator== (OTHER lhs, const BigInt &rhs) { return -rhs.compare(lhs) == 0; } \
+  inline bool operator!= (OTHER lhs, const BigInt &rhs) { return -rhs.compare(lhs) != 0; }
+
+COMPARISON_OPERATORS(BigInt::llong_t)
+COMPARISON_OPERATORS(BigInt::ullong_t)
+COMPARISON_OPERATORS(unsigned long)
+COMPARISON_OPERATORS(int)
+COMPARISON_OPERATORS(unsigned)
+#undef COMPARISON_OPERATORS
 
 #endif//ndef BIGINT_HH
