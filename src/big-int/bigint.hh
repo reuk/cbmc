@@ -5,6 +5,7 @@
 #ifndef BIGINT_HH
 #define BIGINT_HH
 
+#include <cstdint>
 #include <utility>
 
 // This one is pretty simple but has a fair divide implementation.
@@ -84,49 +85,21 @@
 # endif
 #endif
 
-
 class BigInt
 {
 public:
-  // Decide about and publish configuration details:
-
   // Choose digit type for best performance. Bigger is better as long
   // as there are machine instructions for multiplying and dividing on
   // twice the size of a digit, i.e. on twodig_t.
-#if defined __GNUG__ || defined __alpha// || defined __TenDRA__
-  // Or other true 64 bit CPU.
-  typedef unsigned		onedig_t;
-  typedef unsigned long long	twodig_t;
-#elif defined _MSC_VER // || defined __BORLANDC__ (works but is slower)
-  // Like GCC's long long this __int64 actually performs better than
-  // unsigned. Though not as much as is the case with gcc.
-  typedef unsigned		onedig_t;
-  typedef unsigned __int64	twodig_t;
-#elif 1
-  // Majority (currently) of 32 bit CPUs.
-  typedef unsigned short	onedig_t;
-  typedef unsigned		twodig_t;
-#else
-  // Works on 8/16 bit CPUs just as well.
-  typedef unsigned char		onedig_t;
-  typedef unsigned short	twodig_t;
-#endif
+  typedef uint_fast32_t onedig_t;
+  typedef uint_fast64_t twodig_t;
 
-  // Choose largest integral type to use. Must be >= twodig_t.
-#if defined __GNUG__
-  typedef          long long	 llong_t;
-  typedef unsigned long long	ullong_t;
-#elif defined _MSC_VER// || defined __BORLANDC__
-  typedef          __int64	 llong_t;
-  typedef unsigned __int64	ullong_t;
-#else
-  typedef          long		 llong_t;
-  typedef unsigned long		ullong_t;
-#endif
+  typedef  intmax_t  llong_t;
+  typedef uintmax_t ullong_t;
 
   // Maximum number of onedig_t digits which could also be represented
   // by an elementary type.
-  enum { small = sizeof (ullong_t) / sizeof (onedig_t) };
+  static constexpr const auto small = sizeof(ullong_t) / sizeof(onedig_t);
 
 private:
   unsigned size;			// Length of digit vector.
@@ -155,21 +128,26 @@ private:
   // Sets size=0 which indicates that ~BigInt must not delete[].
   inline BigInt (onedig_t *, unsigned, bool) _fast;
 
+  template <typename T>
+  using cast_to_t = typename std::conditional<
+    std::is_signed<T>::value, llong_t, ullong_t>::type;
+
 public:
   ~BigInt() _fast;
 
   BigInt() _fast;
-  BigInt (int) _fast;
-  BigInt (unsigned) _fast;
-
-  BigInt (long signed int x) _fast;
-  BigInt (long unsigned int x) _fast;
 
   BigInt (llong_t) _fast;
   BigInt (ullong_t) _fast;
   BigInt (BigInt const &) _fast;
   BigInt (BigInt &&) _fast;
   BigInt (char const *, onedig_t = 10) _fast;
+
+  template<
+    typename Numeric,
+    typename std::enable_if<std::is_convertible<Numeric,  llong_t>::value &&
+                            std::is_convertible<Numeric, ullong_t>::value, int>::type = 0>
+  BigInt (Numeric x) : BigInt (static_cast<cast_to_t<Numeric>>(x)) {}
 
   BigInt &operator= (BigInt const &) _fast;
   BigInt &operator= (BigInt &&) _fast;
@@ -220,10 +198,11 @@ public:
   int compare (BigInt const &) const _fast;
 
   // Eliminate need for explicit casts when comparing.
-
-  int compare (unsigned long n) const { return compare (static_cast<ullong_t>(n)); }
-  int compare (int n) const           { return compare (static_cast<llong_t> (n)); }
-  int compare (unsigned n) const      { return compare (static_cast<ullong_t>(n)); }
+  template<
+    typename Numeric,
+    typename std::enable_if<std::is_convertible<Numeric,  llong_t>::value &&
+                            std::is_convertible<Numeric, ullong_t>::value, int>::type = 0>
+  int compare (Numeric n) const { return compare (static_cast<cast_to_t<Numeric>>(n)); }
 
   // Tests. These are faster than comparing with 0 or of course %2.
 
@@ -250,17 +229,51 @@ public:
   IN_PLACE_OPERATOR(ullong_t)
 #undef IN_PLACE_OPERATOR
 
-#define OVERLOAD_IN_PLACE_OPERATOR(FROM, TO) \
-  BigInt &operator+=(FROM x) { return operator+=(static_cast<TO>(x)); } \
-  BigInt &operator-=(FROM x) { return operator-=(static_cast<TO>(x)); } \
-  BigInt &operator*=(FROM x) { return operator*=(static_cast<TO>(x)); } \
-  BigInt &operator/=(FROM x) { return operator/=(static_cast<TO>(x)); } \
-  BigInt &operator%=(FROM x) { return operator%=(static_cast<TO>(x)); }
+  template<
+    typename Numeric,
+    typename std::enable_if<std::is_convertible<Numeric,  llong_t>::value &&
+                            std::is_convertible<Numeric, ullong_t>::value, int>::type = 0>
+  BigInt &operator+=(Numeric x)
+  {
+    return operator+=(static_cast<cast_to_t<Numeric>>(x));
+  }
 
-  OVERLOAD_IN_PLACE_OPERATOR(unsigned long, ullong_t)
-  OVERLOAD_IN_PLACE_OPERATOR(int, llong_t)
-  OVERLOAD_IN_PLACE_OPERATOR(unsigned, ullong_t)
-#undef OVERLOAD_IN_PLACE_OPERATOR
+  template<
+    typename Numeric,
+    typename std::enable_if<std::is_convertible<Numeric,  llong_t>::value &&
+                            std::is_convertible<Numeric, ullong_t>::value, int>::type = 0>
+  BigInt &operator-=(Numeric x)
+  {
+    return operator-=(static_cast<cast_to_t<Numeric>>(x));
+  }
+
+  template<
+    typename Numeric,
+    typename std::enable_if<std::is_convertible<Numeric,  llong_t>::value &&
+                            std::is_convertible<Numeric, ullong_t>::value, int>::type = 0>
+  BigInt &operator*=(Numeric x)
+  {
+    return operator*=(static_cast<cast_to_t<Numeric>>(x));
+  }
+
+  template<
+    typename Numeric,
+    typename std::enable_if<std::is_convertible<Numeric,  llong_t>::value &&
+                            std::is_convertible<Numeric, ullong_t>::value, int>::type = 0>
+  BigInt &operator/=(Numeric x)
+  {
+    return operator/=(static_cast<cast_to_t<Numeric>>(x));
+  }
+
+  template<
+    typename Numeric,
+    typename std::enable_if<std::is_convertible<Numeric,  llong_t>::value &&
+                            std::is_convertible<Numeric, ullong_t>::value, int>::type = 0>
+  BigInt &operator%=(Numeric x)
+  {
+    return operator%=(static_cast<cast_to_t<Numeric>>(x));
+  }
+
 
   BigInt &operator++ ()	{ return operator+=(1); } // preincrement
   BigInt &operator-- ()	{ return operator-=(1); } // predecrement
@@ -306,21 +319,48 @@ inline BigInt operator% (const BigInt &lhs, const BigInt &rhs) { return BigInt(l
 // matter which side the BigInt is on.  For the rest of the operators, which
 // are non-associative, we can only get speedups if the primitive type is on
 // the RHS.
-#define BINARY_ARITHMETIC_OPERATORS(OTHER) \
-  inline BigInt operator+ (const BigInt &lhs, OTHER rhs) { return  BigInt(lhs) += rhs; } \
-  inline BigInt operator+ (OTHER lhs, const BigInt &rhs) { return  BigInt(rhs) += lhs; } \
-  inline BigInt operator* (const BigInt &lhs, OTHER rhs) { return  BigInt(lhs) *= rhs; } \
-  inline BigInt operator* (OTHER lhs, const BigInt &rhs) { return  BigInt(rhs) *= lhs; } \
-  inline BigInt operator- (const BigInt &lhs, OTHER rhs) { return  BigInt(lhs) -= rhs; } \
-  inline BigInt operator/ (const BigInt &lhs, OTHER rhs) { return  BigInt(lhs) /= rhs; } \
-  inline BigInt operator% (const BigInt &lhs, OTHER rhs) { return  BigInt(lhs) %= rhs; }
 
-BINARY_ARITHMETIC_OPERATORS(BigInt::llong_t)
-BINARY_ARITHMETIC_OPERATORS(BigInt::ullong_t)
-BINARY_ARITHMETIC_OPERATORS(unsigned long)
-BINARY_ARITHMETIC_OPERATORS(int)
-BINARY_ARITHMETIC_OPERATORS(unsigned)
-#undef BINARY_ARITHMETIC_OPERATORS
+template<
+  typename Numeric,
+  typename std::enable_if<std::is_convertible<Numeric, BigInt:: llong_t>::value &&
+                          std::is_convertible<Numeric, BigInt::ullong_t>::value, int>::type = 0>
+inline BigInt operator+ (const BigInt &lhs, Numeric rhs) { return  BigInt(lhs) += rhs; }
+
+template<
+  typename Numeric,
+  typename std::enable_if<std::is_convertible<Numeric, BigInt:: llong_t>::value &&
+                          std::is_convertible<Numeric, BigInt::ullong_t>::value, int>::type = 0>
+inline BigInt operator+ (Numeric lhs, const BigInt &rhs) { return  BigInt(rhs) += lhs; }
+
+template<
+  typename Numeric,
+  typename std::enable_if<std::is_convertible<Numeric, BigInt:: llong_t>::value &&
+                          std::is_convertible<Numeric, BigInt::ullong_t>::value, int>::type = 0>
+inline BigInt operator* (const BigInt &lhs, Numeric rhs) { return  BigInt(lhs) *= rhs; }
+
+template<
+  typename Numeric,
+  typename std::enable_if<std::is_convertible<Numeric, BigInt:: llong_t>::value &&
+                          std::is_convertible<Numeric, BigInt::ullong_t>::value, int>::type = 0>
+inline BigInt operator* (Numeric lhs, const BigInt &rhs) { return  BigInt(rhs) *= lhs; }
+
+template<
+  typename Numeric,
+  typename std::enable_if<std::is_convertible<Numeric, BigInt:: llong_t>::value &&
+                          std::is_convertible<Numeric, BigInt::ullong_t>::value, int>::type = 0>
+inline BigInt operator- (const BigInt &lhs, Numeric rhs) { return  BigInt(lhs) -= rhs; }
+
+template<
+  typename Numeric,
+  typename std::enable_if<std::is_convertible<Numeric, BigInt:: llong_t>::value &&
+                          std::is_convertible<Numeric, BigInt::ullong_t>::value, int>::type = 0>
+inline BigInt operator/ (const BigInt &lhs, Numeric rhs) { return  BigInt(lhs) /= rhs; }
+
+template<
+  typename Numeric,
+  typename std::enable_if<std::is_convertible<Numeric, BigInt:: llong_t>::value &&
+                          std::is_convertible<Numeric, BigInt::ullong_t>::value, int>::type = 0>
+inline BigInt operator% (const BigInt &lhs, Numeric rhs) { return  BigInt(lhs) %= rhs; }
 
 // Binary comparison operators
 
@@ -331,28 +371,40 @@ inline bool operator>= (const BigInt &lhs, const BigInt &rhs) { return lhs.compa
 inline bool operator== (const BigInt &lhs, const BigInt &rhs) { return lhs.compare(rhs) == 0; }
 inline bool operator!= (const BigInt &lhs, const BigInt &rhs) { return lhs.compare(rhs) != 0; }
 
+template<
+  typename Numeric,
+  typename std::enable_if<std::is_convertible<Numeric, BigInt:: llong_t>::value &&
+                          std::is_convertible<Numeric, BigInt::ullong_t>::value, int>::type = 0>
+bool operator<  (const BigInt &lhs, Numeric rhs) { return  lhs.compare(rhs) <  0; }
 
-// These operators are all associative, so we can define them all for
-// primitives on the LHS and RHS.
-#define COMPARISON_OPERATORS(OTHER) \
-  inline bool operator<  (const BigInt &lhs, OTHER rhs) { return  lhs.compare(rhs) <  0; } \
-  inline bool operator>  (const BigInt &lhs, OTHER rhs) { return  lhs.compare(rhs) >  0; } \
-  inline bool operator<= (const BigInt &lhs, OTHER rhs) { return  lhs.compare(rhs) <= 0; } \
-  inline bool operator>= (const BigInt &lhs, OTHER rhs) { return  lhs.compare(rhs) >= 0; } \
-  inline bool operator== (const BigInt &lhs, OTHER rhs) { return  lhs.compare(rhs) == 0; } \
-  inline bool operator!= (const BigInt &lhs, OTHER rhs) { return  lhs.compare(rhs) != 0; } \
-  inline bool operator<  (OTHER lhs, const BigInt &rhs) { return -rhs.compare(lhs) <  0; } \
-  inline bool operator>  (OTHER lhs, const BigInt &rhs) { return -rhs.compare(lhs) >  0; } \
-  inline bool operator<= (OTHER lhs, const BigInt &rhs) { return -rhs.compare(lhs) <= 0; } \
-  inline bool operator>= (OTHER lhs, const BigInt &rhs) { return -rhs.compare(lhs) >= 0; } \
-  inline bool operator== (OTHER lhs, const BigInt &rhs) { return -rhs.compare(lhs) == 0; } \
-  inline bool operator!= (OTHER lhs, const BigInt &rhs) { return -rhs.compare(lhs) != 0; }
+template<
+  typename Numeric,
+  typename std::enable_if<std::is_convertible<Numeric, BigInt:: llong_t>::value &&
+                          std::is_convertible<Numeric, BigInt::ullong_t>::value, int>::type = 0>
+bool operator>  (const BigInt &lhs, Numeric rhs) { return  lhs.compare(rhs) >  0; }
 
-COMPARISON_OPERATORS(BigInt::llong_t)
-COMPARISON_OPERATORS(BigInt::ullong_t)
-COMPARISON_OPERATORS(unsigned long)
-COMPARISON_OPERATORS(int)
-COMPARISON_OPERATORS(unsigned)
-#undef COMPARISON_OPERATORS
+template<
+  typename Numeric,
+  typename std::enable_if<std::is_convertible<Numeric, BigInt:: llong_t>::value &&
+                          std::is_convertible<Numeric, BigInt::ullong_t>::value, int>::type = 0>
+bool operator<= (const BigInt &lhs, Numeric rhs) { return  lhs.compare(rhs) <= 0; }
+
+template<
+  typename Numeric,
+  typename std::enable_if<std::is_convertible<Numeric, BigInt:: llong_t>::value &&
+                          std::is_convertible<Numeric, BigInt::ullong_t>::value, int>::type = 0>
+bool operator>= (const BigInt &lhs, Numeric rhs) { return  lhs.compare(rhs) >= 0; }
+
+template<
+  typename Numeric,
+  typename std::enable_if<std::is_convertible<Numeric, BigInt:: llong_t>::value &&
+                          std::is_convertible<Numeric, BigInt::ullong_t>::value, int>::type = 0>
+bool operator== (const BigInt &lhs, Numeric rhs) { return  lhs.compare(rhs) == 0; }
+
+template<
+  typename Numeric,
+  typename std::enable_if<std::is_convertible<Numeric, BigInt:: llong_t>::value &&
+                          std::is_convertible<Numeric, BigInt::ullong_t>::value, int>::type = 0>
+bool operator!= (const BigInt &lhs, Numeric rhs) { return  lhs.compare(rhs) != 0; }
 
 #endif//ndef BIGINT_HH
