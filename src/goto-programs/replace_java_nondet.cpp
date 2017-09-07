@@ -152,6 +152,7 @@ static goto_programt::targett check_and_replace_target(
   goto_programt &goto_program,
   const goto_programt::targett &target)
 {
+
   // Check whether this is a nondet library method, and return if not
   const auto instr_info=get_nondet_instruction_info(target);
   const auto next_instr=std::next(target);
@@ -164,7 +165,8 @@ static goto_programt::targett check_and_replace_target(
   // Look at the next instruction, ensure that it is an assignment
   assert(next_instr->is_assign());
   // Get the name of the LHS of the assignment
-  const auto &next_instr_assign_lhs=to_code_assign(next_instr->code).lhs();
+  auto &next_instr_assign=to_code_assign(next_instr->code);
+  const auto &next_instr_assign_lhs=next_instr_assign.lhs();
   if(!(next_instr_assign_lhs.id()==ID_symbol &&
        !next_instr_assign_lhs.has_operands()))
   {
@@ -185,38 +187,80 @@ static goto_programt::targett check_and_replace_target(
       return is_assignment_from(instr, return_identifier);
     });
 
-  assert(matching_assignment!=end);
+  // If we found an assignment to this name, steal the type and replace the
+  // original assignment with an assignment from side_effect_expr_nondet
+  if(matching_assignment!=end)
+  {
+    std::for_each(
+        target,
+        matching_assignment,
+        [](goto_programt::instructiont &instr) { instr.make_skip(); });
 
-  // Assume that the LHS of *this* assignment is the actual nondet variable
-  const auto &code_assign=to_code_assign(matching_assignment->code);
-  const auto nondet_var=code_assign.lhs();
-  const auto source_loc=target->source_location;
+    auto &matching_assignment_code=to_code_assign(matching_assignment->code);
 
-  // Erase from the nondet function call to the assignment
-  const auto after_matching_assignment=std::next(matching_assignment);
-  assert(after_matching_assignment!=end);
+    side_effect_expr_nondett inserted_expr{
+      matching_assignment_code.lhs().type()};
+    inserted_expr.set_nullable(
+      instr_info.get_nullable_type()==
+      nondet_instruction_infot::is_nullablet::TRUE);
 
-  std::for_each(
-    target,
-    after_matching_assignment,
-    [](goto_programt::instructiont &instr)
+    matching_assignment_code.rhs()=inserted_expr;
+
+    goto_program.update();
+
+    return matching_assignment;
+  }
+
+  // There wasn't an assignment, so we'll look for a function call which casts
+  // the argument instead
+  const auto function_call_with_typecast=std::find_if(
+    next_instr,
+    end,
+    [&return_identifier](const goto_programt::instructiont &instr)
     {
-      instr.make_skip();
+      if(!instr.is_function_call())
+      {
+        return false;
+      }
+      const auto &code=to_code(instr.code);
+      if(code.get_statement()!=ID_function_call)
+      {
+        return false;
+      }
+      const auto &function_call=to_code_function_call(code);
+      if(function_call.arguments().size()!=1)
+      {
+        return false;
+      }
+      const auto &arg=function_call.arguments().front();
+      if(arg.id()!=ID_typecast)
+      {
+        return false;
+      }
+      return true;
     });
 
-  const auto inserted=goto_program.insert_before(after_matching_assignment);
-  inserted->make_assignment();
-  side_effect_expr_nondett inserted_expr(nondet_var.type());
+  assert(function_call_with_typecast!=end);
+
+  // We found a function call which typecasts the argument
+  const auto &typecast_expr_type=
+    to_typecast_expr(
+      to_code_function_call(
+        function_call_with_typecast->code).arguments().front()).type();
+
+  side_effect_expr_nondett inserted_expr{typecast_expr_type};
   inserted_expr.set_nullable(
     instr_info.get_nullable_type()==
     nondet_instruction_infot::is_nullablet::TRUE);
-  inserted->code=code_assignt(nondet_var, inserted_expr);
-  inserted->code.add_source_location()=source_loc;
-  inserted->source_location=source_loc;
+
+  next_instr_assign.rhs()=inserted_expr;
+  next_instr_assign.lhs().type()=typecast_expr_type;
+
+  target->make_skip();
 
   goto_program.update();
 
-  return after_matching_assignment;
+  return next_instr;
 }
 
 /// Checks each instruction in the goto program to see whether it is a method
