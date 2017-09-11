@@ -1367,6 +1367,11 @@ inline c_bit_field_typet &to_c_bit_field_type(typet &type)
 class pointer_typet:public bitvector_typet
 {
 public:
+  explicit pointer_typet(const typet &subtype):
+    bitvector_typet(ID_pointer, subtype)
+  {
+  }
+
   pointer_typet(const typet &_subtype, std::size_t width):
     bitvector_typet(ID_pointer, _subtype, width)
   {
@@ -1408,6 +1413,12 @@ inline pointer_typet &to_pointer_type(typet &type)
 class reference_typet:public pointer_typet
 {
 public:
+  explicit reference_typet(const typet &subtype):
+    pointer_typet(subtype)
+  {
+    set(ID_C_reference, true);
+  }
+
   reference_typet(const typet &_subtype, std::size_t _width):
     pointer_typet(_subtype, _width)
   {
