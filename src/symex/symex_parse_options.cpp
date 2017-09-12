@@ -204,7 +204,7 @@ int symex_parse_optionst::doit()
     if(cmdline.isset("show-vcc"))
     {
       path_search.show_vcc=true;
-      path_search(goto_model.goto_functions);
+      path_search(goto_model);
       return 0;
     }
 
@@ -214,14 +214,14 @@ int symex_parse_optionst::doit()
     if(cmdline.isset("cover"))
     {
       // test-suite generation
-      path_search(goto_model.goto_functions);
+      path_search(goto_model);
       report_cover(path_search.property_map);
       return 0;
     }
     else
     {
       // do actual symex, for assertion checking
-      switch(path_search(goto_model.goto_functions))
+      switch(path_search(goto_model))
       {
       case safety_checkert::resultt::SAFE:
         report_properties(path_search.property_map);

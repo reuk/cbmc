@@ -46,8 +46,7 @@ public:
   {
   }
 
-  virtual resultt operator()(
-    const goto_functionst &goto_functions);
+  resultt operator()(const goto_modelt &goto_model) override;
 
   void set_depth_limit(int limit)
   {

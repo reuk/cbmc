@@ -308,7 +308,7 @@ void bmct::show_program()
 }
 
 safety_checkert::resultt bmct::run(
-  const goto_functionst &goto_functions)
+  const goto_modelt &goto_model)
 {
   const std::string mm=options.get_option("mm");
   std::unique_ptr<memory_model_baset> memory_model;
@@ -345,7 +345,7 @@ safety_checkert::resultt bmct::run(
     setup_unwind();
 
     // perform symbolic execution
-    symex(goto_functions);
+    symex(goto_model.goto_functions);
 
     // add a partial ordering, if required
     if(equation.has_threads())
@@ -428,7 +428,7 @@ safety_checkert::resultt bmct::run(
     // coverage report
     std::string cov_out=options.get_option("symex-coverage-report");
     if(!cov_out.empty() &&
-       symex.output_coverage_report(goto_functions, cov_out))
+       symex.output_coverage_report(goto_model.goto_functions, cov_out))
     {
       error() << "Failed to write symex coverage report" << eom;
       return safety_checkert::resultt::ERROR;
@@ -444,14 +444,14 @@ safety_checkert::resultt bmct::run(
     {
       const optionst::value_listt criteria=
         options.get_list_option("cover");
-      return cover(goto_functions, criteria)?
+      return cover(goto_model, criteria)?
         safety_checkert::resultt::ERROR:safety_checkert::resultt::SAFE;
     }
 
     if(options.get_option("localize-faults")!="")
     {
       fault_localizationt fault_localization(
-        goto_functions, *this, options);
+        goto_model.goto_functions, *this, options);
       return fault_localization();
     }
 
@@ -460,7 +460,7 @@ safety_checkert::resultt bmct::run(
        symex.remaining_vccs==0)
     {
       report_success();
-      output_graphml(resultt::SAFE, goto_functions);
+      output_graphml(resultt::SAFE, goto_model.goto_functions);
       return safety_checkert::resultt::SAFE;
     }
 
@@ -470,7 +470,7 @@ safety_checkert::resultt bmct::run(
       return safety_checkert::resultt::SAFE;
     }
 
-    return decide(goto_functions, prop_conv);
+    return decide(goto_model.goto_functions, prop_conv);
   }
 
   catch(std::string &error_str)

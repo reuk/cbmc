@@ -904,7 +904,7 @@ int cbmc_parse_optionst::do_bmc(bmct &bmc)
   int result=6;
 
   // do actual BMC
-  switch(bmc.run(goto_model.goto_functions))
+  switch(bmc.run(goto_model))
   {
     case safety_checkert::resultt::SAFE:
       result=0;

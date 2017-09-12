@@ -61,10 +61,10 @@ void interpretert::initialize(bool init)
   build_memory_map();
 
   total_steps=0;
-  const goto_functionst::function_mapt::const_iterator
-    main_it=goto_functions.function_map.find(goto_functionst::entry_point());
+  const goto_functionst::function_mapt::const_iterator main_it=
+    goto_model.goto_functions.function_map.find(goto_functionst::entry_point());
 
-  if(main_it==goto_functions.function_map.end())
+  if(main_it==goto_model.goto_functions.function_map.end())
     throw "main not found";
 
   const goto_functionst::goto_functiont &goto_function=main_it->second;
@@ -444,7 +444,7 @@ typet interpretert::get_type(const irep_idt &id) const
 {
   dynamic_typest::const_iterator it=dynamic_types.find(id);
   if(it==dynamic_types.end())
-    return symbol_table.lookup(id).type;
+    return goto_model.symbol_table.lookup(id).type;
   return it->second;
 }
 
@@ -757,9 +757,9 @@ void interpretert::execute_function_call()
   trace_step.identifier=identifier;
 
   const goto_functionst::function_mapt::const_iterator f_it=
-    goto_functions.function_map.find(identifier);
+    goto_model.goto_functions.function_map.find(identifier);
 
-  if(f_it==goto_functions.function_map.end())
+  if(f_it==goto_model.goto_functions.function_map.end())
     throw "failed to find function "+id2string(identifier);
 
   // return value
@@ -853,7 +853,7 @@ void interpretert::build_memory_map()
   dynamic_types.clear();
 
   // now do regular static symbols
-  for(const auto &s : symbol_table.symbols)
+  for(const auto &s : goto_model.symbol_table.symbols)
     build_memory_map(s.second);
 
   // for the locals
@@ -1041,7 +1041,7 @@ exprt interpretert::get_value(const irep_idt &id)
   if(findit!=dynamic_types.end())
     get_type=findit->second;
   else
-    get_type=symbol_table.lookup(id).type;
+    get_type=goto_model.symbol_table.lookup(id).type;
 
   symbol_exprt symbol_expr(id, get_type);
   mp_integer whole_lhs_object_address=evaluate_address(symbol_expr);
@@ -1072,10 +1072,7 @@ void interpreter(
   const goto_modelt &goto_model,
   message_handlert &message_handler)
 {
-  interpretert interpreter(
-    goto_model.symbol_table,
-    goto_model.goto_functions,
-    message_handler);
+  interpretert interpreter(goto_model, message_handler);
   interpreter();
 }
 

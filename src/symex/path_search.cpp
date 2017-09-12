@@ -21,12 +21,12 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <path-symex/build_goto_trace.h>
 
 path_searcht::resultt path_searcht::operator()(
-  const goto_functionst &goto_functions)
+  const goto_modelt &goto_model)
 {
   locst locs(ns);
   var_mapt var_map(ns);
 
-  locs.build(goto_functions);
+  locs.build(goto_model.goto_functions);
 
   // this is the container for the history-forest
   path_symex_historyt history;
@@ -47,7 +47,7 @@ path_searcht::resultt path_searcht::operator()(
   // stop the time
   start_time=current_time();
 
-  initialize_property_map(goto_functions);
+  initialize_property_map(goto_model.goto_functions);
 
   while(!queue.empty())
   {

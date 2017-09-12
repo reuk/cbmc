@@ -435,10 +435,10 @@ bool bmc_covert::operator()()
 
 /// Try to cover all goals
 bool bmct::cover(
-  const goto_functionst &goto_functions,
+  const goto_modelt &goto_model,
   const optionst::value_listt &criteria)
 {
-  bmc_covert bmc_cover(goto_functions, *this);
+  bmc_covert bmc_cover(goto_model.goto_functions, *this);
   bmc_cover.set_message_handler(get_message_handler());
   return bmc_cover();
 }

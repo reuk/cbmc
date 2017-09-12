@@ -20,6 +20,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include "goto_functions.h"
 #include "goto_trace.h"
+#include "goto_model.h"
 #include "json_goto_trace.h"
 #include "util/message.h"
 
@@ -27,13 +28,11 @@ class interpretert:public messaget
 {
 public:
   interpretert(
-    const symbol_tablet &_symbol_table,
-    const goto_functionst &_goto_functions,
+    const goto_modelt &goto_model,
     message_handlert &_message_handler):
     messaget(_message_handler),
-    symbol_table(_symbol_table),
-    ns(_symbol_table),
-    goto_functions(_goto_functions),
+    goto_model(goto_model),
+    ns(goto_model.symbol_table),
     stack_pointer(0),
     done(false),
     stop_on_assertion(false)
@@ -96,12 +95,10 @@ public:
   const dynamic_typest &get_dynamic_types() { return dynamic_types; }
 
 protected:
-  const symbol_tablet &symbol_table;
+  const goto_modelt &goto_model;
 
   // This is a cache so that we don't have to create it when a call needs it
   const namespacet ns;
-
-  const goto_functionst &goto_functions;
 
   typedef std::unordered_map<irep_idt, std::size_t, irep_id_hash> memory_mapt;
   typedef std::map<std::size_t, irep_idt> inverse_memory_mapt;

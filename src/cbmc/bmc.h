@@ -27,6 +27,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <goto-symex/symex_target_equation.h>
 #include <goto-programs/safety_checker.h>
+#include <goto-programs/goto_model.h>
 
 #include "symex_bmc.h"
 
@@ -51,7 +52,7 @@ public:
       !options.get_option("symex-coverage-report").empty();
   }
 
-  virtual resultt run(const goto_functionst &goto_functions);
+  virtual resultt run(const goto_modelt &goto_model);
   virtual ~bmct() { }
 
   // additional stuff
@@ -60,10 +61,9 @@ public:
   void set_ui(ui_message_handlert::uit _ui) { ui=_ui; }
 
   // the safety_checkert interface
-  virtual resultt operator()(
-    const goto_functionst &goto_functions)
+  resultt operator()(const goto_modelt &goto_model) override
   {
-    return run(goto_functions);
+    return run(goto_model);
   }
 
 protected:
@@ -109,7 +109,7 @@ protected:
     const goto_functionst &goto_functions);
 
   bool cover(
-    const goto_functionst &goto_functions,
+    const goto_modelt &goto_model,
     const optionst::value_listt &criteria);
 
   friend class bmc_all_propertiest;
