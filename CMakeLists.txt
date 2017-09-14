@@ -4,7 +4,7 @@ find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
     message(STATUS "Rule launch compile: ${CCACHE_PROGRAM}")
- endif()
+endif()
 
 set(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
 
@@ -14,13 +14,15 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+set(custom_cxx_flags "" CACHE STRING "Extra flags used to build CXX files")
+
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR
    "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"
 )
     #   Ensure NDEBUG is not set for release builds
     set(CMAKE_CXX_FLAGS_RELEASE "-O2")
     #   Enable lots of warnings
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wpedantic -Werror")
+    set(CMAKE_CXX_FLAGS "${custom_cxx_flags} -Wall -Wpedantic -Werror")
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     #   This would be the place to enable warnings for Windows builds, although
     #   config.inc doesn't seem to do that currently
