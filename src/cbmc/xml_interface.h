@@ -12,19 +12,16 @@ Author: Daniel Kroening, kroening@kroening.com
 #ifndef CPROVER_CBMC_XML_INTERFACE_H
 #define CPROVER_CBMC_XML_INTERFACE_H
 
-#include <util/cmdline.h>
+#include <istream>
+#include <string>
+#include <vector>
 
-class xml_interfacet
-{
-public:
-  explicit xml_interfacet(cmdlinet &_cmdline)
-  {
-    get_xml_options(_cmdline);
-  }
+namespace util {
+class registered_optionst;
+} // namespace
 
-protected:
-  void get_xml_options(cmdlinet &cmdline);
-  void get_xml_options(const class xmlt &xml, cmdlinet &cmdline);
-};
+std::vector<std::string>
+parse_xml_cmdline_options(util::registered_optionst const &opts,
+                          std::istream &stream);
 
 #endif // CPROVER_CBMC_XML_INTERFACE_H

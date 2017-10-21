@@ -18,7 +18,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <analyses/goto_check.h>
 
-#include "xml_interface.h"
+#include <java_bytecode/java_bytecode_language.h>
 
 class bmct;
 class goto_functionst;
@@ -69,7 +69,6 @@ class optionst;
 
 class cbmc_parse_optionst:
   public parse_options_baset,
-  public xml_interfacet,
   public messaget
 {
 public:

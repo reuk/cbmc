@@ -13,52 +13,51 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <iostream>
 
+#include <util/cmdline_parser.h>
 #include <util/message.h>
 
 #include <xmllang/xml_parser.h>
 
-/// XML User Interface
-void xml_interfacet::get_xml_options(cmdlinet &cmdline)
-{
-  if(cmdline.isset("xml-interface"))
-  {
-    null_message_handlert message_handler;
-    xmlt xml;
-
-    parse_xml(std::cin, "", message_handler, xml);
-
-    get_xml_options(xml, cmdline);
-
-    cmdline.set("xml-ui");
-  }
-}
-
-/// XML User Interface
-void xml_interfacet::get_xml_options(
-  const xmlt &xml,
-  cmdlinet &cmdline)
-{
-  for(const auto &e : xml.elements)
-  {
-    // recursive call
-    get_xml_options(e, cmdline);
+namespace {
+std::vector<std::string>
+parse_xml_cmdline_options(util::registered_optionst const &opts,
+                          xmlt const &xml) {
+  for (const auto &e : xml.elements) {
+    parse_xml_cmdline_options(opts, e);
   }
 
-  if(xml.name=="valueOption")
-  {
-    std::string name=xml.get_attribute("name");
-    std::string value=xml.get_attribute("actual");
+  std::vector<std::string> ret;
 
-    if(name=="")
-      cmdline.args.push_back(value);
-    else
-      cmdline.set(name, value);
-  }
-  else if(xml.name=="flagOption")
-  {
-    if(xml.get_attribute("actual")=="on")
-    {
-      cmdline.set(xml.get_attribute("name"));
+  if (xml.name == "valueOption") {
+    std::string const name = xml.get_attribute("name");
+    std::string const value = xml.get_attribute("actual");
+    for (auto &ptr :
+         util::parse(opts, name.empty() ? std::vector<std::string>{value}
+                                        : std::vector<std::string>{"--" + name,
+                                                                   value})) {
+      ret.emplace_back(std::move(ptr));
+    }
+  } else if (xml.name == "flagOption") {
+    std::string const name = xml.get_attribute("name");
+    if (!name.empty() && xml.get_attribute("actual") == "on") {
+      util::parse(opts, std::vector<std::string>{"--" + name});
+      for (auto &ptr :
+           util::parse(opts, std::vector<std::string>{"--" + name})) {
+        ret.emplace_back(std::move(ptr));
+      }
     }
   }
+
+  return ret;
+}
+} // namespace
+
+std::vector<std::string>
+parse_xml_cmdline_options(util::registered_optionst const &opts,
+                          std::istream &stream) {
+  null_message_handlert message_handler;
+  xmlt xml;
+  parse_xml(stream, "", message_handler, xml);
+
+  return parse_xml_cmdline_options(opts, xml);
 }

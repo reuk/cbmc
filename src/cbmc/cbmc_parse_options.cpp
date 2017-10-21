@@ -70,7 +70,6 @@ Author: Daniel Kroening, kroening@kroening.com
 
 cbmc_parse_optionst::cbmc_parse_optionst(int argc, const char **argv):
   parse_options_baset(CBMC_OPTIONS, argc, argv),
-  xml_interfacet(cmdline),
   messaget(ui_message_handler),
   ui_message_handler(cmdline, "CBMC " CBMC_VERSION)
 {
@@ -81,7 +80,6 @@ cbmc_parse_optionst::cbmc_parse_optionst(int argc, const char **argv):
   const char **argv,
   const std::string &extra_options):
   parse_options_baset(CBMC_OPTIONS+extra_options, argc, argv),
-  xml_interfacet(cmdline),
   messaget(ui_message_handler),
   ui_message_handler(cmdline, "CBMC " CBMC_VERSION)
 {
