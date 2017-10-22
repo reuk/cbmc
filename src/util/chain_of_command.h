@@ -37,8 +37,16 @@ public:
 
 private:
   registered_optionst options_;
-  std::unique_ptr<link_with_optionst> front_;
+  std::unique_ptr<chain_of_command_linkt> front_;
   chain_of_command_linkt *back_ = nullptr;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+
+class do_nothing_linkt : public link_with_optionst {
+public:
+  void run(std::vector<std::string> const &values) override;
+  void register_options(registered_optionst &opts) override;
 };
 
 } // namespace util

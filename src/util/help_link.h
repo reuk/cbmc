@@ -11,6 +11,7 @@ public:
   void run(std::vector<std::string> const &values) override;
 
 private:
+  registered_optionst *opts_ = nullptr;
   bool help_ = false;
 };
 

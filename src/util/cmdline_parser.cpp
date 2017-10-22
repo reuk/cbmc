@@ -67,6 +67,23 @@ registered_optionst::option_ref(std::string const &str) const {
   throw std::runtime_error{"No such option"};
 }
 
+std::string registered_optionst::help() const {
+  auto const left_column = 30;
+  std::ostringstream ss;
+  ss << std::left;
+  for (auto const &details : listener_table_) {
+    ss << std::setw(left_column) << details.first;
+    if (details.first.size() < left_column) {
+      ss << std::setw(50) << details.second->help() << '\n';
+    } else {
+      ss << '\n'
+         << std::string(left_column, ' ') << std::setw(50)
+         << details.second->help() << '\n';
+    }
+  }
+  return ss.str();
+}
+
 std::vector<std::string> parse_cmdline(registered_optionst const &opts,
                                        int argc, char const *const *argv) {
   class parser_visitort : public option_visitort {
@@ -91,31 +108,17 @@ std::vector<std::string> parse_cmdline(registered_optionst const &opts,
 
   std::vector<std::string> ret;
   for (decltype(argc) i = 1; i < argc;) {
-    if (auto const entry = opts.option(argv[i])) {
-      entry->accept(parser_visitort{argv, i});
+    if (strncmp(argv[i], "--", 2) == 0) {
+      auto const flag_name = std::string{std::next(argv[i], 2)};
+      if (auto const entry = opts.option(flag_name)) {
+        entry->accept(parser_visitort{argv, i});
+      }
     } else {
       ret.emplace_back(argv[i]);
       ++i;
     }
   }
   return ret;
-}
-
-std::string registered_optionst::help() const {
-  auto const left_column = 30;
-  std::ostringstream ss;
-  ss << std::left;
-  for (auto const &details : listener_table_) {
-    ss << std::setw(left_column) << details.first;
-    if (details.first.size() < left_column) {
-      ss << std::setw(50) << details.second->help() << '\n';
-    } else {
-      ss << '\n'
-         << std::string(left_column, ' ') << std::setw(50)
-         << details.second->help() << '\n';
-    }
-  }
-  return ss.str();
 }
 
 std::vector<std::string> parse_cmdline(registered_optionst const &opts,

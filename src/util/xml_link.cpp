@@ -1,6 +1,5 @@
 #include "util/xml_link.h"
-
-#include "cbmc/xml_interface.h"
+#include "util/xml_interface.h"
 
 #include <iostream>
 

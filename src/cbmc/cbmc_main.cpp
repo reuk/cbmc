@@ -18,6 +18,9 @@ Author: Daniel Kroening, kroening@kroening.com
 */
 
 #include "cbmc_parse_options.h"
+#include "util/chain_of_command.h"
+#include "util/help_link.h"
+#include "util/xml_link.h"
 
 #include <util/unicode.h>
 
@@ -41,9 +44,14 @@ int wmain(int argc, const wchar_t **argv_wide)
 int main(int argc, const char **argv)
 {
 #endif
-  cbmc_parse_optionst parse_options(argc, argv);
+  util::chain_of_commandt chain;
+  chain.add_to_back(util_make_unique<util::help_linkt>());
+  chain.add_to_back(util_make_unique<util::xml_linkt>());
+  chain.add_to_back(util_make_unique<util::do_nothing_linkt>());
+  chain.run(argc, argv);
 
-  int res=parse_options.main();
+  //cbmc_parse_optionst parse_options(argc, argv);
+  //int res=parse_options.main();
 
   #ifdef IREP_HASH_STATS
   std::cout << "IREP_HASH_CNT=" << irep_hash_cnt << '\n';
@@ -51,5 +59,6 @@ int main(int argc, const char **argv)
   std::cout << "IREP_CMP_NE_CNT=" << irep_cmp_ne_cnt << '\n';
   #endif
 
-  return res;
+  //return res;
+  return 0;
 }
