@@ -104,8 +104,8 @@ public:
 
   void add(std::string name, bool &set, std::string help = "");
 
-  // Returns anything the parser didn't understand
-  std::vector<std::string> parse(int argc, char const *const *argv) const;
+  registered_option_baset const *option(std::string const &str) const;
+  registered_option_baset const &option_ref(std::string const &str) const;
 
   std::string help() const;
 
@@ -114,18 +114,15 @@ private:
       listener_table_;
 
   void check_for_flag(std::string const &str) const;
-
-  registered_option_baset const *option(std::string const &str) const;
 };
 
-std::vector<std::string> parse(const registered_optionst &opts, int argc,
-                               char const *const *argv);
+std::vector<std::string> parse_cmdline(registered_optionst const &opts,
+                                       int argc, char const *const *argv);
 
-std::vector<std::string> parse(const registered_optionst &opts,
-                               std::vector<char const *> const &vec);
+std::vector<std::string> parse_cmdline(registered_optionst const &opts,
+                                       std::vector<char const *> const &vec);
 
-/// BEWARE returned pointers have same lifetime as /p vec
-std::vector<std::string> parse(const registered_optionst &opts,
-                               std::vector<std::string> const &vec);
+std::vector<std::string> parse_cmdline(registered_optionst const &opts,
+                                       std::vector<std::string> const &vec);
 
 } // namespace util

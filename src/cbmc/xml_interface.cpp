@@ -19,6 +19,32 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <xmllang/xml_parser.h>
 
 namespace {
+class expected_flag_visitort : public util::option_visitort {
+public:
+  void visit(util::flag_optiont const &opt) const override { opt.invoke(); }
+
+  void visit(util::value_optiont const &opt) const override {
+    throw std::runtime_error{"This is a flag option"};
+  }
+};
+
+class expected_value_visitort : public util::option_visitort {
+public:
+  explicit expected_value_visitort(std::string value)
+      : value_{std::move(value)} {}
+
+  void visit(util::flag_optiont const &opt) const override {
+    throw std::runtime_error{"This is a value option"};
+  }
+
+  void visit(util::value_optiont const &opt) const override {
+    opt.invoke(value_.c_str());
+  }
+
+private:
+  std::string value_;
+};
+
 std::vector<std::string>
 parse_xml_cmdline_options(util::registered_optionst const &opts,
                           xmlt const &xml) {
@@ -30,21 +56,16 @@ parse_xml_cmdline_options(util::registered_optionst const &opts,
 
   if (xml.name == "valueOption") {
     std::string const name = xml.get_attribute("name");
-    std::string const value = xml.get_attribute("actual");
-    for (auto &ptr :
-         util::parse(opts, name.empty() ? std::vector<std::string>{value}
-                                        : std::vector<std::string>{"--" + name,
-                                                                   value})) {
-      ret.emplace_back(std::move(ptr));
+    std::string value = xml.get_attribute("actual");
+    if (name.empty()) {
+      ret.emplace_back(std::move(value));
+    } else {
+      opts.option_ref(name).accept(expected_value_visitort{value});
     }
   } else if (xml.name == "flagOption") {
     std::string const name = xml.get_attribute("name");
     if (!name.empty() && xml.get_attribute("actual") == "on") {
-      util::parse(opts, std::vector<std::string>{"--" + name});
-      for (auto &ptr :
-           util::parse(opts, std::vector<std::string>{"--" + name})) {
-        ret.emplace_back(std::move(ptr));
-      }
+      opts.option_ref(name).accept(expected_flag_visitort{});
     }
   }
 

@@ -20,8 +20,7 @@ namespace util {
 class registered_optionst;
 } // namespace
 
-std::vector<std::string>
-parse_xml_cmdline_options(util::registered_optionst const &opts,
-                          std::istream &stream);
+std::vector<std::string> parse_xml(util::registered_optionst const &opts,
+                                   std::istream &stream);
 
 #endif // CPROVER_CBMC_XML_INTERFACE_H

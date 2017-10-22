@@ -46,8 +46,29 @@ void registered_optionst::add(std::string name, bool &set, std::string help) {
                           util_make_unique<flag_optiont>(std::move(help), set));
 }
 
-std::vector<std::string>
-registered_optionst::parse(int argc, char const *const *argv) const {
+void registered_optionst::check_for_flag(std::string const &tag) const {
+  auto const it = listener_table_.find(tag);
+  if (it != listener_table_.end()) {
+    throw flag_already_exists_errort(tag);
+  }
+}
+
+registered_option_baset const *
+registered_optionst::option(std::string const &str) const {
+  auto const it = listener_table_.find(str);
+  return it == listener_table_.end() ? nullptr : it->second.get();
+}
+
+registered_option_baset const &
+registered_optionst::option_ref(std::string const &str) const {
+  if (auto const ptr = option(str)) {
+    return *ptr;
+  }
+  throw std::runtime_error{"No such option"};
+}
+
+std::vector<std::string> parse_cmdline(registered_optionst const &opts,
+                                       int argc, char const *const *argv) {
   class parser_visitort : public option_visitort {
   public:
     explicit parser_visitort(char const *const *argv, int &it)
@@ -70,7 +91,7 @@ registered_optionst::parse(int argc, char const *const *argv) const {
 
   std::vector<std::string> ret;
   for (decltype(argc) i = 1; i < argc;) {
-    if (auto const entry = option(argv[i])) {
+    if (auto const entry = opts.option(argv[i])) {
       entry->accept(parser_visitort{argv, i});
     } else {
       ret.emplace_back(argv[i]);
@@ -97,36 +118,18 @@ std::string registered_optionst::help() const {
   return ss.str();
 }
 
-void registered_optionst::check_for_flag(std::string const &tag) const {
-  auto const it = listener_table_.find(tag);
-  if (it != listener_table_.end()) {
-    throw flag_already_exists_errort(tag);
-  }
+std::vector<std::string> parse_cmdline(registered_optionst const &opts,
+                                       std::vector<char const *> const &vec) {
+  return parse_cmdline(opts, vec.size(), vec.data());
 }
 
-registered_option_baset const *
-registered_optionst::option(std::string const &str) const {
-  auto const it = listener_table_.find(str);
-  return it == listener_table_.end() ? nullptr : it->second.get();
-}
-
-std::vector<std::string> parse(const registered_optionst &opts, int argc,
-                               char const *const *argv) {
-  return opts.parse(argc, argv);
-}
-
-std::vector<std::string> parse(const registered_optionst &opts,
-                               std::vector<char const *> const &vec) {
-  return parse(opts, vec.size(), vec.data());
-}
-
-std::vector<std::string> parse(const registered_optionst &opts,
-                               std::vector<std::string> const &vec) {
+std::vector<std::string> parse_cmdline(registered_optionst const &opts,
+                                       std::vector<std::string> const &vec) {
   std::vector<char const *> ptrs;
   ptrs.reserve(vec.size());
   transform(begin(vec), end(vec), back_inserter(ptrs),
             [](std::string const &str) { return str.data(); });
-  return parse(opts, ptrs);
+  return parse_cmdline(opts, ptrs);
 }
 
 } // namespace util
