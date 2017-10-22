@@ -30,15 +30,30 @@ public:
 
 class chain_of_commandt final {
 public:
+  void add_to_front(std::unique_ptr<chain_of_command_linkt> link);
+  void add_to_back(std::unique_ptr<chain_of_command_linkt> link);
+
+  void run(std::vector<std::string> const &values);
+
+private:
+  std::unique_ptr<chain_of_command_linkt> front_;
+  chain_of_command_linkt *back_ = nullptr;
+};
+
+////////////////////////////////////////////////////////////////////////////////
+
+class chain_of_command_with_optionst final {
+public:
   void add_to_front(std::unique_ptr<link_with_optionst> link);
   void add_to_back(std::unique_ptr<link_with_optionst> link);
 
   void run(int argc, char const *const *argv);
 
+  registered_optionst const &options() const;
+
 private:
   registered_optionst options_;
-  std::unique_ptr<chain_of_command_linkt> front_;
-  chain_of_command_linkt *back_ = nullptr;
+  chain_of_commandt chain_;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

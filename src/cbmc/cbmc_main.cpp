@@ -44,9 +44,9 @@ int wmain(int argc, const wchar_t **argv_wide)
 int main(int argc, const char **argv)
 {
 #endif
-  util::chain_of_commandt chain;
-  chain.add_to_back(util_make_unique<util::help_linkt>());
-  chain.add_to_back(util_make_unique<util::xml_linkt>());
+  util::chain_of_command_with_optionst chain;
+  chain.add_to_back(util_make_unique<util::help_linkt>(chain.options()));
+  chain.add_to_back(util_make_unique<util::xml_linkt>(chain.options()));
   chain.add_to_back(util_make_unique<util::do_nothing_linkt>());
   chain.run(argc, argv);
 

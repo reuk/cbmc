@@ -8,9 +8,8 @@ chain_of_command_linkt *chain_of_command_linkt::get_next() const {
   return next_.get();
 }
 
-void chain_of_commandt::add_to_front(std::unique_ptr<link_with_optionst> link) {
-  link->register_options(options_);
-
+void chain_of_commandt::add_to_front(
+    std::unique_ptr<chain_of_command_linkt> link) {
   link->next_ = std::move(front_);
   front_ = std::move(link);
 
@@ -19,21 +18,42 @@ void chain_of_commandt::add_to_front(std::unique_ptr<link_with_optionst> link) {
   }
 }
 
-void chain_of_commandt::add_to_back(std::unique_ptr<link_with_optionst> link) {
-  link->register_options(options_);
+void chain_of_commandt::add_to_back(
+    std::unique_ptr<chain_of_command_linkt> link) {
   if (back_ == nullptr) {
-    front_ = std::move(link);
-    back_ = front_.get();
+    add_to_front(std::move(link));
   } else {
     back_->next_ = std::move(link);
     back_ = back_->next_.get();
   }
 }
 
-void chain_of_commandt::run(int argc, char const *const *argv) {
+void chain_of_commandt::run(std::vector<std::string> const &values) {
   if (front_ != nullptr) {
-    front_->run(parse_cmdline(options_, argc, argv));
+    front_->run(values);
   }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+void chain_of_command_with_optionst::add_to_front(
+    std::unique_ptr<link_with_optionst> link) {
+  link->register_options(options_);
+  chain_.add_to_front(std::move(link));
+}
+
+void chain_of_command_with_optionst::add_to_back(
+    std::unique_ptr<link_with_optionst> link) {
+  link->register_options(options_);
+  chain_.add_to_back(std::move(link));
+}
+
+void chain_of_command_with_optionst::run(int argc, char const *const *argv) {
+  chain_.run(parse_cmdline(options_, argc, argv));
+}
+
+registered_optionst const &chain_of_command_with_optionst::options() const {
+  return options_;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
