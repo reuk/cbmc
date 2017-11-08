@@ -392,7 +392,7 @@ void interpretert::evaluate(
       if(show)
         warning() << "string decoding not fully implemented "
                   << length << eom;
-      mp_integer tmp=value.get_no();
+      mp_integer tmp=irep_id_hash{}(value);
       dest.push_back(tmp);
       return;
     }

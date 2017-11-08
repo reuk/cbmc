@@ -25,7 +25,7 @@ const char *irep_ids_table[]=
   nullptr,
 };
 
-#ifdef USE_DSTRING
+#ifndef DISABLE_DSTRING
 
 #define IREP_ID_ONE(the_id)                                                    \
   const dstringt ID_##the_id=dstringt::make_from_table_index(                  \

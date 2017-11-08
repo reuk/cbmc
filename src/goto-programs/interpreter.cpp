@@ -640,10 +640,15 @@ exprt interpretert::get_value(
   }
   else if(real_type.id()==ID_string)
   {
+#ifndef DISABLE_DSTRING
     // Strings are currently encoded by their irep_idt ID.
     return constant_exprt(
       irep_idt::make_from_table_index(rhs[integer2size_t(offset)].to_long()),
       type);
+#else
+    warning() << "Can't deserialize strings when compiled without dstring\n"
+              << eom;
+#endif
   }
 
   // Retrieve value of basic data type

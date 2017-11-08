@@ -223,7 +223,7 @@ public:
 
   typedef std::unordered_set<unsigned int> dynamic_object_id_sett;
 
-  #ifdef USE_DSTRING
+  #ifndef DISABLE_DSTRING
   typedef std::map<idt, entryt> valuest;
   #else
   typedef std::unordered_map<idt, entryt, string_hash> valuest;

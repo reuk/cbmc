@@ -12,10 +12,10 @@ Author: Reuben Thomas, reuben.thomas@me.com
 #ifndef CPROVER_UTIL_IREP_IDS_H
 #define CPROVER_UTIL_IREP_IDS_H
 
-#define USE_DSTRING
-
-#ifdef USE_DSTRING
+#ifndef DISABLE_DSTRING
 #include "dstring.h"
+#else
+#include <string>
 #endif
 
 /// \file The irep_ids are generated using a technique called
@@ -37,7 +37,7 @@ enum class idt:unsigned
 #include "irep_ids.def"
 };
 
-#ifdef USE_DSTRING
+#ifndef DISABLE_DSTRING
 
 #define IREP_ID_ONE(the_id) extern const dstringt ID_##the_id;
 #define IREP_ID_TWO(the_id, str) extern const dstringt ID_##the_id;

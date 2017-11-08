@@ -190,14 +190,14 @@ private:
   sparse_bitvector_analysist<reaching_definitiont> *bv_container;
 
   typedef std::set<std::size_t> values_innert;
-  #ifdef USE_DSTRING
+  #ifndef DISABLE_DSTRING
   typedef std::map<irep_idt, values_innert> valuest;
   #else
   typedef std::unordered_map<irep_idt, values_innert, irep_id_hash> valuest;
   #endif
   valuest values;
 
-  #ifdef USE_DSTRING
+  #ifndef DISABLE_DSTRING
   typedef std::map<irep_idt, ranges_at_loct> export_cachet;
   #else
   typedef std::unordered_map<irep_idt, ranges_at_loct, irep_id_hash>

@@ -805,7 +805,7 @@ code_blockt &java_bytecode_convert_methodt::get_or_create_block_for_pcrange(
   // any block-internal edges to target the inner header block.
 
   const irep_idt child_label_name=child_label.get_label();
-  std::string new_label_str=as_string(child_label_name);
+  std::string new_label_str=id2string(child_label_name);
   new_label_str+='$';
   irep_idt new_label_irep(new_label_str);
 
@@ -1435,7 +1435,7 @@ codet java_bytecode_convert_methodt::convert_instructions(
           // constructors.
           if(statement=="invokespecial")
           {
-            if(as_string(arg0.get(ID_identifier))
+            if(id2string(arg0.get(ID_identifier))
                .find("<init>")!=std::string::npos)
             {
               if(lazy_methods)

@@ -13,6 +13,8 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <util/std_types.h>
 #include <util/namespace.h>
 
+#include <unordered_map>
+
 class boolbv_widtht
 {
 public:

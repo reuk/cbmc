@@ -13,6 +13,7 @@ Author: Daniel Kroening, kroening@cs.cmu.edu
 #define CPROVER_CPP_CPP_SCOPES_H
 
 #include <set>
+#include <unordered_map>
 
 #include <util/symbol.h>
 #include <util/string_hash.h>

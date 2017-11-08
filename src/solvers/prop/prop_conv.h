@@ -12,6 +12,7 @@ Author: Daniel Kroening, kroening@kroening.com
 
 #include <string>
 #include <map>
+#include <unordered_map>
 
 #include <util/decision_procedure.h>
 #include <util/expr.h>

@@ -28,7 +28,7 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <map>
 #endif
 
-#ifdef USE_DSTRING
+#ifndef DISABLE_DSTRING
 typedef dstringt irep_idt;
 typedef dstringt irep_namet;
 // NOLINTNEXTLINE(readability/identifiers)
@@ -43,7 +43,7 @@ typedef string_hash irep_id_hash;
 
 inline const std::string &id2string(const irep_idt &d)
 {
-  #ifdef USE_DSTRING
+  #ifndef DISABLE_DSTRING
   return as_string(d);
   #else
   return d;
@@ -52,7 +52,7 @@ inline const std::string &id2string(const irep_idt &d)
 
 inline const std::string &name2string(const irep_namet &n)
 {
-  #ifdef USE_DSTRING
+  #ifndef DISABLE_DSTRING
   return as_string(n);
   #else
   return n;
