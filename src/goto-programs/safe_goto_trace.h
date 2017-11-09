@@ -13,6 +13,7 @@ Author: @reuk
 #define CPROVER_GOTO_PROGRAMS_SAFE_GOTO_TRACE_H
 
 #include <goto-programs/goto_program.h>
+#include <goto-programs/goto_trace.h>
 
 #include <util/dereference_iterator.h>
 #include <util/make_unique.h>
@@ -239,11 +240,40 @@ private:
 };
 } // namespace detail
 
+enum class assignment_typet { STATE, ACTUAL_PARAMETER };
+
 class goto_trace_step_assignmentt final
   : public detail::goto_trace_step_mixint<goto_trace_step_assignmentt>
 {
 public:
   bool is_assignment() const override;
+
+  ssa_exprt lhs_object() const { return lhs_object_; }
+  void lhs_object(ssa_exprt lhs_object)
+  {
+    lhs_object_ = std::move(lhs_object);
+  }
+
+  exprt full_lhs() const { return full_lhs_; }
+  void full_lhs(exprt full_lhs) { full_lhs_ = std::move(full_lhs); }
+
+  exprt full_lhs_value() const { return full_lhs_value_; }
+  void full_lhs_value(exprt full_lhs_value)
+  {
+    full_lhs_value_ = std::move(full_lhs_value);
+  }
+
+  assignment_typet assignment_type() const { return assignment_type_; }
+  void assignment_type(assignment_typet assignment_type)
+  {
+    assignment_type_ = assignment_type;
+  }
+
+private:
+  ssa_exprt lhs_object_;
+  exprt full_lhs_;
+  exprt full_lhs_value_;
+  assignment_typet assignment_type_;
 };
 
 class goto_trace_step_assumet final
@@ -289,6 +319,12 @@ class goto_trace_step_function_callt final
 {
 public:
   bool is_function_call() const override;
+
+  irep_idt identifier() const { return identifier_; }
+  void identifier(irep_idt identifier) { identifier_ = std::move(identifier); }
+
+public:
+  irep_idt identifier_;
 };
 
 class goto_trace_step_function_returnt final
@@ -296,6 +332,12 @@ class goto_trace_step_function_returnt final
 {
 public:
   bool is_function_return() const override;
+
+  irep_idt identifier() const { return identifier_; }
+  void identifier(irep_idt identifier) { identifier_ = std::move(identifier); }
+
+public:
+  irep_idt identifier_;
 };
 
 class goto_trace_step_locationt final
@@ -310,6 +352,27 @@ class goto_trace_step_outputt final
 {
 public:
   bool is_output() const override;
+
+  irep_idt format_string() const { return format_string_; }
+  void format_string(irep_idt format_string)
+  {
+    format_string_ = std::move(format_string);
+  }
+
+  irep_idt io_id() const { return io_id_; }
+  void io_id(irep_idt io_id) { io_id_ = std::move(io_id); }
+
+  std::list<exprt> io_args() const { return io_args_; }
+  void io_args(std::list<exprt> io_args) { io_args_ = std::move(io_args); }
+
+  bool formatted() const { return formatted_; }
+  void formatted(bool formatted) { formatted_ = formatted; }
+
+private:
+  irep_idt format_string_;
+  irep_idt io_id_;
+  std::list<exprt> io_args_;
+  bool formatted_;
 };
 
 class goto_trace_step_inputt final
@@ -317,6 +380,27 @@ class goto_trace_step_inputt final
 {
 public:
   bool is_input() const override;
+
+  irep_idt format_string() const { return format_string_; }
+  void format_string(irep_idt format_string)
+  {
+    format_string_ = std::move(format_string);
+  }
+
+  irep_idt io_id() const { return io_id_; }
+  void io_id(irep_idt io_id) { io_id_ = std::move(io_id); }
+
+  std::list<exprt> io_args() const { return io_args_; }
+  void io_args(std::list<exprt> io_args) { io_args_ = std::move(io_args); }
+
+  bool formatted() const { return formatted_; }
+  void formatted(bool formatted) { formatted_ = formatted; }
+
+private:
+  irep_idt format_string_;
+  irep_idt io_id_;
+  std::list<exprt> io_args_;
+  bool formatted_;
 };
 
 class goto_trace_step_declt final
@@ -324,6 +408,33 @@ class goto_trace_step_declt final
 {
 public:
   bool is_decl() const override;
+
+  ssa_exprt lhs_object() const { return lhs_object_; }
+  void lhs_object(ssa_exprt lhs_object)
+  {
+    lhs_object_ = std::move(lhs_object);
+  }
+
+  exprt full_lhs() const { return full_lhs_; }
+  void full_lhs(exprt full_lhs) { full_lhs_ = std::move(full_lhs); }
+
+  exprt full_lhs_value() const { return full_lhs_value_; }
+  void full_lhs_value(exprt full_lhs_value)
+  {
+    full_lhs_value_ = std::move(full_lhs_value);
+  }
+
+  assignment_typet assignment_type() const { return assignment_type_; }
+  void assignment_type(assignment_typet assignment_type)
+  {
+    assignment_type_ = assignment_type;
+  }
+
+private:
+  ssa_exprt lhs_object_;
+  exprt full_lhs_;
+  exprt full_lhs_value_;
+  assignment_typet assignment_type_;
 };
 
 class goto_trace_step_deadt final

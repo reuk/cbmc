@@ -192,6 +192,19 @@ bool goto_trace_step_atomic_endt::is_atomic_end() const
 
 ////////////////////////////////////////////////////////////////////////////////
 
+safe_goto_tracet::safe_goto_tracet(const goto_tracet &trace)
+{
+}
+
+goto_tracet safe_goto_tracet::make_unsafe() const
+{
+  return goto_tracet{};
+}
+
+void safe_goto_tracet::output(const namespacet &ns, std::ostream &os) const
+{
+}
+
 safe_goto_tracet::iteratort safe_goto_tracet::begin()
 {
   return make_dereference_iterator(steps_.begin());
