@@ -175,19 +175,23 @@ public:
 
   void output(const namespacet &, std::ostream &);
 
-  bool hidden() const;
-  void hidden(bool hidden);
+  bool hidden() const { return hidden_; }
+  void hidden(bool hidden) { hidden_ = hidden; }
 
-  bool internal() const;
-  void internal(bool internal);
+  bool internal() const { return internal_; }
+  void internal(bool internal) { internal_ = internal; }
 
-  goto_programt::const_targett pc() const;
-  void pc(goto_programt::const_targett pc);
+  goto_programt::const_targett pc() const { return pc_; }
+  void pc(goto_programt::const_targett pc) { pc_ = std::move(pc); }
+
+  unsigned thread_nr() const { return thread_nr_; }
+  void thread_nr(unsigned thread_nr) { thread_nr_ = thread_nr; }
 
 private:
   bool hidden_ = false;
   bool internal_ = false;
   goto_programt::const_targett pc_;
+  unsigned thread_nr_;
 };
 
 namespace detail
@@ -254,6 +258,16 @@ class goto_trace_step_assertt final
 {
 public:
   bool is_assert() const override;
+
+  bool cond_value() const { return cond_value_; }
+  void cond_value(bool cond_value) { cond_value_ = cond_value; }
+
+  std::string comment() const { return comment_; }
+  void comment(std::string comment) { comment_ = std::move(comment); }
+
+private:
+  bool cond_value_ = false;
+  std::string comment_;
 };
 
 class goto_trace_step_gotot final
