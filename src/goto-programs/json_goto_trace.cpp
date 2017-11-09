@@ -287,7 +287,8 @@ private:
     json_assignment["thread"] = json_numbert(std::to_string(step.thread_nr()));
 
     json_assignment["assignmentType"] = json_stringt(
-      step.assignment_type() == assignment_typet::ACTUAL_PARAMETER
+      step.assignment_type() ==
+          goto_trace_stept::assignment_typet::ACTUAL_PARAMETER
         ? "actual-parameter"
         : "variable");
   }
