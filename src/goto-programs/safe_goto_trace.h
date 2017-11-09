@@ -240,8 +240,6 @@ private:
 };
 } // namespace detail
 
-enum class assignment_typet { STATE, ACTUAL_PARAMETER };
-
 class goto_trace_step_assignmentt final
   : public detail::goto_trace_step_mixint<goto_trace_step_assignmentt>
 {
@@ -263,8 +261,11 @@ public:
     full_lhs_value_ = std::move(full_lhs_value);
   }
 
-  assignment_typet assignment_type() const { return assignment_type_; }
-  void assignment_type(assignment_typet assignment_type)
+  goto_trace_stept::assignment_typet assignment_type() const
+  {
+    return assignment_type_;
+  }
+  void assignment_type(goto_trace_stept::assignment_typet assignment_type)
   {
     assignment_type_ = assignment_type;
   }
@@ -273,7 +274,7 @@ private:
   ssa_exprt lhs_object_;
   exprt full_lhs_;
   exprt full_lhs_value_;
-  assignment_typet assignment_type_;
+  goto_trace_stept::assignment_typet assignment_type_;
 };
 
 class goto_trace_step_assumet final
@@ -424,8 +425,11 @@ public:
     full_lhs_value_ = std::move(full_lhs_value);
   }
 
-  assignment_typet assignment_type() const { return assignment_type_; }
-  void assignment_type(assignment_typet assignment_type)
+  goto_trace_stept::assignment_typet assignment_type() const
+  {
+    return assignment_type_;
+  }
+  void assignment_type(goto_trace_stept::assignment_typet assignment_type)
   {
     assignment_type_ = assignment_type;
   }
@@ -434,7 +438,7 @@ private:
   ssa_exprt lhs_object_;
   exprt full_lhs_;
   exprt full_lhs_value_;
-  assignment_typet assignment_type_;
+  goto_trace_stept::assignment_typet assignment_type_;
 };
 
 class goto_trace_step_deadt final
