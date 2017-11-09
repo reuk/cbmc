@@ -28,7 +28,13 @@ namespace
 class convert_visitort : public goto_trace_const_visitor_const_argst
 {
 public:
-  convert_visitort()
+  convert_visitort(
+    json_arrayt &dest_array,
+    const source_locationt &source_location,
+    const jsont &json_location)
+    : dest_array_(dest_array),
+      source_location_(source_location),
+      json_location_(json_location)
   {
   }
 
@@ -36,7 +42,35 @@ public:
 
   void visit(const goto_trace_step_assumet &) const override {}
 
-  void visit(const goto_trace_step_assertt &) const override {}
+  void visit(const goto_trace_step_assertt &step) const override
+  {
+    if(!step.cond_value())
+    {
+      irep_idt property_id;
+
+      if(step.pc()->is_assert())
+      {
+        property_id = source_location_.get_property_id();
+      }
+      else if(step.pc()->is_goto()) // unwinding, we suspect
+      {
+        property_id = id2string(step.pc()->source_location.get_function()) +
+                      ".unwind." + std::to_string(step.pc()->loop_number);
+      }
+
+      json_objectt &json_failure = dest_array_.push_back().make_object();
+
+      json_failure["stepType"] = json_stringt("failure");
+      json_failure["hidden"] = jsont::json_boolean(step.hidden());
+      json_failure["internal"] = jsont::json_boolean(step.internal());
+      json_failure["thread"] = json_numbert(std::to_string(step.thread_nr()));
+      json_failure["reason"] = json_stringt(id2string(step.comment()));
+      json_failure["property"] = json_stringt(id2string(property_id));
+
+      if(!json_location_.is_null())
+        json_failure["sourceLocation"] = json_location_;
+    }
+  }
 
   void visit(const goto_trace_step_gotot &) const override {}
 
@@ -69,6 +103,9 @@ public:
   void visit(const goto_trace_step_atomic_endt &) const override {}
 
 private:
+  json_arrayt &dest_array_;
+  const source_locationt &source_location_;
+  const jsont &json_location_;
 };
 } // namespace
 
@@ -97,8 +134,9 @@ void convert(
     else
       json_location=json_nullt();
 
-    step.accept(convert_visitort{});
+    step.accept(convert_visitort{dest_array, source_location, json_location});
 
+#if 0
     switch(step.type)
     {
     case goto_trace_stept::typet::ASSERT:
@@ -296,6 +334,7 @@ void convert(
         }
       }
     }
+#endif
 
     if(source_location.is_not_nil() && source_location.get_file()!="")
       previous_source_location=source_location;
