@@ -18,6 +18,8 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <algorithm>
 #include <string.h>
 
+#include <goto-programs/safe_goto_trace.h>
+
 #include <util/invariant.h>
 #include <util/std_types.h>
 #include <util/symbol_table.h>
@@ -151,7 +153,7 @@ void interpretert::command()
   else if(ch=='j')
   {
     jsont json_steps;
-    convert(ns, steps, json_steps);
+    convert(ns, safe_goto_tracet{steps}, json_steps);
     ch=tolower(command[1]);
     if(ch==' ')
     {

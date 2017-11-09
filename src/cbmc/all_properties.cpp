@@ -21,6 +21,7 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <goto-symex/build_goto_trace.h>
 #include <goto-programs/xml_goto_trace.h>
 #include <goto-programs/json_goto_trace.h>
+#include <goto-programs/safe_goto_trace.h>
 
 #include "bv_cbmc.h"
 
@@ -219,7 +220,7 @@ void bmc_all_propertiest::report(const cover_goalst &cover_goals)
         if(g.second.status==goalt::statust::FAILURE)
         {
           jsont &json_trace=result["trace"];
-          convert(bmc.ns, g.second.goto_trace, json_trace);
+          convert(bmc.ns, safe_goto_tracet{g.second.goto_trace}, json_trace);
         }
       }
 

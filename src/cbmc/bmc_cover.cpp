@@ -23,6 +23,7 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <goto-symex/build_goto_trace.h>
 #include <goto-programs/xml_goto_trace.h>
 #include <goto-programs/json_goto_trace.h>
+#include <goto-programs/safe_goto_trace.h>
 
 #include "bv_cbmc.h"
 
@@ -370,7 +371,7 @@ bool bmc_covert::operator()()
         if(bmc.options.get_bool_option("trace"))
         {
           jsont &json_trace=result["trace"];
-          convert(bmc.ns, test.goto_trace, json_trace);
+          convert(bmc.ns, safe_goto_tracet{test.goto_trace}, json_trace);
         }
         else
         {

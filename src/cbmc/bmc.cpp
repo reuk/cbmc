@@ -29,6 +29,7 @@ Author: Daniel Kroening, kroening@kroening.com
 #include <goto-programs/xml_goto_trace.h>
 #include <goto-programs/json_goto_trace.h>
 #include <goto-programs/graphml_witness.h>
+#include <goto-programs/safe_goto_trace.h>
 
 #include <goto-symex/build_goto_trace.h>
 #include <goto-symex/slice.h>
@@ -80,7 +81,7 @@ void bmct::error_trace()
         json_stringt(id2string(step.pc->source_location.get_comment()));
       json_result["status"]=json_stringt("failed");
       jsont &json_trace=json_result["trace"];
-      convert(ns, goto_trace, json_trace);
+      convert(ns, safe_goto_tracet{goto_trace}, json_trace);
       status() << json_result;
     }
     break;
