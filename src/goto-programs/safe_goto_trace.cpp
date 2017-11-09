@@ -199,137 +199,137 @@ make_step(const goto_trace_stept &step)
 {
   switch(step.type)
   {
-    case goto_trace_stept::typet::ASSIGNMENT:
-    {
-      auto ret = util_make_unique<goto_trace_step_assignmentt>();
-      ret->lhs_object(step.lhs_object);
-      ret->full_lhs(step.full_lhs);
-      ret->full_lhs_value(step.full_lhs_value);
-      ret->assignment_type(step.assignment_type);
-      return ret;
-    }
+  case goto_trace_stept::typet::ASSIGNMENT:
+  {
+    auto ret = util_make_unique<goto_trace_step_assignmentt>();
+    ret->lhs_object(step.lhs_object);
+    ret->full_lhs(step.full_lhs);
+    ret->full_lhs_value(step.full_lhs_value);
+    ret->assignment_type(step.assignment_type);
+    return ret;
+  }
 
-    case goto_trace_stept::typet::ASSUME:
-    {
-      auto ret = util_make_unique<goto_trace_step_assumet>();
-      return ret;
-    }
+  case goto_trace_stept::typet::ASSUME:
+  {
+    auto ret = util_make_unique<goto_trace_step_assumet>();
+    return ret;
+  }
 
-    case goto_trace_stept::typet::ASSERT:
-    {
-      auto ret = util_make_unique<goto_trace_step_assertt>();
-      ret->cond_value(step.cond_value);
-      ret->comment(step.comment);
-      return ret;
-    }
+  case goto_trace_stept::typet::ASSERT:
+  {
+    auto ret = util_make_unique<goto_trace_step_assertt>();
+    ret->cond_value(step.cond_value);
+    ret->comment(step.comment);
+    return ret;
+  }
 
-    case goto_trace_stept::typet::GOTO:
-    {
-      auto ret = util_make_unique<goto_trace_step_gotot>();
-      return ret;
-    }
+  case goto_trace_stept::typet::GOTO:
+  {
+    auto ret = util_make_unique<goto_trace_step_gotot>();
+    return ret;
+  }
 
-    case goto_trace_stept::typet::LOCATION:
-    {
-      auto ret = util_make_unique<goto_trace_step_locationt>();
-      return ret;
-    }
+  case goto_trace_stept::typet::LOCATION:
+  {
+    auto ret = util_make_unique<goto_trace_step_locationt>();
+    return ret;
+  }
 
-    case goto_trace_stept::typet::INPUT:
-    {
-      auto ret = util_make_unique<goto_trace_step_inputt>();
-      ret->format_string(step.format_string);
-      ret->io_id(step.io_id);
-      ret->io_args(step.io_args);
-      ret->formatted(step.formatted);
-      return ret;
-    }
+  case goto_trace_stept::typet::INPUT:
+  {
+    auto ret = util_make_unique<goto_trace_step_inputt>();
+    ret->format_string(step.format_string);
+    ret->io_id(step.io_id);
+    ret->io_args(step.io_args);
+    ret->formatted(step.formatted);
+    return ret;
+  }
 
-    case goto_trace_stept::typet::OUTPUT:
-    {
-      auto ret = util_make_unique<goto_trace_step_outputt>();
-      ret->format_string(step.format_string);
-      ret->io_id(step.io_id);
-      ret->io_args(step.io_args);
-      ret->formatted(step.formatted);
-      return ret;
-    }
+  case goto_trace_stept::typet::OUTPUT:
+  {
+    auto ret = util_make_unique<goto_trace_step_outputt>();
+    ret->format_string(step.format_string);
+    ret->io_id(step.io_id);
+    ret->io_args(step.io_args);
+    ret->formatted(step.formatted);
+    return ret;
+  }
 
-    case goto_trace_stept::typet::DECL:
-    {
-      auto ret = util_make_unique<goto_trace_step_declt>();
-      ret->lhs_object(step.lhs_object);
-      ret->full_lhs(step.full_lhs);
-      ret->full_lhs_value(step.full_lhs_value);
-      ret->assignment_type(step.assignment_type);
-      return ret;
-    }
+  case goto_trace_stept::typet::DECL:
+  {
+    auto ret = util_make_unique<goto_trace_step_declt>();
+    ret->lhs_object(step.lhs_object);
+    ret->full_lhs(step.full_lhs);
+    ret->full_lhs_value(step.full_lhs_value);
+    ret->assignment_type(step.assignment_type);
+    return ret;
+  }
 
-    case goto_trace_stept::typet::DEAD:
-    {
-      auto ret = util_make_unique<goto_trace_step_deadt>();
-      return ret;
-    }
+  case goto_trace_stept::typet::DEAD:
+  {
+    auto ret = util_make_unique<goto_trace_step_deadt>();
+    return ret;
+  }
 
-    case goto_trace_stept::typet::FUNCTION_CALL:
-    {
-      auto ret = util_make_unique<goto_trace_step_function_callt>();
-      ret->identifier(step.identifier);
-      return ret;
-    }
+  case goto_trace_stept::typet::FUNCTION_CALL:
+  {
+    auto ret = util_make_unique<goto_trace_step_function_callt>();
+    ret->identifier(step.identifier);
+    return ret;
+  }
 
-    case goto_trace_stept::typet::FUNCTION_RETURN:
-    {
-      auto ret = util_make_unique<goto_trace_step_function_returnt>();
-      ret->identifier(step.identifier);
-      return ret;
-    }
+  case goto_trace_stept::typet::FUNCTION_RETURN:
+  {
+    auto ret = util_make_unique<goto_trace_step_function_returnt>();
+    ret->identifier(step.identifier);
+    return ret;
+  }
 
-    case goto_trace_stept::typet::CONSTRAINT:
-    {
-      auto ret = util_make_unique<goto_trace_step_constraintt>();
-      return ret;
-    }
+  case goto_trace_stept::typet::CONSTRAINT:
+  {
+    auto ret = util_make_unique<goto_trace_step_constraintt>();
+    return ret;
+  }
 
-    case goto_trace_stept::typet::SHARED_READ:
-    {
-      auto ret = util_make_unique<goto_trace_step_shared_readt>();
-      return ret;
-    }
+  case goto_trace_stept::typet::SHARED_READ:
+  {
+    auto ret = util_make_unique<goto_trace_step_shared_readt>();
+    return ret;
+  }
 
-    case goto_trace_stept::typet::SHARED_WRITE:
-    {
-      auto ret = util_make_unique<goto_trace_step_shared_writet>();
-      return ret;
-    }
+  case goto_trace_stept::typet::SHARED_WRITE:
+  {
+    auto ret = util_make_unique<goto_trace_step_shared_writet>();
+    return ret;
+  }
 
-    case goto_trace_stept::typet::SPAWN:
-    {
-      auto ret = util_make_unique<goto_trace_step_spawnt>();
-      return ret;
-    }
+  case goto_trace_stept::typet::SPAWN:
+  {
+    auto ret = util_make_unique<goto_trace_step_spawnt>();
+    return ret;
+  }
 
-    case goto_trace_stept::typet::MEMORY_BARRIER:
-    {
-      auto ret = util_make_unique<goto_trace_step_memory_barriert>();
-      return ret;
-    }
+  case goto_trace_stept::typet::MEMORY_BARRIER:
+  {
+    auto ret = util_make_unique<goto_trace_step_memory_barriert>();
+    return ret;
+  }
 
-    case goto_trace_stept::typet::ATOMIC_BEGIN:
-    {
-      auto ret = util_make_unique<goto_trace_step_atomic_begint>();
-      return ret;
-    }
+  case goto_trace_stept::typet::ATOMIC_BEGIN:
+  {
+    auto ret = util_make_unique<goto_trace_step_atomic_begint>();
+    return ret;
+  }
 
-    case goto_trace_stept::typet::ATOMIC_END:
-    {
-      auto ret = util_make_unique<goto_trace_step_atomic_endt>();
-      return ret;
-    }
+  case goto_trace_stept::typet::ATOMIC_END:
+  {
+    auto ret = util_make_unique<goto_trace_step_atomic_endt>();
+    return ret;
+  }
 
-    default:
-      UNREACHABLE;
-      break;
+  default:
+    UNREACHABLE;
+    break;
   }
 }
 

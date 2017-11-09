@@ -176,17 +176,41 @@ public:
 
   void output(const namespacet &, std::ostream &);
 
-  bool hidden() const { return hidden_; }
-  void hidden(bool hidden) { hidden_ = hidden; }
+  bool hidden() const
+  {
+    return hidden_;
+  }
+  void hidden(bool hidden)
+  {
+    hidden_ = hidden;
+  }
 
-  bool internal() const { return internal_; }
-  void internal(bool internal) { internal_ = internal; }
+  bool internal() const
+  {
+    return internal_;
+  }
+  void internal(bool internal)
+  {
+    internal_ = internal;
+  }
 
-  goto_programt::const_targett pc() const { return pc_; }
-  void pc(goto_programt::const_targett pc) { pc_ = std::move(pc); }
+  goto_programt::const_targett pc() const
+  {
+    return pc_;
+  }
+  void pc(goto_programt::const_targett pc)
+  {
+    pc_ = std::move(pc);
+  }
 
-  unsigned thread_nr() const { return thread_nr_; }
-  void thread_nr(unsigned thread_nr) { thread_nr_ = thread_nr; }
+  unsigned thread_nr() const
+  {
+    return thread_nr_;
+  }
+  void thread_nr(unsigned thread_nr)
+  {
+    thread_nr_ = thread_nr;
+  }
 
 private:
   bool hidden_ = false;
@@ -246,16 +270,28 @@ class goto_trace_step_assignmentt final
 public:
   bool is_assignment() const override;
 
-  ssa_exprt lhs_object() const { return lhs_object_; }
+  ssa_exprt lhs_object() const
+  {
+    return lhs_object_;
+  }
   void lhs_object(ssa_exprt lhs_object)
   {
     lhs_object_ = std::move(lhs_object);
   }
 
-  exprt full_lhs() const { return full_lhs_; }
-  void full_lhs(exprt full_lhs) { full_lhs_ = std::move(full_lhs); }
+  exprt full_lhs() const
+  {
+    return full_lhs_;
+  }
+  void full_lhs(exprt full_lhs)
+  {
+    full_lhs_ = std::move(full_lhs);
+  }
 
-  exprt full_lhs_value() const { return full_lhs_value_; }
+  exprt full_lhs_value() const
+  {
+    return full_lhs_value_;
+  }
   void full_lhs_value(exprt full_lhs_value)
   {
     full_lhs_value_ = std::move(full_lhs_value);
@@ -290,11 +326,23 @@ class goto_trace_step_assertt final
 public:
   bool is_assert() const override;
 
-  bool cond_value() const { return cond_value_; }
-  void cond_value(bool cond_value) { cond_value_ = cond_value; }
+  bool cond_value() const
+  {
+    return cond_value_;
+  }
+  void cond_value(bool cond_value)
+  {
+    cond_value_ = cond_value;
+  }
 
-  std::string comment() const { return comment_; }
-  void comment(std::string comment) { comment_ = std::move(comment); }
+  std::string comment() const
+  {
+    return comment_;
+  }
+  void comment(std::string comment)
+  {
+    comment_ = std::move(comment);
+  }
 
 private:
   bool cond_value_ = false;
@@ -321,8 +369,14 @@ class goto_trace_step_function_callt final
 public:
   bool is_function_call() const override;
 
-  irep_idt identifier() const { return identifier_; }
-  void identifier(irep_idt identifier) { identifier_ = std::move(identifier); }
+  irep_idt identifier() const
+  {
+    return identifier_;
+  }
+  void identifier(irep_idt identifier)
+  {
+    identifier_ = std::move(identifier);
+  }
 
 public:
   irep_idt identifier_;
@@ -334,8 +388,14 @@ class goto_trace_step_function_returnt final
 public:
   bool is_function_return() const override;
 
-  irep_idt identifier() const { return identifier_; }
-  void identifier(irep_idt identifier) { identifier_ = std::move(identifier); }
+  irep_idt identifier() const
+  {
+    return identifier_;
+  }
+  void identifier(irep_idt identifier)
+  {
+    identifier_ = std::move(identifier);
+  }
 
 public:
   irep_idt identifier_;
@@ -354,20 +414,41 @@ class goto_trace_step_outputt final
 public:
   bool is_output() const override;
 
-  irep_idt format_string() const { return format_string_; }
+  irep_idt format_string() const
+  {
+    return format_string_;
+  }
   void format_string(irep_idt format_string)
   {
     format_string_ = std::move(format_string);
   }
 
-  irep_idt io_id() const { return io_id_; }
-  void io_id(irep_idt io_id) { io_id_ = std::move(io_id); }
+  irep_idt io_id() const
+  {
+    return io_id_;
+  }
+  void io_id(irep_idt io_id)
+  {
+    io_id_ = std::move(io_id);
+  }
 
-  std::list<exprt> io_args() const { return io_args_; }
-  void io_args(std::list<exprt> io_args) { io_args_ = std::move(io_args); }
+  std::list<exprt> io_args() const
+  {
+    return io_args_;
+  }
+  void io_args(std::list<exprt> io_args)
+  {
+    io_args_ = std::move(io_args);
+  }
 
-  bool formatted() const { return formatted_; }
-  void formatted(bool formatted) { formatted_ = formatted; }
+  bool formatted() const
+  {
+    return formatted_;
+  }
+  void formatted(bool formatted)
+  {
+    formatted_ = formatted;
+  }
 
 private:
   irep_idt format_string_;
@@ -382,20 +463,41 @@ class goto_trace_step_inputt final
 public:
   bool is_input() const override;
 
-  irep_idt format_string() const { return format_string_; }
+  irep_idt format_string() const
+  {
+    return format_string_;
+  }
   void format_string(irep_idt format_string)
   {
     format_string_ = std::move(format_string);
   }
 
-  irep_idt io_id() const { return io_id_; }
-  void io_id(irep_idt io_id) { io_id_ = std::move(io_id); }
+  irep_idt io_id() const
+  {
+    return io_id_;
+  }
+  void io_id(irep_idt io_id)
+  {
+    io_id_ = std::move(io_id);
+  }
 
-  std::list<exprt> io_args() const { return io_args_; }
-  void io_args(std::list<exprt> io_args) { io_args_ = std::move(io_args); }
+  std::list<exprt> io_args() const
+  {
+    return io_args_;
+  }
+  void io_args(std::list<exprt> io_args)
+  {
+    io_args_ = std::move(io_args);
+  }
 
-  bool formatted() const { return formatted_; }
-  void formatted(bool formatted) { formatted_ = formatted; }
+  bool formatted() const
+  {
+    return formatted_;
+  }
+  void formatted(bool formatted)
+  {
+    formatted_ = formatted;
+  }
 
 private:
   irep_idt format_string_;
@@ -410,16 +512,28 @@ class goto_trace_step_declt final
 public:
   bool is_decl() const override;
 
-  ssa_exprt lhs_object() const { return lhs_object_; }
+  ssa_exprt lhs_object() const
+  {
+    return lhs_object_;
+  }
   void lhs_object(ssa_exprt lhs_object)
   {
     lhs_object_ = std::move(lhs_object);
   }
 
-  exprt full_lhs() const { return full_lhs_; }
-  void full_lhs(exprt full_lhs) { full_lhs_ = std::move(full_lhs); }
+  exprt full_lhs() const
+  {
+    return full_lhs_;
+  }
+  void full_lhs(exprt full_lhs)
+  {
+    full_lhs_ = std::move(full_lhs);
+  }
 
-  exprt full_lhs_value() const { return full_lhs_value_; }
+  exprt full_lhs_value() const
+  {
+    return full_lhs_value_;
+  }
   void full_lhs_value(exprt full_lhs_value)
   {
     full_lhs_value_ = std::move(full_lhs_value);
