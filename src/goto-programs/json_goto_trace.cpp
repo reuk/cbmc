@@ -21,6 +21,57 @@ Author: Daniel Kroening
 
 #include <langapi/language_util.h>
 
+#include <goto-programs/safe_goto_trace.h>
+
+namespace
+{
+class convert_visitort : public goto_trace_const_visitor_const_argst
+{
+public:
+  convert_visitort()
+  {
+  }
+
+  void visit(const goto_trace_step_assignmentt &) const override {}
+
+  void visit(const goto_trace_step_assumet &) const override {}
+
+  void visit(const goto_trace_step_assertt &) const override {}
+
+  void visit(const goto_trace_step_gotot &) const override {}
+
+  void visit(const goto_trace_step_constraintt &) const override {}
+
+  void visit(const goto_trace_step_function_callt &) const override {}
+
+  void visit(const goto_trace_step_function_returnt &) const override {}
+
+  void visit(const goto_trace_step_locationt &) const override {}
+
+  void visit(const goto_trace_step_outputt &) const override {}
+
+  void visit(const goto_trace_step_inputt &) const override {}
+
+  void visit(const goto_trace_step_declt &) const override {}
+
+  void visit(const goto_trace_step_deadt &) const override {}
+
+  void visit(const goto_trace_step_shared_readt &) const override {}
+
+  void visit(const goto_trace_step_shared_writet &) const override {}
+
+  void visit(const goto_trace_step_spawnt &) const override {}
+
+  void visit(const goto_trace_step_memory_barriert &) const override {}
+
+  void visit(const goto_trace_step_atomic_begint &) const override {}
+
+  void visit(const goto_trace_step_atomic_endt &) const override {}
+
+private:
+};
+} // namespace
+
 /// Produce a json representation of a trace.
 /// \param ns: a namespace
 /// \param goto_trace: a trace in a goto program
@@ -28,16 +79,16 @@ Author: Daniel Kroening
 ///   added
 void convert(
   const namespacet &ns,
-  const goto_tracet &goto_trace,
+  const safe_goto_tracet &goto_trace,
   jsont &dest)
 {
   json_arrayt &dest_array=dest.make_array();
 
   source_locationt previous_source_location;
 
-  for(const auto &step : goto_trace.steps)
+  for(const auto &step : goto_trace)
   {
-    const source_locationt &source_location=step.pc->source_location;
+    const source_locationt &source_location=step.pc()->source_location;
 
     jsont json_location;
 
@@ -45,6 +96,8 @@ void convert(
       json_location=json(source_location);
     else
       json_location=json_nullt();
+
+    step.accept(convert_visitort{});
 
     switch(step.type)
     {
