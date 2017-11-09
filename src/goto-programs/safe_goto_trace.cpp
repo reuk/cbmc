@@ -98,6 +98,38 @@ bool goto_trace_step_baset::is_atomic_end() const
   return false;
 }
 
+bool goto_trace_step_baset::hidden() const
+{
+  return hidden_;
+}
+
+void goto_trace_step_baset::hidden(bool hidden)
+{
+  hidden_ = hidden;
+}
+
+bool goto_trace_step_baset::internal() const
+{
+  return internal_;
+}
+
+void goto_trace_step_baset::internal(bool internal)
+{
+  internal_ = internal;
+}
+
+goto_programt::const_targett goto_trace_step_baset::pc() const
+{
+  return pc_;
+}
+
+void goto_trace_step_baset::pc(goto_programt::const_targett pc)
+{
+  pc_ = std::move(pc);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 bool goto_trace_step_assignmentt::is_assignment() const
 {
   return true;
@@ -187,6 +219,8 @@ bool goto_trace_step_atomic_endt::is_atomic_end() const
 {
   return true;
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 safe_goto_tracet::iteratort safe_goto_tracet::begin()
 {

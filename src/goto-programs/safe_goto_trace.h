@@ -12,6 +12,8 @@ Author: @reuk
 #ifndef CPROVER_GOTO_PROGRAMS_SAFE_GOTO_TRACE_H
 #define CPROVER_GOTO_PROGRAMS_SAFE_GOTO_TRACE_H
 
+#include <goto-programs/goto_program.h>
+
 #include <util/dereference_iterator.h>
 #include <util/make_unique.h>
 
@@ -173,17 +175,19 @@ public:
 
   void output(const namespacet &, std::ostream &);
 
-  bool internal() const
-  {
-    return internal_;
-  }
-  void internal(bool x)
-  {
-    internal_ = x;
-  }
+  bool hidden() const;
+  void hidden(bool hidden);
+
+  bool internal() const;
+  void internal(bool internal);
+
+  goto_programt::const_targett pc() const;
+  void pc(goto_programt::const_targett pc);
 
 private:
+  bool hidden_ = false;
   bool internal_ = false;
+  goto_programt::const_targett pc_;
 };
 
 namespace detail
