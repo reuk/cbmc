@@ -29,7 +29,7 @@ struct view_makert final
   operator()(goto_trace_stept &step) const
   {
     return make_view(step);
-}
+  }
 };
 } // namespace detail
 
@@ -69,7 +69,7 @@ private:
 };
 
 template <typename T>
-goto_trace_step_view_facadet<T> make_dereference_facade(T &t)
+goto_trace_step_view_facadet<T> make_goto_trace_step_view_facade(T &t)
 {
   return goto_trace_step_view_facadet<T>{t};
 }

@@ -392,20 +392,12 @@ class goto_trace_step_function_callt final
   : public detail::goto_trace_step_mixint<goto_trace_step_function_callt>
 {
 public:
-  explicit goto_trace_step_function_callt(goto_trace_stept &step) : step_(step)
-  {
-  }
+  explicit goto_trace_step_function_callt(goto_trace_stept &step) : step_(step) { }
 
   bool is_function_call() const override;
 
-  irep_idt identifier() const
-  {
-    return step_.identifier;
-  }
-  void identifier(irep_idt identifier)
-  {
-    step_.identifier = std::move(identifier);
-  }
+  irep_idt identifier() const { return step_.identifier; }
+  void identifier(irep_idt identifier) { step_.identifier = std::move(identifier); }
 
 private:
   goto_trace_stept &step_; // MUST remain private
