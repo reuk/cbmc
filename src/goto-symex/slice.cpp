@@ -9,10 +9,10 @@ Author: Daniel Kroening, kroening@kroening.com
 /// \file
 /// Slicer for symex traces
 
-#include "slice.h"
-
 #include <util/std_expr.h>
 
+#include "slice.h"
+#include "safe_ssa_step.h"
 #include "symex_slice_class.h"
 
 void symex_slicet::get_symbols(const exprt &expr)
@@ -33,7 +33,7 @@ void symex_slicet::get_symbols(const typet &type)
 
 void symex_slicet::slice(
   symex_target_equationt &equation,
-  const expr_listt &exprs)
+  const std::list<exprt> &exprs)
 {
   // collect dependencies
   forall_expr_list(expr_it, exprs)
